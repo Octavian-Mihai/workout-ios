@@ -1,5 +1,20 @@
 import Foundation
 
+struct StressEstimate {
+    var total: Double
+    var lift: Double
+    var run: Double
+}
+
+struct DailyStress: Identifiable {
+    var date: Date
+    var total: Double
+    var lift: Double
+    var run: Double
+
+    var id: Date { date }
+}
+
 enum StressBand: String {
     case recovery = "Recovery / easy"
     case productive = "Productive"
@@ -144,6 +159,65 @@ enum StressCalculator {
             "chin-up", "chin up", "dip"
         ]
         return keys.contains { n.contains($0) }
+    }
+
+    /// Recency-weighted stress for today using the last 3 days (today 1.0, yesterday 0.6, 2 days ago 0.3).
+    static func todayEstimate(sets: [SetLog], runs: [RunningWorkout], now: Date = Date()) -> StressEstimate {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: now)
+        let weights = [1.0, 0.6, 0.3]
+        var liftAcc = 0.0
+        var runAcc = 0.0
+        var weightSum = 0.0
+        for (offset, weight) in weights.enumerated() {
+            guard let day = cal.date(byAdding: .day, value: -offset, to: today) else { continue }
+            let slice = daySlice(sets: sets, runs: runs, dayStart: day, calendar: cal)
+            liftAcc += slice.lift * weight
+            runAcc += slice.run * weight
+            weightSum += weight
+        }
+        let lift = weightSum > 0 ? liftAcc / weightSum : 0
+        let run = weightSum > 0 ? runAcc / weightSum : 0
+        return StressEstimate(total: blend(lift: lift, run: run), lift: lift, run: run)
+    }
+
+    static func dailyTrend(sets: [SetLog], runs: [RunningWorkout], days: Int = 7, now: Date = Date()) -> [DailyStress] {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: now)
+        return (0..<days).compactMap { offset in
+            guard let day = cal.date(byAdding: .day, value: -(days - 1 - offset), to: today) else { return nil }
+            let slice = daySlice(sets: sets, runs: runs, dayStart: day, calendar: cal)
+            return DailyStress(date: day, total: slice.total, lift: slice.lift, run: slice.run)
+        }
+    }
+
+    static func blend(lift: Double, run: Double) -> Double {
+        if lift > 0, run > 0 {
+            return min(100, lift * 0.65 + run * 0.35)
+        }
+        return min(100, max(lift, run))
+    }
+
+    static func dayLiftScore(_ sets: [SetLog]) -> Double {
+        guard !sets.isEmpty else { return 0 }
+        let volumeScore = min(60.0, totalVolume(from: sets) / 400.0)
+        let intensities = sets.map { max(0, 5.0 - Double(min($0.rir, 5))) / 5.0 }
+        let avgIntensity = intensities.reduce(0, +) / Double(intensities.count)
+        return min(100, volumeScore + avgIntensity * 40.0)
+    }
+
+    static func dayRunScore(_ runs: [RunningWorkout]) -> Double {
+        guard !runs.isEmpty else { return 0 }
+        return min(100, runs.map(\.stress).reduce(0, +))
+    }
+
+    private static func daySlice(sets: [SetLog], runs: [RunningWorkout], dayStart: Date, calendar: Calendar) -> StressEstimate {
+        let end = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart.addingTimeInterval(86_400)
+        let daySets = sets.filter { $0.timestamp >= dayStart && $0.timestamp < end }
+        let dayRuns = runs.filter { $0.start >= dayStart && $0.start < end }
+        let lift = dayLiftScore(daySets)
+        let run = dayRunScore(dayRuns)
+        return StressEstimate(total: blend(lift: lift, run: run), lift: lift, run: run)
     }
 
     static func bestEstimated1RM(for exerciseName: String, in sets: [SetLog], now: Date = Date()) -> Double {

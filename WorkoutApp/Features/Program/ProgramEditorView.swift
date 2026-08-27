@@ -113,28 +113,26 @@ struct DayEditorView: View {
         .toolbar { EditButton() }
         .sheet(isPresented: $showPicker) {
             NavigationStack {
-                ExercisePickerView { catalog, sets, reps in
+                ExercisePickerView { catalog in
                     addExercise(
                         name: catalog.name,
                         primary: catalog.primaryNames,
-                        secondary: catalog.secondaryNames,
-                        sets: sets,
-                        reps: reps
+                        secondary: catalog.secondaryNames
                     )
-                } onCustom: { name, primary, secondary, sets, reps in
-                    addExercise(name: name, primary: primary, secondary: secondary, sets: sets, reps: reps)
+                } onCustom: { name, primary, secondary in
+                    addExercise(name: name, primary: primary, secondary: secondary)
                 }
             }
         }
     }
 
-    private func addExercise(name: String, primary: [String], secondary: [String], sets: Int, reps: Int) {
+    private func addExercise(name: String, primary: [String], secondary: [String]) {
         let item = DayExercise(
             name: name,
             primaryMuscles: primary,
             secondaryMuscles: secondary,
-            targetSets: sets,
-            targetReps: reps,
+            targetSets: 0,
+            targetReps: 0,
             sortIndex: day.exercises.count
         )
         item.day = day
@@ -175,8 +173,6 @@ struct DayExerciseEditorRow: View {
             Text(exercise.primaryMuscles.joined(separator: ", "))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Stepper("Sets: \(exercise.targetSets)", value: $exercise.targetSets, in: 1...12)
-            Stepper("Reps: \(exercise.targetReps)", value: $exercise.targetReps, in: 1...30)
         }
         .padding(.vertical, 4)
     }

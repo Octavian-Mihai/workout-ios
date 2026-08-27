@@ -1,20 +1,71 @@
 import SwiftUI
+import SwiftData
 
 struct InfoView: View {
+    @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
+    @EnvironmentObject private var health: HealthKitService
+    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+
+    private var accent: Color {
+        AccentOption(rawValue: accentName)?.color ?? .orange
+    }
+
+    private var allSets: [SetLog] {
+        sessions.flatMap(\.sets)
+    }
+
+    private var estimate: StressEstimate {
+        StressCalculator.todayEstimate(sets: allSets, runs: health.runs)
+    }
+
+    private var trend: [DailyStress] {
+        StressCalculator.dailyTrend(sets: allSets, runs: health.runs)
+    }
+
     var body: some View {
         NavigationStack {
-            List {
-                Section("Learn") {
-                    NavigationLink("Workout 101") { Workout101View() }
-                    NavigationLink("Movements 101") { Movements101View() }
-                    NavigationLink("Anatomy 101") { Anatomy101View() }
-                    NavigationLink("Training insight") { TrainingInsightView() }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("My stress")
+                        .font(.headline)
+                    TodayStressCard(
+                        estimate: estimate,
+                        showSplit: true,
+                        trend: trend,
+                        accent: accent
+                    )
+
+                    Text("Learn")
+                        .font(.headline)
+                        .padding(.top, 4)
+                    articleLink("Workout 101", destination: Workout101View())
+                    articleLink("Movements 101", destination: Movements101View())
+                    articleLink("Anatomy 101", destination: Anatomy101View())
+                    articleLink("Training insight", destination: TrainingInsightView())
                 }
+                .padding(16)
             }
-            .scrollContentBackground(.hidden)
-            .background(Theme.groupedBackground)
+            .background(Theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Info")
         }
+    }
+
+    private func articleLink<D: View>(_ title: String, destination: D) -> some View {
+        NavigationLink {
+            destination
+        } label: {
+            HStack {
+                Text(title)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(16)
+            .opaqueCard()
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -67,7 +118,7 @@ struct Workout101View: View {
             )
             ArticleCard(
                 title: "Logging well",
-                bodyText: "Use the rest timer between sets. Match the load to the target reps, then mark RIR honestly. Productive work usually lives around RIR 2–3. RIR 0–1 is a grind; RIR 4+ is easy technique or warm-up work."
+                bodyText: "Use the rest timer between sets. Log the load and reps you actually did, then mark RIR honestly. Productive work usually lives around RIR 2–3. RIR 0–1 is a grind; RIR 4+ is easy technique or warm-up work."
             )
             ArticleCard(
                 title: "Empty workouts",
@@ -159,7 +210,7 @@ struct TrainingInsightView: View {
         ArticleScreen(title: "Training insight") {
             ArticleCard(
                 title: "RIR colors",
-                bodyText: "0–1 red: near failure, high fatigue. 2 orange: hard, useful for strength. 3 accent: productive hypertrophy range. 4+ muted: easy, technique, or leftover reps."
+                bodyText: "0–1 red: near failure, high fatigue. 2–3 yellow: hard, useful work. 4 green: productive easier sets. 5+ blue: easy, technique, or leftover reps."
             )
             ArticleCard(
                 title: "Estimated 1RM",

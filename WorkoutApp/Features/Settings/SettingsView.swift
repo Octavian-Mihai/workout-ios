@@ -1,11 +1,26 @@
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct SettingsView: View {
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var health: HealthKitService
+    @Query private var programs: [Program]
+    @Query private var sessions: [WorkoutSession]
+    @Query private var weightEntries: [BodyWeightEntry]
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
     @AppStorage("appearanceMode") private var appearanceMode = AppearanceMode.system.rawValue
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
+    @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
+    @AppStorage("restTimerHaptics") private var restTimerHaptics = true
+    @State private var showDeleteConfirm = false
+
+    private var versionLabel: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "\(version) (\(build))"
+    }
 
     var body: some View {
         NavigationStack {
@@ -67,10 +82,20 @@ struct SettingsView: View {
                     Text("Lifting loads and body weight are stored in kilograms and converted for display.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    Picker("Distance", selection: $distanceUnitRaw) {
+                        ForEach(DistanceUnit.allCases) { unit in
+                            Text(unit.title).tag(unit.rawValue)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    Text("Running distance and pace use this unit. Values from Health stay in meters internally.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 Section("Session") {
                     Stepper("Default rest \(defaultRestSeconds)s", value: $defaultRestSeconds, in: 15...300, step: 15)
+                    Toggle("Rest-timer haptics", isOn: $restTimerHaptics)
                 }
 
                 Section("Body weight") {
@@ -83,12 +108,79 @@ struct SettingsView: View {
                     Text("Running is read from Apple Health. Strength sessions stay in this app and are not written to HealthKit.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    Button("Re-request HealthKit access") {
+                        Task { await health.requestAndLoad() }
+                    }
+                    Button("Open Apple Health") {
+                        if let url = URL(string: "x-apple-health://") {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                }
+
+                Section("Privacy") {
+                    NavigationLink("What we store") {
+                        PrivacyInfoView()
+                    }
+                }
+
+                Section("Data") {
+                    Button("Delete all local data", role: .destructive) {
+                        showDeleteConfirm = true
+                    }
+                }
+
+                Section("About") {
+                    HStack {
+                        Text("Version")
+                        Spacer()
+                        Text(versionLabel)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
                 }
             }
             .scrollContentBackground(.hidden)
             .background(Theme.groupedBackground)
             .navigationTitle("Settings")
+            .alert("Delete all local data?", isPresented: $showDeleteConfirm) {
+                Button("Delete", role: .destructive) { deleteAllLocalData() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This removes programs, workout history, and body-weight entries from this device. Apple Health data is not deleted.")
+            }
         }
+    }
+
+    private func deleteAllLocalData() {
+        for item in programs { modelContext.delete(item) }
+        for item in sessions { modelContext.delete(item) }
+        for item in weightEntries { modelContext.delete(item) }
+        try? modelContext.save()
+    }
+}
+
+struct PrivacyInfoView: View {
+    var body: some View {
+        List {
+            Section("On this device") {
+                Text("Programs, workout sessions, sets (weight, reps, RIR), and body-weight entries are stored locally with SwiftData. Nothing is uploaded to a server.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            Section("Apple Health") {
+                Text("Running workouts, GPS routes, distance, and heart rate are read only. This app never writes strength sessions or other data to HealthKit.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            Section("Encryption") {
+                Text("The app does not use non-exempt encryption. Workout data stays in the device’s standard app container.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle("Privacy")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

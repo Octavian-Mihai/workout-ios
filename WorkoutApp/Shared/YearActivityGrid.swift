@@ -55,6 +55,8 @@ struct YearActivityGrid: View {
 
     @Environment(\.calendar) private var calendar
 
+    private static let monthLetters = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]
+
     private var cells: [YearDayCell] {
         YearGridBuilder.cells(year: year, sessions: sessions, calendar: calendar)
     }
@@ -64,7 +66,7 @@ struct YearActivityGrid: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("\(year)")
                     .font(.headline)
@@ -75,31 +77,20 @@ struct YearActivityGrid: View {
             }
 
             GeometryReader { geo in
-                let spacing: CGFloat = 2
+                let spacing: CGFloat = 1.5
                 let columns = 53
-                let cell = max(3.5, (geo.size.width - CGFloat(columns - 1) * spacing) / CGFloat(columns))
-                let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
+                let raw = (geo.size.width - CGFloat(columns - 1) * spacing) / CGFloat(columns)
+                let cell = min(5.5, max(3, raw))
 
-                HStack(alignment: .top, spacing: 4) {
-                    VStack(spacing: spacing) {
-                        ForEach(0..<7, id: \.self) { row in
-                            Text(weekdays[row])
-                                .font(.system(size: 7, weight: .medium))
-                                .foregroundStyle(.secondary)
-                                .frame(width: 8, height: cell)
-                        }
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        monthLabels(cell: cell, spacing: spacing)
-                        HStack(alignment: .top, spacing: spacing) {
-                            ForEach(0..<columns, id: \.self) { col in
-                                VStack(spacing: spacing) {
-                                    ForEach(0..<7, id: \.self) { row in
-                                        let index = col * 7 + row
-                                        if index < cells.count {
-                                            dayDot(cells[index], size: cell)
-                                        }
+                VStack(alignment: .leading, spacing: 3) {
+                    monthLabels(cell: cell, spacing: spacing)
+                    HStack(alignment: .top, spacing: spacing) {
+                        ForEach(0..<columns, id: \.self) { col in
+                            VStack(spacing: spacing) {
+                                ForEach(0..<7, id: \.self) { row in
+                                    let index = col * 7 + row
+                                    if index < cells.count {
+                                        dayDot(cells[index], size: cell)
                                     }
                                 }
                             }
@@ -107,14 +98,15 @@ struct YearActivityGrid: View {
                     }
                 }
             }
-            .frame(height: 118)
+            .frame(height: 68)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Year activity grid")
             .onTapGesture {
                 onSelect?(Date())
             }
         }
-        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
         .opaqueCard()
     }
 
@@ -133,7 +125,7 @@ struct YearActivityGrid: View {
             }
             Spacer(minLength: 0)
         }
-        .frame(height: 10)
+        .frame(height: 9)
     }
 
     private func monthStarts() -> [(offset: Int, column: Int, label: String)] {
@@ -143,7 +135,8 @@ struct YearActivityGrid: View {
             let month = calendar.component(.month, from: cell.date)
             if seen.insert(month).inserted {
                 let col = index / 7
-                result.append((result.count, col, Formatters.month.string(from: cell.date)))
+                let letter = Self.monthLetters[month - 1]
+                result.append((result.count, col, letter))
             }
         }
         return result

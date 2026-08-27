@@ -75,6 +75,24 @@ enum WeightUnit: String, CaseIterable, Identifiable {
     }
 }
 
+enum DistanceUnit: String, CaseIterable, Identifiable {
+    case km, mi
+
+    var id: String { rawValue }
+
+    var title: String { self == .km ? "km" : "mi" }
+
+    func fromMeters(_ meters: Double) -> Double {
+        self == .km ? meters / 1000.0 : meters / 1609.344
+    }
+
+    func paceMinutesPerUnit(duration: TimeInterval, meters: Double) -> Double? {
+        let distance = fromMeters(meters)
+        guard distance > 0, duration > 0 else { return nil }
+        return (duration / 60.0) / distance
+    }
+}
+
 enum Theme {
     static let cardCorner: CGFloat = 16
 
@@ -105,20 +123,20 @@ extension View {
 }
 
 enum RIRPalette {
-    static func color(for rir: Int, accent: Color) -> Color {
+    static func color(for rir: Int, accent _: Color) -> Color {
         switch rir {
         case ...1: return Color(red: 0.90, green: 0.22, blue: 0.25)
-        case 2: return Color(red: 0.95, green: 0.52, blue: 0.12)
-        case 3: return accent
-        default: return Color.secondary.opacity(0.75)
+        case 2, 3: return Color(red: 0.95, green: 0.78, blue: 0.12)
+        case 4: return Color(red: 0.22, green: 0.70, blue: 0.38)
+        default: return Color(red: 0.25, green: 0.55, blue: 0.90)
         }
     }
 
     static func label(for rir: Int) -> String {
         switch rir {
         case ...1: return "High"
-        case 2: return "Hard"
-        case 3: return "Productive"
+        case 2, 3: return "Hard"
+        case 4: return "Productive"
         default: return "Easy"
         }
     }

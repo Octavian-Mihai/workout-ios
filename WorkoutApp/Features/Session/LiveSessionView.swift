@@ -7,8 +7,6 @@ struct DraftExercise: Identifiable {
     var name: String
     var primaryMuscles: [String]
     var secondaryMuscles: [String]
-    var targetSets: Int
-    var targetReps: Int
     var logged: [DraftSet]
 
     init(
@@ -16,16 +14,12 @@ struct DraftExercise: Identifiable {
         name: String,
         primaryMuscles: [String],
         secondaryMuscles: [String],
-        targetSets: Int,
-        targetReps: Int,
         logged: [DraftSet] = []
     ) {
         self.id = id
         self.name = name
         self.primaryMuscles = primaryMuscles
         self.secondaryMuscles = secondaryMuscles
-        self.targetSets = targetSets
-        self.targetReps = targetReps
         self.logged = logged
     }
 }
@@ -44,17 +38,26 @@ struct DraftSet: Identifiable {
     }
 }
 
+enum SessionField: Hashable {
+    case weight(UUID)
+    case reps(UUID)
+}
+
 @MainActor
 final class SessionController: ObservableObject {
     @Published var exercises: [DraftExercise]
     @Published var restDuration: Int
     @Published var restRemaining: Int
     @Published var timerRunning = false
+    @Published var restCompletedPulse = 0
     @Published var startedAt: Date
 
     let program: Program?
     let programDay: ProgramDay?
     let isEmpty: Bool
+    let originalNames: [String]
+
+    private var timerCancellable: AnyCancellable?
 
     init(program: Program?, programDay: ProgramDay?, defaultRest: Int = 90) {
         self.program = program
@@ -64,16 +67,17 @@ final class SessionController: ObservableObject {
         self.restRemaining = defaultRest
         self.startedAt = Date()
         if let day = programDay {
-            self.exercises = day.orderedExercises.map { item in
+            let ordered = day.orderedExercises
+            self.originalNames = ordered.map(\.name)
+            self.exercises = ordered.map { item in
                 DraftExercise(
                     name: item.name,
                     primaryMuscles: item.primaryMuscles,
-                    secondaryMuscles: item.secondaryMuscles,
-                    targetSets: item.targetSets,
-                    targetReps: item.targetReps
+                    secondaryMuscles: item.secondaryMuscles
                 )
             }
         } else {
+            self.originalNames = []
             self.exercises = []
         }
     }
@@ -82,22 +86,45 @@ final class SessionController: ObservableObject {
         exercises.reduce(0) { $0 + $1.logged.count }
     }
 
+    var exerciseListChanged: Bool {
+        guard !isEmpty else { return false }
+        return exercises.map(\.name) != originalNames
+    }
+
     func tick() {
         guard timerRunning, restRemaining > 0 else { return }
         restRemaining -= 1
         if restRemaining == 0 {
             timerRunning = false
+            restCompletedPulse += 1
+            stopTimer()
         }
     }
 
     func startRest() {
         restRemaining = restDuration
         timerRunning = true
+        ensureTimer()
     }
 
     func resetRest() {
         restRemaining = restDuration
         timerRunning = false
+        stopTimer()
+    }
+
+    func stopTimer() {
+        timerCancellable?.cancel()
+        timerCancellable = nil
+    }
+
+    private func ensureTimer() {
+        guard timerCancellable == nil else { return }
+        timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.tick()
+            }
     }
 
     func logSet(exerciseID: UUID, weightKg: Double, reps: Int, rir: Int) {
@@ -111,53 +138,43 @@ final class SessionController: ObservableObject {
         exercises[index].logged.removeAll { $0.id == setID }
     }
 
-    func addExercise(_ catalog: CatalogExercise, sets: Int, reps: Int) {
+    func addExercise(_ catalog: CatalogExercise) {
         exercises.append(
             DraftExercise(
                 name: catalog.name,
                 primaryMuscles: catalog.primaryNames,
-                secondaryMuscles: catalog.secondaryNames,
-                targetSets: sets,
-                targetReps: reps
+                secondaryMuscles: catalog.secondaryNames
             )
         )
     }
 
-    func addCustom(name: String, primary: [String], secondary: [String], sets: Int, reps: Int) {
+    func addCustom(name: String, primary: [String], secondary: [String]) {
         exercises.append(
             DraftExercise(
                 name: name,
                 primaryMuscles: primary,
-                secondaryMuscles: secondary,
-                targetSets: sets,
-                targetReps: reps
+                secondaryMuscles: secondary
             )
         )
     }
 }
 
 struct LiveSessionView: View {
+    @ObservedObject var controller: SessionController
+    var onMinimize: () -> Void
+    var onFinished: () -> Void
+    var onDiscard: () -> Void
+
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
+    @AppStorage("restTimerHaptics") private var restTimerHaptics = true
 
-    @StateObject private var controller: SessionController
     @State private var showAddExercise = false
-    @State private var restFired = false
-
-    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
-    init(program: Program?, programDay: ProgramDay?) {
-        _controller = StateObject(
-            wrappedValue: SessionController(
-                program: program,
-                programDay: programDay,
-                defaultRest: UserDefaults.standard.object(forKey: "defaultRestSeconds") as? Int ?? 90
-            )
-        )
-    }
+    @State private var showSaveTemplate = false
+    @State private var showDiscardConfirm = false
+    @FocusState private var focusedField: SessionField?
 
     private var accent: Color {
         AccentOption(rawValue: accentName)?.color ?? .orange
@@ -168,38 +185,65 @@ struct LiveSessionView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                restTimerCard
-                if controller.exercises.isEmpty {
-                    Text("Add an exercise to start logging sets.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .padding(16)
-                        .opaqueCard()
-                }
-                ForEach(controller.exercises) { exercise in
-                    SessionExerciseCard(
-                        exercise: exercise,
-                        unit: unit,
-                        accent: accent,
-                        onLog: { weightKg, reps, rir in
-                            controller.logSet(exerciseID: exercise.id, weightKg: weightKg, reps: reps, rir: rir)
-                        },
-                        onDeleteSet: { setID in
-                            controller.removeSet(exerciseID: exercise.id, setID: setID)
+        VStack(spacing: 0) {
+            compactRestTimer
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    if controller.exercises.isEmpty {
+                        Text("Add an exercise to start logging sets.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(16)
+                            .opaqueCard()
+                    }
+                    ForEach(controller.exercises) { exercise in
+                        SessionExerciseCard(
+                            exercise: exercise,
+                            unit: unit,
+                            accent: accent,
+                            focusedField: $focusedField,
+                            onLog: { weightKg, reps, rir in
+                                controller.logSet(exerciseID: exercise.id, weightKg: weightKg, reps: reps, rir: rir)
+                            },
+                            onDeleteSet: { setID in
+                                controller.removeSet(exerciseID: exercise.id, setID: setID)
+                            }
+                        )
+                    }
+
+                    Button {
+                        finish()
+                    } label: {
+                        Text("Finish workout")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                    }
+                    .disabled(controller.loggedSetCount == 0)
+                    .buttonStyle(.borderedProminent)
+                    .padding(.top, 8)
+
+                    Button("Discard workout", role: .destructive) {
+                        if controller.loggedSetCount > 0 {
+                            showDiscardConfirm = true
+                        } else {
+                            onDiscard()
                         }
-                    )
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 24)
                 }
+                .padding(16)
             }
-            .padding(16)
+            .scrollDismissesKeyboard(.interactively)
         }
         .background(Theme.groupedBackground.ignoresSafeArea())
         .navigationTitle(controller.programDay?.name ?? "Empty workout")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("Cancel") { dismiss() }
+                Button("Close") { onMinimize() }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -208,76 +252,86 @@ struct LiveSessionView: View {
                     Image(systemName: "plus")
                 }
             }
-            ToolbarItem(placement: .bottomBar) {
-                Button {
-                    finish()
-                } label: {
-                    Text("Finish workout")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                }
-                .disabled(controller.loggedSetCount == 0)
-                .buttonStyle(.borderedProminent)
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { focusedField = nil }
             }
         }
         .sheet(isPresented: $showAddExercise) {
             NavigationStack {
-                ExercisePickerView { catalog, sets, reps in
-                    controller.addExercise(catalog, sets: sets, reps: reps)
-                } onCustom: { name, primary, secondary, sets, reps in
-                    controller.addCustom(name: name, primary: primary, secondary: secondary, sets: sets, reps: reps)
+                ExercisePickerView { catalog in
+                    controller.addExercise(catalog)
+                } onCustom: { name, primary, secondary in
+                    controller.addCustom(name: name, primary: primary, secondary: secondary)
                 }
             }
         }
-        .onReceive(timer) { _ in
-            let wasRunning = controller.timerRunning && controller.restRemaining > 0
-            controller.tick()
-            if wasRunning && controller.restRemaining == 0 {
-                restFired.toggle()
+        .alert("Save this day as a template?", isPresented: $showSaveTemplate) {
+            Button("Save template") {
+                rewriteDayTemplate()
+                onFinished()
             }
-        }
-        .sensoryFeedback(.success, trigger: restFired)
-        .onAppear {
-            controller.restDuration = defaultRestSeconds
-            if !controller.timerRunning {
-                controller.restRemaining = defaultRestSeconds
+            Button("Don’t save", role: .cancel) {
+                onFinished()
             }
+        } message: {
+            Text("Exercises were added, removed, or reordered. Save them to this program day, or keep the original template.")
         }
+        .alert("Discard this workout?", isPresented: $showDiscardConfirm) {
+            Button("Discard", role: .destructive) { onDiscard() }
+            Button("Keep", role: .cancel) {}
+        } message: {
+            Text("Logged sets will be lost.")
+        }
+        .sensoryFeedback(.success, trigger: restTimerHaptics ? controller.restCompletedPulse : 0)
     }
 
-    private var restTimerCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Rest timer")
-                    .font(.headline)
-                Spacer()
-                Text(Formatters.duration(controller.restRemaining))
-                    .font(.title.monospacedDigit().weight(.bold))
-                    .foregroundStyle(controller.timerRunning ? accent : .primary)
-            }
-            Stepper(value: Binding(
-                get: { controller.restDuration },
-                set: { newValue in
-                    controller.restDuration = newValue
-                    defaultRestSeconds = newValue
-                    if !controller.timerRunning {
-                        controller.restRemaining = newValue
+    private var compactRestTimer: some View {
+        HStack(spacing: 10) {
+            Text(Formatters.duration(controller.restRemaining))
+                .font(.title3.monospacedDigit().weight(.bold))
+                .foregroundStyle(controller.timerRunning ? accent : .primary)
+                .frame(minWidth: 64, alignment: .leading)
+            Text("Rest")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Stepper(
+                value: Binding(
+                    get: { controller.restDuration },
+                    set: { newValue in
+                        controller.restDuration = newValue
+                        defaultRestSeconds = newValue
+                        if !controller.timerRunning {
+                            controller.restRemaining = newValue
+                        }
                     }
-                }
-            ), in: 15...300, step: 15) {
-                Text("Target \(controller.restDuration)s")
-                    .font(.subheadline)
+                ),
+                in: 15...300,
+                step: 15
+            ) {
+                Text("\(controller.restDuration)s")
+                    .font(.caption.monospacedDigit())
                     .foregroundStyle(.secondary)
             }
-            HStack {
-                Button("Start") { controller.startRest() }
-                    .buttonStyle(.borderedProminent)
-                Button("Reset") { controller.resetRest() }
-                    .buttonStyle(.bordered)
+            .labelsHidden()
+            .frame(width: 92)
+            Button(controller.timerRunning ? "Reset" : "Start") {
+                if controller.timerRunning {
+                    controller.resetRest()
+                } else {
+                    controller.startRest()
+                }
             }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
         }
-        .padding(16)
-        .opaqueCard()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(Theme.cardFill)
+        .overlay(alignment: .bottom) {
+            Divider()
+        }
     }
 
     private func finish() {
@@ -303,14 +357,39 @@ struct LiveSessionView: View {
                     weight: set.weightKg,
                     reps: set.reps,
                     rir: set.rir,
-                    targetReps: exercise.targetReps
+                    targetReps: nil
                 )
                 log.session = session
                 modelContext.insert(log)
             }
         }
         try? modelContext.save()
-        dismiss()
+
+        if controller.exerciseListChanged {
+            showSaveTemplate = true
+        } else {
+            onFinished()
+        }
+    }
+
+    private func rewriteDayTemplate() {
+        guard let day = controller.programDay else { return }
+        for existing in day.exercises {
+            modelContext.delete(existing)
+        }
+        for (index, exercise) in controller.exercises.enumerated() {
+            let item = DayExercise(
+                name: exercise.name,
+                primaryMuscles: exercise.primaryMuscles,
+                secondaryMuscles: exercise.secondaryMuscles,
+                targetSets: 0,
+                targetReps: 0,
+                sortIndex: index
+            )
+            item.day = day
+            modelContext.insert(item)
+        }
+        try? modelContext.save()
     }
 }
 
@@ -318,6 +397,7 @@ struct SessionExerciseCard: View {
     let exercise: DraftExercise
     let unit: WeightUnit
     let accent: Color
+    var focusedField: FocusState<SessionField?>.Binding
     var onLog: (Double, Int, Int) -> Void
     var onDeleteSet: (UUID) -> Void
 
@@ -325,14 +405,25 @@ struct SessionExerciseCard: View {
     @State private var repsInput: Int = 8
     @State private var rirInput: Int = 3
 
+    private var isInputFocused: Bool {
+        switch focusedField.wrappedValue {
+        case .weight(let id), .reps(let id):
+            return id == exercise.id
+        default:
+            return false
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(exercise.name)
                     .font(.headline)
-                Text("Target \(exercise.targetSets)×\(exercise.targetReps)  ·  \(exercise.primaryMuscles.joined(separator: ", "))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if !exercise.primaryMuscles.isEmpty {
+                    Text(exercise.primaryMuscles.joined(separator: ", "))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             ForEach(Array(exercise.logged.enumerated()), id: \.element.id) { index, set in
@@ -363,6 +454,7 @@ struct SessionExerciseCard: View {
                         TextField("0", value: $weightInput, format: .number)
                             .keyboardType(.decimalPad)
                             .textFieldStyle(.roundedBorder)
+                            .focused(focusedField, equals: .weight(exercise.id))
                     }
                     VStack(alignment: .leading) {
                         Text("Reps")
@@ -371,12 +463,15 @@ struct SessionExerciseCard: View {
                         TextField("0", value: $repsInput, format: .number)
                             .keyboardType(.numberPad)
                             .textFieldStyle(.roundedBorder)
+                            .focused(focusedField, equals: .reps(exercise.id))
                     }
                 }
-                Text("RIR")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                RIRSelector(rir: $rirInput, accent: accent)
+                if isInputFocused {
+                    Text("RIR")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    RIRSelector(rir: $rirInput, accent: accent)
+                }
                 Button {
                     let kg = unit.toKg(weightInput)
                     onLog(kg, max(repsInput, 1), rirInput)
@@ -388,13 +483,6 @@ struct SessionExerciseCard: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
-
-            if exercise.targetReps > 0, let last = exercise.logged.last {
-                let ratio = Double(last.reps) / Double(exercise.targetReps)
-                Text("Last set \(Int((ratio * 100).rounded()))% of target reps")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
         }
         .padding(16)
         .opaqueCard()
@@ -403,8 +491,6 @@ struct SessionExerciseCard: View {
                 weightInput = unit.fromKg(last.weightKg)
                 repsInput = last.reps
                 rirInput = last.rir
-            } else if weightInput == 0 {
-                repsInput = max(exercise.targetReps, 1)
             }
         }
     }

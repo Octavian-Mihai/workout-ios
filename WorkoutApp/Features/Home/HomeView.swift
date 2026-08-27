@@ -4,13 +4,26 @@ import SwiftData
 struct HomeView: View {
     @Query(sort: \Program.createdAt) private var programs: [Program]
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
+    @EnvironmentObject private var sessionStore: ActiveSessionStore
+    @EnvironmentObject private var health: HealthKitService
+    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
 
-    @State private var showSession = false
-    @State private var sessionIsEmpty = false
     @State private var showTrends = false
+
+    private var accent: Color {
+        AccentOption(rawValue: accentName)?.color ?? .orange
+    }
 
     private var nextDay: ProgramDay? {
         NextWorkoutResolver.nextDay(activeProgram: programs.first(where: \.isActive), sessions: sessions)
+    }
+
+    private var allSets: [SetLog] {
+        sessions.flatMap(\.sets)
+    }
+
+    private var todayStress: StressEstimate {
+        StressCalculator.todayEstimate(sets: allSets, runs: health.runs)
     }
 
     var body: some View {
@@ -23,8 +36,7 @@ struct HomeView: View {
 
                     if let program = programs.first(where: \.isActive), let day = nextDay {
                         NextWorkoutCard(program: program, day: day) {
-                            sessionIsEmpty = false
-                            showSession = true
+                            sessionStore.start(program: program, programDay: day)
                         }
                     } else {
                         VStack(alignment: .leading, spacing: 8) {
@@ -34,13 +46,13 @@ struct HomeView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(16)
                         .opaqueCard()
                     }
 
                     Button {
-                        sessionIsEmpty = true
-                        showSession = true
+                        sessionStore.start(program: nil, programDay: nil)
                     } label: {
                         Label("Start empty workout", systemImage: "plus.circle.fill")
                             .font(.headline)
@@ -48,17 +60,14 @@ struct HomeView: View {
                             .padding(.vertical, 14)
                     }
                     .buttonStyle(.borderedProminent)
+
+                    TodayStressCard(estimate: todayStress, accent: accent)
                 }
                 .padding(16)
             }
             .background(Theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Home")
-            .navigationDestination(isPresented: $showSession) {
-                LiveSessionView(
-                    program: sessionIsEmpty ? nil : programs.first(where: \.isActive),
-                    programDay: sessionIsEmpty ? nil : nextDay
-                )
-            }
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $showTrends) {
                 TrendsDetailView()
             }
@@ -94,14 +103,8 @@ struct NextWorkoutCard: View {
             } else {
                 VStack(alignment: .leading, spacing: 6) {
                     ForEach(day.orderedExercises.prefix(6)) { exercise in
-                        HStack {
-                            Text(exercise.name)
-                            Spacer()
-                            Text("\(exercise.targetSets)×\(exercise.targetReps)")
-                                .foregroundStyle(.secondary)
-                                .monospacedDigit()
-                        }
-                        .font(.subheadline)
+                        Text(exercise.name)
+                            .font(.subheadline)
                     }
                     if day.orderedExercises.count > 6 {
                         Text("+\(day.orderedExercises.count - 6) more")
@@ -119,6 +122,7 @@ struct NextWorkoutCard: View {
             }
             .buttonStyle(.borderedProminent)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .opaqueCard()
     }

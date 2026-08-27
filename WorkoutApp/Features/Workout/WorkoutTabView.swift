@@ -5,11 +5,10 @@ import Charts
 struct WorkoutTabView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @Query(sort: \Program.createdAt) private var programs: [Program]
+    @EnvironmentObject private var sessionStore: ActiveSessionStore
+    @EnvironmentObject private var health: HealthKitService
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @State private var showEmptySession = false
-    @State private var showProgrammedSession = false
     @State private var showTrends = false
-    @StateObject private var health = HealthKitService()
 
     private var accent: Color {
         AccentOption(rawValue: accentName)?.color ?? .orange
@@ -39,7 +38,7 @@ struct WorkoutTabView: View {
 
                     if let program = activeProgram, let day = nextDay {
                         Button {
-                            showProgrammedSession = true
+                            sessionStore.start(program: program, programDay: day)
                         } label: {
                             Label("Start \(day.name)", systemImage: "play.fill")
                                 .font(.headline)
@@ -51,7 +50,7 @@ struct WorkoutTabView: View {
                     }
 
                     Button {
-                        showEmptySession = true
+                        sessionStore.start(program: nil, programDay: nil)
                     } label: {
                         Label("Start empty workout", systemImage: "plus")
                             .frame(maxWidth: .infinity)
@@ -73,19 +72,8 @@ struct WorkoutTabView: View {
             }
             .background(Theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Workout")
-            .navigationDestination(isPresented: $showEmptySession) {
-                LiveSessionView(program: nil, programDay: nil)
-            }
-            .navigationDestination(isPresented: $showProgrammedSession) {
-                LiveSessionView(program: activeProgram, programDay: nextDay)
-            }
             .navigationDestination(isPresented: $showTrends) {
                 TrendsDetailView()
-            }
-            .task {
-                if health.isAvailable {
-                    await health.requestAndLoad()
-                }
             }
         }
     }
@@ -230,7 +218,7 @@ struct StrengthAnalyticsView: View {
         return VStack(alignment: .leading, spacing: 8) {
             Text("Intensity map")
                 .font(.headline)
-            Text("RIR color plus actual reps / target reps when a target exists.")
+            Text("Average RIR per exercise over the last 7 days.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if rows.isEmpty {
@@ -249,11 +237,6 @@ struct StrengthAnalyticsView: View {
                         }
                         Spacer()
                         RIRBadge(rir: row.avgRIR, accent: accent)
-                        if let ratio = row.ratio {
-                            Text("\(Int((ratio * 100).rounded()))%")
-                                .font(.caption.monospacedDigit())
-                                .foregroundStyle(.secondary)
-                        }
                     }
                     GeometryReader { geo in
                         Capsule()
@@ -296,16 +279,12 @@ struct StrengthAnalyticsView: View {
         let grouped = Dictionary(grouping: recent, by: \.exerciseName)
         return grouped.map { name, items in
             let avgRIR = Int((items.map { Double($0.rir) }.reduce(0, +) / Double(max(items.count, 1))).rounded())
-            let ratios = items.compactMap(\.intensityRatio)
-            let ratio = ratios.isEmpty ? nil : ratios.reduce(0, +) / Double(ratios.count)
-            let rirHeat = max(0, 5.0 - Double(min(avgRIR, 5))) / 5.0
-            let heat = ratio.map { min(1, ($0 * 0.5) + (rirHeat * 0.5)) } ?? rirHeat
+            let heat = max(0, 5.0 - Double(min(avgRIR, 5))) / 5.0
             return IntensityRow(
                 id: name,
                 exercise: name,
                 muscle: items.first?.primaryMuscles.first ?? "—",
                 avgRIR: avgRIR,
-                ratio: ratio,
                 heat: heat
             )
         }
@@ -325,6 +304,5 @@ struct IntensityRow: Identifiable {
     let exercise: String
     let muscle: String
     let avgRIR: Int
-    let ratio: Double?
     let heat: Double
 }

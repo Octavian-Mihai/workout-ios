@@ -160,7 +160,7 @@ final class SetLog {
         weight: Double,
         reps: Int,
         rir: Int,
-        targetReps: Int?,
+        targetReps: Int? = nil,
         timestamp: Date = Date()
     ) {
         self.exerciseName = exerciseName

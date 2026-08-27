@@ -41,11 +41,15 @@ enum Formatters {
         duration(Int(interval.rounded()))
     }
 
-    static func pace(_ minPerKm: Double) -> String {
-        guard minPerKm.isFinite, minPerKm > 0 else { return "—" }
-        let minutes = Int(minPerKm)
-        let seconds = Int((minPerKm - Double(minutes)) * 60)
-        return String(format: "%d:%02d /km", minutes, seconds)
+    static func pace(_ minutesPerUnit: Double, unit: DistanceUnit = .km) -> String {
+        guard minutesPerUnit.isFinite, minutesPerUnit > 0 else { return "—" }
+        let minutes = Int(minutesPerUnit)
+        let seconds = Int((minutesPerUnit - Double(minutes)) * 60)
+        return String(format: "%d:%02d /%@", minutes, seconds, unit.title)
+    }
+
+    static func distance(_ meters: Double, unit: DistanceUnit) -> String {
+        String(format: "%.2f %@", unit.fromMeters(meters), unit.title)
     }
 
     static func compactNumber(_ value: Double) -> String {

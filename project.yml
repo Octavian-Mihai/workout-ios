@@ -36,6 +36,8 @@ targets:
         SWIFT_EMIT_LOC_STRINGS: YES
     dependencies:
       - sdk: HealthKit.framework
+      - sdk: MapKit.framework
+      - sdk: CoreLocation.framework
     entitlements:
       path: WorkoutApp.entitlements
       properties:

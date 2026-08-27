@@ -1,4 +1,5 @@
 import SwiftUI
+import Charts
 
 struct StressLegendView: View {
     var compact: Bool = false
@@ -74,6 +75,73 @@ struct StressMeter: View {
             Text(band.rawValue)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+        }
+    }
+}
+
+struct TodayStressCard: View {
+    let estimate: StressEstimate
+    var showSplit: Bool = false
+    var trend: [DailyStress] = []
+    let accent: Color
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            StressMeter(title: "Today’s stress", score: estimate.total, accent: accent)
+            if showSplit {
+                HStack(spacing: 16) {
+                    splitMeter(title: "Lift", score: estimate.lift)
+                    splitMeter(title: "Run", score: estimate.run)
+                }
+            }
+            if trend.count >= 2 {
+                Chart(trend) { point in
+                    LineMark(
+                        x: .value("Day", point.date),
+                        y: .value("Stress", point.total)
+                    )
+                    .foregroundStyle(accent)
+                    PointMark(
+                        x: .value("Day", point.date),
+                        y: .value("Stress", point.total)
+                    )
+                    .foregroundStyle(accent)
+                }
+                .frame(height: 120)
+                .chartYScale(domain: 0...100)
+                .chartXAxis {
+                    AxisMarks(values: .stride(by: .day)) { _ in
+                        AxisGridLine()
+                        AxisValueLabel(format: .dateTime.weekday(.narrow))
+                    }
+                }
+            }
+            StressLegendView(compact: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .opaqueCard()
+    }
+
+    private func splitMeter(title: String, score: Double) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text("\(Int(score.rounded()))")
+                    .font(.caption.monospacedDigit().weight(.semibold))
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Theme.mutedFill)
+                    Capsule()
+                        .fill(accent)
+                        .frame(width: max(4, geo.size.width * min(max(score / 100, 0), 1)))
+                }
+            }
+            .frame(height: 6)
         }
     }
 }
