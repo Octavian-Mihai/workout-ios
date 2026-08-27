@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import UIKit
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
@@ -14,12 +15,23 @@ struct SettingsView: View {
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
+    @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
+    @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
+    @AppStorage(EquipmentSettings.ftIncrementKgKey) private var ftIncrementKg = EquipmentSettings.defaultFTKg
+    @AppStorage(EquipmentSettings.ftIncrementLbKey) private var ftIncrementLb = EquipmentSettings.defaultFTLb
     @State private var showDeleteConfirm = false
+    @State private var showImporter = false
+    @State private var dataError: String?
+    @State private var showDataError = false
 
     private var versionLabel: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         return "\(version) (\(build))"
+    }
+
+    private var unit: WeightUnit {
+        WeightUnit(rawValue: weightUnitRaw) ?? .kg
     }
 
     var body: some View {
@@ -98,6 +110,39 @@ struct SettingsView: View {
                     Toggle("Rest-timer haptics", isOn: $restTimerHaptics)
                 }
 
+                Section("Equipment") {
+                    if unit == .kg {
+                        Stepper(
+                            "Barbell bar \(Formatters.trimmedNumber(barbellBarKg)) kg",
+                            value: $barbellBarKg,
+                            in: 5...40,
+                            step: 2.5
+                        )
+                        Stepper(
+                            "FT increment \(Formatters.trimmedNumber(ftIncrementKg)) kg",
+                            value: $ftIncrementKg,
+                            in: 0.5...20,
+                            step: 0.5
+                        )
+                    } else {
+                        Stepper(
+                            "Barbell bar \(Formatters.trimmedNumber(barbellBarLb)) lb",
+                            value: $barbellBarLb,
+                            in: 15...70,
+                            step: 5
+                        )
+                        Stepper(
+                            "FT increment \(Formatters.trimmedNumber(ftIncrementLb)) lb",
+                            value: $ftIncrementLb,
+                            in: 1...45,
+                            step: 2.5
+                        )
+                    }
+                    Text("The plate calculator subtracts bar or functional-trainer base weight, then shows plates per side.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 Section("Body weight") {
                     NavigationLink("Weight log") {
                         BodyWeightLogView()
@@ -105,7 +150,7 @@ struct SettingsView: View {
                 }
 
                 Section("Health") {
-                    Text("Running is read from Apple Health. Strength sessions stay in this app and are not written to HealthKit.")
+                    Text("Running is read from Apple Health. Body weight is read from and saved to Health. Strength sessions stay in this app and are not written to HealthKit.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button("Re-request HealthKit access") {
@@ -125,6 +170,19 @@ struct SettingsView: View {
                 }
 
                 Section("Data") {
+                    ShareLink(
+                        item: WorkoutBackupService.make(
+                            programs: programs,
+                            sessions: sessions,
+                            weights: weightEntries
+                        ),
+                        preview: SharePreview("Workout data")
+                    ) {
+                        Label("Export workout data", systemImage: "square.and.arrow.up")
+                    }
+                    Button("Import workout data") {
+                        showImporter = true
+                    }
                     Button("Delete all local data", role: .destructive) {
                         showDeleteConfirm = true
                     }
@@ -149,6 +207,46 @@ struct SettingsView: View {
             } message: {
                 Text("This removes programs, workout history, and body-weight entries from this device. Apple Health data is not deleted.")
             }
+            .alert("Couldn’t import workout data", isPresented: $showDataError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(dataError ?? "The file could not be read.")
+            }
+            .fileImporter(
+                isPresented: $showImporter,
+                allowedContentTypes: [.json],
+                allowsMultipleSelection: false
+            ) { result in
+                switch result {
+                case .success(let urls):
+                    guard let url = urls.first else { return }
+                    importWorkoutData(from: url)
+                case .failure(let error):
+                    dataError = error.localizedDescription
+                    showDataError = true
+                }
+            }
+        }
+    }
+
+    private func importWorkoutData(from url: URL) {
+        let access = url.startAccessingSecurityScopedResource()
+        defer {
+            if access { url.stopAccessingSecurityScopedResource() }
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            let backup = try WorkoutBackupService.decode(data)
+            try WorkoutBackupService.importBackup(
+                backup,
+                context: modelContext,
+                existingPrograms: programs,
+                existingSessions: sessions,
+                existingWeights: weightEntries
+            )
+        } catch {
+            dataError = error.localizedDescription
+            showDataError = true
         }
     }
 
@@ -169,7 +267,7 @@ struct PrivacyInfoView: View {
                     .foregroundStyle(.secondary)
             }
             Section("Apple Health") {
-                Text("Running workouts, GPS routes, distance, and heart rate are read only. This app never writes strength sessions or other data to HealthKit.")
+                Text("Running workouts, GPS routes, distance, and heart rate are read only. Body weight is read from and written to Apple Health when you use the weight log. This app never writes strength sessions to HealthKit.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -186,6 +284,7 @@ struct PrivacyInfoView: View {
 
 struct BodyWeightLogView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var health: HealthKitService
     @Query(sort: \BodyWeightEntry.date, order: .reverse) private var entries: [BodyWeightEntry]
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @State private var showAdd = false
@@ -228,8 +327,35 @@ struct BodyWeightLogView: View {
                     let entry = BodyWeightEntry(date: date, kilograms: kg)
                     modelContext.insert(entry)
                     try? modelContext.save()
+                    Task { await health.saveBodyMass(kilograms: kg, date: date) }
                 }
             }
+        }
+        .task {
+            await mergeHealthKitWeights()
+        }
+    }
+
+    private func mergeHealthKitWeights() async {
+        do {
+            let samples = try await health.fetchBodyMass()
+            let calendar = Calendar.current
+            var added = false
+            for sample in samples {
+                let exists = entries.contains { entry in
+                    calendar.isDate(entry.date, inSameDayAs: sample.date)
+                        && abs(entry.kilograms - sample.kilograms) < 0.05
+                }
+                if !exists {
+                    modelContext.insert(BodyWeightEntry(date: sample.date, kilograms: sample.kilograms))
+                    added = true
+                }
+            }
+            if added {
+                try modelContext.save()
+            }
+        } catch {
+            health.lastError = error.localizedDescription
         }
     }
 }

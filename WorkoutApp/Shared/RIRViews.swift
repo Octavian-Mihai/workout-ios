@@ -3,9 +3,10 @@ import SwiftUI
 struct RIRSelector: View {
     @Binding var rir: Int
     var accent: Color
+    var compact: Bool = false
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: compact ? 4 : 6) {
             ForEach(0...5, id: \.self) { value in
                 Button {
                     rir = value
@@ -13,7 +14,7 @@ struct RIRSelector: View {
                     Text(RIRPalette.display(value))
                         .font(.caption.weight(.semibold).monospacedDigit())
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
+                        .padding(.vertical, compact ? 6 : 8)
                         .background(
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                                 .fill(rir == value ? RIRPalette.color(for: value, accent: accent) : Theme.mutedFill)

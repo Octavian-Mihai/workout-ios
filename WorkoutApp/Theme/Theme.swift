@@ -69,9 +69,12 @@ enum WeightUnit: String, CaseIterable, Identifiable {
         self == .kg ? value : value / 2.2046226218
     }
 
-    func format(_ kg: Double, decimals: Int = 1) -> String {
-        let value = fromKg(kg)
-        return String(format: "%.\(decimals)f %@", value, rawValue)
+    func format(_ kg: Double, decimals: Int = 2) -> String {
+        "\(formatNumber(kg, decimals: decimals)) \(rawValue)"
+    }
+
+    func formatNumber(_ kg: Double, decimals: Int = 2) -> String {
+        Formatters.trimmedNumber(fromKg(kg), decimals: decimals)
     }
 }
 

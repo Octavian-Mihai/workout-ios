@@ -38,6 +38,8 @@ targets:
       - sdk: HealthKit.framework
       - sdk: MapKit.framework
       - sdk: CoreLocation.framework
+      - sdk: AudioToolbox.framework
+      - sdk: AVFoundation.framework
     entitlements:
       path: WorkoutApp.entitlements
       properties:

@@ -5,23 +5,54 @@ struct YearDayCell: Identifiable {
     let id: Date
     let date: Date
     let inYear: Bool
-    let volume: Double
-    let workoutCount: Int
+    let hasLift: Bool
+    let hasRun: Bool
+
+    var kind: YearActivityKind {
+        switch (hasLift, hasRun) {
+        case (true, true): return .both
+        case (true, false): return .weights
+        case (false, true): return .running
+        case (false, false): return .none
+        }
+    }
+}
+
+enum YearActivityKind {
+    case none, weights, running, both
+
+    var color: Color? {
+        switch self {
+        case .none: return nil
+        case .weights: return YearActivityPalette.weights
+        case .running: return YearActivityPalette.running
+        case .both: return YearActivityPalette.both
+        }
+    }
+}
+
+enum YearActivityPalette {
+    static let weights = Color(red: 0x6E / 255, green: 0xA8 / 255, blue: 0xFE / 255)
+    static let running = Color(red: 0xFE / 255, green: 0xE4 / 255, blue: 0x40 / 255)
+    static let both = Color(red: 0xFF / 255, green: 0x6B / 255, blue: 0x7A / 255)
 }
 
 enum YearGridBuilder {
-    static func cells(year: Int, sessions: [WorkoutSession], calendar: Calendar = .current) -> [YearDayCell] {
+    static func cells(
+        year: Int,
+        sessions: [WorkoutSession],
+        runDates: Set<Date>,
+        calendar: Calendar = .current
+    ) -> [YearDayCell] {
         var cal = calendar
         cal.firstWeekday = 1
 
-        var volumeByDay: [Date: Double] = [:]
-        var countByDay: [Date: Int] = [:]
+        var liftDays: Set<Date> = []
         for session in sessions where session.endDate != nil {
-            let day = cal.startOfDay(for: session.startDate)
-            let vol = session.sets.reduce(0.0) { $0 + $1.volume }
-            volumeByDay[day, default: 0] += vol
-            countByDay[day, default: 0] += 1
+            liftDays.insert(cal.startOfDay(for: session.startDate))
         }
+
+        let runDays = Set(runDates.map { cal.startOfDay(for: $0) })
 
         guard let jan1 = cal.date(from: DateComponents(year: year, month: 1, day: 1)) else { return [] }
         let weekday = cal.component(.weekday, from: jan1)
@@ -39,8 +70,8 @@ enum YearGridBuilder {
                     id: date,
                     date: date,
                     inYear: inYear,
-                    volume: inYear ? (volumeByDay[day] ?? 0) : 0,
-                    workoutCount: inYear ? (countByDay[day] ?? 0) : 0
+                    hasLift: inYear && liftDays.contains(day),
+                    hasRun: inYear && runDays.contains(day)
                 )
             )
         }
@@ -50,6 +81,7 @@ enum YearGridBuilder {
 
 struct YearActivityGrid: View {
     let sessions: [WorkoutSession]
+    var runDates: Set<Date> = []
     var year: Int = Calendar.current.component(.year, from: Date())
     var onSelect: ((Date) -> Void)? = nil
 
@@ -58,22 +90,20 @@ struct YearActivityGrid: View {
     private static let monthLetters = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]
 
     private var cells: [YearDayCell] {
-        YearGridBuilder.cells(year: year, sessions: sessions, calendar: calendar)
-    }
-
-    private var maxVolume: Double {
-        max(cells.map(\.volume).max() ?? 0, 1)
+        YearGridBuilder.cells(year: year, sessions: sessions, runDates: runDates, calendar: calendar)
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("\(year)")
+                Text(verbatim: String(year))
                     .font(.headline)
                 Spacer()
-                Text("Activity")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 8) {
+                    legendLabel("Weights", color: YearActivityPalette.weights)
+                    legendLabel("Running", color: YearActivityPalette.running)
+                    legendLabel("Both", color: YearActivityPalette.both)
+                }
             }
 
             GeometryReader { geo in
@@ -110,6 +140,17 @@ struct YearActivityGrid: View {
         .opaqueCard()
     }
 
+    private func legendLabel(_ title: String, color: Color) -> some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(color)
+                .frame(width: 7, height: 7)
+            Text(title)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+    }
+
     private func monthLabels(cell: CGFloat, spacing: CGFloat) -> some View {
         let labels = monthStarts()
         return HStack(spacing: 0) {
@@ -144,10 +185,8 @@ struct YearActivityGrid: View {
 
     @ViewBuilder
     private func dayDot(_ cell: YearDayCell, size: CGFloat) -> some View {
-        let filled = cell.inYear && cell.workoutCount > 0
-        let intensity = filled ? 0.28 + 0.72 * min(cell.volume / maxVolume, 1) : 0
         Circle()
-            .fill(filled ? Color.accentColor.opacity(intensity) : (cell.inYear ? Theme.mutedFill : Color.clear))
+            .fill(cell.kind.color ?? (cell.inYear ? Theme.mutedFill : Color.clear))
             .frame(width: size, height: size)
             .overlay {
                 if cell.inYear && calendar.isDateInToday(cell.date) {

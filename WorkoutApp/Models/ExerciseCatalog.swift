@@ -44,6 +44,45 @@ enum ExerciseCategory: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable {
+    case barbell
+    case functionalTrainer
+    case other
+
+    var id: String { rawValue }
+
+    static func infer(from name: String) -> ExerciseEquipment {
+        let n = name.lowercased()
+        if n.contains("functional trainer")
+            || n.contains("cable")
+            || n.contains("lat pulldown")
+            || n.contains("pulldown")
+            || n.contains("face pull")
+            || n.contains("pushdown") {
+            return .functionalTrainer
+        }
+        if n.contains("dumbbell") || n.contains("kettlebell") || n.contains("machine") {
+            return .other
+        }
+        if n.contains("barbell")
+            || n.contains("deadlift")
+            || n.contains("ohp")
+            || n.contains("overhead press")
+            || n.contains("hip thrust")
+            || n.contains("bench") {
+            return .barbell
+        }
+        if n.contains("squat"),
+           !n.contains("split"),
+           !n.contains("hack"),
+           !n.contains("goblet"),
+           !n.contains("pistol") {
+            return .barbell
+        }
+        return .other
+    }
+}
+
 struct CatalogExercise: Identifiable, Hashable {
     let id: String
     let name: String
@@ -51,9 +90,28 @@ struct CatalogExercise: Identifiable, Hashable {
     let primary: [MuscleGroup]
     let secondary: [MuscleGroup]
     let cues: String
+    let equipment: ExerciseEquipment
 
     var primaryNames: [String] { primary.map(\.rawValue) }
     var secondaryNames: [String] { secondary.map(\.rawValue) }
+
+    init(
+        id: String,
+        name: String,
+        category: ExerciseCategory,
+        primary: [MuscleGroup],
+        secondary: [MuscleGroup],
+        cues: String,
+        equipment: ExerciseEquipment = .other
+    ) {
+        self.id = id
+        self.name = name
+        self.category = category
+        self.primary = primary
+        self.secondary = secondary
+        self.cues = cues
+        self.equipment = equipment
+    }
 }
 
 enum ExerciseCatalog {
@@ -64,7 +122,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.quads, .glutes],
             secondary: [.adductors, .core, .lowerBack],
-            cues: "Brace before you descend. Sit between the hips, keep mid-foot pressure, and stand without collapsing the chest."
+            cues: "Brace before you descend. Sit between the hips, keep mid-foot pressure, and stand without collapsing the chest.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "front-squat",
@@ -72,7 +131,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.quads, .core],
             secondary: [.glutes, .upperBack],
-            cues: "Elbows high, torso tall. The bar stays over mid-foot as you sit down and drive up."
+            cues: "Elbows high, torso tall. The bar stays over mid-foot as you sit down and drive up.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "leg-press",
@@ -120,7 +180,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.hamstrings, .glutes],
             secondary: [.lowerBack, .traps],
-            cues: "Soft knees, push the hips back, bar close to the legs. Stop when the hamstrings run out of range."
+            cues: "Soft knees, push the hips back, bar close to the legs. Stop when the hamstrings run out of range.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "deadlift",
@@ -128,7 +189,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.hamstrings, .glutes, .lowerBack],
             secondary: [.quads, .traps, .lats, .core],
-            cues: "Wedge in, brace, and push the floor away. The bar stays over mid-foot from floor to lockout."
+            cues: "Wedge in, brace, and push the floor away. The bar stays over mid-foot from floor to lockout.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "hip-thrust",
@@ -136,7 +198,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.glutes],
             secondary: [.hamstrings, .core],
-            cues: "Chin tucked, ribs down. Finish with a hard glute squeeze and a flat torso at the top."
+            cues: "Chin tucked, ribs down. Finish with a hard glute squeeze and a flat torso at the top.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "calf-raise",
@@ -152,7 +215,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.chest],
             secondary: [.triceps, .frontDelts],
-            cues: "Plant the feet, set the scaps, and lower to the chest with wrists stacked. Press back toward the rack."
+            cues: "Plant the feet, set the scaps, and lower to the chest with wrists stacked. Press back toward the rack.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "incline-dumbbell-press",
@@ -192,7 +256,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.frontDelts],
             secondary: [.triceps, .traps, .core],
-            cues: "Glutes tight, ribs stacked. Bar path close to the face; head through at the top."
+            cues: "Glutes tight, ribs stacked. Bar path close to the face; head through at the top.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "dumbbell-shoulder-press",
@@ -216,7 +281,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.chest],
             secondary: [.frontDelts],
-            cues: "Soft elbows, sweep in an arc, and squeeze without shrugging."
+            cues: "Soft elbows, sweep in an arc, and squeeze without shrugging.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "tricep-pushdown",
@@ -224,7 +290,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.triceps],
             secondary: [],
-            cues: "Elbows pinned by the sides. Full extension, then a controlled return."
+            cues: "Elbows pinned by the sides. Full extension, then a controlled return.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "skull-crusher",
@@ -240,7 +307,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats, .upperBack],
             secondary: [.biceps, .rearDelts, .lowerBack],
-            cues: "Hinge, brace, and row to the lower ribs. Don’t turn it into a shrug or a deadlift."
+            cues: "Hinge, brace, and row to the lower ribs. Don’t turn it into a shrug or a deadlift.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "seated-cable-row",
@@ -248,7 +316,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats, .upperBack],
             secondary: [.biceps, .rearDelts],
-            cues: "Start from a long arm. Pull elbows back, pause, then reach forward without rounding hard."
+            cues: "Start from a long arm. Pull elbows back, pause, then reach forward without rounding hard.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "lat-pulldown",
@@ -256,7 +325,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats],
             secondary: [.biceps, .upperBack],
-            cues: "Set the scaps first. Pull the bar to the upper chest, elbows down, not behind the body."
+            cues: "Set the scaps first. Pull the bar to the upper chest, elbows down, not behind the body.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "pull-up",
@@ -280,7 +350,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.rearDelts, .traps],
             secondary: [.upperBack],
-            cues: "Pull toward the face, externally rotate at the end, and keep the ribs down."
+            cues: "Pull toward the face, externally rotate at the end, and keep the ribs down.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "barbell-curl",
@@ -288,7 +359,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps],
             secondary: [.forearms],
-            cues: "Elbows close. No swing. Squeeze at the top and lower for 2–3 seconds."
+            cues: "Elbows close. No swing. Squeeze at the top and lower for 2–3 seconds.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "dumbbell-curl",
@@ -328,7 +400,8 @@ enum ExerciseCatalog {
             category: .core,
             primary: [.core],
             secondary: [],
-            cues: "Round the spine to shorten the abs. Hips stay relatively still."
+            cues: "Round the spine to shorten the abs. Hips stay relatively still.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "ab-wheel",
@@ -350,5 +423,9 @@ enum ExerciseCatalog {
     static func match(name: String) -> CatalogExercise? {
         let key = name.lowercased()
         return all.first { $0.name.lowercased() == key }
+    }
+
+    static func equipment(forName name: String) -> ExerciseEquipment {
+        match(name: name)?.equipment ?? ExerciseEquipment.infer(from: name)
     }
 }

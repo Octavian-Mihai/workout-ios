@@ -30,7 +30,7 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    YearActivityGrid(sessions: sessions) { _ in
+                    YearActivityGrid(sessions: sessions, runDates: health.activityRunDays) { _ in
                         showTrends = true
                     }
 
@@ -61,7 +61,7 @@ struct HomeView: View {
                     }
                     .buttonStyle(.borderedProminent)
 
-                    TodayStressCard(estimate: todayStress, accent: accent)
+                    TodayStressCard(estimate: todayStress, accent: accent, compact: true)
                 }
                 .padding(16)
             }

@@ -61,4 +61,15 @@ enum Formatters {
         }
         return String(format: "%.1f", value)
     }
+
+    static func trimmedNumber(_ value: Double, decimals: Int = 2) -> String {
+        let raw = String(format: "%.\(max(decimals, 0))f", value)
+        guard let dot = raw.firstIndex(of: ".") else { return raw }
+        var fraction = String(raw[raw.index(after: dot)...])
+        let integer = String(raw[..<dot])
+        while fraction.last == "0" {
+            fraction.removeLast()
+        }
+        return fraction.isEmpty ? integer : "\(integer).\(fraction)"
+    }
 }

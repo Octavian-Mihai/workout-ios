@@ -24,7 +24,7 @@ struct RootTabView: View {
                 .tabItem { Label("Running", systemImage: "figure.run") }
 
             InfoView()
-                .tabItem { Label("Info", systemImage: "book.fill") }
+                .tabItem { Label("Info", systemImage: "chart.bar.fill") }
 
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
@@ -111,5 +111,10 @@ struct ResumeSessionPill: View {
         }
         .buttonStyle(.plain)
         .sensoryFeedback(.success, trigger: hapticsEnabled ? controller.restCompletedPulse : 0)
+        .onChange(of: controller.restCompletedPulse) { _, pulse in
+            if pulse > 0 {
+                RestTimerSound.play()
+            }
+        }
     }
 }

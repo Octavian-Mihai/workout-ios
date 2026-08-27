@@ -55,12 +55,22 @@ struct RunDetailData {
 final class HealthKitService: ObservableObject {
     @Published var isAuthorized = false
     @Published var runs: [RunningWorkout] = []
+    @Published var runDays: Set<Date> = []
     @Published var lastError: String?
     @Published var isLoading = false
 
     private let store = HKHealthStore()
 
     var isAvailable: Bool { HKHealthStore.isHealthDataAvailable() }
+
+    var activityRunDays: Set<Date> {
+        var days = runDays
+        let cal = Calendar.current
+        for run in runs {
+            days.insert(cal.startOfDay(for: run.start))
+        }
+        return days
+    }
 
     func requestAndLoad() async {
         guard isAvailable else {
@@ -75,6 +85,7 @@ final class HealthKitService: ObservableObject {
             try await requestAuthorization()
             isAuthorized = true
             try await loadRuns()
+            try await loadRunDays()
         } catch {
             lastError = error.localizedDescription
         }
@@ -82,7 +93,8 @@ final class HealthKitService: ObservableObject {
 
     func requestAuthorization() async throws {
         guard let distance = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning),
-              let heartRate = HKQuantityType.quantityType(forIdentifier: .heartRate) else {
+              let heartRate = HKQuantityType.quantityType(forIdentifier: .heartRate),
+              let bodyMass = HKQuantityType.quantityType(forIdentifier: .bodyMass) else {
             throw HealthKitServiceError.missingTypes
         }
 
@@ -90,9 +102,77 @@ final class HealthKitService: ObservableObject {
             HKObjectType.workoutType(),
             distance,
             heartRate,
-            HKSeriesType.workoutRoute()
+            HKSeriesType.workoutRoute(),
+            bodyMass
         ]
-        try await store.requestAuthorization(toShare: Set<HKSampleType>(), read: read)
+        try await store.requestAuthorization(toShare: [bodyMass], read: read)
+    }
+
+    func loadRunDays(year: Int? = nil) async throws {
+        let cal = Calendar.current
+        let y = year ?? cal.component(.year, from: Date())
+        guard let start = cal.date(from: DateComponents(year: y, month: 1, day: 1)),
+              let end = cal.date(from: DateComponents(year: y + 1, month: 1, day: 1)) else {
+            runDays = []
+            return
+        }
+
+        let workouts: [HKWorkout] = try await withCheckedThrowingContinuation { continuation in
+            let workoutPred = HKQuery.predicateForWorkouts(with: .running)
+            let datePred = HKQuery.predicateForSamples(withStart: start, end: end, options: .strictStartDate)
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [workoutPred, datePred])
+            let query = HKSampleQuery(
+                sampleType: .workoutType(),
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: nil
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: (samples as? [HKWorkout]) ?? [])
+            }
+            store.execute(query)
+        }
+        runDays = Set(workouts.map { cal.startOfDay(for: $0.startDate) })
+    }
+
+    func fetchBodyMass(limit: Int = 100) async throws -> [(date: Date, kilograms: Double)] {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .bodyMass) else {
+            throw HealthKitServiceError.missingTypes
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+            let query = HKSampleQuery(
+                sampleType: type,
+                predicate: nil,
+                limit: limit,
+                sortDescriptors: [sort]
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                let unit = HKUnit.gramUnit(with: .kilo)
+                let result = (samples as? [HKQuantitySample] ?? []).map {
+                    (date: $0.startDate, kilograms: $0.quantity.doubleValue(for: unit))
+                }
+                continuation.resume(returning: result)
+            }
+            store.execute(query)
+        }
+    }
+
+    func saveBodyMass(kilograms: Double, date: Date) async {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .bodyMass) else { return }
+        let quantity = HKQuantity(unit: .gramUnit(with: .kilo), doubleValue: kilograms)
+        let sample = HKQuantitySample(type: type, quantity: quantity, start: date, end: date)
+        do {
+            try await store.save(sample)
+        } catch {
+            lastError = error.localizedDescription
+        }
     }
 
     func loadRuns(limit: Int = 50) async throws {
@@ -253,6 +333,6 @@ enum HealthKitServiceError: LocalizedError {
     case missingTypes
 
     var errorDescription: String? {
-        "Could not read running types from Health."
+        "Could not read Health types for running or body weight."
     }
 }

@@ -6,13 +6,6 @@ struct WorkoutTabView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @Query(sort: \Program.createdAt) private var programs: [Program]
     @EnvironmentObject private var sessionStore: ActiveSessionStore
-    @EnvironmentObject private var health: HealthKitService
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @State private var showTrends = false
-
-    private var accent: Color {
-        AccentOption(rawValue: accentName)?.color ?? .orange
-    }
 
     private var activeProgram: Program? {
         programs.first(where: \.isActive)
@@ -20,14 +13,6 @@ struct WorkoutTabView: View {
 
     private var nextDay: ProgramDay? {
         NextWorkoutResolver.nextDay(activeProgram: activeProgram, sessions: sessions)
-    }
-
-    private var allSets: [SetLog] {
-        sessions.flatMap(\.sets)
-    }
-
-    private var weeklyRunStress: Double {
-        StressCalculator.averageRunStress(health.runs)
     }
 
     var body: some View {
@@ -58,23 +43,12 @@ struct WorkoutTabView: View {
                     }
                     .buttonStyle(.bordered)
 
-                    YearActivityGrid(sessions: sessions) { _ in
-                        showTrends = true
-                    }
-
-                    StrengthAnalyticsView(
-                        sets: allSets,
-                        runStress: weeklyRunStress,
-                        accent: accent
-                    )
+                    LearnLinksView()
                 }
                 .padding(16)
             }
             .background(Theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Workout")
-            .navigationDestination(isPresented: $showTrends) {
-                TrendsDetailView()
-            }
         }
     }
 }

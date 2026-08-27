@@ -35,18 +35,29 @@ struct InfoView: View {
                         accent: accent
                     )
 
-                    Text("Learn")
-                        .font(.headline)
-                        .padding(.top, 4)
-                    articleLink("Workout 101", destination: Workout101View())
-                    articleLink("Movements 101", destination: Movements101View())
-                    articleLink("Anatomy 101", destination: Anatomy101View())
-                    articleLink("Training insight", destination: TrainingInsightView())
+                    StrengthAnalyticsView(
+                        sets: allSets,
+                        runStress: StressCalculator.averageRunStress(health.runs),
+                        accent: accent
+                    )
                 }
                 .padding(16)
             }
             .background(Theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Info")
+        }
+    }
+}
+
+struct LearnLinksView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Learn")
+                .font(.title3.weight(.bold))
+            articleLink("Workout 101", destination: Workout101View())
+            articleLink("Movements 101", destination: Movements101View())
+            articleLink("Anatomy 101", destination: Anatomy101View())
+            articleLink("Training insight", destination: TrainingInsightView())
         }
     }
 

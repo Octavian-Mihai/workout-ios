@@ -41,6 +41,25 @@ struct DraftSet: Identifiable {
 enum SessionField: Hashable {
     case weight(UUID)
     case reps(UUID)
+
+    var exerciseID: UUID {
+        switch self {
+        case .weight(let id), .reps(let id):
+            return id
+        }
+    }
+
+    var isWeight: Bool {
+        if case .weight = self { return true }
+        return false
+    }
+}
+
+struct ExerciseDraft: Equatable {
+    var weightText: String = ""
+    var repsText: String = "8"
+    var rir: Int = 3
+    var didSeed = false
 }
 
 @MainActor
@@ -51,6 +70,8 @@ final class SessionController: ObservableObject {
     @Published var timerRunning = false
     @Published var restCompletedPulse = 0
     @Published var startedAt: Date
+    @Published var focusedField: SessionField?
+    @Published var drafts: [UUID: ExerciseDraft] = [:]
 
     let program: Program?
     let programDay: ProgramDay?
@@ -66,19 +87,23 @@ final class SessionController: ObservableObject {
         self.restDuration = defaultRest
         self.restRemaining = defaultRest
         self.startedAt = Date()
+        self.focusedField = nil
         if let day = programDay {
             let ordered = day.orderedExercises
             self.originalNames = ordered.map(\.name)
-            self.exercises = ordered.map { item in
+            let list = ordered.map { item in
                 DraftExercise(
                     name: item.name,
                     primaryMuscles: item.primaryMuscles,
                     secondaryMuscles: item.secondaryMuscles
                 )
             }
+            self.exercises = list
+            self.drafts = Dictionary(uniqueKeysWithValues: list.map { ($0.id, ExerciseDraft()) })
         } else {
             self.originalNames = []
             self.exercises = []
+            self.drafts = [:]
         }
     }
 
@@ -139,23 +164,33 @@ final class SessionController: ObservableObject {
     }
 
     func addExercise(_ catalog: CatalogExercise) {
-        exercises.append(
-            DraftExercise(
-                name: catalog.name,
-                primaryMuscles: catalog.primaryNames,
-                secondaryMuscles: catalog.secondaryNames
-            )
+        let exercise = DraftExercise(
+            name: catalog.name,
+            primaryMuscles: catalog.primaryNames,
+            secondaryMuscles: catalog.secondaryNames
         )
+        exercises.append(exercise)
+        drafts[exercise.id] = ExerciseDraft()
     }
 
     func addCustom(name: String, primary: [String], secondary: [String]) {
-        exercises.append(
-            DraftExercise(
-                name: name,
-                primaryMuscles: primary,
-                secondaryMuscles: secondary
-            )
+        let exercise = DraftExercise(
+            name: name,
+            primaryMuscles: primary,
+            secondaryMuscles: secondary
         )
+        exercises.append(exercise)
+        drafts[exercise.id] = ExerciseDraft()
+    }
+
+    func draft(for id: UUID) -> ExerciseDraft {
+        drafts[id] ?? ExerciseDraft()
+    }
+
+    func updateDraft(for id: UUID, _ body: (inout ExerciseDraft) -> Void) {
+        var value = drafts[id] ?? ExerciseDraft()
+        body(&value)
+        drafts[id] = value
     }
 }
 
@@ -166,6 +201,7 @@ struct LiveSessionView: View {
     var onDiscard: () -> Void
 
     @Environment(\.modelContext) private var modelContext
+    @Query(sort: \WorkoutSession.startDate, order: .reverse) private var pastSessions: [WorkoutSession]
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
@@ -174,7 +210,6 @@ struct LiveSessionView: View {
     @State private var showAddExercise = false
     @State private var showSaveTemplate = false
     @State private var showDiscardConfirm = false
-    @FocusState private var focusedField: SessionField?
 
     private var accent: Color {
         AccentOption(rawValue: accentName)?.color ?? .orange
@@ -199,13 +234,11 @@ struct LiveSessionView: View {
                     }
                     ForEach(controller.exercises) { exercise in
                         SessionExerciseCard(
+                            controller: controller,
                             exercise: exercise,
                             unit: unit,
                             accent: accent,
-                            focusedField: $focusedField,
-                            onLog: { weightKg, reps, rir in
-                                controller.logSet(exerciseID: exercise.id, weightKg: weightKg, reps: reps, rir: rir)
-                            },
+                            previousSets: previousSets(for: exercise.name),
                             onDeleteSet: { setID in
                                 controller.removeSet(exerciseID: exercise.id, setID: setID)
                             }
@@ -236,9 +269,11 @@ struct LiveSessionView: View {
                 }
                 .padding(16)
             }
-            .scrollDismissesKeyboard(.interactively)
         }
         .background(Theme.groupedBackground.ignoresSafeArea())
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            sessionKeyboard
+        }
         .navigationTitle(controller.programDay?.name ?? "Empty workout")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -252,10 +287,9 @@ struct LiveSessionView: View {
                     Image(systemName: "plus")
                 }
             }
-            ToolbarItemGroup(placement: .keyboard) {
-                Spacer()
-                Button("Done") { focusedField = nil }
-            }
+        }
+        .onDisappear {
+            controller.focusedField = nil
         }
         .sheet(isPresented: $showAddExercise) {
             NavigationStack {
@@ -284,6 +318,53 @@ struct LiveSessionView: View {
             Text("Logged sets will be lost.")
         }
         .sensoryFeedback(.success, trigger: restTimerHaptics ? controller.restCompletedPulse : 0)
+        .onChange(of: controller.restCompletedPulse) { _, pulse in
+            if pulse > 0 {
+                RestTimerSound.play()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var sessionKeyboard: some View {
+        if let field = controller.focusedField {
+            let id = field.exerciseID
+            let exerciseName = controller.exercises.first(where: { $0.id == id })?.name ?? ""
+            SessionInputKeyboard(
+                mode: field.isWeight ? .weight : .reps,
+                accent: accent,
+                unit: unit,
+                equipment: ExerciseCatalog.equipment(forName: exerciseName),
+                weightText: Binding(
+                    get: { controller.draft(for: id).weightText },
+                    set: { newValue in controller.updateDraft(for: id) { $0.weightText = newValue } }
+                ),
+                repsText: Binding(
+                    get: { controller.draft(for: id).repsText },
+                    set: { newValue in controller.updateDraft(for: id) { $0.repsText = newValue } }
+                ),
+                rir: Binding(
+                    get: { controller.draft(for: id).rir },
+                    set: { newValue in controller.updateDraft(for: id) { $0.rir = newValue } }
+                ),
+                onDismiss: { controller.focusedField = nil },
+                onNext: { controller.focusedField = .reps(id) },
+                onCompleteSet: { completeSet(exerciseID: id) }
+            )
+        }
+    }
+
+    private func completeSet(exerciseID: UUID) {
+        let draft = controller.draft(for: exerciseID)
+        let weight = Double(draft.weightText) ?? 0
+        let reps = Int(draft.repsText) ?? 0
+        controller.logSet(
+            exerciseID: exerciseID,
+            weightKg: unit.toKg(weight),
+            reps: max(reps, 1),
+            rir: draft.rir
+        )
+        controller.focusedField = nil
     }
 
     private var compactRestTimer: some View {
@@ -332,6 +413,16 @@ struct LiveSessionView: View {
         .overlay(alignment: .bottom) {
             Divider()
         }
+    }
+
+    private func previousSets(for name: String) -> [SetLog] {
+        for session in pastSessions where session.endDate != nil {
+            let sets = session.orderedSets.filter {
+                $0.exerciseName.compare(name, options: .caseInsensitive) == .orderedSame
+            }
+            if !sets.isEmpty { return sets }
+        }
+        return []
     }
 
     private func finish() {
@@ -394,104 +485,147 @@ struct LiveSessionView: View {
 }
 
 struct SessionExerciseCard: View {
+    @ObservedObject var controller: SessionController
     let exercise: DraftExercise
     let unit: WeightUnit
     let accent: Color
-    var focusedField: FocusState<SessionField?>.Binding
-    var onLog: (Double, Int, Int) -> Void
+    let previousSets: [SetLog]
     var onDeleteSet: (UUID) -> Void
 
-    @State private var weightInput: Double = 0
-    @State private var repsInput: Int = 8
-    @State private var rirInput: Int = 3
+    private var live: DraftExercise {
+        controller.exercises.first(where: { $0.id == exercise.id }) ?? exercise
+    }
 
-    private var isInputFocused: Bool {
-        switch focusedField.wrappedValue {
-        case .weight(let id), .reps(let id):
-            return id == exercise.id
-        default:
-            return false
-        }
+    private var draft: ExerciseDraft {
+        controller.draft(for: exercise.id)
+    }
+
+    private var weightFocused: Bool {
+        controller.focusedField == .weight(exercise.id)
+    }
+
+    private var repsFocused: Bool {
+        controller.focusedField == .reps(exercise.id)
+    }
+
+    private var previousLine: String? {
+        guard !previousSets.isEmpty else { return nil }
+        let sets = previousSets.map { set in
+            "\(unit.formatNumber(set.weight)) / \(set.reps) RIR \(RIRPalette.display(set.rir))"
+        }.joined(separator: "  ·  ")
+        return "Last  \(sets)"
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(exercise.name)
+                Text(live.name)
                     .font(.headline)
-                if !exercise.primaryMuscles.isEmpty {
-                    Text(exercise.primaryMuscles.joined(separator: ", "))
+                if !live.primaryMuscles.isEmpty {
+                    Text(live.primaryMuscles.joined(separator: ", "))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                if let previousLine {
+                    Text(previousLine)
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                }
             }
 
-            ForEach(Array(exercise.logged.enumerated()), id: \.element.id) { index, set in
-                HStack {
-                    Text("Set \(index + 1)")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(unit.format(set.weightKg))
-                    Text("× \(set.reps)")
-                    RIRBadge(rir: set.rir, accent: accent)
-                    Button {
-                        onDeleteSet(set.id)
-                    } label: {
-                        Image(systemName: "trash")
-                            .foregroundStyle(.secondary)
+            if !live.logged.isEmpty {
+                List {
+                    ForEach(Array(live.logged.enumerated()), id: \.element.id) { index, set in
+                        loggedRow(index: index, set: set)
+                            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    onDeleteSet(set.id)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                     }
-                    .buttonStyle(.plain)
                 }
-                .font(.subheadline.monospacedDigit())
+                .listStyle(.plain)
+                .scrollDisabled(true)
+                .scrollContentBackground(.hidden)
+                .frame(height: CGFloat(live.logged.count) * 44)
             }
 
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Weight (\(unit.rawValue))")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        TextField("0", value: $weightInput, format: .number)
-                            .keyboardType(.decimalPad)
-                            .textFieldStyle(.roundedBorder)
-                            .focused(focusedField, equals: .weight(exercise.id))
-                    }
-                    VStack(alignment: .leading) {
-                        Text("Reps")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        TextField("0", value: $repsInput, format: .number)
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(.roundedBorder)
-                            .focused(focusedField, equals: .reps(exercise.id))
-                    }
+            HStack(spacing: 10) {
+                inputField(
+                    title: "Weight (\(unit.rawValue))",
+                    value: draft.weightText.isEmpty ? "0" : draft.weightText,
+                    focused: weightFocused
+                ) {
+                    controller.focusedField = .weight(exercise.id)
                 }
-                if isInputFocused {
-                    Text("RIR")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    RIRSelector(rir: $rirInput, accent: accent)
+                inputField(
+                    title: "Reps",
+                    value: draft.repsText.isEmpty ? "0" : draft.repsText,
+                    focused: repsFocused
+                ) {
+                    controller.focusedField = .reps(exercise.id)
                 }
-                Button {
-                    let kg = unit.toKg(weightInput)
-                    onLog(kg, max(repsInput, 1), rirInput)
-                } label: {
-                    Text("Log set")
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                }
-                .buttonStyle(.borderedProminent)
             }
         }
         .padding(16)
         .opaqueCard()
-        .onAppear {
-            if weightInput == 0, let last = exercise.logged.last {
-                weightInput = unit.fromKg(last.weightKg)
-                repsInput = last.reps
-                rirInput = last.rir
+        .onAppear(perform: seedDraftIfNeeded)
+    }
+
+    private func inputField(title: String, value: String, focused: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(value)
+                    .font(.title3.monospacedDigit().weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: 36, alignment: .leading)
+                    .padding(.horizontal, 10)
+                    .background(Theme.mutedFill)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .strokeBorder(focused ? accent : Color.clear, lineWidth: 2)
+                    )
+                    .foregroundStyle(.primary)
             }
         }
+        .buttonStyle(.plain)
+    }
+
+    private func loggedRow(index: Int, set: DraftSet) -> some View {
+        HStack {
+            Text("Set \(index + 1)")
+                .foregroundStyle(.secondary)
+            Spacer()
+            Text(unit.format(set.weightKg))
+            Text("× \(set.reps)")
+            RIRBadge(rir: set.rir, accent: accent)
+        }
+        .font(.subheadline.monospacedDigit())
+    }
+
+    private func seedDraftIfNeeded() {
+        var current = controller.draft(for: exercise.id)
+        guard !current.didSeed else { return }
+        if let last = live.logged.last {
+            current.weightText = unit.formatNumber(last.weightKg)
+            current.repsText = "\(last.reps)"
+            current.rir = last.rir
+        } else if let last = previousSets.last {
+            current.weightText = unit.formatNumber(last.weight)
+            current.repsText = "\(last.reps)"
+            current.rir = last.rir
+        }
+        current.didSeed = true
+        controller.drafts[exercise.id] = current
     }
 }
