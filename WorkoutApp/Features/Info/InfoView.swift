@@ -5,9 +5,10 @@ struct InfoView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @EnvironmentObject private var health: HealthKitService
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
 
     private var accent: Color {
-        AccentOption(rawValue: accentName)?.color ?? .orange
+        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
     }
 
     private var allSets: [SetLog] {

@@ -54,12 +54,13 @@ struct RunningFilters: Equatable {
 struct RunningView: View {
     @EnvironmentObject private var health: HealthKitService
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
     @State private var filters = RunningFilters()
     @State private var showFilters = false
 
     private var accent: Color {
-        AccentOption(rawValue: accentName)?.color ?? .orange
+        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
     }
 
     private var unit: DistanceUnit {

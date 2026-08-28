@@ -7,11 +7,12 @@ struct HomeView: View {
     @EnvironmentObject private var sessionStore: ActiveSessionStore
     @EnvironmentObject private var health: HealthKitService
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
 
     @State private var showTrends = false
 
     private var accent: Color {
-        AccentOption(rawValue: accentName)?.color ?? .orange
+        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
     }
 
     private var nextDay: ProgramDay? {

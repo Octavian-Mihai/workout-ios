@@ -1,14 +1,15 @@
 import SwiftUI
 
+import SwiftUI
+import UIKit
+
 enum AccentOption: String, CaseIterable, Identifiable {
     case orange, blue, teal, green, purple, indigo, red
 
     var id: String { rawValue }
 
-    /// Options shown in the accent picker (coral removed).
-    static var selectable: [AccentOption] {
-        allCases
-    }
+    /// Five presets shown in Settings (columns 1–4 and 6; column 5 is custom).
+    static let presets: [AccentOption] = [.orange, .blue, .green, .purple, .red]
 
     static func resolved(rawValue: String) -> AccentOption {
         if rawValue == "coral" { return .orange }
@@ -37,6 +38,45 @@ enum AccentOption: String, CaseIterable, Identifiable {
         case .indigo: return Color(red: 0.35, green: 0.40, blue: 0.85)
         case .red: return Color(red: 0.90, green: 0.22, blue: 0.25)
         }
+    }
+}
+
+enum AccentTheme {
+    static let customName = "custom"
+    static let customHexKey = "customAccentHex"
+    static let defaultCustomHex = "FA6B2E"
+
+    static func color(accentName: String, customHex: String) -> Color {
+        if accentName == customName {
+            return Color(hex: customHex.isEmpty ? defaultCustomHex : customHex) ?? AccentOption.orange.color
+        }
+        return AccentOption.resolved(rawValue: accentName).color
+    }
+
+    static func isCustom(_ accentName: String) -> Bool {
+        accentName == customName
+    }
+}
+
+extension Color {
+    init?(hex: String) {
+        var cleaned = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        if cleaned.hasPrefix("#") { cleaned.removeFirst() }
+        guard cleaned.count == 6, let value = UInt64(cleaned, radix: 16) else { return nil }
+        let r = Double((value >> 16) & 0xFF) / 255
+        let g = Double((value >> 8) & 0xFF) / 255
+        let b = Double(value & 0xFF) / 255
+        self.init(red: r, green: g, blue: b)
+    }
+
+    func toHex() -> String {
+        let ui = UIColor(self)
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        ui.getRed(&r, green: &g, blue: &b, alpha: &a)
+        return String(format: "%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
     }
 }
 

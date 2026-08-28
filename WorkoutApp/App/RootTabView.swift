@@ -6,10 +6,11 @@ struct RootTabView: View {
     @StateObject private var health = HealthKitService()
     @Environment(\.modelContext) private var modelContext
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
 
     private var accent: Color {
-        AccentOption(rawValue: accentName)?.color ?? .orange
+        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
     }
 
     var body: some View {

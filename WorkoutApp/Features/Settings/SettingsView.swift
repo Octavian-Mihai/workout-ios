@@ -10,6 +10,7 @@ struct SettingsView: View {
     @Query private var sessions: [WorkoutSession]
     @Query private var weightEntries: [BodyWeightEntry]
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
     @AppStorage("appearanceMode") private var appearanceMode = AppearanceMode.system.rawValue
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
@@ -38,7 +39,7 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section("Accent") {
-                    AccentPickerDashboard(accentName: $accentName)
+                    AccentPickerDashboard(accentName: $accentName, customHex: $customAccentHex)
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 }

@@ -229,6 +229,7 @@ struct LiveSessionView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var pastSessions: [WorkoutSession]
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
@@ -238,7 +239,7 @@ struct LiveSessionView: View {
     @State private var showDiscardConfirm = false
 
     private var accent: Color {
-        AccentOption.resolved(rawValue: accentName).color
+        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
     }
 
     private var unit: WeightUnit {
@@ -659,7 +660,7 @@ struct SessionExerciseCard: View {
             Text("Set")
                 .frame(width: 32, alignment: .center)
             Text("Last")
-                .frame(width: 88, alignment: .leading)
+                .frame(width: 88, alignment: .center)
             Text(unit.rawValue)
                 .frame(maxWidth: .infinity, alignment: .center)
             Text("Reps")
@@ -689,14 +690,14 @@ private struct SetGridRow: View {
     var body: some View {
         HStack(spacing: 8) {
             Text("\(setNumber)")
-                .font(.subheadline.weight(.semibold).monospacedDigit())
+                .font(.body.weight(.bold).monospacedDigit())
                 .foregroundStyle(.secondary)
                 .frame(width: 32, height: 32)
                 .background(Theme.mutedFill)
                 .clipShape(Circle())
 
             previousCell
-                .frame(width: 88, alignment: .leading)
+                .frame(width: 88, alignment: .center)
 
             if isPreview {
                 inputCell(
@@ -716,8 +717,7 @@ private struct SetGridRow: View {
                     .frame(maxWidth: .infinity)
             }
         }
-        .font(.subheadline.monospacedDigit())
-        .padding(.trailing, 10)
+        .padding(.trailing, 14)
     }
 
     @ViewBuilder
@@ -725,11 +725,11 @@ private struct SetGridRow: View {
         if let previousSet {
             HStack(spacing: 4) {
                 Text("\(unit.formatNumber(previousSet.weight)) × \(previousSet.reps)")
-                    .font(.caption.monospacedDigit())
+                    .font(.subheadline.monospacedDigit())
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
-                RIRDot(rir: previousSet.rir, size: 12)
+                RIRDot(rir: previousSet.rir, size: 14)
             }
         } else {
             Text("—")
@@ -741,7 +741,7 @@ private struct SetGridRow: View {
     private func inputCell(value: String, placeholder: String, focused: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(value.isEmpty ? placeholder : value)
-                .font(.subheadline.monospacedDigit().weight(.semibold))
+                .font(.body.monospacedDigit().weight(.semibold))
                 .foregroundStyle(value.isEmpty ? Color.secondary : Color.primary)
                 .frame(maxWidth: .infinity, minHeight: 36)
                 .background(Theme.mutedFill)
@@ -756,7 +756,7 @@ private struct SetGridRow: View {
 
     private func valueCell(_ value: String) -> some View {
         Text(value)
-            .font(.subheadline.monospacedDigit().weight(.medium))
+            .font(.body.monospacedDigit().weight(.semibold))
             .frame(maxWidth: .infinity, minHeight: 36)
             .background(Theme.mutedFill.opacity(0.5))
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -764,31 +764,31 @@ private struct SetGridRow: View {
 
     @ViewBuilder
     private func repsCell(isInput: Bool) -> some View {
-        let content = Group {
-            if isInput {
-                Button(action: onRepsTap) {
-                    repsFieldContent(isInput: true)
+        ZStack(alignment: .bottomTrailing) {
+            Group {
+                if isInput {
+                    Button(action: onRepsTap) {
+                        repsFieldContent(isInput: true)
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    repsFieldContent(isInput: false)
                 }
-                .buttonStyle(.plain)
-            } else {
-                repsFieldContent(isInput: false)
             }
-        }
 
-        content
-            .overlay(alignment: .bottomTrailing) {
-                RIRDot(rir: rir, size: 14)
-                    .offset(x: 4, y: 4)
-                    .zIndex(1)
-            }
+            RIRDot(rir: rir, size: 24)
+                .offset(x: 5, y: 5)
+                .zIndex(10)
+                .allowsHitTesting(false)
+        }
     }
 
     private func repsFieldContent(isInput: Bool) -> some View {
         Text(repsText.isEmpty && isInput ? "—" : repsText)
-            .font(.subheadline.monospacedDigit().weight(isInput ? .semibold : .medium))
+            .font(.body.monospacedDigit().weight(.semibold))
             .foregroundStyle(repsText.isEmpty && isInput ? Color.secondary : Color.primary)
             .frame(maxWidth: .infinity, minHeight: 36)
-            .padding(.trailing, 10)
+            .padding(.trailing, 12)
             .background(isInput ? Theme.mutedFill : Theme.mutedFill.opacity(0.5))
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay(

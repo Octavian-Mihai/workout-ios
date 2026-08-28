@@ -5,9 +5,10 @@ import Charts
 struct TrendsDetailView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
 
     private var accent: Color {
-        AccentOption(rawValue: accentName)?.color ?? .orange
+        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
     }
 
     private var finished: [WorkoutSession] {

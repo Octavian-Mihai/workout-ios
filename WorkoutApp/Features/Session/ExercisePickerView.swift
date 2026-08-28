@@ -6,6 +6,7 @@ struct ExercisePickerView: View {
 
     @Environment(\.dismiss) private var dismiss
     @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
+    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
     @State private var query = ""
     @State private var showCustom = false
     @State private var categoryFilter: ExerciseCategory?
@@ -13,7 +14,7 @@ struct ExercisePickerView: View {
     @State private var muscleFilter: MuscleGroup?
 
     private var accent: Color {
-        AccentOption(rawValue: accentName)?.color ?? .orange
+        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
     }
 
     private var filtered: [CatalogExercise] {
