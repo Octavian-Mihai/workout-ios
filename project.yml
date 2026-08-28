@@ -44,3 +44,17 @@ targets:
       path: WorkoutApp.entitlements
       properties:
         com.apple.developer.healthkit: true
+  WorkoutAppUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: WorkoutAppUITests
+    dependencies:
+      - target: WorkoutApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.WorkoutAppUITests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: WorkoutApp
+        CODE_SIGNING_ALLOWED: NO

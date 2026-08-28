@@ -36,6 +36,7 @@
 		BA32FB8F306D86088103BE44 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63E3739AA33506CD6ACC198 /* CoreLocation.framework */; };
 		BA6176842BD3AF3499330966 /* OneRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFE7227737392FE8C66197A /* OneRM.swift */; };
 		D1F8FA0371166F1BD51CEF27 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38CDA0471BEA3C57336CD4A9 /* AudioToolbox.framework */; };
+		D344CB9BB61D6CC6212B4A94 /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C729BCFE81109650DA6485 /* ScreenshotTests.swift */; };
 		D957929D068F86E6C3C63835 /* ExerciseCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8ABF239EC4A2FE587DCA3C /* ExerciseCatalog.swift */; };
 		DD5B39393F4A3FE0FF1E24A7 /* ActiveSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A0C7C5FA17D8A21CD6B30A /* ActiveSessionStore.swift */; };
 		DF675EE4BA32DF76B4FACC30 /* TrendsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848A234CC9E65450975D6E2D /* TrendsDetailView.swift */; };
@@ -45,6 +46,16 @@
 		FF1E727C6D979C9AABA1B451 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DF1935B97A864F04647A291 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		206370E242511B86B7E11336 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 60EA2621795256BF0325FBC9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F188A5381D91802A1CFB359E;
+			remoteInfo = WorkoutApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		06E683E77D158F57A447DF81 /* WorkoutApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutApp.swift; sourceTree = "<group>"; };
 		14C43064353C47412352616A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -53,9 +64,10 @@
 		2C334BF3622A98A9F7979AF5 /* ProgramEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramEditorView.swift; sourceTree = "<group>"; };
 		2CE795723010CE3E2D66B7A0 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		345E7F362E9745AB51F78A99 /* ExercisePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePickerView.swift; sourceTree = "<group>"; };
+		35C729BCFE81109650DA6485 /* ScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
 		37446E4DDD7163176DFFAFC8 /* RunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningView.swift; sourceTree = "<group>"; };
 		38CDA0471BEA3C57336CD4A9 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		422D09EB801CE5BA0EDFBA28 /* Workout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Workout.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		422D09EB801CE5BA0EDFBA28 /* WorkoutApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WorkoutApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45807FC427FAE0EEE6D1465B /* LiveSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionView.swift; sourceTree = "<group>"; };
 		4DFE7227737392FE8C66197A /* OneRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneRM.swift; sourceTree = "<group>"; };
 		5D20C5D59A01F6E785F367D3 /* RestTimerSound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerSound.swift; sourceTree = "<group>"; };
@@ -73,6 +85,7 @@
 		B92E529C838DBC34454DC60A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		BBF17773585342C27C170F89 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		D2A70CEAD22F0780B6C8A6B0 /* WorkoutTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTabView.swift; sourceTree = "<group>"; };
+		D8D186FCB83C27ABE5B36777 /* WorkoutAppUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WorkoutAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC9F0772CA154A2089BC2FC8 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		E28E37477937D37BFD762CD8 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		E63E3739AA33506CD6ACC198 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -129,7 +142,8 @@
 		1A4FDE67EAE450623CB0160D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				422D09EB801CE5BA0EDFBA28 /* Workout.app */,
+				422D09EB801CE5BA0EDFBA28 /* WorkoutApp.app */,
+				D8D186FCB83C27ABE5B36777 /* WorkoutAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -219,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				2A0855B4E2B9D687EEBDF6C0 /* WorkoutApp */,
+				E88556D062811818B31AEC36 /* WorkoutAppUITests */,
 				D3F882F02AD0788B14306193 /* Frameworks */,
 				1A4FDE67EAE450623CB0160D /* Products */,
 			);
@@ -280,9 +295,35 @@
 			path = Home;
 			sourceTree = "<group>";
 		};
+		E88556D062811818B31AEC36 /* WorkoutAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				35C729BCFE81109650DA6485 /* ScreenshotTests.swift */,
+			);
+			path = WorkoutAppUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F029B2FA34DC1EB5DD3E4624 /* WorkoutAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 67293C6A4CA01E8A16636CE7 /* Build configuration list for PBXNativeTarget "WorkoutAppUITests" */;
+			buildPhases = (
+				2815D2C73F4DDA2808076D4C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				841C874D953B4CF9DEC23FA9 /* PBXTargetDependency */,
+			);
+			name = WorkoutAppUITests;
+			packageProductDependencies = (
+			);
+			productName = WorkoutAppUITests;
+			productReference = D8D186FCB83C27ABE5B36777 /* WorkoutAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		F188A5381D91802A1CFB359E /* WorkoutApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3804A6874859320A16FCC96C /* Build configuration list for PBXNativeTarget "WorkoutApp" */;
@@ -299,7 +340,7 @@
 			packageProductDependencies = (
 			);
 			productName = WorkoutApp;
-			productReference = 422D09EB801CE5BA0EDFBA28 /* Workout.app */;
+			productReference = 422D09EB801CE5BA0EDFBA28 /* WorkoutApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -311,6 +352,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					F029B2FA34DC1EB5DD3E4624 = {
+						TestTargetID = F188A5381D91802A1CFB359E;
+					};
 					F188A5381D91802A1CFB359E = {
 						ProvisioningStyle = Automatic;
 					};
@@ -331,6 +375,7 @@
 			projectRoot = "";
 			targets = (
 				F188A5381D91802A1CFB359E /* WorkoutApp */,
+				F029B2FA34DC1EB5DD3E4624 /* WorkoutAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -347,6 +392,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2815D2C73F4DDA2808076D4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D344CB9BB61D6CC6212B4A94 /* ScreenshotTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5EBF8347CA2961C598328ED0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -385,6 +438,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		841C874D953B4CF9DEC23FA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F188A5381D91802A1CFB359E /* WorkoutApp */;
+			targetProxy = 206370E242511B86B7E11336 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0488BFC6683F34AB94ECA7F0 /* Release */ = {
@@ -445,6 +506,25 @@
 			};
 			name = Release;
 		};
+		31CD1E9915D4BBC1BB0EC36A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.WorkoutAppUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = WorkoutApp;
+			};
+			name = Debug;
+		};
 		4209FFBD4267CD291475C47E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -454,7 +534,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LFUJ5F964X;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -482,7 +561,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LFUJ5F964X;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -500,6 +578,25 @@
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
+		};
+		9E3F331CC553F894807C9772 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.WorkoutAppUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = WorkoutApp;
+			};
+			name = Release;
 		};
 		E625AC6F19C362C0AB7F4470 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -583,6 +680,15 @@
 			buildConfigurations = (
 				E625AC6F19C362C0AB7F4470 /* Debug */,
 				0488BFC6683F34AB94ECA7F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		67293C6A4CA01E8A16636CE7 /* Build configuration list for PBXNativeTarget "WorkoutAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31CD1E9915D4BBC1BB0EC36A /* Debug */,
+				9E3F331CC553F894807C9772 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
