@@ -48,6 +48,7 @@ struct AccentPickerDashboard: View {
         }
         .buttonStyle(.plain)
         .frame(maxWidth: .infinity)
+        .accessibilityLabel(option.title)
     }
 
     private var customButton: some View {

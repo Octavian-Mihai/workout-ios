@@ -118,6 +118,8 @@ workout_ios/
 
 ## Regenerate README screenshots
 
+Captures **dark appearance** and **red accent** automatically.
+
 ```bash
 xcodegen generate
 xcodebuild test \
