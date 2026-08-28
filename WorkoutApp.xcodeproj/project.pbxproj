@@ -12,6 +12,7 @@
 		142677DFEC3133725373AFCE /* StressCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BBBB891955C99D0710309 /* StressCalculator.swift */; };
 		196F1450A890A2CB67846459 /* ProgramEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C334BF3622A98A9F7979AF5 /* ProgramEditorView.swift */; };
 		1EEF59C9A150CF0E7D9C5A75 /* SessionInputKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A65C59D2BEDAAC917E4111B /* SessionInputKeyboard.swift */; };
+		2363FE82BB839706124D2492 /* AccentPickerDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5989C63462884A38BA52973 /* AccentPickerDashboard.swift */; };
 		28607DF074E5B2E88FC39427 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9F0772CA154A2089BC2FC8 /* Theme.swift */; };
 		2AC541EED8F83771C7C13E19 /* WorkoutBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA34CFD9F56446CE052A02E /* WorkoutBackup.swift */; };
 		2CD05DF0BE34C4716D2B344B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14C43064353C47412352616A /* Assets.xcassets */; };
@@ -28,6 +29,7 @@
 		74CC9775A63F913ED8B64C1A /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CD87A072FA195D910510F1 /* Formatters.swift */; };
 		7792F81F651D35625B072F07 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE795723010CE3E2D66B7A0 /* HomeView.swift */; };
 		7BB265CB166E4FEA1310C42F /* YearActivityGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0D3AF107B52635A65CBF39 /* YearActivityGrid.swift */; };
+		89E5A03AE106B3BDFC22F31C /* ExerciseHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7B88BDDF3C24E9D0C08C /* ExerciseHistoryView.swift */; };
 		9E9096F991394FB062D39558 /* StressLegendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E675DAC054C94F4C6C7B6BD4 /* StressLegendView.swift */; };
 		A5EC5FA89BA60A158334805A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2BB7618F4EEBFB393C2BBB1 /* AVFoundation.framework */; };
 		B58967691B6E240732718DA7 /* RunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37446E4DDD7163176DFFAFC8 /* RunningView.swift */; };
@@ -62,6 +64,7 @@
 		7A65C59D2BEDAAC917E4111B /* SessionInputKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInputKeyboard.swift; sourceTree = "<group>"; };
 		7BA34CFD9F56446CE052A02E /* WorkoutBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutBackup.swift; sourceTree = "<group>"; };
 		848A234CC9E65450975D6E2D /* TrendsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsDetailView.swift; sourceTree = "<group>"; };
+		86FC7B88BDDF3C24E9D0C08C /* ExerciseHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseHistoryView.swift; sourceTree = "<group>"; };
 		9DF1935B97A864F04647A291 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A71F8466EF41AAAC1BB6BD49 /* RIRViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RIRViews.swift; sourceTree = "<group>"; };
 		A7273A2B966C0A2C4FF8A8F0 /* PlateCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateCalculator.swift; sourceTree = "<group>"; };
@@ -78,6 +81,7 @@
 		F045F3A11D4A17D7666C6F20 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		F2BB7618F4EEBFB393C2BBB1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		F2BCB761E3BD2F6ECD74CA83 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		F5989C63462884A38BA52973 /* AccentPickerDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentPickerDashboard.swift; sourceTree = "<group>"; };
 		FA6BBBB891955C99D0710309 /* StressCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressCalculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -156,6 +160,7 @@
 		394C01B6B6EA73E441D8928F /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				F5989C63462884A38BA52973 /* AccentPickerDashboard.swift */,
 				B92E529C838DBC34454DC60A /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -259,6 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				70A0C7C5FA17D8A21CD6B30A /* ActiveSessionStore.swift */,
+				86FC7B88BDDF3C24E9D0C08C /* ExerciseHistoryView.swift */,
 				345E7F362E9745AB51F78A99 /* ExercisePickerView.swift */,
 				45807FC427FAE0EEE6D1465B /* LiveSessionView.swift */,
 				7A65C59D2BEDAAC917E4111B /* SessionInputKeyboard.swift */,
@@ -345,8 +351,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2363FE82BB839706124D2492 /* AccentPickerDashboard.swift in Sources */,
 				DD5B39393F4A3FE0FF1E24A7 /* ActiveSessionStore.swift in Sources */,
 				D957929D068F86E6C3C63835 /* ExerciseCatalog.swift in Sources */,
+				89E5A03AE106B3BDFC22F31C /* ExerciseHistoryView.swift in Sources */,
 				3931B0615727B114C0B83BD8 /* ExercisePickerView.swift in Sources */,
 				74CC9775A63F913ED8B64C1A /* Formatters.swift in Sources */,
 				5BE49F321E06281CEE1D69AC /* HealthKitService.swift in Sources */,

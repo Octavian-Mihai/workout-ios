@@ -41,3 +41,20 @@ struct RIRBadge: View {
             .clipShape(Capsule())
     }
 }
+
+struct RIRDot: View {
+    let rir: Int
+    var size: CGFloat = 14
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(RIRPalette.color(for: rir, accent: .clear))
+                .frame(width: size, height: size)
+            Text(RIRPalette.display(rir))
+                .font(.system(size: size * 0.45, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .minimumScaleFactor(0.5)
+        }
+    }
+}

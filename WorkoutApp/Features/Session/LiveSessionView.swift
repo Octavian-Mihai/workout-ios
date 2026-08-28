@@ -158,6 +158,32 @@ final class SessionController: ObservableObject {
         startRest()
     }
 
+    func ensureDraft(for exerciseID: UUID, unit: WeightUnit, previousSets: [SetLog]) {
+        guard let exercise = exercises.first(where: { $0.id == exerciseID }) else { return }
+        var draft = drafts[exerciseID] ?? ExerciseDraft()
+        if !draft.didSeed {
+            if let last = exercise.logged.last {
+                draft.weightText = unit.formatNumber(last.weightKg)
+                draft.repsText = "\(last.reps)"
+                draft.rir = last.rir
+            } else if let last = previousSets.last {
+                draft.weightText = unit.formatNumber(last.weight)
+                draft.repsText = "\(last.reps)"
+                draft.rir = last.rir
+            }
+            draft.didSeed = true
+        }
+        drafts[exerciseID] = draft
+    }
+
+    func carryDraftForward(exerciseID: UUID, weightText: String, repsText: String, rir: Int) {
+        updateDraft(for: exerciseID) { draft in
+            draft.weightText = weightText
+            draft.repsText = repsText
+            draft.rir = rir
+        }
+    }
+
     func removeSet(exerciseID: UUID, setID: UUID) {
         guard let index = exercises.firstIndex(where: { $0.id == exerciseID }) else { return }
         exercises[index].logged.removeAll { $0.id == setID }
@@ -212,7 +238,7 @@ struct LiveSessionView: View {
     @State private var showDiscardConfirm = false
 
     private var accent: Color {
-        AccentOption(rawValue: accentName)?.color ?? .orange
+        AccentOption.resolved(rawValue: accentName).color
     }
 
     private var unit: WeightUnit {
@@ -356,14 +382,19 @@ struct LiveSessionView: View {
 
     private func completeSet(exerciseID: UUID) {
         let draft = controller.draft(for: exerciseID)
-        let weight = Double(draft.weightText) ?? 0
-        let reps = Int(draft.repsText) ?? 0
+        let weightText = draft.weightText
+        let repsText = draft.repsText
+        let weight = Double(weightText) ?? 0
+        let reps = Int(repsText) ?? 0
+        let rir = draft.rir
+        guard weight > 0, reps > 0 else { return }
         controller.logSet(
             exerciseID: exerciseID,
             weightKg: unit.toKg(weight),
-            reps: max(reps, 1),
-            rir: draft.rir
+            reps: reps,
+            rir: rir
         )
+        controller.carryDraftForward(exerciseID: exerciseID, weightText: weightText, repsText: repsText, rir: rir)
         controller.focusedField = nil
     }
 
@@ -492,6 +523,8 @@ struct SessionExerciseCard: View {
     let previousSets: [SetLog]
     var onDeleteSet: (UUID) -> Void
 
+    @State private var showHistory = false
+
     private var live: DraftExercise {
         controller.exercises.first(where: { $0.id == exercise.id }) ?? exercise
     }
@@ -508,124 +541,265 @@ struct SessionExerciseCard: View {
         controller.focusedField == .reps(exercise.id)
     }
 
-    private var previousLine: String? {
-        guard !previousSets.isEmpty else { return nil }
-        let sets = previousSets.map { set in
-            "\(unit.formatNumber(set.weight)) / \(set.reps) RIR \(RIRPalette.display(set.rir))"
-        }.joined(separator: "  ·  ")
-        return "Last  \(sets)"
+    private var nextSetNumber: Int {
+        live.logged.count + 1
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(live.name)
-                    .font(.headline)
-                if !live.primaryMuscles.isEmpty {
-                    Text(live.primaryMuscles.joined(separator: ", "))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(live.name)
+                        .font(.headline)
+                    if !live.primaryMuscles.isEmpty {
+                        Text(live.primaryMuscles.joined(separator: ", "))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
-                if let previousLine {
-                    Text(previousLine)
-                        .font(.caption2.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+                Spacer(minLength: 8)
+                Button {
+                    showHistory = true
+                } label: {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(accent)
+                        .frame(width: 32, height: 32)
+                        .background(accent.opacity(0.12))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Exercise history and 1RM")
             }
+
+            setColumnHeader
 
             if !live.logged.isEmpty {
                 List {
                     ForEach(Array(live.logged.enumerated()), id: \.element.id) { index, set in
-                        loggedRow(index: index, set: set)
-                            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button(role: .destructive) {
-                                    onDeleteSet(set.id)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
+                        SetGridRow(
+                            setNumber: index + 1,
+                            previousSet: previousSets[safe: index],
+                            weightText: unit.formatNumber(set.weightKg),
+                            repsText: "\(set.reps)",
+                            rir: set.rir,
+                            unit: unit,
+                            accent: accent,
+                            isPreview: false,
+                            weightFocused: false,
+                            repsFocused: false,
+                            onWeightTap: {},
+                            onRepsTap: {}
+                        )
+                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 4))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                onDeleteSet(set.id)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
                             }
+                        }
                     }
                 }
                 .listStyle(.plain)
                 .scrollDisabled(true)
                 .scrollContentBackground(.hidden)
-                .frame(height: CGFloat(live.logged.count) * 44)
+                .frame(height: CGFloat(live.logged.count) * 52)
             }
 
-            HStack(spacing: 10) {
-                inputField(
-                    title: "Weight (\(unit.rawValue))",
-                    value: draft.weightText.isEmpty ? "0" : draft.weightText,
-                    focused: weightFocused
-                ) {
+            SetGridRow(
+                setNumber: nextSetNumber,
+                previousSet: previousSets[safe: live.logged.count],
+                weightText: draft.weightText.isEmpty ? "" : draft.weightText,
+                repsText: draft.repsText.isEmpty ? "" : draft.repsText,
+                rir: draft.rir,
+                unit: unit,
+                accent: accent,
+                isPreview: true,
+                weightFocused: weightFocused,
+                repsFocused: repsFocused,
+                onWeightTap: {
+                    controller.ensureDraft(for: exercise.id, unit: unit, previousSets: previousSets)
                     controller.focusedField = .weight(exercise.id)
-                }
-                inputField(
-                    title: "Reps",
-                    value: draft.repsText.isEmpty ? "0" : draft.repsText,
-                    focused: repsFocused
-                ) {
+                },
+                onRepsTap: {
+                    controller.ensureDraft(for: exercise.id, unit: unit, previousSets: previousSets)
                     controller.focusedField = .reps(exercise.id)
                 }
-            }
+            )
+            .padding(.horizontal, 6)
+            .padding(.vertical, 4)
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(accent.opacity(weightFocused || repsFocused ? 0.18 : 0.10))
+            )
+            .opacity(weightFocused || repsFocused ? 1 : 0.72)
         }
         .padding(16)
         .opaqueCard()
-        .onAppear(perform: seedDraftIfNeeded)
+        .onAppear {
+            controller.ensureDraft(for: exercise.id, unit: unit, previousSets: previousSets)
+        }
+        .sheet(isPresented: $showHistory) {
+            NavigationStack {
+                ExerciseHistoryView(exerciseName: live.name, unit: unit, accent: accent)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Close") { showHistory = false }
+                        }
+                    }
+            }
+        }
     }
 
-    private func inputField(title: String, value: String, focused: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(value)
-                    .font(.title3.monospacedDigit().weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: 36, alignment: .leading)
-                    .padding(.horizontal, 10)
-                    .background(Theme.mutedFill)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .strokeBorder(focused ? accent : Color.clear, lineWidth: 2)
-                    )
-                    .foregroundStyle(.primary)
+    private var setColumnHeader: some View {
+        HStack(spacing: 8) {
+            Text("Set")
+                .frame(width: 32, alignment: .center)
+            Text("Last")
+                .frame(width: 88, alignment: .leading)
+            Text(unit.rawValue)
+                .frame(maxWidth: .infinity, alignment: .center)
+            Text("Reps")
+                .frame(maxWidth: .infinity, alignment: .center)
+        }
+        .font(.caption2.weight(.semibold))
+        .foregroundStyle(.tertiary)
+        .textCase(.uppercase)
+        .padding(.trailing, 10)
+    }
+}
+
+private struct SetGridRow: View {
+    let setNumber: Int
+    let previousSet: SetLog?
+    let weightText: String
+    let repsText: String
+    let rir: Int
+    let unit: WeightUnit
+    let accent: Color
+    let isPreview: Bool
+    let weightFocused: Bool
+    let repsFocused: Bool
+    var onWeightTap: () -> Void
+    var onRepsTap: () -> Void
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text("\(setNumber)")
+                .font(.subheadline.weight(.semibold).monospacedDigit())
+                .foregroundStyle(.secondary)
+                .frame(width: 32, height: 32)
+                .background(Theme.mutedFill)
+                .clipShape(Circle())
+
+            previousCell
+                .frame(width: 88, alignment: .leading)
+
+            if isPreview {
+                inputCell(
+                    value: weightText,
+                    placeholder: "—",
+                    focused: weightFocused,
+                    action: onWeightTap
+                )
+                .frame(maxWidth: .infinity)
+
+                repsCell(isInput: true)
+                    .frame(maxWidth: .infinity)
+            } else {
+                valueCell(weightText.isEmpty ? "—" : weightText)
+                    .frame(maxWidth: .infinity)
+                repsCell(isInput: false)
+                    .frame(maxWidth: .infinity)
             }
+        }
+        .font(.subheadline.monospacedDigit())
+        .padding(.trailing, 10)
+    }
+
+    @ViewBuilder
+    private var previousCell: some View {
+        if let previousSet {
+            HStack(spacing: 4) {
+                Text("\(unit.formatNumber(previousSet.weight)) × \(previousSet.reps)")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+                RIRDot(rir: previousSet.rir, size: 12)
+            }
+        } else {
+            Text("—")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        }
+    }
+
+    private func inputCell(value: String, placeholder: String, focused: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(value.isEmpty ? placeholder : value)
+                .font(.subheadline.monospacedDigit().weight(.semibold))
+                .foregroundStyle(value.isEmpty ? Color.secondary : Color.primary)
+                .frame(maxWidth: .infinity, minHeight: 36)
+                .background(Theme.mutedFill)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .strokeBorder(focused ? accent : Color.clear, lineWidth: 2)
+                )
         }
         .buttonStyle(.plain)
     }
 
-    private func loggedRow(index: Int, set: DraftSet) -> some View {
-        HStack {
-            Text("Set \(index + 1)")
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(unit.format(set.weightKg))
-            Text("× \(set.reps)")
-            RIRBadge(rir: set.rir, accent: accent)
-        }
-        .font(.subheadline.monospacedDigit())
+    private func valueCell(_ value: String) -> some View {
+        Text(value)
+            .font(.subheadline.monospacedDigit().weight(.medium))
+            .frame(maxWidth: .infinity, minHeight: 36)
+            .background(Theme.mutedFill.opacity(0.5))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 
-    private func seedDraftIfNeeded() {
-        var current = controller.draft(for: exercise.id)
-        guard !current.didSeed else { return }
-        if let last = live.logged.last {
-            current.weightText = unit.formatNumber(last.weightKg)
-            current.repsText = "\(last.reps)"
-            current.rir = last.rir
-        } else if let last = previousSets.last {
-            current.weightText = unit.formatNumber(last.weight)
-            current.repsText = "\(last.reps)"
-            current.rir = last.rir
+    @ViewBuilder
+    private func repsCell(isInput: Bool) -> some View {
+        let content = Group {
+            if isInput {
+                Button(action: onRepsTap) {
+                    repsFieldContent(isInput: true)
+                }
+                .buttonStyle(.plain)
+            } else {
+                repsFieldContent(isInput: false)
+            }
         }
-        current.didSeed = true
-        controller.drafts[exercise.id] = current
+
+        content
+            .overlay(alignment: .bottomTrailing) {
+                RIRDot(rir: rir, size: 14)
+                    .offset(x: 4, y: 4)
+                    .zIndex(1)
+            }
+    }
+
+    private func repsFieldContent(isInput: Bool) -> some View {
+        Text(repsText.isEmpty && isInput ? "—" : repsText)
+            .font(.subheadline.monospacedDigit().weight(isInput ? .semibold : .medium))
+            .foregroundStyle(repsText.isEmpty && isInput ? Color.secondary : Color.primary)
+            .frame(maxWidth: .infinity, minHeight: 36)
+            .padding(.trailing, 10)
+            .background(isInput ? Theme.mutedFill : Theme.mutedFill.opacity(0.5))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .strokeBorder(isInput && repsFocused ? accent : Color.clear, lineWidth: 2)
+            )
+    }
+}
+
+private extension Array {
+    subscript(safe index: Int) -> Element? {
+        indices.contains(index) ? self[index] : nil
     }
 }

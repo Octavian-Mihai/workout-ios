@@ -22,8 +22,8 @@ struct SessionInputKeyboard: View {
     @AppStorage(EquipmentSettings.ftIncrementKgKey) private var ftIncrementKg = EquipmentSettings.defaultFTKg
     @AppStorage(EquipmentSettings.ftIncrementLbKey) private var ftIncrementLb = EquipmentSettings.defaultFTLb
 
-    private let rowHeight: CGFloat = 38
-    private let gap: CGFloat = 5
+    private let rowHeight: CGFloat = 50
+    private let gap: CGFloat = 6
     private let numberKeys: [[String?]] = [
         ["1", "2", "3"],
         ["4", "5", "6"],
@@ -73,9 +73,9 @@ struct SessionInputKeyboard: View {
             }
             padGrid
         }
-        .padding(.horizontal, 10)
-        .padding(.top, 8)
-        .padding(.bottom, 6)
+        .padding(.horizontal, 12)
+        .padding(.top, 10)
+        .padding(.bottom, 10)
         .background(Theme.cardFill.ignoresSafeArea(edges: .bottom))
         .overlay(alignment: .top) {
             Divider()
@@ -155,7 +155,7 @@ struct SessionInputKeyboard: View {
     private func numberKey(_ title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(title)
-                .font(.title3.monospacedDigit().weight(.semibold))
+                .font(.title2.monospacedDigit().weight(.semibold))
                 .frame(maxWidth: .infinity)
                 .frame(height: rowHeight)
                 .background(Theme.mutedFill)

@@ -1,14 +1,23 @@
 import SwiftUI
 
 enum AccentOption: String, CaseIterable, Identifiable {
-    case orange, coral, blue, teal, green, purple, indigo, red
+    case orange, blue, teal, green, purple, indigo, red
 
     var id: String { rawValue }
+
+    /// Options shown in the accent picker (coral removed).
+    static var selectable: [AccentOption] {
+        allCases
+    }
+
+    static func resolved(rawValue: String) -> AccentOption {
+        if rawValue == "coral" { return .orange }
+        return AccentOption(rawValue: rawValue) ?? .orange
+    }
 
     var title: String {
         switch self {
         case .orange: return "Orange"
-        case .coral: return "Coral"
         case .blue: return "Blue"
         case .teal: return "Teal"
         case .green: return "Green"
@@ -21,7 +30,6 @@ enum AccentOption: String, CaseIterable, Identifiable {
     var color: Color {
         switch self {
         case .orange: return Color(red: 0.98, green: 0.42, blue: 0.18)
-        case .coral: return Color(red: 0.95, green: 0.35, blue: 0.38)
         case .blue: return Color(red: 0.20, green: 0.48, blue: 0.96)
         case .teal: return Color(red: 0.12, green: 0.65, blue: 0.62)
         case .green: return Color(red: 0.22, green: 0.70, blue: 0.38)
@@ -110,8 +118,7 @@ enum Theme {
 struct OpaqueCard: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .background(Theme.cardFill)
-            .clipShape(RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous))
+            .background(Theme.cardFill, in: RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous)
                     .strokeBorder(Theme.cardBorder, lineWidth: 1)

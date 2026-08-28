@@ -38,38 +38,12 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section("Accent") {
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4), spacing: 12) {
-                        ForEach(AccentOption.allCases) { option in
-                            Button {
-                                accentName = option.rawValue
-                            } label: {
-                                VStack(spacing: 6) {
-                                    Circle()
-                                        .fill(option.color)
-                                        .frame(width: 32, height: 32)
-                                        .overlay {
-                                            if accentName == option.rawValue {
-                                                Circle().strokeBorder(Color.primary, lineWidth: 2)
-                                            }
-                                        }
-                                    Text(option.title)
-                                        .font(.caption2)
-                                        .foregroundStyle(.primary)
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 8)
-                                .background(Theme.cardFill)
-                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .strokeBorder(Theme.cardBorder, lineWidth: 1)
-                                )
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                    AccentPickerDashboard(accentName: $accentName)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                }
+                .onAppear {
+                    if accentName == "coral" { accentName = AccentOption.orange.rawValue }
                 }
 
                 Section("Appearance") {

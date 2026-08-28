@@ -9,7 +9,7 @@ struct WorkoutApp: App {
     var body: some Scene {
         WindowGroup {
             RootTabView()
-                .tint(AccentOption(rawValue: accentName)?.color ?? AccentOption.orange.color)
+                .tint(AccentOption.resolved(rawValue: accentName).color)
                 .preferredColorScheme(AppearanceMode(rawValue: appearanceMode)?.colorScheme)
         }
         .modelContainer(for: [
