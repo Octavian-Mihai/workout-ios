@@ -1,6 +1,4 @@
 import SwiftUI
-
-import SwiftUI
 import UIKit
 
 enum AccentOption: String, CaseIterable, Identifiable {
@@ -58,6 +56,65 @@ enum AccentTheme {
     }
 }
 
+enum BackgroundOption: String, CaseIterable, Identifiable {
+    case system, charcoal, navy, warmGray, forest, slate
+
+    var id: String { rawValue }
+
+    static let presets: [BackgroundOption] = [.system, .charcoal, .navy, .warmGray, .forest, .slate]
+
+    static func resolved(rawValue: String) -> BackgroundOption? {
+        BackgroundOption(rawValue: rawValue)
+    }
+
+    var title: String {
+        switch self {
+        case .system: return "System"
+        case .charcoal: return "Charcoal"
+        case .navy: return "Navy"
+        case .warmGray: return "Warm Gray"
+        case .forest: return "Forest"
+        case .slate: return "Slate"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .system: return Color(.systemGroupedBackground)
+        case .charcoal: return Color(red: 0.11, green: 0.11, blue: 0.12)
+        case .navy: return Color(red: 0.07, green: 0.12, blue: 0.22)
+        case .warmGray: return Color(red: 0.20, green: 0.18, blue: 0.16)
+        case .forest: return Color(red: 0.10, green: 0.18, blue: 0.12)
+        case .slate: return Color(red: 0.14, green: 0.18, blue: 0.24)
+        }
+    }
+}
+
+enum BackgroundTheme {
+    static let customName = "custom"
+    static let systemName = "system"
+    static let backgroundNameKey = "backgroundName"
+    static let customHexKey = "customBackgroundHex"
+    static let defaultCustomHex = "1C1C1E"
+
+    static func baseColor(backgroundName: String, customHex: String) -> Color? {
+        if backgroundName == systemName { return nil }
+        if backgroundName == customName {
+            return Color(hex: customHex.isEmpty ? defaultCustomHex : customHex)
+                ?? Color(hex: defaultCustomHex)!
+        }
+        return BackgroundOption.resolved(rawValue: backgroundName)?.color
+    }
+
+    static func isSystem(_ backgroundName: String) -> Bool {
+        backgroundName == systemName
+    }
+
+    static func isCustom(_ backgroundName: String) -> Bool {
+        backgroundName == customName
+    }
+}
+
 extension Color {
     init?(hex: String) {
         var cleaned = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
@@ -77,6 +134,31 @@ extension Color {
         var a: CGFloat = 0
         ui.getRed(&r, green: &g, blue: &b, alpha: &a)
         return String(format: "%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
+    }
+
+    var relativeLuminance: Double {
+        let ui = UIColor(self)
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        ui.getRed(&r, green: &g, blue: &b, alpha: &a)
+        return 0.2126 * Double(r) + 0.7152 * Double(g) + 0.0722 * Double(b)
+    }
+
+    func blended(with other: Color, amount: Double) -> Color {
+        let ui1 = UIColor(self)
+        let ui2 = UIColor(other)
+        var r1: CGFloat = 0, g1: CGFloat = 0, b1: CGFloat = 0, a1: CGFloat = 0
+        var r2: CGFloat = 0, g2: CGFloat = 0, b2: CGFloat = 0, a2: CGFloat = 0
+        ui1.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
+        ui2.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
+        let t = CGFloat(min(max(amount, 0), 1))
+        return Color(
+            red: Double(r1 + (r2 - r1) * t),
+            green: Double(g1 + (g2 - g1) * t),
+            blue: Double(b1 + (b2 - b1) * t)
+        )
     }
 }
 
@@ -144,24 +226,144 @@ enum DistanceUnit: String, CaseIterable, Identifiable {
     }
 }
 
+@Observable
+final class AppTheme {
+    static let appearanceModeKey = "appearanceMode"
+
+    var appearanceMode: AppearanceMode {
+        didSet { UserDefaults.standard.set(appearanceMode.rawValue, forKey: Self.appearanceModeKey) }
+    }
+
+    var backgroundName: String {
+        didSet { UserDefaults.standard.set(backgroundName, forKey: BackgroundTheme.backgroundNameKey) }
+    }
+
+    var customBackgroundHex: String {
+        didSet { UserDefaults.standard.set(customBackgroundHex, forKey: BackgroundTheme.customHexKey) }
+    }
+
+    var accentName: String {
+        didSet { UserDefaults.standard.set(accentName, forKey: "accentName") }
+    }
+
+    var customAccentHex: String {
+        didSet { UserDefaults.standard.set(customAccentHex, forKey: AccentTheme.customHexKey) }
+    }
+
+    init() {
+        let defaults = UserDefaults.standard
+        appearanceMode = AppearanceMode(rawValue: defaults.string(forKey: Self.appearanceModeKey) ?? "") ?? .system
+        backgroundName = defaults.string(forKey: BackgroundTheme.backgroundNameKey) ?? BackgroundTheme.systemName
+        customBackgroundHex = defaults.string(forKey: BackgroundTheme.customHexKey) ?? BackgroundTheme.defaultCustomHex
+        accentName = defaults.string(forKey: "accentName") ?? AccentOption.orange.rawValue
+        customAccentHex = defaults.string(forKey: AccentTheme.customHexKey) ?? AccentTheme.defaultCustomHex
+        if accentName == "coral" { accentName = AccentOption.orange.rawValue }
+    }
+
+    var accent: Color {
+        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
+    }
+
+    var resolvedColorScheme: ColorScheme? {
+        switch appearanceMode {
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        case .system:
+            guard !BackgroundTheme.isSystem(backgroundName),
+                  let base = BackgroundTheme.baseColor(backgroundName: backgroundName, customHex: customBackgroundHex)
+            else { return nil }
+            let lum = base.relativeLuminance
+            if lum < 0.35 { return .dark }
+            if lum > 0.65 { return .light }
+            return nil
+        }
+    }
+
+    var groupedBackground: Color {
+        if BackgroundTheme.isSystem(backgroundName) {
+            return Color(.systemGroupedBackground)
+        }
+        return BackgroundTheme.baseColor(backgroundName: backgroundName, customHex: customBackgroundHex)
+            ?? Color(.systemGroupedBackground)
+    }
+
+    var cardFill: Color {
+        if BackgroundTheme.isSystem(backgroundName) {
+            return Color(.secondarySystemBackground)
+        }
+        let base = groupedBackground
+        let lum = base.relativeLuminance
+        if lum < 0.5 {
+            return base.blended(with: .white, amount: 0.10)
+        }
+        return base.blended(with: .black, amount: 0.06)
+    }
+
+    var cardBorder: Color {
+        if BackgroundTheme.isSystem(backgroundName) {
+            return Color.primary.opacity(0.10)
+        }
+        let lum = groupedBackground.relativeLuminance
+        if lum < 0.5 {
+            return Color.white.opacity(0.12)
+        }
+        return Color.black.opacity(0.10)
+    }
+
+    var mutedFill: Color {
+        if BackgroundTheme.isSystem(backgroundName) {
+            return Color.primary.opacity(0.10)
+        }
+        let lum = groupedBackground.relativeLuminance
+        if lum < 0.5 {
+            return Color.white.opacity(0.12)
+        }
+        return Color.black.opacity(0.08)
+    }
+
+    var mutedText: Color { Color.secondary }
+
+    func foregroundPrimary(for colorScheme: ColorScheme) -> Color {
+        if !BackgroundTheme.isSystem(backgroundName) {
+            return groupedBackground.relativeLuminance < 0.5
+                ? Color.white
+                : Color(red: 0.11, green: 0.11, blue: 0.12)
+        }
+        switch appearanceMode {
+        case .dark:
+            return Color.white
+        case .light:
+            return Color(red: 0.11, green: 0.11, blue: 0.12)
+        case .system:
+            return colorScheme == .dark
+                ? Color.white
+                : Color(red: 0.11, green: 0.11, blue: 0.12)
+        }
+    }
+
+    func foregroundSecondary(for colorScheme: ColorScheme) -> Color {
+        foregroundPrimary(for: colorScheme).opacity(0.62)
+    }
+}
+
 enum Theme {
     static let cardCorner: CGFloat = 16
 
     static var background: Color { Color(.systemBackground) }
-    static var cardFill: Color { Color(.secondarySystemBackground) }
-    static var groupedBackground: Color { Color(.systemGroupedBackground) }
-    static var cardBorder: Color { Color.primary.opacity(0.10) }
-    static var mutedFill: Color { Color.primary.opacity(0.10) }
     static var mutedText: Color { Color.secondary }
 }
 
 struct OpaqueCard: ViewModifier {
+    @Environment(AppTheme.self) private var theme
+
     func body(content: Content) -> some View {
         content
-            .background(Theme.cardFill, in: RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous))
+            .background(theme.cardFill, in: RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous)
-                    .strokeBorder(Theme.cardBorder, lineWidth: 1)
+                    .strokeBorder(theme.cardBorder, lineWidth: 1)
             )
     }
 }

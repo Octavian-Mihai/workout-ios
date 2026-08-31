@@ -7,6 +7,7 @@ struct ExerciseHistoryView: View {
     let unit: WeightUnit
     let accent: Color
 
+    @Environment(AppTheme.self) private var theme
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
 
     private var matchingSets: [SetLog] {
@@ -60,7 +61,7 @@ struct ExerciseHistoryView: View {
             }
             .padding(16)
         }
-        .background(Theme.groupedBackground.ignoresSafeArea())
+        .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle(exerciseName)
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -4,6 +4,7 @@ import Charts
 struct StressLegendView: View {
     var compact: Bool = false
     var highlightScore: Double? = nil
+    @Environment(AppTheme.self) private var theme
 
     private let bands: [(range: String, title: String, color: Color, band: StressBand)] = [
         ("0–30", "Recovery / easy", Color(red: 0.30, green: 0.72, blue: 0.48), .recovery),
@@ -52,6 +53,8 @@ struct StressMeter: View {
     let accent: Color
     var compact: Bool = false
 
+    @Environment(AppTheme.self) private var theme
+
     private var band: StressBand { StressCalculator.band(for: score) }
 
     private var color: Color {
@@ -77,7 +80,7 @@ struct StressMeter: View {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Theme.mutedFill)
+                        .fill(theme.mutedFill)
                     Capsule()
                         .fill(color)
                         .frame(width: max(8, geo.size.width * min(max(score / 100, 0), 1)))
@@ -99,6 +102,8 @@ struct TodayStressCard: View {
     var trend: [DailyStress] = []
     let accent: Color
     var compact: Bool = false
+
+    @Environment(AppTheme.self) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? 6 : 12) {
@@ -153,7 +158,7 @@ struct TodayStressCard: View {
             }
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    Capsule().fill(Theme.mutedFill)
+                    Capsule().fill(theme.mutedFill)
                     Capsule()
                         .fill(accent)
                         .frame(width: max(4, geo.size.width * min(max(score / 100, 0), 1)))

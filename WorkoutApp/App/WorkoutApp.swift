@@ -19,29 +19,14 @@ private let _applyScreenshotDefaults: Void = ScreenshotDefaults.apply()
 
 @main
 struct WorkoutApp: App {
-    @AppStorage("appearanceMode") private var appearanceMode = AppearanceMode.system.rawValue
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
-
-    private var tintColor: Color {
-        if ScreenshotDefaults.isActive {
-            return AccentOption.red.color
-        }
-        return AccentTheme.color(accentName: accentName, customHex: customAccentHex)
-    }
-
-    private var colorScheme: ColorScheme? {
-        if ScreenshotDefaults.isActive {
-            return .dark
-        }
-        return AppearanceMode(rawValue: appearanceMode)?.colorScheme
-    }
+    @State private var appTheme = AppTheme()
 
     var body: some Scene {
         WindowGroup {
             RootTabView()
-                .tint(tintColor)
-                .preferredColorScheme(colorScheme)
+                .environment(appTheme)
+                .tint(ScreenshotDefaults.isActive ? AccentOption.red.color : appTheme.accent)
+                .preferredColorScheme(ScreenshotDefaults.isActive ? .dark : appTheme.resolvedColorScheme)
         }
         .modelContainer(for: [
             Program.self,

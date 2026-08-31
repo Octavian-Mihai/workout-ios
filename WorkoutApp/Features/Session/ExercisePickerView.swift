@@ -5,8 +5,7 @@ struct ExercisePickerView: View {
     var onCustom: (String, [String], [String]) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
+    @Environment(AppTheme.self) private var theme
     @State private var query = ""
     @State private var showCustom = false
     @State private var categoryFilter: ExerciseCategory?
@@ -14,7 +13,7 @@ struct ExercisePickerView: View {
     @State private var muscleFilter: MuscleGroup?
 
     private var accent: Color {
-        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
+        theme.accent
     }
 
     private var filtered: [CatalogExercise] {
@@ -66,7 +65,7 @@ struct ExercisePickerView: View {
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
         }
-        .background(Theme.groupedBackground)
+        .background(theme.groupedBackground)
         .searchable(text: $query, prompt: "Search exercises or muscles")
         .navigationTitle("Add exercise")
         .navigationBarTitleDisplayMode(.inline)
@@ -139,7 +138,7 @@ struct ExercisePickerView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
         }
-        .background(Theme.cardFill)
+        .background(theme.cardFill)
         .overlay(alignment: .bottom) { Divider() }
     }
 
@@ -154,6 +153,7 @@ struct ExercisePickerView: View {
 
 private struct ExercisePickerRow: View {
     let exercise: CatalogExercise
+    @Environment(AppTheme.self) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -186,7 +186,7 @@ private struct ExercisePickerRow: View {
             .foregroundStyle(.secondary)
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
-            .background(Theme.mutedFill)
+            .background(theme.mutedFill)
             .clipShape(Capsule())
     }
 }
@@ -207,6 +207,7 @@ private struct FilterChip: View {
 private struct FilterChipLabel: View {
     let title: String
     let selected: Bool
+    @Environment(AppTheme.self) private var theme
 
     var body: some View {
         Text(title)
@@ -214,7 +215,7 @@ private struct FilterChipLabel: View {
             .foregroundStyle(selected ? Color.white : Color.primary)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
-            .background(selected ? Color.accentColor : Theme.mutedFill)
+            .background(selected ? Color.accentColor : theme.mutedFill)
             .clipShape(Capsule())
     }
 }

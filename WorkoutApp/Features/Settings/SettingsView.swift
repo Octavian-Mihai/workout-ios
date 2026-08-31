@@ -5,13 +5,11 @@ import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppTheme.self) private var appTheme
     @EnvironmentObject private var health: HealthKitService
     @Query private var programs: [Program]
     @Query private var sessions: [WorkoutSession]
     @Query private var weightEntries: [BodyWeightEntry]
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
-    @AppStorage("appearanceMode") private var appearanceMode = AppearanceMode.system.rawValue
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
@@ -36,24 +34,31 @@ struct SettingsView: View {
     }
 
     var body: some View {
+        @Bindable var theme = appTheme
+
         NavigationStack {
             List {
                 Section("Accent") {
-                    AccentPickerDashboard(accentName: $accentName, customHex: $customAccentHex)
+                    AccentPickerDashboard(accentName: $theme.accentName, customHex: $theme.customAccentHex)
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 }
-                .onAppear {
-                    if accentName == "coral" { accentName = AccentOption.orange.rawValue }
-                }
 
                 Section("Appearance") {
-                    Picker("Background", selection: $appearanceMode) {
+                    Picker("Mode", selection: $theme.appearanceMode) {
                         ForEach(AppearanceMode.allCases) { mode in
-                            Text(mode.title).tag(mode.rawValue)
+                            Text(mode.title).tag(mode)
                         }
                     }
                     .pickerStyle(.segmented)
+
+                    BackgroundPickerDashboard(
+                        backgroundName: $theme.backgroundName,
+                        customHex: $theme.customBackgroundHex
+                    )
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+
                     Text("Cards use opaque fills and borders — no glass or ultra-thin materials.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -174,7 +179,7 @@ struct SettingsView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(Theme.groupedBackground)
+            .background(theme.groupedBackground)
             .navigationTitle("Settings")
             .alert("Delete all local data?", isPresented: $showDeleteConfirm) {
                 Button("Delete", role: .destructive) { deleteAllLocalData() }

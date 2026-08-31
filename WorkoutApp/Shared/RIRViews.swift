@@ -4,6 +4,7 @@ struct RIRSelector: View {
     @Binding var rir: Int
     var accent: Color
     var compact: Bool = false
+    @Environment(AppTheme.self) private var theme
 
     var body: some View {
         HStack(spacing: compact ? 4 : 6) {
@@ -17,7 +18,7 @@ struct RIRSelector: View {
                         .padding(.vertical, compact ? 6 : 8)
                         .background(
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(rir == value ? RIRPalette.color(for: value, accent: accent) : Theme.mutedFill)
+                                .fill(rir == value ? RIRPalette.color(for: value, accent: accent) : theme.mutedFill)
                         )
                         .foregroundStyle(rir == value ? Color.white : Color.primary)
                 }

@@ -6,6 +6,11 @@ struct WorkoutTabView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @Query(sort: \Program.createdAt) private var programs: [Program]
     @EnvironmentObject private var sessionStore: ActiveSessionStore
+    @Environment(AppTheme.self) private var theme
+    @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
+
+    private var accent: Color { theme.accent }
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
 
     private var activeProgram: Program? {
         programs.first(where: \.isActive)
@@ -44,10 +49,12 @@ struct WorkoutTabView: View {
                     .buttonStyle(.bordered)
 
                     LearnLinksView()
+
+                    WorkoutHistoryView(sessions: sessions, accent: accent, unit: unit)
                 }
                 .padding(16)
             }
-            .background(Theme.groupedBackground.ignoresSafeArea())
+            .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Workout")
         }
     }
@@ -56,15 +63,27 @@ struct WorkoutTabView: View {
 struct StrengthAnalyticsView: View {
     let sets: [SetLog]
     let runStress: Double
+    var hrvSDNN: Double? = nil
+    var sleepHours: Double? = nil
     let accent: Color
 
+    @Environment(AppTheme.self) private var theme
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
 
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
     private var recent: [SetLog] { StressCalculator.sets(inLastDays: 7, from: sets) }
     private var csi: Double { StressCalculator.centralStress(sets: sets) }
     private var tsi: Double { StressCalculator.totalStress(sets: sets, runStress: runStress) }
-    private var recovery: Double { StressCalculator.recoveryScore(totalStress: tsi) }
+    private var recovery: Double {
+        StressCalculator.adjustedRecoveryScore(
+            totalStress: tsi,
+            hrvSDNN: hrvSDNN,
+            sleepHours: sleepHours
+        )
+    }
+    private var recoveryContext: String? {
+        StressCalculator.recoveryContextLabel(hrvSDNN: hrvSDNN, sleepHours: sleepHours)
+    }
     private var muscleVolume: [(String, Double)] {
         StressCalculator.muscleVolume(from: recent)
             .map { ($0.key, $0.value) }
@@ -80,6 +99,11 @@ struct StrengthAnalyticsView: View {
                 StressMeter(title: "Central stress (7d)", score: csi, accent: accent)
                 StressMeter(title: "Total stress (7d)", score: tsi, accent: accent)
                 StressMeter(title: "Recovery", score: recovery, accent: accent)
+                if let recoveryContext {
+                    Text(recoveryContext)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
                 HStack {
                     Text("Total volume (7d)")
                     Spacer()
@@ -214,7 +238,7 @@ struct StrengthAnalyticsView: View {
                     }
                     GeometryReader { geo in
                         Capsule()
-                            .fill(Theme.mutedFill)
+                            .fill(theme.mutedFill)
                             .overlay(alignment: .leading) {
                                 Capsule()
                                     .fill(RIRPalette.color(for: row.avgRIR, accent: accent))

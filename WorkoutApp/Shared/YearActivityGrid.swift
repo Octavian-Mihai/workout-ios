@@ -86,6 +86,7 @@ struct YearActivityGrid: View {
     var onSelect: ((Date) -> Void)? = nil
 
     @Environment(\.calendar) private var calendar
+    @Environment(AppTheme.self) private var theme
 
     private static let monthLetters = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]
 
@@ -186,7 +187,7 @@ struct YearActivityGrid: View {
     @ViewBuilder
     private func dayDot(_ cell: YearDayCell, size: CGFloat) -> some View {
         Circle()
-            .fill(cell.kind.color ?? (cell.inYear ? Theme.mutedFill : Color.clear))
+            .fill(cell.kind.color ?? (cell.inYear ? theme.mutedFill : Color.clear))
             .frame(width: size, height: size)
             .overlay {
                 if cell.inYear && calendar.isDateInToday(cell.date) {

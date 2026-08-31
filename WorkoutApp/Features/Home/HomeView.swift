@@ -6,13 +6,12 @@ struct HomeView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @EnvironmentObject private var sessionStore: ActiveSessionStore
     @EnvironmentObject private var health: HealthKitService
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
+    @Environment(AppTheme.self) private var theme
 
     @State private var showTrends = false
 
     private var accent: Color {
-        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
+        theme.accent
     }
 
     private var nextDay: ProgramDay? {
@@ -24,7 +23,12 @@ struct HomeView: View {
     }
 
     private var todayStress: StressEstimate {
-        StressCalculator.todayEstimate(sets: allSets, runs: health.runs)
+        StressCalculator.todayEstimate(
+            sets: allSets,
+            cardioWorkouts: health.cardioWorkouts,
+            restingHeartRate: health.restingHeartRate,
+            maxHeartRate: health.maxHeartRate
+        )
     }
 
     var body: some View {
@@ -66,7 +70,7 @@ struct HomeView: View {
                 }
                 .padding(16)
             }
-            .background(Theme.groupedBackground.ignoresSafeArea())
+            .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $showTrends) {

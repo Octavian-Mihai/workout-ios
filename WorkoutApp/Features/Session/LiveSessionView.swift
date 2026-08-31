@@ -227,9 +227,8 @@ struct LiveSessionView: View {
     var onDiscard: () -> Void
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppTheme.self) private var theme
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var pastSessions: [WorkoutSession]
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
@@ -237,9 +236,11 @@ struct LiveSessionView: View {
     @State private var showAddExercise = false
     @State private var showSaveTemplate = false
     @State private var showDiscardConfirm = false
+    @State private var finishedSession: WorkoutSession?
+    @State private var showSummary = false
 
     private var accent: Color {
-        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
+        theme.accent
     }
 
     private var unit: WeightUnit {
@@ -297,7 +298,7 @@ struct LiveSessionView: View {
                 .padding(16)
             }
         }
-        .background(Theme.groupedBackground.ignoresSafeArea())
+        .background(theme.groupedBackground.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             sessionKeyboard
         }
@@ -343,6 +344,16 @@ struct LiveSessionView: View {
             Button("Keep", role: .cancel) {}
         } message: {
             Text("Logged sets will be lost.")
+        }
+        .sheet(isPresented: $showSummary, onDismiss: handleSummaryDismissed) {
+            if let session = finishedSession {
+                WorkoutSummarySheet(
+                    model: WorkoutSummaryModel(session: session),
+                    accent: accent,
+                    unit: unit,
+                    onDone: { showSummary = false }
+                )
+            }
         }
         .sensoryFeedback(.success, trigger: restTimerHaptics ? controller.restCompletedPulse : 0)
         .onChange(of: controller.restCompletedPulse) { _, pulse in
@@ -441,7 +452,7 @@ struct LiveSessionView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .background(Theme.cardFill)
+        .background(theme.cardFill)
         .overlay(alignment: .bottom) {
             Divider()
         }
@@ -488,6 +499,12 @@ struct LiveSessionView: View {
         }
         try? modelContext.save()
 
+        finishedSession = session
+        showSummary = true
+    }
+
+    private func handleSummaryDismissed() {
+        finishedSession = nil
         if controller.exerciseListChanged {
             showSaveTemplate = true
         } else {
@@ -686,6 +703,7 @@ private struct SetGridRow: View {
     let repsFocused: Bool
     var onWeightTap: () -> Void
     var onRepsTap: () -> Void
+    @Environment(AppTheme.self) private var theme
 
     var body: some View {
         HStack(spacing: 8) {
@@ -693,7 +711,7 @@ private struct SetGridRow: View {
                 .font(.body.weight(.bold).monospacedDigit())
                 .foregroundStyle(.secondary)
                 .frame(width: 32, height: 32)
-                .background(Theme.mutedFill)
+                .background(theme.mutedFill)
                 .clipShape(Circle())
 
             previousCell
@@ -744,7 +762,7 @@ private struct SetGridRow: View {
                 .font(.body.monospacedDigit().weight(.semibold))
                 .foregroundStyle(value.isEmpty ? Color.secondary : Color.primary)
                 .frame(maxWidth: .infinity, minHeight: 36)
-                .background(Theme.mutedFill)
+                .background(theme.mutedFill)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -758,7 +776,7 @@ private struct SetGridRow: View {
         Text(value)
             .font(.body.monospacedDigit().weight(.semibold))
             .frame(maxWidth: .infinity, minHeight: 36)
-            .background(Theme.mutedFill.opacity(0.5))
+            .background(theme.mutedFill.opacity(0.5))
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 
@@ -789,7 +807,7 @@ private struct SetGridRow: View {
             .foregroundStyle(repsText.isEmpty && isInput ? Color.secondary : Color.primary)
             .frame(maxWidth: .infinity, minHeight: 36)
             .padding(.trailing, 12)
-            .background(isInput ? Theme.mutedFill : Theme.mutedFill.opacity(0.5))
+            .background(isInput ? theme.mutedFill : theme.mutedFill.opacity(0.5))
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)

@@ -4,11 +4,10 @@ import Charts
 
 struct TrendsDetailView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
+    @Environment(AppTheme.self) private var theme
 
     private var accent: Color {
-        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
+        theme.accent
     }
 
     private var finished: [WorkoutSession] {
@@ -115,7 +114,7 @@ struct TrendsDetailView: View {
             }
             .padding(16)
         }
-        .background(Theme.groupedBackground.ignoresSafeArea())
+        .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle("Trends")
         .navigationBarTitleDisplayMode(.inline)
     }

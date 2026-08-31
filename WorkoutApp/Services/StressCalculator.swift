@@ -1,4 +1,5 @@
 import Foundation
+import HealthKit
 
 struct StressEstimate {
     var total: Double
@@ -116,38 +117,122 @@ enum StressCalculator {
         max(0, 100 - totalStress)
     }
 
-    /// Run stress 0–100.
+    static func estimatedMaxHeartRate(dateOfBirth: Date?, now: Date = Date()) -> Double {
+        guard let dateOfBirth else { return 190 }
+        let age = Calendar.current.dateComponents([.year], from: dateOfBirth, to: now).year ?? 30
+        return max(140, 220 - Double(age))
+    }
+
+    /// HRV and sleep adjustment applied to recovery score, in [-15, +10].
+    static func recoveryModifier(hrvSDNN: Double?, sleepHours: Double?) -> Double {
+        var modifier = 0.0
+
+        if let sleep = sleepHours {
+            switch sleep {
+            case ..<5: modifier -= 10
+            case 5..<6: modifier -= 5
+            case 7...9: break
+            case 9...: modifier += 5
+            default: break
+            }
+        }
+
+        if let hrv = hrvSDNN {
+            if hrv < 30 {
+                modifier -= 5
+            } else if hrv > 50 {
+                modifier += 5
+            }
+        }
+
+        return min(10, max(-15, modifier))
+    }
+
+    static func adjustedRecoveryScore(
+        totalStress: Double,
+        hrvSDNN: Double?,
+        sleepHours: Double?
+    ) -> Double {
+        let base = recoveryScore(totalStress: totalStress)
+        let adjusted = base + recoveryModifier(hrvSDNN: hrvSDNN, sleepHours: sleepHours)
+        return max(0, min(100, adjusted))
+    }
+
+    static func recoveryContextLabel(hrvSDNN: Double?, sleepHours: Double?) -> String? {
+        var parts: [String] = []
+        if let sleep = sleepHours {
+            parts.append(String(format: "Sleep: %.1fh", sleep))
+        }
+        if let hrv = hrvSDNN {
+            parts.append(String(format: "HRV: %.0fms", hrv))
+        }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
+    /// Cardio stress 0–100.
     /// HR path: Banister-style TRIMP from duration × HR reserve.
     /// No HR: duration × relative intensity vs an easy 8:00/km baseline.
     static func runStress(
         duration: TimeInterval,
         distanceMeters: Double,
         averageHeartRate: Double?,
-        restingHeartRate: Double = 60,
-        maxHeartRate: Double = 190
+        restingHeartRate: Double? = nil,
+        maxHeartRate: Double? = nil,
+        elevationGainMeters: Double? = nil,
+        activityType: HKWorkoutActivityType = .running
     ) -> Double {
+        let resting = restingHeartRate ?? 60
+        let maxHR = maxHeartRate ?? 190
         let minutes = max(duration / 60.0, 0)
-        if let hr = averageHeartRate, hr > 0, maxHeartRate > restingHeartRate {
-            let hrr = min(max((hr - restingHeartRate) / (maxHeartRate - restingHeartRate), 0), 1.05)
+
+        var score: Double
+        if let hr = averageHeartRate, hr > 0, maxHR > resting {
+            let hrr = min(max((hr - resting) / (maxHR - resting), 0), 1.05)
             let trimp = minutes * hrr * 0.64 * exp(1.92 * hrr)
-            return min(100, trimp / 1.5)
+            score = min(100, trimp / 1.5)
+        } else {
+            let km = distanceMeters / 1000.0
+            if km > 0, minutes > 0 {
+                let paceMinPerKm = minutes / km
+                let easyPace = 8.0
+                let relative = min(easyPace / max(paceMinPerKm, 3.0), 2.0)
+                score = min(100, (minutes / 60.0) * relative * 70.0)
+            } else {
+                score = min(100, minutes / 60.0 * 40.0)
+            }
         }
 
-        let km = distanceMeters / 1000.0
-        guard km > 0, minutes > 0 else {
-            return min(100, minutes / 60.0 * 40.0)
+        if let elevation = elevationGainMeters, elevation > 0 {
+            let elevationFactor = 1.0 + min(elevation / 300.0, 0.35)
+            score *= elevationFactor
         }
-        let paceMinPerKm = minutes / km
-        let easyPace = 8.0
-        let relative = min(easyPace / max(paceMinPerKm, 3.0), 2.0)
-        return min(100, (minutes / 60.0) * relative * 70.0)
+
+        score *= activityWeight(for: activityType)
+        return min(100, score)
     }
 
-    static func averageRunStress(_ runs: [RunningWorkout], now: Date = Date()) -> Double {
+    private static func activityWeight(for activityType: HKWorkoutActivityType) -> Double {
+        switch activityType {
+        case .running: return 1.0
+        case .hiking: return 0.85
+        case .cycling: return 0.75
+        case .walking: return 0.50
+        default: return 1.0
+        }
+    }
+
+    static func averageRunStress(
+        _ workouts: [CardioWorkout],
+        restingHeartRate: Double? = nil,
+        maxHeartRate: Double? = nil,
+        now: Date = Date()
+    ) -> Double {
         let cutoff = now.addingTimeInterval(-windowDays * 86_400)
-        let recent = runs.filter { $0.start >= cutoff }
+        let recent = workouts.filter { $0.start >= cutoff }
         guard !recent.isEmpty else { return 0 }
-        let mean = recent.map(\.stress).reduce(0, +) / Double(recent.count)
+        let mean = recent
+            .map { $0.stress(restingHeartRate: restingHeartRate, maxHeartRate: maxHeartRate) }
+            .reduce(0, +) / Double(recent.count)
         return min(100, mean)
     }
 
@@ -162,7 +247,13 @@ enum StressCalculator {
     }
 
     /// Recency-weighted stress for today using the last 3 days (today 1.0, yesterday 0.6, 2 days ago 0.3).
-    static func todayEstimate(sets: [SetLog], runs: [RunningWorkout], now: Date = Date()) -> StressEstimate {
+    static func todayEstimate(
+        sets: [SetLog],
+        cardioWorkouts: [CardioWorkout],
+        restingHeartRate: Double? = nil,
+        maxHeartRate: Double? = nil,
+        now: Date = Date()
+    ) -> StressEstimate {
         let cal = Calendar.current
         let today = cal.startOfDay(for: now)
         let weights = [1.0, 0.6, 0.3]
@@ -171,7 +262,14 @@ enum StressCalculator {
         var weightSum = 0.0
         for (offset, weight) in weights.enumerated() {
             guard let day = cal.date(byAdding: .day, value: -offset, to: today) else { continue }
-            let slice = daySlice(sets: sets, runs: runs, dayStart: day, calendar: cal)
+            let slice = daySlice(
+                sets: sets,
+                cardioWorkouts: cardioWorkouts,
+                dayStart: day,
+                calendar: cal,
+                restingHeartRate: restingHeartRate,
+                maxHeartRate: maxHeartRate
+            )
             liftAcc += slice.lift * weight
             runAcc += slice.run * weight
             weightSum += weight
@@ -181,12 +279,26 @@ enum StressCalculator {
         return StressEstimate(total: blend(lift: lift, run: run), lift: lift, run: run)
     }
 
-    static func dailyTrend(sets: [SetLog], runs: [RunningWorkout], days: Int = 7, now: Date = Date()) -> [DailyStress] {
+    static func dailyTrend(
+        sets: [SetLog],
+        cardioWorkouts: [CardioWorkout],
+        restingHeartRate: Double? = nil,
+        maxHeartRate: Double? = nil,
+        days: Int = 7,
+        now: Date = Date()
+    ) -> [DailyStress] {
         let cal = Calendar.current
         let today = cal.startOfDay(for: now)
         return (0..<days).compactMap { offset in
             guard let day = cal.date(byAdding: .day, value: -(days - 1 - offset), to: today) else { return nil }
-            let slice = daySlice(sets: sets, runs: runs, dayStart: day, calendar: cal)
+            let slice = daySlice(
+                sets: sets,
+                cardioWorkouts: cardioWorkouts,
+                dayStart: day,
+                calendar: cal,
+                restingHeartRate: restingHeartRate,
+                maxHeartRate: maxHeartRate
+            )
             return DailyStress(date: day, total: slice.total, lift: slice.lift, run: slice.run)
         }
     }
@@ -206,17 +318,31 @@ enum StressCalculator {
         return min(100, volumeScore + avgIntensity * 40.0)
     }
 
-    static func dayRunScore(_ runs: [RunningWorkout]) -> Double {
-        guard !runs.isEmpty else { return 0 }
-        return min(100, runs.map(\.stress).reduce(0, +))
+    static func dayRunScore(
+        _ workouts: [CardioWorkout],
+        restingHeartRate: Double? = nil,
+        maxHeartRate: Double? = nil
+    ) -> Double {
+        guard !workouts.isEmpty else { return 0 }
+        let total = workouts
+            .map { $0.stress(restingHeartRate: restingHeartRate, maxHeartRate: maxHeartRate) }
+            .reduce(0, +)
+        return min(100, total)
     }
 
-    private static func daySlice(sets: [SetLog], runs: [RunningWorkout], dayStart: Date, calendar: Calendar) -> StressEstimate {
+    private static func daySlice(
+        sets: [SetLog],
+        cardioWorkouts: [CardioWorkout],
+        dayStart: Date,
+        calendar: Calendar,
+        restingHeartRate: Double?,
+        maxHeartRate: Double?
+    ) -> StressEstimate {
         let end = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart.addingTimeInterval(86_400)
         let daySets = sets.filter { $0.timestamp >= dayStart && $0.timestamp < end }
-        let dayRuns = runs.filter { $0.start >= dayStart && $0.start < end }
+        let dayWorkouts = cardioWorkouts.filter { $0.start >= dayStart && $0.start < end }
         let lift = dayLiftScore(daySets)
-        let run = dayRunScore(dayRuns)
+        let run = dayRunScore(dayWorkouts, restingHeartRate: restingHeartRate, maxHeartRate: maxHeartRate)
         return StressEstimate(total: blend(lift: lift, run: run), lift: lift, run: run)
     }
 

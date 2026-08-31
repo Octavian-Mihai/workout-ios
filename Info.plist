@@ -25,7 +25,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Workout reads your running workouts, GPS routes, distance, and heart rate from Apple Health to show maps, pace charts, duration, and run stress. It also reads body weight to keep your weight log in sync. Strength training is stored only in this app and is not written to Health.</string>
+	<string>Workout reads your cardio workouts (running, walking, hiking, cycling), GPS routes, distance, elevation, heart rate, resting heart rate, HRV, and sleep from Apple Health to show maps, pace charts, duration, and training stress. It also reads body weight to keep your weight log in sync. Strength training is stored only in this app and is not written to Health.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Workout saves body weight entries you log in the app to Apple Health. It does not write lifting workouts or other training sessions to Health.</string>
 	<key>UILaunchScreen</key>

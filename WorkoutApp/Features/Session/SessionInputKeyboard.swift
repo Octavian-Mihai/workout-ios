@@ -17,6 +17,8 @@ struct SessionInputKeyboard: View {
     var onNext: () -> Void
     var onCompleteSet: () -> Void
 
+    @Environment(AppTheme.self) private var theme
+
     @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
     @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
     @AppStorage(EquipmentSettings.ftIncrementKgKey) private var ftIncrementKg = EquipmentSettings.defaultFTKg
@@ -76,7 +78,7 @@ struct SessionInputKeyboard: View {
         .padding(.horizontal, 12)
         .padding(.top, 10)
         .padding(.bottom, 10)
-        .background(Theme.cardFill.ignoresSafeArea(edges: .bottom))
+        .background(theme.cardFill.ignoresSafeArea(edges: .bottom))
         .overlay(alignment: .top) {
             Divider()
         }
@@ -98,7 +100,7 @@ struct SessionInputKeyboard: View {
             VStack(spacing: gap) {
                 actionKey(
                     title: "Dismiss Keyboard",
-                    fill: Theme.mutedFill,
+                    fill: theme.mutedFill,
                     foreground: .primary,
                     action: onDismiss
                 )
@@ -138,7 +140,7 @@ struct SessionInputKeyboard: View {
                 Image(systemName: "delete.backward")
                     .font(.subheadline.weight(.semibold))
                     .frame(width: 34, height: 26)
-                    .background(Theme.mutedFill)
+                    .background(theme.mutedFill)
                     .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
                     .foregroundStyle(.primary)
             }
@@ -158,7 +160,7 @@ struct SessionInputKeyboard: View {
                 .font(.title2.monospacedDigit().weight(.semibold))
                 .frame(maxWidth: .infinity)
                 .frame(height: rowHeight)
-                .background(Theme.mutedFill)
+                .background(theme.mutedFill)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .foregroundStyle(.primary)
         }
@@ -201,7 +203,7 @@ struct SessionInputKeyboard: View {
                     Image(systemName: "minus")
                         .font(.caption.weight(.bold))
                         .frame(width: 24, height: 24)
-                        .background(Theme.mutedFill)
+                        .background(theme.mutedFill)
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
@@ -214,7 +216,7 @@ struct SessionInputKeyboard: View {
                     Image(systemName: "plus")
                         .font(.caption.weight(.bold))
                         .frame(width: 24, height: 24)
-                        .background(Theme.mutedFill)
+                        .background(theme.mutedFill)
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)

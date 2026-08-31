@@ -4,11 +4,10 @@ import SwiftData
 struct InfoView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @EnvironmentObject private var health: HealthKitService
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
+    @Environment(AppTheme.self) private var theme
 
     private var accent: Color {
-        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
+        theme.accent
     }
 
     private var allSets: [SetLog] {
@@ -16,11 +15,36 @@ struct InfoView: View {
     }
 
     private var estimate: StressEstimate {
-        StressCalculator.todayEstimate(sets: allSets, runs: health.runs)
+        StressCalculator.todayEstimate(
+            sets: allSets,
+            cardioWorkouts: health.cardioWorkouts,
+            restingHeartRate: health.restingHeartRate,
+            maxHeartRate: health.maxHeartRate
+        )
     }
 
     private var trend: [DailyStress] {
-        StressCalculator.dailyTrend(sets: allSets, runs: health.runs)
+        StressCalculator.dailyTrend(
+            sets: allSets,
+            cardioWorkouts: health.cardioWorkouts,
+            restingHeartRate: health.restingHeartRate,
+            maxHeartRate: health.maxHeartRate
+        )
+    }
+
+    private var cardioRunStress: Double {
+        StressCalculator.averageRunStress(
+            health.cardioWorkouts,
+            restingHeartRate: health.restingHeartRate,
+            maxHeartRate: health.maxHeartRate
+        )
+    }
+
+    private var recoveryContext: String? {
+        StressCalculator.recoveryContextLabel(
+            hrvSDNN: health.hrvSDNN,
+            sleepHours: health.lastNightSleepHours
+        )
     }
 
     var body: some View {
@@ -36,15 +60,29 @@ struct InfoView: View {
                         accent: accent
                     )
 
+                    if health.cardioWorkouts.contains(where: { $0.activityType != .running }) {
+                        Text("Cardio stress includes walking, hiking, and cycling from Apple Health.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    if let recoveryContext {
+                        Text(recoveryContext)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
                     StrengthAnalyticsView(
                         sets: allSets,
-                        runStress: StressCalculator.averageRunStress(health.runs),
+                        runStress: cardioRunStress,
+                        hrvSDNN: health.hrvSDNN,
+                        sleepHours: health.lastNightSleepHours,
                         accent: accent
                     )
                 }
                 .padding(16)
             }
-            .background(Theme.groupedBackground.ignoresSafeArea())
+            .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Info")
         }
     }
@@ -84,6 +122,7 @@ struct LearnLinksView: View {
 struct ArticleScreen<Content: View>: View {
     let title: String
     @ViewBuilder var content: Content
+    @Environment(AppTheme.self) private var theme
 
     var body: some View {
         ScrollView {
@@ -92,7 +131,7 @@ struct ArticleScreen<Content: View>: View {
             }
             .padding(16)
         }
-        .background(Theme.groupedBackground.ignoresSafeArea())
+        .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -230,7 +269,15 @@ struct TrainingInsightView: View {
             )
             ArticleCard(
                 title: "Stress scores (0–100)",
-                bodyText: "Central stress looks at heavy compounds, percent of estimated 1RM, and low RIR over 7 days. Total stress adds weekly volume, average intensity, and optional run stress from Health. Both share the same scale."
+                bodyText: "Central stress looks at heavy compounds, percent of estimated 1RM, and low RIR over 7 days. Total stress adds weekly volume, average intensity, and cardio stress from Health (running, walking, hiking, cycling). Both share the same scale."
+            )
+            ArticleCard(
+                title: "Cardio stress",
+                bodyText: "Run stress uses personalized TRIMP when heart rate is available — your resting HR from Health and an age-based max HR. Elevation gain adds up to +35% for hilly routes. Activity weights: running 1.0, hiking 0.85, cycling 0.75, walking 0.50."
+            )
+            ArticleCard(
+                title: "Recovery modifier",
+                bodyText: "Recovery adjusts for last night’s sleep and recent HRV from Apple Health. Sleep under 5h: −10; 5–6h: −5; 7–9h: neutral; over 9h: +5. HRV below 30ms: −5; above 50ms: +5. The modifier is clamped to [−15, +10] and added to the base recovery score."
             )
             StressLegendView()
                 .padding(16)

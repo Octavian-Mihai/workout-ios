@@ -1,20 +1,21 @@
 import SwiftUI
 import UIKit
 
-struct AccentPickerDashboard: View {
-    @Binding var accentName: String
+struct BackgroundPickerDashboard: View {
+    @Binding var backgroundName: String
     @Binding var customHex: String
 
     @Environment(AppTheme.self) private var theme
     @State private var showCustomPicker = false
 
     private var activeColor: Color {
-        AccentTheme.color(accentName: accentName, customHex: customHex)
+        BackgroundTheme.baseColor(backgroundName: backgroundName, customHex: customHex)
+            ?? Color(.systemGroupedBackground)
     }
 
     var body: some View {
-        HStack(spacing: 10) {
-            ForEach(AccentOption.presets) { option in
+        HStack(spacing: 8) {
+            ForEach(BackgroundOption.presets) { option in
                 presetSwatch(option)
             }
 
@@ -22,30 +23,43 @@ struct AccentPickerDashboard: View {
         }
         .padding(.vertical, 4)
         .sheet(isPresented: $showCustomPicker) {
-            CustomAccentPickerSheet(
-                accentName: $accentName,
+            CustomBackgroundPickerSheet(
+                backgroundName: $backgroundName,
                 customHex: $customHex,
                 initialColor: activeColor
             )
         }
     }
 
-    private func presetSwatch(_ option: AccentOption) -> some View {
+    private func presetSwatch(_ option: BackgroundOption) -> some View {
         Button {
-            accentName = option.rawValue
+            backgroundName = option.rawValue
         } label: {
-            Circle()
-                .fill(option.color)
-                .frame(height: 40)
-                .overlay {
-                    if accentName == option.rawValue {
-                        Circle()
-                            .strokeBorder(Color.primary, lineWidth: 2.5)
-                        Image(systemName: "checkmark")
-                            .font(.caption.weight(.bold))
-                            .foregroundStyle(.white)
-                    }
+            Group {
+                if option == .system {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Color(white: 0.92), Color(white: 0.18)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                } else {
+                    Circle()
+                        .fill(option.color)
                 }
+            }
+            .frame(height: 36)
+            .overlay {
+                if backgroundName == option.rawValue {
+                    Circle()
+                        .strokeBorder(Color.primary, lineWidth: 2.5)
+                    Image(systemName: "checkmark")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(.white)
+                }
+            }
         }
         .buttonStyle(.plain)
         .frame(maxWidth: .infinity)
@@ -57,14 +71,14 @@ struct AccentPickerDashboard: View {
             showCustomPicker = true
         } label: {
             Group {
-                if AccentTheme.isCustom(accentName) {
+                if BackgroundTheme.isCustom(backgroundName) {
                     Circle()
                         .fill(activeColor)
                         .overlay {
                             Circle()
                                 .strokeBorder(Color.primary, lineWidth: 2.5)
                             Image(systemName: "checkmark")
-                                .font(.caption.weight(.bold))
+                                .font(.caption2.weight(.bold))
                                 .foregroundStyle(.white)
                         }
                 } else {
@@ -78,31 +92,31 @@ struct AccentPickerDashboard: View {
                         }
                 }
             }
-            .frame(height: 40)
+            .frame(height: 36)
         }
         .buttonStyle(.plain)
         .frame(maxWidth: .infinity)
-        .accessibilityLabel("Custom accent color")
+        .accessibilityLabel("Custom background color")
     }
 }
 
-private struct CustomAccentPickerSheet: View {
-    @Binding var accentName: String
+private struct CustomBackgroundPickerSheet: View {
+    @Binding var backgroundName: String
     @Binding var customHex: String
     let initialColor: Color
 
     @Environment(\.dismiss) private var dismiss
     @State private var draftColor: Color
 
-    init(accentName: Binding<String>, customHex: Binding<String>, initialColor: Color) {
-        _accentName = accentName
+    init(backgroundName: Binding<String>, customHex: Binding<String>, initialColor: Color) {
+        _backgroundName = backgroundName
         _customHex = customHex
         self.initialColor = initialColor
         _draftColor = State(initialValue: initialColor)
     }
 
     var body: some View {
-        SystemAccentColorPicker(color: $draftColor, onSave: saveAndClose)
+        SystemBackgroundColorPicker(color: $draftColor, onSave: saveAndClose)
             .ignoresSafeArea()
             .presentationDetents([.large])
             .presentationDragIndicator(.visible)
@@ -110,13 +124,12 @@ private struct CustomAccentPickerSheet: View {
 
     private func saveAndClose() {
         customHex = draftColor.toHex()
-        accentName = AccentTheme.customName
+        backgroundName = BackgroundTheme.customName
         dismiss()
     }
 }
 
-/// Native iOS color picker (spectrum, sliders, grip) with a Save bar button.
-private struct SystemAccentColorPicker: UIViewControllerRepresentable {
+private struct SystemBackgroundColorPicker: UIViewControllerRepresentable {
     @Binding var color: Color
     var onSave: () -> Void
 
@@ -152,9 +165,9 @@ private struct SystemAccentColorPicker: UIViewControllerRepresentable {
     }
 
     final class Coordinator: NSObject, UIColorPickerViewControllerDelegate {
-        var parent: SystemAccentColorPicker
+        var parent: SystemBackgroundColorPicker
 
-        init(parent: SystemAccentColorPicker) {
+        init(parent: SystemBackgroundColorPicker) {
             self.parent = parent
         }
 

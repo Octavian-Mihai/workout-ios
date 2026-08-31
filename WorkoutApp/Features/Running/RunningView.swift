@@ -26,7 +26,7 @@ struct RunningFilters: Equatable {
             || useMinPace || useMaxPace || useStartDate || useEndDate
     }
 
-    func matches(_ run: RunningWorkout, unit: DistanceUnit) -> Bool {
+    func matches(_ run: CardioWorkout, unit: DistanceUnit) -> Bool {
         let distance = unit.fromMeters(run.distanceMeters)
         if useMinDistance, distance < minDistance { return false }
         if useMaxDistance, distance > maxDistance { return false }
@@ -53,21 +53,20 @@ struct RunningFilters: Equatable {
 
 struct RunningView: View {
     @EnvironmentObject private var health: HealthKitService
-    @AppStorage("accentName") private var accentName = AccentOption.orange.rawValue
-    @AppStorage(AccentTheme.customHexKey) private var customAccentHex = AccentTheme.defaultCustomHex
+    @Environment(AppTheme.self) private var theme
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
     @State private var filters = RunningFilters()
     @State private var showFilters = false
 
     private var accent: Color {
-        AccentTheme.color(accentName: accentName, customHex: customAccentHex)
+        theme.accent
     }
 
     private var unit: DistanceUnit {
         DistanceUnit(rawValue: distanceUnitRaw) ?? .km
     }
 
-    private var filtered: [RunningWorkout] {
+    private var filtered: [CardioWorkout] {
         health.runs.filter { filters.matches($0, unit: unit) }
     }
 
@@ -75,15 +74,15 @@ struct RunningView: View {
         Date().addingTimeInterval(-14 * 86_400)
     }
 
-    private var recentRuns: [RunningWorkout] {
+    private var recentRuns: [CardioWorkout] {
         filtered.filter { $0.start >= twoWeekCutoff }
     }
 
-    private var olderRuns: [RunningWorkout] {
+    private var olderRuns: [CardioWorkout] {
         filtered.filter { $0.start < twoWeekCutoff }
     }
 
-    private var last7: [RunningWorkout] {
+    private var last7: [CardioWorkout] {
         let cutoff = Date().addingTimeInterval(-7 * 86_400)
         return health.runs.filter { $0.start >= cutoff }
     }
@@ -99,7 +98,15 @@ struct RunningView: View {
     }
 
     private var weeklyRunStress: Double {
-        StressCalculator.averageRunStress(health.runs)
+        StressCalculator.averageRunStress(
+            health.runs,
+            restingHeartRate: health.restingHeartRate,
+            maxHeartRate: health.maxHeartRate
+        )
+    }
+
+    private func runStress(for run: CardioWorkout) -> Double {
+        run.stress(restingHeartRate: health.restingHeartRate, maxHeartRate: health.maxHeartRate)
     }
 
     var body: some View {
@@ -150,10 +157,16 @@ struct RunningView: View {
                         } else {
                             ForEach(recentRuns) { run in
                                 NavigationLink {
-                                    RunDetailView(run: run, accent: accent, unit: unit)
-                                        .environmentObject(health)
+                                    RunDetailView(
+                                        run: run,
+                                        accent: accent,
+                                        unit: unit,
+                                        restingHeartRate: health.restingHeartRate,
+                                        maxHeartRate: health.maxHeartRate
+                                    )
+                                    .environmentObject(health)
                                 } label: {
-                                    RunRow(run: run, accent: accent, unit: unit)
+                                    RunRow(run: run, accent: accent, unit: unit, stressScore: runStress(for: run))
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -162,10 +175,16 @@ struct RunningView: View {
                                     VStack(spacing: 8) {
                                         ForEach(olderRuns) { run in
                                             NavigationLink {
-                                                RunDetailView(run: run, accent: accent, unit: unit)
-                                        .environmentObject(health)
+                                                RunDetailView(
+                                                    run: run,
+                                                    accent: accent,
+                                                    unit: unit,
+                                                    restingHeartRate: health.restingHeartRate,
+                                                    maxHeartRate: health.maxHeartRate
+                                                )
+                                                .environmentObject(health)
                                             } label: {
-                                                RunRow(run: run, accent: accent, unit: unit)
+                                                RunRow(run: run, accent: accent, unit: unit, stressScore: runStress(for: run))
                                             }
                                             .buttonStyle(.plain)
                                         }
@@ -181,7 +200,7 @@ struct RunningView: View {
                 }
                 .padding(16)
             }
-            .background(Theme.groupedBackground.ignoresSafeArea())
+            .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Running")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -222,12 +241,12 @@ struct RunningView: View {
                 Chart(last7.sorted { $0.start < $1.start }) { run in
                     LineMark(
                         x: .value("Date", run.start),
-                        y: .value("Stress", run.stress)
+                        y: .value("Stress", runStress(for: run))
                     )
                     .foregroundStyle(accent)
                     PointMark(
                         x: .value("Date", run.start),
-                        y: .value("Stress", run.stress)
+                        y: .value("Stress", runStress(for: run))
                     )
                     .foregroundStyle(accent)
                 }
@@ -251,87 +270,310 @@ struct RunningView: View {
     }
 }
 
+enum RunningFilterField: Hashable {
+    case minDistance, maxDistance
+    case minDuration, maxDuration
+    case maxPace, minPace
+    case startDate, endDate
+}
+
 struct RunningFilterSheet: View {
     @Binding var filters: RunningFilters
     let unit: DistanceUnit
     @Environment(\.dismiss) private var dismiss
+    @Environment(AppTheme.self) private var theme
+
+    @State private var focusedField: RunningFilterField?
+    @State private var minDistanceText = ""
+    @State private var maxDistanceText = ""
+    @State private var minDurationText = ""
+    @State private var maxDurationText = ""
+    @State private var maxPaceText = ""
+    @State private var minPaceText = ""
+    @State private var startDateDaysText = ""
+    @State private var endDateDaysText = ""
+
+    private var accent: Color { theme.accent }
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("Distance (\(unit.title))") {
-                    Toggle("Minimum", isOn: $filters.useMinDistance)
-                    if filters.useMinDistance {
-                        Stepper(value: $filters.minDistance, in: 0.5...80, step: 0.5) {
-                            Text(String(format: "%.1f %@", filters.minDistance, unit.title))
-                        }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    filterSection("Distance (\(unit.title))") {
+                        filterField("Minimum", text: minDistanceText, field: .minDistance, placeholder: "Any")
+                        filterField("Maximum", text: maxDistanceText, field: .maxDistance, placeholder: "Any")
                     }
-                    Toggle("Maximum", isOn: $filters.useMaxDistance)
-                    if filters.useMaxDistance {
-                        Stepper(value: $filters.maxDistance, in: 1...100, step: 0.5) {
-                            Text(String(format: "%.1f %@", filters.maxDistance, unit.title))
-                        }
+
+                    filterSection("Duration (min)") {
+                        filterField("Minimum", text: minDurationText, field: .minDuration, placeholder: "Any")
+                        filterField("Maximum", text: maxDurationText, field: .maxDuration, placeholder: "Any")
                     }
-                }
-                Section("Duration (min)") {
-                    Toggle("Minimum", isOn: $filters.useMinDuration)
-                    if filters.useMinDuration {
-                        Stepper(value: $filters.minDurationMinutes, in: 5...240, step: 5) {
-                            Text("\(Int(filters.minDurationMinutes)) min")
-                        }
+
+                    filterSection("Pace (min / \(unit.title))") {
+                        filterField("Faster than", text: maxPaceText, field: .maxPace, placeholder: "Any")
+                        filterField("Slower than", text: minPaceText, field: .minPace, placeholder: "Any")
                     }
-                    Toggle("Maximum", isOn: $filters.useMaxDuration)
-                    if filters.useMaxDuration {
-                        Stepper(value: $filters.maxDurationMinutes, in: 10...360, step: 5) {
-                            Text("\(Int(filters.maxDurationMinutes)) min")
-                        }
+
+                    filterSection("Date") {
+                        filterField("From", text: startDateDisplay, field: .startDate, placeholder: "Any")
+                        filterField("To", text: endDateDisplay, field: .endDate, placeholder: "Any")
                     }
-                }
-                Section("Pace (min / \(unit.title))") {
-                    Toggle("Faster than", isOn: $filters.useMaxPace)
-                    if filters.useMaxPace {
-                        Stepper(value: $filters.maxPace, in: 3...15, step: 0.25) {
-                            Text(Formatters.pace(filters.maxPace, unit: unit))
-                        }
-                    }
-                    Toggle("Slower than", isOn: $filters.useMinPace)
-                    if filters.useMinPace {
-                        Stepper(value: $filters.minPace, in: 3...20, step: 0.25) {
-                            Text(Formatters.pace(filters.minPace, unit: unit))
-                        }
-                    }
-                }
-                Section("Date") {
-                    Toggle("From", isOn: $filters.useStartDate)
-                    if filters.useStartDate {
-                        DatePicker("From", selection: $filters.startDate, displayedComponents: .date)
-                    }
-                    Toggle("To", isOn: $filters.useEndDate)
-                    if filters.useEndDate {
-                        DatePicker("To", selection: $filters.endDate, displayedComponents: .date)
-                    }
-                }
-                Section {
+
                     Button("Clear filters") {
                         filters = RunningFilters()
+                        loadTextsFromFilters()
+                        focusedField = nil
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
                 }
+                .padding(16)
+                .padding(.bottom, focusedField == nil ? 0 : 280)
             }
+            .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Filters")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                    Button("Done") {
+                        if let field = focusedField {
+                            applyField(field)
+                            focusedField = nil
+                        }
+                        dismiss()
+                    }
                 }
+            }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                filterKeyboard
+            }
+            .onAppear {
+                loadTextsFromFilters()
+            }
+            .onDisappear {
+                focusedField = nil
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var filterKeyboard: some View {
+        if let field = focusedField {
+            FilterInputKeyboard(
+                text: activeTextBinding(for: field),
+                suggestions: suggestions(for: field),
+                allowsDecimal: field != .minDuration && field != .maxDuration && field != .startDate && field != .endDate,
+                accent: accent,
+                onDismiss: {
+                    applyField(field)
+                    focusedField = nil
+                }
+            )
+        }
+    }
+
+    private func filterSection<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+            VStack(spacing: 8) {
+                content()
+            }
+            .padding(14)
+            .opaqueCard()
+        }
+    }
+
+    private func filterField(_ label: String, text: String, field: RunningFilterField, placeholder: String) -> some View {
+        Button {
+            prepareFieldForEditing(field)
+            focusedField = field
+        } label: {
+            HStack {
+                Text(label)
+                    .font(.subheadline)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Text(text.isEmpty ? placeholder : text)
+                    .font(.subheadline.monospacedDigit())
+                    .foregroundStyle(text.isEmpty ? .secondary : (focusedField == field ? accent : .primary))
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(focusedField == field ? accent.opacity(0.15) : theme.mutedFill)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var startDateDisplay: String {
+        guard filters.useStartDate else { return "" }
+        return Formatters.shortDate.string(from: filters.startDate)
+    }
+
+    private var endDateDisplay: String {
+        guard filters.useEndDate else { return "" }
+        return Formatters.shortDate.string(from: filters.endDate)
+    }
+
+    private func activeTextBinding(for field: RunningFilterField) -> Binding<String> {
+        switch field {
+        case .minDistance: return $minDistanceText
+        case .maxDistance: return $maxDistanceText
+        case .minDuration: return $minDurationText
+        case .maxDuration: return $maxDurationText
+        case .maxPace: return $maxPaceText
+        case .minPace: return $minPaceText
+        case .startDate: return $startDateDaysText
+        case .endDate: return $endDateDaysText
+        }
+    }
+
+    private func suggestions(for field: RunningFilterField) -> [FilterSuggestion] {
+        switch field {
+        case .minDistance, .maxDistance:
+            let values: [(String, String)] = unit == .km
+                ? [("5K", "5"), ("10K", "10"), ("Half", "21.1"), ("Marathon", "42.2")]
+                : [("5K", "3.1"), ("10K", "6.2"), ("Half", "13.1"), ("Marathon", "26.2")]
+            return values.map { FilterSuggestion(label: $0.0, value: $0.1) }
+        case .minDuration, .maxDuration:
+            return [
+                FilterSuggestion(label: "30 min", value: "30"),
+                FilterSuggestion(label: "45 min", value: "45"),
+                FilterSuggestion(label: "1 h", value: "60"),
+                FilterSuggestion(label: "90 min", value: "90")
+            ]
+        case .maxPace, .minPace:
+            return [
+                FilterSuggestion(label: "4:00", value: "4"),
+                FilterSuggestion(label: "5:00", value: "5"),
+                FilterSuggestion(label: "6:00", value: "6"),
+                FilterSuggestion(label: "7:00", value: "7"),
+                FilterSuggestion(label: "8:00", value: "8")
+            ]
+        case .startDate:
+            return [
+                FilterSuggestion(label: "Today", value: "0"),
+                FilterSuggestion(label: "Week", value: "7"),
+                FilterSuggestion(label: "Month", value: "30"),
+                FilterSuggestion(label: "3 months", value: "90")
+            ]
+        case .endDate:
+            return [
+                FilterSuggestion(label: "Today", value: "0"),
+                FilterSuggestion(label: "Yesterday", value: "1"),
+                FilterSuggestion(label: "Week ago", value: "7")
+            ]
+        }
+    }
+
+    private func prepareFieldForEditing(_ field: RunningFilterField) {
+        switch field {
+        case .startDate where filters.useStartDate:
+            startDateDaysText = String(daysAgo(from: filters.startDate))
+        case .endDate where filters.useEndDate:
+            endDateDaysText = String(daysAgo(from: filters.endDate))
+        default:
+            break
+        }
+    }
+
+    private func daysAgo(from date: Date) -> Int {
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: date)
+        let today = cal.startOfDay(for: Date())
+        return max(cal.dateComponents([.day], from: start, to: today).day ?? 0, 0)
+    }
+
+    private func loadTextsFromFilters() {
+        minDistanceText = filters.useMinDistance ? Formatters.trimmedNumber(filters.minDistance) : ""
+        maxDistanceText = filters.useMaxDistance ? Formatters.trimmedNumber(filters.maxDistance) : ""
+        minDurationText = filters.useMinDuration ? String(Int(filters.minDurationMinutes)) : ""
+        maxDurationText = filters.useMaxDuration ? String(Int(filters.maxDurationMinutes)) : ""
+        maxPaceText = filters.useMaxPace ? Formatters.trimmedNumber(filters.maxPace) : ""
+        minPaceText = filters.useMinPace ? Formatters.trimmedNumber(filters.minPace) : ""
+        startDateDaysText = ""
+        endDateDaysText = ""
+    }
+
+    private func applyField(_ field: RunningFilterField) {
+        switch field {
+        case .minDistance:
+            if let value = Double(minDistanceText), value > 0 {
+                filters.useMinDistance = true
+                filters.minDistance = value
+            } else {
+                filters.useMinDistance = false
+                minDistanceText = ""
+            }
+        case .maxDistance:
+            if let value = Double(maxDistanceText), value > 0 {
+                filters.useMaxDistance = true
+                filters.maxDistance = value
+            } else {
+                filters.useMaxDistance = false
+                maxDistanceText = ""
+            }
+        case .minDuration:
+            if let value = Double(minDurationText), value > 0 {
+                filters.useMinDuration = true
+                filters.minDurationMinutes = value
+            } else {
+                filters.useMinDuration = false
+                minDurationText = ""
+            }
+        case .maxDuration:
+            if let value = Double(maxDurationText), value > 0 {
+                filters.useMaxDuration = true
+                filters.maxDurationMinutes = value
+            } else {
+                filters.useMaxDuration = false
+                maxDurationText = ""
+            }
+        case .maxPace:
+            if let value = Double(maxPaceText), value > 0 {
+                filters.useMaxPace = true
+                filters.maxPace = value
+            } else {
+                filters.useMaxPace = false
+                maxPaceText = ""
+            }
+        case .minPace:
+            if let value = Double(minPaceText), value > 0 {
+                filters.useMinPace = true
+                filters.minPace = value
+            } else {
+                filters.useMinPace = false
+                minPaceText = ""
+            }
+        case .startDate:
+            if let days = Int(startDateDaysText), days >= 0 {
+                filters.useStartDate = true
+                filters.startDate = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
+                startDateDaysText = ""
+            } else if startDateDaysText.isEmpty {
+                filters.useStartDate = false
+            }
+        case .endDate:
+            if let days = Int(endDateDaysText), days >= 0 {
+                filters.useEndDate = true
+                filters.endDate = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
+                endDateDaysText = ""
+            } else if endDateDaysText.isEmpty {
+                filters.useEndDate = false
             }
         }
     }
 }
 
 struct RunRow: View {
-    let run: RunningWorkout
+    let run: CardioWorkout
     let accent: Color
     let unit: DistanceUnit
+    let stressScore: Double
 
     var body: some View {
         HStack {
@@ -350,9 +592,9 @@ struct RunRow: View {
                         .font(.subheadline.monospacedDigit())
                         .foregroundStyle(.primary)
                 }
-                Text("Stress \(Int(run.stress.rounded()))")
+                Text("Stress \(Int(stressScore.rounded()))")
                     .font(.caption)
-                    .foregroundStyle(RIRPalette.color(for: run.stress > 75 ? 0 : (run.stress > 55 ? 2 : 4), accent: accent))
+                    .foregroundStyle(RIRPalette.color(for: stressScore > 75 ? 0 : (stressScore > 55 ? 2 : 4), accent: accent))
             }
         }
         .padding(14)
@@ -361,13 +603,20 @@ struct RunRow: View {
 }
 
 struct RunDetailView: View {
-    let run: RunningWorkout
+    let run: CardioWorkout
     let accent: Color
     let unit: DistanceUnit
+    let restingHeartRate: Double?
+    let maxHeartRate: Double
 
     @EnvironmentObject private var health: HealthKitService
+    @Environment(AppTheme.self) private var theme
     @State private var details: RunDetailData?
     @State private var loading = true
+
+    private var stressScore: Double {
+        run.stress(restingHeartRate: restingHeartRate, maxHeartRate: maxHeartRate)
+    }
 
     var body: some View {
         ScrollView {
@@ -378,6 +627,9 @@ struct RunDetailView: View {
                     row("Time", Formatters.duration(run.duration))
                     row("Pace", unit.paceMinutesPerUnit(duration: run.duration, meters: run.distanceMeters).map { Formatters.pace($0, unit: unit) } ?? "—")
                     row("Avg HR", run.averageHeartRate.map { String(format: "%.0f bpm", $0) } ?? "Not recorded")
+                    if let elevation = run.elevationGainMeters {
+                        row("Elevation", String(format: "%.0f m gain", elevation))
+                    }
                 }
                 .padding(16)
                 .opaqueCard()
@@ -386,16 +638,22 @@ struct RunDetailView: View {
                 heartRateCard
                 paceCard
 
-                StressMeter(title: "Run stress", score: run.stress, accent: accent)
+                StressMeter(title: "Run stress", score: stressScore, accent: accent)
                     .padding(16)
                     .opaqueCard()
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(run.averageHeartRate == nil
-                         ? "Stress used pace versus an easy 8:00/km baseline because no heart rate was stored for this run."
-                         : "Stress used a TRIMP-style heart-rate calculation (duration × heart-rate reserve).")
+                    Text(stressExplanation)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    if let context = StressCalculator.recoveryContextLabel(
+                        hrvSDNN: health.hrvSDNN,
+                        sleepHours: health.lastNightSleepHours
+                    ) {
+                        Text("Recovery context: \(context)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                     StressLegendView(compact: true)
                 }
                 .padding(16)
@@ -403,7 +661,7 @@ struct RunDetailView: View {
             }
             .padding(16)
         }
-        .background(Theme.groupedBackground.ignoresSafeArea())
+        .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle("Run")
         .navigationBarTitleDisplayMode(.inline)
         .task {
@@ -411,6 +669,23 @@ struct RunDetailView: View {
             details = await health.loadDetails(for: run)
             loading = false
         }
+    }
+
+    private var stressExplanation: String {
+        if run.averageHeartRate == nil {
+            return "Stress used pace versus an easy 8:00/km baseline because no heart rate was stored for this run."
+        }
+        var text = "Stress used personalized TRIMP (resting HR"
+        if let resting = restingHeartRate {
+            text += String(format: " %.0f bpm", resting)
+        } else {
+            text += " estimated"
+        }
+        text += ", max HR \(Int(maxHeartRate)) bpm)."
+        if run.elevationGainMeters != nil {
+            text += " Elevation gain increased the score."
+        }
+        return text
     }
 
     @ViewBuilder

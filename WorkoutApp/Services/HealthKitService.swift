@@ -2,13 +2,15 @@ import Foundation
 import HealthKit
 import CoreLocation
 
-struct RunningWorkout: Identifiable {
+struct CardioWorkout: Identifiable {
     let id: UUID
     let start: Date
     let end: Date
     let duration: TimeInterval
     let distanceMeters: Double
     let averageHeartRate: Double?
+    let activityType: HKWorkoutActivityType
+    let elevationGainMeters: Double?
     let workout: HKWorkout
 
     var distanceKilometers: Double { distanceMeters / 1000.0 }
@@ -18,11 +20,15 @@ struct RunningWorkout: Identifiable {
         return (duration / 60.0) / distanceKilometers
     }
 
-    var stress: Double {
+    func stress(restingHeartRate: Double?, maxHeartRate: Double? = nil) -> Double {
         StressCalculator.runStress(
             duration: duration,
             distanceMeters: distanceMeters,
-            averageHeartRate: averageHeartRate
+            averageHeartRate: averageHeartRate,
+            restingHeartRate: restingHeartRate,
+            maxHeartRate: maxHeartRate,
+            elevationGainMeters: elevationGainMeters,
+            activityType: activityType
         )
     }
 }
@@ -54,14 +60,26 @@ struct RunDetailData {
 @MainActor
 final class HealthKitService: ObservableObject {
     @Published var isAuthorized = false
-    @Published var runs: [RunningWorkout] = []
+    @Published var cardioWorkouts: [CardioWorkout] = []
     @Published var runDays: Set<Date> = []
     @Published var lastError: String?
     @Published var isLoading = false
+    @Published var restingHeartRate: Double?
+    @Published var hrvSDNN: Double?
+    @Published var lastNightSleepHours: Double?
+    @Published var dateOfBirth: Date?
 
     private let store = HKHealthStore()
 
     var isAvailable: Bool { HKHealthStore.isHealthDataAvailable() }
+
+    var runs: [CardioWorkout] {
+        cardioWorkouts.filter { $0.activityType == .running }
+    }
+
+    var maxHeartRate: Double {
+        StressCalculator.estimatedMaxHeartRate(dateOfBirth: dateOfBirth)
+    }
 
     var activityRunDays: Set<Date> {
         var days = runDays
@@ -84,8 +102,12 @@ final class HealthKitService: ObservableObject {
         do {
             try await requestAuthorization()
             isAuthorized = true
-            try await loadRuns()
+            loadDateOfBirth()
+            try await loadCardioWorkouts()
             try await loadRunDays()
+            try await loadRestingHeartRate()
+            try await loadHRV()
+            try await loadSleep()
         } catch {
             lastError = error.localizedDescription
         }
@@ -94,7 +116,10 @@ final class HealthKitService: ObservableObject {
     func requestAuthorization() async throws {
         guard let distance = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning),
               let heartRate = HKQuantityType.quantityType(forIdentifier: .heartRate),
-              let bodyMass = HKQuantityType.quantityType(forIdentifier: .bodyMass) else {
+              let bodyMass = HKQuantityType.quantityType(forIdentifier: .bodyMass),
+              let restingHR = HKQuantityType.quantityType(forIdentifier: .restingHeartRate),
+              let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN),
+              let sleep = HKCategoryType.categoryType(forIdentifier: .sleepAnalysis) else {
             throw HealthKitServiceError.missingTypes
         }
 
@@ -102,25 +127,27 @@ final class HealthKitService: ObservableObject {
             HKObjectType.workoutType(),
             distance,
             heartRate,
+            restingHR,
+            hrv,
+            sleep,
             HKSeriesType.workoutRoute(),
             bodyMass
         ]
         try await store.requestAuthorization(toShare: [bodyMass], read: read)
     }
 
-    func loadRunDays(year: Int? = nil) async throws {
-        let cal = Calendar.current
-        let y = year ?? cal.component(.year, from: Date())
-        guard let start = cal.date(from: DateComponents(year: y, month: 1, day: 1)),
-              let end = cal.date(from: DateComponents(year: y + 1, month: 1, day: 1)) else {
-            runDays = []
-            return
+    private func loadDateOfBirth() {
+        if let components = try? store.dateOfBirthComponents(),
+           let date = Calendar.current.date(from: components) {
+            dateOfBirth = date
         }
+    }
+
+    func loadRunDays() async throws {
+        let cal = Calendar.current
 
         let workouts: [HKWorkout] = try await withCheckedThrowingContinuation { continuation in
-            let workoutPred = HKQuery.predicateForWorkouts(with: .running)
-            let datePred = HKQuery.predicateForSamples(withStart: start, end: end, options: .strictStartDate)
-            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [workoutPred, datePred])
+            let predicate = HKQuery.predicateForWorkouts(with: .running)
             let query = HKSampleQuery(
                 sampleType: .workoutType(),
                 predicate: predicate,
@@ -175,13 +202,16 @@ final class HealthKitService: ObservableObject {
         }
     }
 
-    func loadRuns(limit: Int = 50) async throws {
+    func loadCardioWorkouts(limit: Int = HKObjectQueryNoLimit) async throws {
+        let activityTypes: [HKWorkoutActivityType] = [.running, .walking, .hiking, .cycling]
+        let typePredicates = activityTypes.map { HKQuery.predicateForWorkouts(with: $0) }
+        let workoutPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: typePredicates)
+
         let workouts: [HKWorkout] = try await withCheckedThrowingContinuation { continuation in
-            let predicate = HKQuery.predicateForWorkouts(with: .running)
             let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
             let query = HKSampleQuery(
                 sampleType: .workoutType(),
-                predicate: predicate,
+                predicate: workoutPredicate,
                 limit: limit,
                 sortDescriptors: [sort]
             ) { _, samples, error in
@@ -193,21 +223,139 @@ final class HealthKitService: ObservableObject {
             }
             store.execute(query)
         }
-        runs = workouts.map { workout in
+
+        var results: [CardioWorkout] = []
+        for workout in workouts {
+            var elevation = elevationFromMetadata(workout)
+            if elevation == nil {
+                elevation = await elevationFromRoute(workout)
+            }
             let distance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
-            return RunningWorkout(
+            results.append(CardioWorkout(
                 id: workout.uuid,
                 start: workout.startDate,
                 end: workout.endDate,
                 duration: workout.duration,
                 distanceMeters: distance,
                 averageHeartRate: averageHeartRate(from: workout),
+                activityType: workout.workoutActivityType,
+                elevationGainMeters: elevation,
                 workout: workout
-            )
+            ))
+        }
+        cardioWorkouts = results
+    }
+
+    func loadRestingHeartRate() async throws {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .restingHeartRate) else { return }
+        let unit = HKUnit.count().unitDivided(by: .minute())
+        let samples: [HKQuantitySample] = try await withCheckedThrowingContinuation { continuation in
+            let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+            let query = HKSampleQuery(
+                sampleType: type,
+                predicate: nil,
+                limit: 7,
+                sortDescriptors: [sort]
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: (samples as? [HKQuantitySample]) ?? [])
+            }
+            store.execute(query)
+        }
+        guard !samples.isEmpty else {
+            restingHeartRate = nil
+            return
+        }
+        let values = samples.map { $0.quantity.doubleValue(for: unit) }
+        restingHeartRate = values.reduce(0, +) / Double(values.count)
+    }
+
+    func loadHRV() async throws {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else { return }
+        let unit = HKUnit.secondUnit(with: .milli)
+        let cutoff = Date().addingTimeInterval(-3 * 86_400)
+        let predicate = HKQuery.predicateForSamples(withStart: cutoff, end: Date(), options: .strictStartDate)
+
+        let samples: [HKQuantitySample] = try await withCheckedThrowingContinuation { continuation in
+            let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+            let query = HKSampleQuery(
+                sampleType: type,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [sort]
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: (samples as? [HKQuantitySample]) ?? [])
+            }
+            store.execute(query)
+        }
+        guard !samples.isEmpty else {
+            hrvSDNN = nil
+            return
+        }
+
+        let cal = Calendar.current
+        var daily: [Date: [Double]] = [:]
+        for sample in samples {
+            let day = cal.startOfDay(for: sample.startDate)
+            daily[day, default: []].append(sample.quantity.doubleValue(for: unit))
+        }
+        let sortedDays = daily.keys.sorted(by: >)
+        if let latestDay = sortedDays.first, let values = daily[latestDay], !values.isEmpty {
+            hrvSDNN = values.reduce(0, +) / Double(values.count)
+        } else {
+            hrvSDNN = nil
         }
     }
 
-    func loadDetails(for run: RunningWorkout) async -> RunDetailData {
+    func loadSleep() async throws {
+        guard let type = HKCategoryType.categoryType(forIdentifier: .sleepAnalysis) else { return }
+        let cal = Calendar.current
+        let todayStart = cal.startOfDay(for: Date())
+        guard let yesterdayStart = cal.date(byAdding: .day, value: -1, to: todayStart),
+              let searchStart = cal.date(bySettingHour: 18, minute: 0, second: 0, of: yesterdayStart) else {
+            lastNightSleepHours = nil
+            return
+        }
+
+        let predicate = HKQuery.predicateForSamples(withStart: searchStart, end: Date(), options: .strictStartDate)
+        let samples: [HKCategorySample] = try await withCheckedThrowingContinuation { continuation in
+            let query = HKSampleQuery(
+                sampleType: type,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: nil
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: (samples as? [HKCategorySample]) ?? [])
+            }
+            store.execute(query)
+        }
+
+        let asleepValues: Set<Int> = [
+            HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue,
+            HKCategoryValueSleepAnalysis.asleepCore.rawValue,
+            HKCategoryValueSleepAnalysis.asleepDeep.rawValue,
+            HKCategoryValueSleepAnalysis.asleepREM.rawValue
+        ]
+
+        var totalSeconds = 0.0
+        for sample in samples where asleepValues.contains(sample.value) {
+            totalSeconds += sample.endDate.timeIntervalSince(sample.startDate)
+        }
+        lastNightSleepHours = totalSeconds > 0 ? totalSeconds / 3600.0 : nil
+    }
+
+    func loadDetails(for run: CardioWorkout) async -> RunDetailData {
         async let heart = heartRateSeries(for: run.workout)
         async let distance = distanceSeries(for: run.workout)
         async let route = routeLocations(for: run.workout)
@@ -217,6 +365,27 @@ final class HealthKitService: ObservableObject {
             pace: paceSeries(from: dist),
             route: locations
         )
+    }
+
+    private func elevationFromMetadata(_ workout: HKWorkout) -> Double? {
+        guard let quantity = workout.metadata?[HKMetadataKeyElevationAscended] as? HKQuantity else { return nil }
+        let meters = quantity.doubleValue(for: .meter())
+        return meters > 0 ? meters : nil
+    }
+
+    private func elevationFromRoute(_ workout: HKWorkout) async -> Double? {
+        let locations = await routeLocations(for: workout)
+        return Self.elevationGain(from: locations)
+    }
+
+    static func elevationGain(from locations: [CLLocation]) -> Double? {
+        guard locations.count >= 2 else { return nil }
+        var gain = 0.0
+        for index in 1..<locations.count {
+            let delta = locations[index].altitude - locations[index - 1].altitude
+            if delta > 0 { gain += delta }
+        }
+        return gain > 0 ? gain : nil
     }
 
     private func averageHeartRate(from workout: HKWorkout) -> Double? {
@@ -236,7 +405,14 @@ final class HealthKitService: ObservableObject {
     }
 
     private func distanceSeries(for workout: HKWorkout) async -> [(Date, Double)] {
-        guard let type = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning) else { return [] }
+        let type: HKQuantityType?
+        switch workout.workoutActivityType {
+        case .cycling:
+            type = HKQuantityType.quantityType(forIdentifier: .distanceCycling)
+        default:
+            type = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)
+        }
+        guard let type else { return [] }
         let samples = await quantitySamples(type: type, workout: workout)
         return samples.compactMap { sample in
             guard let quantity = sample as? HKQuantitySample else { return nil }
@@ -333,6 +509,6 @@ enum HealthKitServiceError: LocalizedError {
     case missingTypes
 
     var errorDescription: String? {
-        "Could not read Health types for running or body weight."
+        "Could not read Health types for cardio workouts or body weight."
     }
 }
