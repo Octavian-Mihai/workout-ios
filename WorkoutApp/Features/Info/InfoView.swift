@@ -149,6 +149,7 @@ struct LearnLinksView: View {
                 articleLink("Movements 101", destination: Movements101View())
                 articleLink("Anatomy 101", destination: Anatomy101View())
                 articleLink("Training insight", destination: TrainingInsightView())
+                articleLink("Your Guide View", destination: YourGuideView())
             }
             .padding(.top, 8)
         } label: {
