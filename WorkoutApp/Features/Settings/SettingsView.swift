@@ -18,6 +18,11 @@ struct SettingsView: View {
     @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
     @AppStorage(EquipmentSettings.ftIncrementKgKey) private var ftIncrementKg = EquipmentSettings.defaultFTKg
     @AppStorage(EquipmentSettings.ftIncrementLbKey) private var ftIncrementLb = EquipmentSettings.defaultFTLb
+    @AppStorage(InfoPageVisibility.showTodayStressKey) private var showTodayStress = true
+    @AppStorage(InfoPageVisibility.showTonnageKey) private var showTonnage = true
+    @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
+    @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
+    @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
     @State private var showDeleteConfirm = false
     @State private var showImporter = false
     @State private var dataError: String?
@@ -88,6 +93,17 @@ struct SettingsView: View {
                 Section("Session") {
                     Stepper("Default rest \(defaultRestSeconds)s", value: $defaultRestSeconds, in: 15...300, step: 15)
                     Toggle("Rest-timer haptics", isOn: $restTimerHaptics)
+                }
+
+                Section("Info page") {
+                    Toggle("Show today’s stress", isOn: $showTodayStress)
+                    Toggle("Show tonnage / muscle breakdown", isOn: $showTonnage)
+                    Toggle("Show volume charts", isOn: $showVolumeCharts)
+                    Toggle("Show estimated 1RM", isOn: $showEstimated1RM)
+                    Toggle("Show intensity map", isOn: $showIntensityMap)
+                    Text("Hidden sections do not appear on the Info tab.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 Section("Equipment") {

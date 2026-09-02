@@ -6,7 +6,7 @@ enum WidgetSnapshotIDs {
 }
 
 /// Compact payload the main app writes and widgets read. No SwiftData / HealthKit.
-struct WidgetSnapshot: Codable, Equatable {
+struct WidgetSnapshot: Equatable {
     var version: Int
     var updatedAt: Date
     var year: Int
@@ -25,6 +25,8 @@ struct WidgetSnapshot: Codable, Equatable {
     var nextDayName: String?
     var nextProgramName: String?
     var accentHex: String
+    /// Finished lifting sessions whose startDate falls in the last 7 calendar days.
+    var workoutsLast7Days: Int = 0
 
     static let empty = WidgetSnapshot(
         version: 1,
@@ -44,7 +46,8 @@ struct WidgetSnapshot: Codable, Equatable {
         lastWorkoutDate: nil,
         nextDayName: nil,
         nextProgramName: nil,
-        accentHex: "FA6B2E"
+        accentHex: "FA6B2E",
+        workoutsLast7Days: 0
     )
 
     static let preview: WidgetSnapshot = {
@@ -86,9 +89,70 @@ struct WidgetSnapshot: Codable, Equatable {
             lastWorkoutDate: cal.date(byAdding: .day, value: -1, to: now),
             nextDayName: "Pull B",
             nextProgramName: "Hypertrophy",
-            accentHex: "FA6B2E"
+            accentHex: "FA6B2E",
+            workoutsLast7Days: 6
         )
     }()
+}
+
+extension WidgetSnapshot: Codable {
+    enum CodingKeys: String, CodingKey {
+        case version, updatedAt, year, dayOfYear
+        case liftDayStarts, runDayStarts, activityDayCount
+        case liftSessionCount, recentActivityDays
+        case todayStress, todayLift, todayRun, trendTotals
+        case lastWorkoutTitle, lastWorkoutDate
+        case nextDayName, nextProgramName, accentHex
+        case workoutsLast7Days
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(
+            version: try c.decode(Int.self, forKey: .version),
+            updatedAt: try c.decode(Date.self, forKey: .updatedAt),
+            year: try c.decode(Int.self, forKey: .year),
+            dayOfYear: try c.decode(Int.self, forKey: .dayOfYear),
+            liftDayStarts: try c.decode([Double].self, forKey: .liftDayStarts),
+            runDayStarts: try c.decode([Double].self, forKey: .runDayStarts),
+            activityDayCount: try c.decode(Int.self, forKey: .activityDayCount),
+            liftSessionCount: try c.decode(Int.self, forKey: .liftSessionCount),
+            recentActivityDays: try c.decode(Int.self, forKey: .recentActivityDays),
+            todayStress: try c.decode(Double.self, forKey: .todayStress),
+            todayLift: try c.decode(Double.self, forKey: .todayLift),
+            todayRun: try c.decode(Double.self, forKey: .todayRun),
+            trendTotals: try c.decode([Double].self, forKey: .trendTotals),
+            lastWorkoutTitle: try c.decodeIfPresent(String.self, forKey: .lastWorkoutTitle),
+            lastWorkoutDate: try c.decodeIfPresent(Date.self, forKey: .lastWorkoutDate),
+            nextDayName: try c.decodeIfPresent(String.self, forKey: .nextDayName),
+            nextProgramName: try c.decodeIfPresent(String.self, forKey: .nextProgramName),
+            accentHex: try c.decode(String.self, forKey: .accentHex),
+            workoutsLast7Days: try c.decodeIfPresent(Int.self, forKey: .workoutsLast7Days) ?? 0
+        )
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(version, forKey: .version)
+        try c.encode(updatedAt, forKey: .updatedAt)
+        try c.encode(year, forKey: .year)
+        try c.encode(dayOfYear, forKey: .dayOfYear)
+        try c.encode(liftDayStarts, forKey: .liftDayStarts)
+        try c.encode(runDayStarts, forKey: .runDayStarts)
+        try c.encode(activityDayCount, forKey: .activityDayCount)
+        try c.encode(liftSessionCount, forKey: .liftSessionCount)
+        try c.encode(recentActivityDays, forKey: .recentActivityDays)
+        try c.encode(todayStress, forKey: .todayStress)
+        try c.encode(todayLift, forKey: .todayLift)
+        try c.encode(todayRun, forKey: .todayRun)
+        try c.encode(trendTotals, forKey: .trendTotals)
+        try c.encodeIfPresent(lastWorkoutTitle, forKey: .lastWorkoutTitle)
+        try c.encodeIfPresent(lastWorkoutDate, forKey: .lastWorkoutDate)
+        try c.encodeIfPresent(nextDayName, forKey: .nextDayName)
+        try c.encodeIfPresent(nextProgramName, forKey: .nextProgramName)
+        try c.encode(accentHex, forKey: .accentHex)
+        try c.encode(workoutsLast7Days, forKey: .workoutsLast7Days)
+    }
 }
 
 enum WidgetYearActivityKind: Int {

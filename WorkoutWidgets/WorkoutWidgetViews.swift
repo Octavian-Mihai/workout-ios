@@ -64,7 +64,7 @@ struct WorkoutYearWidgetView: View {
                 yearMedium(snap)
             }
         }
-        .widgetChrome(padding: family == .systemMedium ? 6 : 14)
+        .widgetChrome(padding: family == .systemMedium ? 6 : (family == .systemLarge ? 10 : 14))
     }
 
     private func yearStat(_ snap: WidgetSnapshot) -> some View {
@@ -84,56 +84,33 @@ struct WorkoutYearWidgetView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     }
 
-    @ViewBuilder
+    /// Home-style compact header: day-of-year on the left, counted legend on the right. No year title.
+    /// Shared by medium and the top of large so both fill leftover height the same way.
     private func yearMedium(_ snap: WidgetSnapshot) -> some View {
-        if family == .systemMedium {
-            yearMediumDashboard(snap)
-        } else {
-            yearMediumLegacy(snap)
-        }
+        yearMediumDashboard(snap)
     }
 
-    /// Home-style compact header: day-of-year on the left, counted legend on the right. No year title.
     private func yearMediumDashboard(_ snap: WidgetSnapshot) -> some View {
         let daysInYear = Self.daysInYear(snap.year)
         let bothCount = Self.bothDayCount(snap)
         return VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .center, spacing: 8) {
                 Text("\(snap.dayOfYear) / \(daysInYear) days")
-                    .font(.caption.monospacedDigit().weight(.medium))
+                    .font(.footnote.monospacedDigit().weight(.medium))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.85)
                 Spacer(minLength: 4)
-                HStack(spacing: 8) {
-                    legend("Weights (\(snap.liftSessionCount))", color: WidgetChrome.weights)
-                    legend("Running (\(snap.runDayStarts.count))", color: WidgetChrome.running)
-                    legend("Both (\(bothCount))", color: WidgetChrome.both)
+                HStack(spacing: 7) {
+                    legend("W(\(snap.liftSessionCount))", color: WidgetChrome.weights)
+                    legend("R(\(snap.runDayStarts.count))", color: WidgetChrome.running)
+                    legend("B(\(bothCount))", color: WidgetChrome.both)
                 }
             }
             WidgetYearGridView(snapshot: snap, dense: true)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-    }
-
-    /// Shared by the large family — keep the year title and original legend.
-    private func yearMediumLegacy(_ snap: WidgetSnapshot) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(verbatim: String(snap.year))
-                    .font(.headline)
-                Spacer()
-                Text("\(snap.activityDayCount) days · \(snap.dayOfYear)")
-                    .font(.caption.monospacedDigit())
-                    .foregroundStyle(.secondary)
-            }
-            WidgetYearGridView(snapshot: snap, dense: false)
-            HStack(spacing: 10) {
-                legend("Weights", color: WidgetChrome.weights)
-                legend("Running", color: WidgetChrome.running)
-                legend("Both", color: WidgetChrome.both)
-            }
-        }
     }
 
     private static func daysInYear(_ year: Int) -> Int {
@@ -149,52 +126,46 @@ struct WorkoutYearWidgetView: View {
     }
 
     private func yearLarge(_ snap: WidgetSnapshot) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            yearMedium(snap)
-            HStack(alignment: .top, spacing: 16) {
-                stressBlock(snap)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("This week")
+        let color = WidgetChrome.stressColor(for: snap.todayStress)
+        return VStack(alignment: .leading, spacing: 10) {
+            yearMediumDashboard(snap)
+            HStack(alignment: .firstTextBaseline, spacing: 16) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Today’s stress")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Text("\(snap.recentActivityDays)")
-                        .font(.title2.monospacedDigit().weight(.bold))
-                    Text(snap.recentActivityDays == 1 ? "active day" : "active days")
-                        .font(.caption2)
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("\(Int(snap.todayStress.rounded()))")
+                            .font(.title2.monospacedDigit().weight(.bold))
+                            .foregroundStyle(color)
+                        Text(WidgetChrome.stressLabel(for: snap.todayStress))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer(minLength: 8)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(snap.workoutsLast7Days == 1 ? "1 workout" : "\(snap.workoutsLast7Days) workouts")
+                        .font(.title3.monospacedDigit().weight(.bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                    Text("last 7 days")
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                Spacer(minLength: 0)
             }
+            StressAxisChart(values: snap.trendTotals, color: color)
+                .frame(height: 78)
         }
-    }
-
-    private func stressBlock(_ snap: WidgetSnapshot) -> some View {
-        let color = WidgetChrome.stressColor(for: snap.todayStress)
-        return VStack(alignment: .leading, spacing: 4) {
-            Text("Today’s stress")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("\(Int(snap.todayStress.rounded()))")
-                    .font(.title2.monospacedDigit().weight(.bold))
-                    .foregroundStyle(color)
-                Text(WidgetChrome.stressLabel(for: snap.todayStress))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            StressSparkline(values: snap.trendTotals, color: color)
-                .frame(height: 28)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func legend(_ title: String, color: Color) -> some View {
         HStack(spacing: 4) {
             Circle()
                 .fill(color)
-                .frame(width: family == .systemMedium ? 7 : 6, height: family == .systemMedium ? 7 : 6)
+                .frame(width: 7, height: 7)
             Text(title)
-                .font(.caption2)
+                .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
@@ -342,30 +313,33 @@ struct WidgetYearGridView: View {
             runDayStarts: snapshot.runDayStarts
         )
         GeometryReader { geo in
-            let spacing: CGFloat = dense ? 0.55 : 1.4
             let columns = 53
             let monthH: CGFloat = showMonths ? 9 : 0
             let monthGap: CGFloat = showMonths ? (dense ? 2 : 3) : 0
             let availableH = max(geo.size.height - monthH - monthGap, 1)
-            let rawW = (geo.size.width - CGFloat(columns - 1) * spacing) / CGFloat(columns)
-            let rawH = (availableH - 6 * spacing) / 7
-            let cellCap: CGFloat = dense ? 10 : 5.5
-            let cell = min(max(min(rawW, rawH), 2.4), cellCap)
+            let colSpacing: CGFloat = dense ? 0.55 : 1.4
+            let rawW = (geo.size.width - CGFloat(columns - 1) * colSpacing) / CGFloat(columns)
+            let layout = Self.cellLayout(
+                dense: dense,
+                rawW: rawW,
+                availableH: availableH,
+                colSpacing: colSpacing
+            )
 
             VStack(alignment: .leading, spacing: monthGap == 0 ? 0 : monthGap) {
                 if showMonths {
-                    monthLabels(cells: cells, cell: cell, spacing: spacing)
+                    monthLabels(cells: cells, cell: layout.cell, spacing: colSpacing)
                 }
-                HStack(alignment: .top, spacing: spacing) {
+                HStack(alignment: .top, spacing: colSpacing) {
                     ForEach(0..<columns, id: \.self) { col in
-                        VStack(spacing: spacing) {
+                        VStack(spacing: layout.rowSpacing) {
                             ForEach(0..<7, id: \.self) { row in
                                 let index = col * 7 + row
                                 if index < cells.count {
                                     let item = cells[index]
                                     Circle()
                                         .fill(WidgetChrome.color(for: item.kind, inYear: item.inYear))
-                                        .frame(width: cell, height: cell)
+                                        .frame(width: layout.cell, height: layout.cell)
                                         .overlay {
                                             if item.inYear && Calendar.current.isDateInToday(item.date) {
                                                 Circle().strokeBorder(Color.primary.opacity(0.45), lineWidth: 0.8)
@@ -376,12 +350,38 @@ struct WidgetYearGridView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: dense ? .infinity : nil)
         .frame(height: dense ? nil : (showMonths ? 58 : 46))
         .accessibilityLabel("Year activity grid")
+    }
+
+    /// Dots size from width (53 week columns). Leftover height becomes row spacing so
+    /// the 7 weekday rows fill the frame instead of leaving a maroon band underneath.
+    private static func cellLayout(
+        dense: Bool,
+        rawW: CGFloat,
+        availableH: CGFloat,
+        colSpacing: CGFloat
+    ) -> (cell: CGFloat, rowSpacing: CGFloat) {
+        let minCell: CGFloat = 2.4
+        let cellCap: CGFloat = dense ? 22 : 5.5
+        let widthCell = min(max(rawW, minCell), cellCap)
+        guard dense else {
+            let rawH = (availableH - 6 * colSpacing) / 7
+            return (min(max(min(widthCell, rawH), minCell), cellCap), colSpacing)
+        }
+        let minRowSpacing = colSpacing
+        let packedH = widthCell * 7 + minRowSpacing * 6
+        if packedH <= availableH {
+            return (widthCell, minRowSpacing + (availableH - packedH) / 6)
+        }
+        let squeezed = (availableH - minRowSpacing * 6) / 7
+        return (max(min(widthCell, squeezed), minCell), minRowSpacing)
     }
 
     private func monthLabels(cells: [WidgetYearCell], cell: CGFloat, spacing: CGFloat) -> some View {
@@ -455,6 +455,97 @@ struct StressSparkline: View {
     }
 }
 
+/// 7-day stress trend with 0 / 50 / 100 Y ticks and weekday letters on X.
+struct StressAxisChart: View {
+    let values: [Double]
+    var color: Color
+
+    private static let plotHeight: CGFloat = 56
+
+    var body: some View {
+        let letters = Self.weekdayLetters()
+        HStack(alignment: .top, spacing: 4) {
+            VStack(alignment: .trailing, spacing: 0) {
+                Text("100")
+                Spacer(minLength: 0)
+                Text("50")
+                Spacer(minLength: 0)
+                Text("0")
+            }
+            .font(.system(size: 8, weight: .medium).monospacedDigit())
+            .foregroundStyle(.secondary)
+            .frame(width: 22, height: Self.plotHeight)
+
+            VStack(spacing: 3) {
+                GeometryReader { geo in
+                    let size = geo.size
+                    let pts = points(in: size)
+                    ZStack {
+                        Path { path in
+                            path.move(to: .zero)
+                            path.addLine(to: CGPoint(x: 0, y: size.height))
+                            path.addLine(to: CGPoint(x: size.width, y: size.height))
+                            path.move(to: CGPoint(x: 0, y: 0))
+                            path.addLine(to: CGPoint(x: size.width, y: 0))
+                            path.move(to: CGPoint(x: 0, y: size.height / 2))
+                            path.addLine(to: CGPoint(x: size.width, y: size.height / 2))
+                        }
+                        .stroke(Color.primary.opacity(0.18), lineWidth: 0.6)
+
+                        Path { path in
+                            guard let first = pts.first else { return }
+                            path.move(to: first)
+                            for point in pts.dropFirst() {
+                                path.addLine(to: point)
+                            }
+                        }
+                        .stroke(color, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+
+                        if let last = pts.last {
+                            Circle()
+                                .fill(color)
+                                .frame(width: 5, height: 5)
+                                .position(last)
+                        }
+                    }
+                }
+                .frame(height: Self.plotHeight)
+
+                HStack(spacing: 0) {
+                    ForEach(Array(letters.enumerated()), id: \.offset) { _, letter in
+                        Text(letter)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .font(.system(size: 8, weight: .semibold))
+                .foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private static func weekdayLetters(now: Date = Date(), calendar: Calendar = .current) -> [String] {
+        let today = calendar.startOfDay(for: now)
+        let symbols = calendar.veryShortWeekdaySymbols
+        return (0..<7).compactMap { offset in
+            guard let day = calendar.date(byAdding: .day, value: -(6 - offset), to: today) else { return nil }
+            return symbols[calendar.component(.weekday, from: day) - 1]
+        }
+    }
+
+    private func points(in size: CGSize) -> [CGPoint] {
+        guard !values.isEmpty else { return [] }
+        let count = values.count
+        let padX: CGFloat = 2
+        let usable = max(size.width - padX * 2, 1)
+        return values.enumerated().map { index, value in
+            let x = count == 1 ? size.width / 2 : padX + usable * CGFloat(index) / CGFloat(count - 1)
+            let y = size.height * (1 - CGFloat(min(max(value / 100, 0), 1)))
+            return CGPoint(x: x, y: y)
+        }
+    }
+}
+
 private struct WidgetChromeModifier: ViewModifier {
     var padding: CGFloat = 14
 
@@ -475,6 +566,12 @@ private extension View {
 }
 
 #Preview("Year medium", as: .systemMedium) {
+    WorkoutYearWidget()
+} timeline: {
+    WorkoutWidgetEntry(date: .now, snapshot: .preview)
+}
+
+#Preview("Year large", as: .systemLarge) {
     WorkoutYearWidget()
 } timeline: {
     WorkoutWidgetEntry(date: .now, snapshot: .preview)

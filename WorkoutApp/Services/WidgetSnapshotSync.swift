@@ -43,11 +43,15 @@ enum WidgetSnapshotSync {
 
         var liftDays: Set<TimeInterval> = []
         var liftSessionCount = 0
+        var workoutsLast7Days = 0
         for session in sessions where session.endDate != nil {
             let day = cal.startOfDay(for: session.startDate)
             if cal.component(.year, from: day) == year {
                 liftDays.insert(day.timeIntervalSince1970)
                 liftSessionCount += 1
+            }
+            if day >= recentStart {
+                workoutsLast7Days += 1
             }
         }
 
@@ -110,7 +114,8 @@ enum WidgetSnapshotSync {
             lastWorkoutDate: last?.startDate,
             nextDayName: next?.name,
             nextProgramName: active?.name,
-            accentHex: accentHex
+            accentHex: accentHex,
+            workoutsLast7Days: workoutsLast7Days
         )
     }
 }

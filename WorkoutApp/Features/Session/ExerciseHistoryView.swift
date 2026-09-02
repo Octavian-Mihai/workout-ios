@@ -154,6 +154,101 @@ struct ExerciseHistoryView: View {
     }
 }
 
+struct ExerciseHistoryBrowserView: View {
+    let accent: Color
+
+    @Environment(AppTheme.self) private var theme
+    @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
+    @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
+    @State private var query = ""
+
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
+
+    private var loggedExercises: [LoggedExerciseSummary] {
+        var grouped: [String: LoggedExerciseSummary] = [:]
+        for session in sessions where session.endDate != nil {
+            var seen = Set<String>()
+            for set in session.sets {
+                let key = set.exerciseName.lowercased()
+                guard seen.insert(key).inserted else { continue }
+                if var existing = grouped[key] {
+                    existing.sessionCount += 1
+                    if session.startDate > existing.lastDate {
+                        existing.lastDate = session.startDate
+                        existing.name = set.exerciseName
+                    }
+                    grouped[key] = existing
+                } else {
+                    grouped[key] = LoggedExerciseSummary(
+                        id: key,
+                        name: set.exerciseName,
+                        lastDate: session.startDate,
+                        sessionCount: 1
+                    )
+                }
+            }
+        }
+        return grouped.values.sorted {
+            $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+        }
+    }
+
+    private var filtered: [LoggedExerciseSummary] {
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return loggedExercises }
+        return loggedExercises.filter { $0.name.localizedCaseInsensitiveContains(q) }
+    }
+
+    var body: some View {
+        List {
+            if filtered.isEmpty {
+                Text(loggedExercises.isEmpty
+                     ? "No logged exercises yet. Finish a workout to see history here."
+                     : "No exercises match your search.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .listRowBackground(Color.clear)
+            } else {
+                ForEach(filtered) { item in
+                    NavigationLink {
+                        ExerciseHistoryView(exerciseName: item.name, unit: unit, accent: accent)
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(item.name)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(.primary)
+                                Text(subtitle(for: item))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                        }
+                    }
+                }
+            }
+        }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(theme.groupedBackground)
+        .searchable(text: $query, prompt: "Search exercises")
+        .navigationTitle("Exercise history")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func subtitle(for item: LoggedExerciseSummary) -> String {
+        let sessions = item.sessionCount == 1 ? "1 session" : "\(item.sessionCount) sessions"
+        return "\(sessions) · \(Formatters.shortDate.string(from: item.lastDate))"
+    }
+}
+
+private struct LoggedExerciseSummary: Identifiable {
+    let id: String
+    var name: String
+    var lastDate: Date
+    var sessionCount: Int
+}
+
 private struct HistoryPoint: Identifiable {
     let id = UUID()
     let date: Date

@@ -1,10 +1,25 @@
 import SwiftUI
 import SwiftData
 
+enum InfoPageVisibility {
+    static let showTodayStressKey = "infoShowTodayStress"
+    static let showTonnageKey = "infoShowTonnage"
+    static let showVolumeChartsKey = "infoShowVolumeCharts"
+    static let showEstimated1RMKey = "infoShowEstimated1RM"
+    static let showIntensityMapKey = "infoShowIntensityMap"
+}
+
 struct InfoView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @EnvironmentObject private var health: HealthKitService
     @Environment(AppTheme.self) private var theme
+    @AppStorage(InfoPageVisibility.showTodayStressKey) private var showTodayStress = true
+    @AppStorage(InfoPageVisibility.showTonnageKey) private var showTonnage = true
+    @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
+    @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
+    @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
+    @State private var stressExpanded = true
+    @State private var analyticsExpanded = false
 
     private var accent: Color {
         theme.accent
@@ -12,6 +27,10 @@ struct InfoView: View {
 
     private var allSets: [SetLog] {
         sessions.flatMap(\.sets)
+    }
+
+    private var showsAnalytics: Bool {
+        showTonnage || showVolumeCharts || showEstimated1RM || showIntensityMap
     }
 
     private var estimate: StressEstimate {
@@ -43,34 +62,80 @@ struct InfoView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("My stress")
-                        .font(.headline)
-                    TodayStressCard(
-                        estimate: estimate,
-                        showSplit: true,
-                        trend: trend,
-                        accent: accent
-                    )
+                    if showTodayStress {
+                        DisclosureGroup(isExpanded: $stressExpanded) {
+                            VStack(alignment: .leading, spacing: 16) {
+                                TodayStressCard(
+                                    estimate: estimate,
+                                    showSplit: true,
+                                    trend: trend,
+                                    accent: accent
+                                )
 
-                    if health.cardioWorkouts.contains(where: { $0.activityType != .running }) {
-                        Text("Cardio stress includes walking, hiking, and cycling from Apple Health.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                                if health.cardioWorkouts.contains(where: { $0.activityType != .running }) {
+                                    Text("Cardio stress includes walking, hiking, and cycling from Apple Health.")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                if let recoveryContext {
+                                    Text(recoveryContext)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .padding(.top, 8)
+                        } label: {
+                            Text("My stress")
+                                .font(.title3.weight(.bold))
+                                .foregroundStyle(.primary)
+                        }
+                        .tint(.secondary)
                     }
 
-                    if let recoveryContext {
-                        Text(recoveryContext)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
+                    exerciseHistoryLink
 
-                    StrengthAnalyticsView(sets: allSets, accent: accent)
+                    if showsAnalytics {
+                        DisclosureGroup(isExpanded: $analyticsExpanded) {
+                            StrengthAnalyticsView(sets: allSets, accent: accent)
+                                .padding(.top, 8)
+                        } label: {
+                            Text("Analytics")
+                                .font(.title3.weight(.bold))
+                                .foregroundStyle(.primary)
+                        }
+                        .tint(.secondary)
+                    }
                 }
                 .padding(16)
             }
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Info")
         }
+    }
+
+    private var exerciseHistoryLink: some View {
+        NavigationLink {
+            ExerciseHistoryBrowserView(accent: accent)
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Exercise history")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text("1RM and weight evolution for logged lifts")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(16)
+            .opaqueCard()
+        }
+        .buttonStyle(.plain)
     }
 }
 

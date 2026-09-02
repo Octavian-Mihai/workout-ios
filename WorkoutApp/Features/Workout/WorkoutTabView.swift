@@ -66,6 +66,10 @@ struct StrengthAnalyticsView: View {
 
     @Environment(AppTheme.self) private var theme
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
+    @AppStorage(InfoPageVisibility.showTonnageKey) private var showTonnage = true
+    @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
+    @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
+    @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
 
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
     private var recent: [SetLog] { StressCalculator.sets(inLastDays: 7, from: sets) }
@@ -81,15 +85,19 @@ struct StrengthAnalyticsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Analytics")
-                .font(.title3.weight(.bold))
-
-            tonnageSummary
-
-            volumeChart
-            oneRMChart
-            engagementChart
-            intensityMap
+            if showTonnage {
+                tonnageSummary
+            }
+            if showVolumeCharts {
+                volumeChart
+                engagementChart
+            }
+            if showEstimated1RM {
+                oneRMChart
+            }
+            if showIntensityMap {
+                intensityMap
+            }
         }
     }
 

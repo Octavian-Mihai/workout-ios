@@ -1,0 +1,160 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutWidgets/WorkoutWidgetViews.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 75
+        }
+      },
+      {
+        "comment": "",
+        "key": "Day %lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 80
+        }
+      },
+      {
+        "comment": "",
+        "key": "workout day",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 77
+        }
+      },
+      {
+        "comment": "",
+        "key": "workout days",
+        "location": {
+          "startingColumn": 63,
+          "startingLine": 77
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld / %lld days",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 98
+        }
+      },
+      {
+        "comment": "",
+        "key": "Today’s stress",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 134
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 138
+        }
+      },
+      {
+        "comment": "",
+        "key": "last 7 days",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 152
+        }
+      },
+      {
+        "comment": "",
+        "key": "1 workout",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld workouts",
+        "location": {
+          "startingColumn": 70,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 186
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 189
+        }
+      },
+      {
+        "comment": "",
+        "key": "Today’s stress",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 202
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 241
+        }
+      },
+      {
+        "comment": "",
+        "key": "Year activity grid",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 360
+        }
+      },
+      {
+        "comment": "",
+        "key": "100",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 469
+        }
+      },
+      {
+        "comment": "",
+        "key": "50",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 471
+        }
+      },
+      {
+        "comment": "",
+        "key": "0",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 473
+        }
+      }
+    ]
+  },
+  "version": 1
+}
