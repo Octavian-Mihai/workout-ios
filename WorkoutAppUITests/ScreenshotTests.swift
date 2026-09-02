@@ -14,7 +14,6 @@ final class ScreenshotTests: XCTestCase {
         app.launch()
 
         sleep(2)
-        configureAppearanceForScreenshots(in: app)
 
         saveScreenshot(named: "home", in: app)
 
@@ -37,20 +36,6 @@ final class ScreenshotTests: XCTestCase {
             sleep(1)
             saveScreenshot(named: "live-workout", in: app)
         }
-    }
-
-    private func configureAppearanceForScreenshots(in app: XCUIApplication) {
-        tapTab("Settings", in: app)
-        let dark = app.buttons["Dark"]
-        if dark.waitForExistence(timeout: 2) {
-            dark.tap()
-        }
-        let red = app.buttons["Red"]
-        if red.waitForExistence(timeout: 2) {
-            red.tap()
-        }
-        sleep(1)
-        tapTab("Home", in: app)
     }
 
     private func tapTab(_ label: String, in app: XCUIApplication) {

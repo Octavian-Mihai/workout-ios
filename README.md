@@ -1,6 +1,6 @@
-# Workout (iOS)
+# Workout
 
-Native iPhone workout tracker built with **SwiftUI** and **SwiftData**. Log strength sessions with a custom keypad and RIR tracking, build your own programs, analyze training stress, sync runs from Apple Health, and customize the app accent.
+A native iPhone app for strength training. Log sessions with a custom keypad and RIR, build rotating programs, follow recovery and volume, and pull runs from Apple Health.
 
 Requires **iOS 17+**.
 
@@ -12,9 +12,9 @@ Requires **iOS 17+**.
 |:---:|:---:|
 | ![Home screen](docs/screenshots/home.png) | ![Live workout session](docs/screenshots/live-workout.png) |
 
-| Workout (Learn) | Info (Analytics) |
+| Workout | Info |
 |:---:|:---:|
-| ![Workout tab](docs/screenshots/workout.png) | ![Info analytics](docs/screenshots/info.png) |
+| ![Workout tab](docs/screenshots/workout.png) | ![Info tab](docs/screenshots/info.png) |
 
 | Running | Settings |
 |:---:|:---:|
@@ -25,40 +25,54 @@ Requires **iOS 17+**.
 ## Features
 
 ### Home
-- Year activity grid with **Weights**, **Running**, and **Both** day markers
-- Next workout from your active program rotation
-- Start an empty workout anytime
-- **Today's stress** estimate from recent lifting + running load
+- Year activity grid for **Weights**, **Running**, and **Both**
+- Workout count and day-of-year on the year card
+- **Today’s stress** under the year overview
+- Next workout from your active program, or start an empty session
 
 ### Workout logging
-- Custom **4×4 number pad** (no system keyboard) with rest timer
-- **RIR** input on the reps keypad (color-coded 0–5+)
-- **Plate calculator** for barbell and functional-trainer exercises
-- Per-set history: last session performance + 4-column set grid
-- Swipe left to delete a logged set
-- Minimize an in-progress session and resume from a floating pill
-- Exercise history & **1RM estimate** per movement
+- Custom number pad (no system keyboard) with rest timer
+- **RIR** on the reps keypad, with an in-session explainer
+- Planned vs logged sets (`X out of Y sets done`)
+- Edit a logged set’s weight, reps, and RIR without adding a new set
+- Plate calculator for barbell and functional-trainer lifts
+- Exercise history and estimated **1RM** per movement
 
 ### Programs
-- Create multi-day programs with exercise rotation
-- Optional save of a changed day template after a programmed session
+- Multi-day programs with a rotating next workout
+- Sets per exercise while building a day
+- Overview after you tap Done: planned sets, muscle breakdown, and split notes
+
+### Learn
+- Core movement categories
+- Key muscle groups
+- More strength patterns
+- Related muscles and patterns as separate cards you can tap through
 
 ### Info
-- Personal stress dashboard (today + 7-day trend)
-- Strength analytics: volume, 1RM charts, muscle engagement, intensity map, central/total stress (0–100)
+- Today’s stress and 7-day trend
+- 7-day tonnage and reps (totals and per muscle)
+- Volume, 1RM, engagement, and intensity charts
+- Searchable exercise history
+- Sections you can hide from Settings
 
 ### Running
-- Reads runs from **Apple Health** (read-only)
-- Filters, pace/HR charts, route map when GPS data exists
-- Runs older than 2 weeks grouped in a collapsible section
+- Reads running, walking, hiking, and cycling from **Apple Health**
+- Filters, pace and heart-rate charts, route map when GPS exists
+
+### Widgets
+- **Year** — small, medium, and large year-in-pixels views
+- **Today’s stress** — small and medium
+- **Next workout** — small
 
 ### Settings
-- Accent color: 5 presets + custom color picker (spectrum / sliders)
+- Custom accent and appearance (including a custom background color)
 - Light, dark, or system appearance
-- kg/lb and km/mi units
-- Body weight log synced with HealthKit
-- Export / import workout data (JSON backup)
-- Delete local data, privacy info, HealthKit permissions
+- kg/lb and km/mi
+- Body weight log synced with Health
+- Optional write of finished strength sessions to Apple Health (Traditional Strength Training)
+- Export / import JSON backup
+- Info-page visibility toggles
 
 ---
 
@@ -70,81 +84,15 @@ Requires **iOS 17+**.
 | Persistence | SwiftData |
 | Charts | Swift Charts |
 | Maps | MapKit |
-| Health | HealthKit (running read, body mass read/write) |
-| Project | [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`project.yml`) |
+| Health | HealthKit (cardio read; body mass read/write; optional strength workout write) |
+| Home screen | WidgetKit |
 
 ---
 
-## Getting started
+## App Store
 
-### Requirements
-- macOS with **Xcode 15+** (iOS 17 SDK)
-- [XcodeGen](https://github.com/yonaskolb/XcodeGen) — `brew install xcodegen`
-
-### Open the project
-
-```bash
-git clone https://github.com/Octavian-Mihai/workout-ios.git
-cd workout-ios
-xcodegen generate
-open WorkoutApp.xcodeproj
-```
-
-Select an **iPhone** simulator or a physical device, set your **Team** under Signing & Capabilities, then **Run**.
-
-### HealthKit on device
-Running analytics and body-weight sync need Apple Health permission on a **physical iPhone**. The simulator has limited Health data unless you add samples manually.
-
----
-
-## Project structure
-
-```
-workout_ios/
-├── WorkoutApp/
-│   ├── App/              Root tab view, app entry
-│   ├── Features/         Home, Workout, Session, Program, Running, Info, Settings
-│   ├── Models/           SwiftData models + exercise catalog
-│   ├── Services/         Stress, 1RM, HealthKit, backup
-│   ├── Shared/           Activity grid, RIR, formatters
-│   └── Theme/            Accent, cards, units
-├── WorkoutAppUITests/    UI tests (includes screenshot capture)
-├── docs/screenshots/     README screenshots
-├── project.yml
-└── Info.plist
-```
-
----
-
-## Regenerate README screenshots
-
-Captures **dark appearance** and **red accent** automatically.
-
-```bash
-xcodegen generate
-xcodebuild test \
-  -project WorkoutApp.xcodeproj \
-  -scheme WorkoutApp \
-  -destination 'platform=iOS Simulator,name=iPhone 16' \
-  -only-testing:WorkoutAppUITests/ScreenshotTests/testCaptureScreenshots \
-  CODE_SIGNING_ALLOWED=NO
-```
-
-PNG files are written to `docs/screenshots/`.
-
----
-
-## App Store notes
-
-Before submitting:
-- Replace `com.local.WorkoutApp` with your production bundle ID
-- Add App Icon marketing assets
-- Configure HealthKit capability with your Apple Developer team
 - Privacy strings for HealthKit are in `Info.plist`
-- `ITSAppUsesNonExemptEncryption` is set to `false`
-
----
-
-## License
-
-Private project — all rights reserved unless a license file is added.
+- `ITSAppUsesNonExemptEncryption` is `false`
+- Strength sessions stay on-device unless the user turns on **Write finished workouts to Apple Health**
+- Cardio workouts from Health are read-only
+- Replace `com.local.WorkoutApp` with your production bundle ID and App Icon before submit
