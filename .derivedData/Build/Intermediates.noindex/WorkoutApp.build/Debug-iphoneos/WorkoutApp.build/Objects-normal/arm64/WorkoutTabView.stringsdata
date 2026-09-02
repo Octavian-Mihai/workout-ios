@@ -36,18 +36,10 @@
       },
       {
         "comment": "",
-        "key": "Analytics",
-        "location": {
-          "startingColumn": 18,
-          "startingLine": 84
-        }
-      },
-      {
-        "comment": "",
         "key": "Log sets to see tonnage.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 99
+          "startingLine": 107
         }
       },
       {
@@ -55,7 +47,7 @@
         "key": "Tonnage (7d)",
         "location": {
           "startingColumn": 26,
-          "startingLine": 104
+          "startingLine": 112
         }
       },
       {
@@ -63,7 +55,7 @@
         "key": "%@ %@·reps",
         "location": {
           "startingColumn": 26,
-          "startingLine": 106
+          "startingLine": 114
         }
       },
       {
@@ -71,7 +63,7 @@
         "key": "Reps (7d)",
         "location": {
           "startingColumn": 26,
-          "startingLine": 111
+          "startingLine": 119
         }
       },
       {
@@ -79,7 +71,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 26,
-          "startingLine": 113
+          "startingLine": 121
         }
       },
       {
@@ -87,7 +79,7 @@
         "key": "%@ %@·reps",
         "location": {
           "startingColumn": 34,
-          "startingLine": 122
+          "startingLine": 130
         }
       },
       {
@@ -95,7 +87,7 @@
         "key": "%@ reps",
         "location": {
           "startingColumn": 34,
-          "startingLine": 124
+          "startingLine": 132
         }
       },
       {
@@ -103,7 +95,7 @@
         "key": "Volume per muscle (7d)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 140
+          "startingLine": 148
         }
       },
       {
@@ -111,7 +103,7 @@
         "key": "Primary gets full set volume; secondary gets half.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 142
+          "startingLine": 150
         }
       },
       {
@@ -119,7 +111,7 @@
         "key": "Log sets to see muscle volume.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 146
+          "startingLine": 154
         }
       },
       {
@@ -127,7 +119,7 @@
         "key": "Volume",
         "location": {
           "startingColumn": 35,
-          "startingLine": 152
+          "startingLine": 160
         }
       },
       {
@@ -135,7 +127,7 @@
         "key": "Muscle",
         "location": {
           "startingColumn": 35,
-          "startingLine": 153
+          "startingLine": 161
         }
       },
       {
@@ -143,7 +135,7 @@
         "key": "Estimated 1RM",
         "location": {
           "startingColumn": 18,
-          "startingLine": 168
+          "startingLine": 176
         }
       },
       {
@@ -151,7 +143,7 @@
         "key": "weight × (1 + (reps + RIR) / 30)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 170
+          "startingLine": 178
         }
       },
       {
@@ -159,7 +151,7 @@
         "key": "Squat, bench, deadlift, OHP, and row will appear here.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 174
+          "startingLine": 182
         }
       },
       {
@@ -167,47 +159,47 @@
         "key": "Date",
         "location": {
           "startingColumn": 35,
-          "startingLine": 180
-        }
-      },
-      {
-        "comment": "",
-        "key": "1RM",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 181
-        }
-      },
-      {
-        "comment": "",
-        "key": "Lift",
-        "location": {
-          "startingColumn": 49,
-          "startingLine": 183
-        }
-      },
-      {
-        "comment": "",
-        "key": "Date",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 185
-        }
-      },
-      {
-        "comment": "",
-        "key": "1RM",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 186
-        }
-      },
-      {
-        "comment": "",
-        "key": "Lift",
-        "location": {
-          "startingColumn": 49,
           "startingLine": 188
+        }
+      },
+      {
+        "comment": "",
+        "key": "1RM",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 189
+        }
+      },
+      {
+        "comment": "",
+        "key": "Lift",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 191
+        }
+      },
+      {
+        "comment": "",
+        "key": "Date",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 193
+        }
+      },
+      {
+        "comment": "",
+        "key": "1RM",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 194
+        }
+      },
+      {
+        "comment": "",
+        "key": "Lift",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 196
         }
       },
       {
@@ -215,7 +207,7 @@
         "key": "Muscle engagement (7d)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 200
+          "startingLine": 208
         }
       },
       {
@@ -223,7 +215,7 @@
         "key": "No sets in the last 7 days.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 203
+          "startingLine": 211
         }
       },
       {
@@ -231,7 +223,7 @@
         "key": "Muscle",
         "location": {
           "startingColumn": 35,
-          "startingLine": 209
+          "startingLine": 217
         }
       },
       {
@@ -239,7 +231,7 @@
         "key": "Volume",
         "location": {
           "startingColumn": 35,
-          "startingLine": 210
+          "startingLine": 218
         }
       },
       {
@@ -247,7 +239,7 @@
         "key": "Intensity map",
         "location": {
           "startingColumn": 18,
-          "startingLine": 229
+          "startingLine": 237
         }
       },
       {
@@ -255,7 +247,7 @@
         "key": "Average RIR per exercise over the last 7 days.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 231
+          "startingLine": 239
         }
       },
       {
@@ -263,7 +255,7 @@
         "key": "Intensity appears after you log sets.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 235
+          "startingLine": 243
         }
       }
     ]

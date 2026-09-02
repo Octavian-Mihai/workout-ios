@@ -1,17 +1,17 @@
 {
+  "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Info/YourGuideView.swift" : {
+    "const-values" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/YourGuideView.swiftconstvalues",
+    "dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/YourGuideView.d",
+    "diagnostics" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/YourGuideView.dia",
+    "object" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/YourGuideView.o",
+    "swift-dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/YourGuideView.swiftdeps"
+  },
   "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Program/ProgramListView.swift" : {
     "const-values" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramListView.swiftconstvalues",
     "dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramListView.d",
     "diagnostics" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramListView.dia",
     "object" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramListView.o",
     "swift-dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramListView.swiftdeps"
-  },
-  "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Program/ProgramOverviewStats.swift" : {
-    "const-values" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramOverviewStats.swiftconstvalues",
-    "dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramOverviewStats.d",
-    "diagnostics" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramOverviewStats.dia",
-    "object" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramOverviewStats.o",
-    "swift-dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramOverviewStats.swiftdeps"
   },
   "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Program/ProgramOverviewView.swift" : {
     "const-values" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/ProgramOverviewView.swiftconstvalues",

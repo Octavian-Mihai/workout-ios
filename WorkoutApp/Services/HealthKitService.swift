@@ -59,6 +59,9 @@ struct RunDetailData {
 
 @MainActor
 final class HealthKitService: ObservableObject {
+    /// Opt-in: when true, finishing a strength session writes an `HKWorkout` to Health.
+    static let writeStrengthToHealthKitKey = "writeStrengthToHealthKit"
+
     @Published var isAuthorized = false
     @Published var cardioWorkouts: [CardioWorkout] = []
     @Published var runDays: Set<Date> = []
@@ -123,8 +126,9 @@ final class HealthKitService: ObservableObject {
             throw HealthKitServiceError.missingTypes
         }
 
+        let workoutType = HKObjectType.workoutType()
         let read: Set<HKObjectType> = [
-            HKObjectType.workoutType(),
+            workoutType,
             distance,
             heartRate,
             restingHR,
@@ -133,7 +137,58 @@ final class HealthKitService: ObservableObject {
             HKSeriesType.workoutRoute(),
             bodyMass
         ]
-        try await store.requestAuthorization(toShare: [bodyMass], read: read)
+        try await store.requestAuthorization(toShare: [bodyMass, workoutType], read: read)
+    }
+
+    /// Saves a finished in-app strength session as Traditional Strength Training.
+    /// Failures are recorded on `lastError` and do not throw.
+    func saveStrengthWorkout(start: Date, end: Date, sessionUUID: UUID) async {
+        guard isAvailable else { return }
+        let safeEnd = end > start ? end : start.addingTimeInterval(1)
+        if await strengthWorkoutExists(sessionUUID: sessionUUID) {
+            return
+        }
+
+        let configuration = HKWorkoutConfiguration()
+        configuration.activityType = .traditionalStrengthTraining
+        let builder = HKWorkoutBuilder(healthStore: store, configuration: configuration, device: .local())
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+            ?? Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
+            ?? "Workout"
+        let metadata: [String: Any] = [
+            HKMetadataKeyWorkoutBrandName: appName,
+            HKMetadataKeyExternalUUID: sessionUUID.uuidString
+        ]
+
+        do {
+            try await builder.beginCollection(at: start)
+            try await builder.addMetadata(metadata)
+            try await builder.endCollection(at: safeEnd)
+            guard try await builder.finishWorkout() != nil else {
+                lastError = "Could not save the strength workout to Apple Health."
+                return
+            }
+        } catch {
+            lastError = error.localizedDescription
+        }
+    }
+
+    private func strengthWorkoutExists(sessionUUID: UUID) async -> Bool {
+        await withCheckedContinuation { continuation in
+            let predicate = HKQuery.predicateForObjects(
+                withMetadataKey: HKMetadataKeyExternalUUID,
+                allowedValues: [sessionUUID.uuidString]
+            )
+            let query = HKSampleQuery(
+                sampleType: .workoutType(),
+                predicate: predicate,
+                limit: 1,
+                sortDescriptors: nil
+            ) { _, samples, _ in
+                continuation.resume(returning: !(samples ?? []).isEmpty)
+            }
+            store.execute(query)
+        }
     }
 
     private func loadDateOfBirth() {

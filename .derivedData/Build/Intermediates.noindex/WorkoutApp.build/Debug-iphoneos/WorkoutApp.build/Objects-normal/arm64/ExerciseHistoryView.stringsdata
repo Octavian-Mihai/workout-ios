@@ -105,6 +105,38 @@
           "startingColumn": 38,
           "startingLine": 135
         }
+      },
+      {
+        "comment": "",
+        "key": "Search exercises",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 234
+        }
+      },
+      {
+        "comment": "",
+        "key": "Exercise history",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 235
+        }
+      },
+      {
+        "comment": "",
+        "key": "No logged exercises yet. Finish a workout to see history here.",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 206
+        }
+      },
+      {
+        "comment": "",
+        "key": "No exercises match your search.",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 207
+        }
       }
     ]
   },

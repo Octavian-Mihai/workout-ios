@@ -5,6 +5,49 @@
 	<key>logFormatVersion</key>
 	<integer>12</integer>
 	<key>logs</key>
-	<dict/>
+	<dict>
+		<key>D6A81533-0352-404A-B92F-126D33A3CD0B</key>
+		<dict>
+			<key>className</key>
+			<string>IDECommandLineBuildLog</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>D6A81533-0352-404A-B92F-126D33A3CD0B.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+				<key>totalNumberOfAnalyzerIssues</key>
+				<integer>0</integer>
+				<key>totalNumberOfErrors</key>
+				<integer>0</integer>
+				<key>totalNumberOfTestFailures</key>
+				<integer>0</integer>
+				<key>totalNumberOfWarnings</key>
+				<integer>0</integer>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>WorkoutApp project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>WorkoutApp</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Building project WorkoutApp with scheme WorkoutApp and configuration Debug</string>
+			<key>timeStartedRecording</key>
+			<real>810022180.82131195</real>
+			<key>timeStoppedRecording</key>
+			<real>810022191.39197004</real>
+			<key>title</key>
+			<string>Building project WorkoutApp with scheme WorkoutApp and configuration Debug</string>
+			<key>uniqueIdentifier</key>
+			<string>D6A81533-0352-404A-B92F-126D33A3CD0B</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

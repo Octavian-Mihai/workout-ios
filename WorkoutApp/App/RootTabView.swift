@@ -55,6 +55,7 @@ struct RootTabView: View {
                 }
                 .environment(\.modelContext, modelContext)
                 .environmentObject(sessionStore)
+                .environmentObject(health)
                 .tint(accent)
             }
         }

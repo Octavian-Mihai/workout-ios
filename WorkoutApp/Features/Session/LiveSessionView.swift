@@ -289,10 +289,12 @@ struct LiveSessionView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(AppTheme.self) private var theme
+    @EnvironmentObject private var health: HealthKitService
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var pastSessions: [WorkoutSession]
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
+    @AppStorage(HealthKitService.writeStrengthToHealthKitKey) private var writeStrengthToHealthKit = false
 
     @State private var showAddExercise = false
     @State private var showSaveTemplate = false
@@ -583,6 +585,15 @@ struct LiveSessionView: View {
             }
         }
         try? modelContext.save()
+
+        if writeStrengthToHealthKit {
+            let start = session.startDate
+            let end = session.endDate ?? Date()
+            let sessionUUID = session.uuid
+            Task {
+                await health.saveStrengthWorkout(start: start, end: end, sessionUUID: sessionUUID)
+            }
+        }
 
         finishedSession = session
         showSummary = true

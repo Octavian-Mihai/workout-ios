@@ -23,6 +23,7 @@ struct SettingsView: View {
     @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
     @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
+    @AppStorage(HealthKitService.writeStrengthToHealthKitKey) private var writeStrengthToHealthKit = false
     @State private var showDeleteConfirm = false
     @State private var showImporter = false
     @State private var dataError: String?
@@ -146,7 +147,8 @@ struct SettingsView: View {
                 }
 
                 Section("Health") {
-                    Text("Running is read from Apple Health. Body weight is read from and saved to Health. Strength sessions stay in this app and are not written to HealthKit.")
+                    Toggle("Write finished workouts to Apple Health", isOn: $writeStrengthToHealthKit)
+                    Text("When this is on, finishing a strength session adds a Traditional Strength Training workout to Apple Health. When it’s off, sessions stay in this app only. Running is read from Health. Body weight is read from and saved to Health.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button("Re-request HealthKit access") {
@@ -202,6 +204,11 @@ struct SettingsView: View {
                 Button("Cancel", role: .cancel) {}
             } message: {
                 Text("This removes programs, workout history, and body-weight entries from this device. Apple Health data is not deleted.")
+            }
+            .onChange(of: writeStrengthToHealthKit) { _, isOn in
+                if isOn {
+                    Task { await health.requestAndLoad() }
+                }
             }
             .alert("Couldn’t import workout data", isPresented: $showDataError) {
                 Button("OK", role: .cancel) {}
@@ -263,7 +270,7 @@ struct PrivacyInfoView: View {
                     .foregroundStyle(.secondary)
             }
             Section("Apple Health") {
-                Text("Running workouts, GPS routes, distance, and heart rate are read only. Body weight is read from and written to Apple Health when you use the weight log. This app never writes strength sessions to HealthKit.")
+                Text("Running workouts, GPS routes, distance, and heart rate are read only. Body weight is read from and written to Apple Health when you use the weight log. Finished strength sessions are written to Health as Traditional Strength Training workouts only if you turn on writing workouts in Settings.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

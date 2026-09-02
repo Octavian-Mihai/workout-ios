@@ -7,23 +7,47 @@
         "key": "Info",
         "location": {
           "startingColumn": 30,
-          "startingLine": 72
-        }
-      },
-      {
-        "comment": "",
-        "key": "My stress",
-        "location": {
-          "startingColumn": 26,
-          "startingLine": 46
+          "startingLine": 113
         }
       },
       {
         "comment": "",
         "key": "Cardio stress includes walking, hiking, and cycling from Apple Health.",
         "location": {
-          "startingColumn": 30,
-          "startingLine": 56
+          "startingColumn": 42,
+          "startingLine": 76
+        }
+      },
+      {
+        "comment": "",
+        "key": "My stress",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analytics",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 103
+        }
+      },
+      {
+        "comment": "",
+        "key": "Exercise history",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 123
+        }
+      },
+      {
+        "comment": "",
+        "key": "1RM and weight evolution for logged lifts",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 126
         }
       },
       {
@@ -31,31 +55,7 @@
         "key": "Learn",
         "location": {
           "startingColumn": 18,
-          "startingLine": 90
-        }
-      },
-      {
-        "comment": "",
-        "key": "Catalog lifts used in the program builder. Muscle tags feed volume charts.",
-        "location": {
-          "startingColumn": 18,
-          "startingLine": 210
-        }
-      },
-      {
-        "comment": "",
-        "key": "Primary: %@",
-        "location": {
-          "startingColumn": 34,
-          "startingLine": 222
-        }
-      },
-      {
-        "comment": "",
-        "key": "Secondary: %@",
-        "location": {
-          "startingColumn": 38,
-          "startingLine": 226
+          "startingLine": 145
         }
       }
     ]

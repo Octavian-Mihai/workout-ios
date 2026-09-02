@@ -1,0 +1,32 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Info/YourGuideView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Related",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 841
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@, photo coming soon",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 976
+        }
+      },
+      {
+        "comment": "",
+        "key": "Photo coming soon",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 970
+        }
+      }
+    ]
+  },
+  "version": 1
+}
