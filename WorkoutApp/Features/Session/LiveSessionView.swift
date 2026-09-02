@@ -7,6 +7,7 @@ struct DraftExercise: Identifiable {
     var name: String
     var primaryMuscles: [String]
     var secondaryMuscles: [String]
+    var targetSets: Int
     var logged: [DraftSet]
 
     init(
@@ -14,12 +15,14 @@ struct DraftExercise: Identifiable {
         name: String,
         primaryMuscles: [String],
         secondaryMuscles: [String],
+        targetSets: Int = 0,
         logged: [DraftSet] = []
     ) {
         self.id = id
         self.name = name
         self.primaryMuscles = primaryMuscles
         self.secondaryMuscles = secondaryMuscles
+        self.targetSets = targetSets
         self.logged = logged
     }
 }
@@ -39,13 +42,20 @@ struct DraftSet: Identifiable {
 }
 
 enum SessionField: Hashable {
-    case weight(UUID)
-    case reps(UUID)
+    case weight(UUID, setID: UUID?)
+    case reps(UUID, setID: UUID?)
 
     var exerciseID: UUID {
         switch self {
-        case .weight(let id), .reps(let id):
+        case .weight(let id, _), .reps(let id, _):
             return id
+        }
+    }
+
+    var setID: UUID? {
+        switch self {
+        case .weight(_, let setID), .reps(_, let setID):
+            return setID
         }
     }
 
@@ -70,8 +80,15 @@ final class SessionController: ObservableObject {
     @Published var timerRunning = false
     @Published var restCompletedPulse = 0
     @Published var startedAt: Date
-    @Published var focusedField: SessionField?
+    @Published var focusedField: SessionField? {
+        didSet {
+            if let previous = oldValue?.setID, previous != focusedField?.setID {
+                loggedEdits[previous] = nil
+            }
+        }
+    }
     @Published var drafts: [UUID: ExerciseDraft] = [:]
+    @Published var loggedEdits: [UUID: ExerciseDraft] = [:]
 
     let program: Program?
     let programDay: ProgramDay?
@@ -95,7 +112,8 @@ final class SessionController: ObservableObject {
                 DraftExercise(
                     name: item.name,
                     primaryMuscles: item.primaryMuscles,
-                    secondaryMuscles: item.secondaryMuscles
+                    secondaryMuscles: item.secondaryMuscles,
+                    targetSets: item.targetSets
                 )
             }
             self.exercises = list
@@ -158,6 +176,45 @@ final class SessionController: ObservableObject {
         startRest()
     }
 
+    func updateSet(exerciseID: UUID, setID: UUID, weightKg: Double, reps: Int, rir: Int) {
+        guard let exerciseIndex = exercises.firstIndex(where: { $0.id == exerciseID }),
+              let setIndex = exercises[exerciseIndex].logged.firstIndex(where: { $0.id == setID })
+        else { return }
+        exercises[exerciseIndex].logged[setIndex].weightKg = weightKg
+        exercises[exerciseIndex].logged[setIndex].reps = reps
+        exercises[exerciseIndex].logged[setIndex].rir = rir
+    }
+
+    func ensureLoggedEdit(exerciseID: UUID, setID: UUID, unit: WeightUnit) {
+        if loggedEdits[setID] != nil { return }
+        guard let exercise = exercises.first(where: { $0.id == exerciseID }),
+              let set = exercise.logged.first(where: { $0.id == setID })
+        else { return }
+        loggedEdits[setID] = ExerciseDraft(
+            weightText: unit.formatNumber(set.weightKg),
+            repsText: "\(set.reps)",
+            rir: set.rir,
+            didSeed: true
+        )
+    }
+
+    func activeDraft(for field: SessionField) -> ExerciseDraft {
+        if let setID = field.setID {
+            return loggedEdits[setID] ?? ExerciseDraft()
+        }
+        return draft(for: field.exerciseID)
+    }
+
+    func updateActiveDraft(for field: SessionField, _ body: (inout ExerciseDraft) -> Void) {
+        if let setID = field.setID {
+            var value = loggedEdits[setID] ?? ExerciseDraft()
+            body(&value)
+            loggedEdits[setID] = value
+            return
+        }
+        updateDraft(for: field.exerciseID, body)
+    }
+
     func ensureDraft(for exerciseID: UUID, unit: WeightUnit, previousSets: [SetLog]) {
         guard let exercise = exercises.first(where: { $0.id == exerciseID }) else { return }
         var draft = drafts[exerciseID] ?? ExerciseDraft()
@@ -187,6 +244,10 @@ final class SessionController: ObservableObject {
     func removeSet(exerciseID: UUID, setID: UUID) {
         guard let index = exercises.firstIndex(where: { $0.id == exerciseID }) else { return }
         exercises[index].logged.removeAll { $0.id == setID }
+        loggedEdits[setID] = nil
+        if focusedField?.setID == setID {
+            focusedField = nil
+        }
     }
 
     func addExercise(_ catalog: CatalogExercise) {
@@ -370,24 +431,32 @@ struct LiveSessionView: View {
             let exerciseName = controller.exercises.first(where: { $0.id == id })?.name ?? ""
             SessionInputKeyboard(
                 mode: field.isWeight ? .weight : .reps,
+                focusIdentity: field,
                 accent: accent,
                 unit: unit,
                 equipment: ExerciseCatalog.equipment(forName: exerciseName),
                 weightText: Binding(
-                    get: { controller.draft(for: id).weightText },
-                    set: { newValue in controller.updateDraft(for: id) { $0.weightText = newValue } }
+                    get: { controller.activeDraft(for: field).weightText },
+                    set: { newValue in controller.updateActiveDraft(for: field) { $0.weightText = newValue } }
                 ),
                 repsText: Binding(
-                    get: { controller.draft(for: id).repsText },
-                    set: { newValue in controller.updateDraft(for: id) { $0.repsText = newValue } }
+                    get: { controller.activeDraft(for: field).repsText },
+                    set: { newValue in controller.updateActiveDraft(for: field) { $0.repsText = newValue } }
                 ),
                 rir: Binding(
-                    get: { controller.draft(for: id).rir },
-                    set: { newValue in controller.updateDraft(for: id) { $0.rir = newValue } }
+                    get: { controller.activeDraft(for: field).rir },
+                    set: { newValue in controller.updateActiveDraft(for: field) { $0.rir = newValue } }
                 ),
+                completeTitle: field.setID == nil ? "Complete Set" : "Save",
                 onDismiss: { controller.focusedField = nil },
-                onNext: { controller.focusedField = .reps(id) },
-                onCompleteSet: { completeSet(exerciseID: id) }
+                onNext: { controller.focusedField = .reps(id, setID: field.setID) },
+                onCompleteSet: {
+                    if let setID = field.setID {
+                        saveLoggedSet(exerciseID: id, setID: setID)
+                    } else {
+                        completeSet(exerciseID: id)
+                    }
+                }
             )
         }
     }
@@ -407,6 +476,22 @@ struct LiveSessionView: View {
             rir: rir
         )
         controller.carryDraftForward(exerciseID: exerciseID, weightText: weightText, repsText: repsText, rir: rir)
+        controller.focusedField = nil
+    }
+
+    private func saveLoggedSet(exerciseID: UUID, setID: UUID) {
+        let draft = controller.loggedEdits[setID] ?? controller.draft(for: exerciseID)
+        let weight = Double(draft.weightText) ?? 0
+        let reps = Int(draft.repsText) ?? 0
+        guard weight > 0, reps > 0 else { return }
+        controller.updateSet(
+            exerciseID: exerciseID,
+            setID: setID,
+            weightKg: unit.toKg(weight),
+            reps: reps,
+            rir: draft.rir
+        )
+        controller.loggedEdits[setID] = nil
         controller.focusedField = nil
     }
 
@@ -522,7 +607,7 @@ struct LiveSessionView: View {
                 name: exercise.name,
                 primaryMuscles: exercise.primaryMuscles,
                 secondaryMuscles: exercise.secondaryMuscles,
-                targetSets: 0,
+                targetSets: exercise.targetSets,
                 targetReps: 0,
                 sortIndex: index
             )
@@ -552,11 +637,11 @@ struct SessionExerciseCard: View {
     }
 
     private var weightFocused: Bool {
-        controller.focusedField == .weight(exercise.id)
+        controller.focusedField == .weight(exercise.id, setID: nil)
     }
 
     private var repsFocused: Bool {
-        controller.focusedField == .reps(exercise.id)
+        controller.focusedField == .reps(exercise.id, setID: nil)
     }
 
     private var nextSetNumber: Int {
@@ -565,17 +650,18 @@ struct SessionExerciseCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(live.name)
-                        .font(.headline)
-                    if !live.primaryMuscles.isEmpty {
-                        Text(live.primaryMuscles.joined(separator: ", "))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
+            HStack(alignment: .center, spacing: 8) {
+                Text(live.name)
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                if live.targetSets > 0 {
+                    Text("\(live.logged.count) out of \(live.targetSets) sets done")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                        .multilineTextAlignment(.trailing)
                 }
-                Spacer(minLength: 8)
                 Button {
                     showHistory = true
                 } label: {
@@ -589,28 +675,44 @@ struct SessionExerciseCard: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Exercise history and 1RM")
             }
+            if !live.primaryMuscles.isEmpty {
+                Text(live.primaryMuscles.joined(separator: ", "))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
 
             setColumnHeader
 
             if !live.logged.isEmpty {
                 List {
                     ForEach(Array(live.logged.enumerated()), id: \.element.id) { index, set in
+                        let editing = controller.loggedEdits[set.id]
+                        let isEditingSet = controller.focusedField?.setID == set.id
                         SetGridRow(
                             setNumber: index + 1,
                             previousSet: previousSets[safe: index],
-                            weightText: unit.formatNumber(set.weightKg),
-                            repsText: "\(set.reps)",
-                            rir: set.rir,
+                            weightText: editing?.weightText ?? unit.formatNumber(set.weightKg),
+                            repsText: editing?.repsText ?? "\(set.reps)",
+                            rir: editing?.rir ?? set.rir,
                             unit: unit,
                             accent: accent,
                             isPreview: false,
-                            weightFocused: false,
-                            repsFocused: false,
-                            onWeightTap: {},
-                            onRepsTap: {}
+                            weightFocused: controller.focusedField == .weight(exercise.id, setID: set.id),
+                            repsFocused: controller.focusedField == .reps(exercise.id, setID: set.id),
+                            onWeightTap: {
+                                controller.ensureLoggedEdit(exerciseID: exercise.id, setID: set.id, unit: unit)
+                                controller.focusedField = .weight(exercise.id, setID: set.id)
+                            },
+                            onRepsTap: {
+                                controller.ensureLoggedEdit(exerciseID: exercise.id, setID: set.id, unit: unit)
+                                controller.focusedField = .reps(exercise.id, setID: set.id)
+                            }
                         )
                         .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 4))
-                        .listRowBackground(Color.clear)
+                        .listRowBackground(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(isEditingSet ? accent.opacity(0.18) : Color.clear)
+                        )
                         .listRowSeparator(.hidden)
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
@@ -640,11 +742,11 @@ struct SessionExerciseCard: View {
                 repsFocused: repsFocused,
                 onWeightTap: {
                     controller.ensureDraft(for: exercise.id, unit: unit, previousSets: previousSets)
-                    controller.focusedField = .weight(exercise.id)
+                    controller.focusedField = .weight(exercise.id, setID: nil)
                 },
                 onRepsTap: {
                     controller.ensureDraft(for: exercise.id, unit: unit, previousSets: previousSets)
-                    controller.focusedField = .reps(exercise.id)
+                    controller.focusedField = .reps(exercise.id, setID: nil)
                 }
             )
             .padding(.horizontal, 6)
@@ -717,23 +819,16 @@ private struct SetGridRow: View {
             previousCell
                 .frame(width: 88, alignment: .center)
 
-            if isPreview {
-                inputCell(
-                    value: weightText,
-                    placeholder: "—",
-                    focused: weightFocused,
-                    action: onWeightTap
-                )
-                .frame(maxWidth: .infinity)
+            inputCell(
+                value: weightText,
+                placeholder: "—",
+                focused: weightFocused,
+                action: onWeightTap
+            )
+            .frame(maxWidth: .infinity)
 
-                repsCell(isInput: true)
-                    .frame(maxWidth: .infinity)
-            } else {
-                valueCell(weightText.isEmpty ? "—" : weightText)
-                    .frame(maxWidth: .infinity)
-                repsCell(isInput: false)
-                    .frame(maxWidth: .infinity)
-            }
+            repsCell(isInput: true)
+                .frame(maxWidth: .infinity)
         }
         .padding(.trailing, 14)
     }
@@ -769,15 +864,8 @@ private struct SetGridRow: View {
                         .strokeBorder(focused ? accent : Color.clear, lineWidth: 2)
                 )
         }
-        .buttonStyle(.plain)
-    }
-
-    private func valueCell(_ value: String) -> some View {
-        Text(value)
-            .font(.body.monospacedDigit().weight(.semibold))
-            .frame(maxWidth: .infinity, minHeight: 36)
-            .background(theme.mutedFill.opacity(0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .buttonStyle(.borderless)
+        .contentShape(Rectangle())
     }
 
     @ViewBuilder
@@ -788,7 +876,8 @@ private struct SetGridRow: View {
                     Button(action: onRepsTap) {
                         repsFieldContent(isInput: true)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.borderless)
+                    .contentShape(Rectangle())
                 } else {
                     repsFieldContent(isInput: false)
                 }
@@ -807,7 +896,7 @@ private struct SetGridRow: View {
             .foregroundStyle(repsText.isEmpty && isInput ? Color.secondary : Color.primary)
             .frame(maxWidth: .infinity, minHeight: 36)
             .padding(.trailing, 12)
-            .background(isInput ? theme.mutedFill : theme.mutedFill.opacity(0.5))
+            .background(isInput ? (isPreview ? theme.mutedFill : theme.mutedFill.opacity(0.72)) : theme.mutedFill.opacity(0.5))
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)

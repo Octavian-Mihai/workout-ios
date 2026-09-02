@@ -32,14 +32,6 @@ struct InfoView: View {
         )
     }
 
-    private var cardioRunStress: Double {
-        StressCalculator.averageRunStress(
-            health.cardioWorkouts,
-            restingHeartRate: health.restingHeartRate,
-            maxHeartRate: health.maxHeartRate
-        )
-    }
-
     private var recoveryContext: String? {
         StressCalculator.recoveryContextLabel(
             hrvSDNN: health.hrvSDNN,
@@ -72,13 +64,7 @@ struct InfoView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    StrengthAnalyticsView(
-                        sets: allSets,
-                        runStress: cardioRunStress,
-                        hrvSDNN: health.hrvSDNN,
-                        sleepHours: health.lastNightSleepHours,
-                        accent: accent
-                    )
+                    StrengthAnalyticsView(sets: allSets, accent: accent)
                 }
                 .padding(16)
             }
@@ -89,15 +75,23 @@ struct InfoView: View {
 }
 
 struct LearnLinksView: View {
+    @State private var isExpanded = false
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        DisclosureGroup(isExpanded: $isExpanded) {
+            VStack(alignment: .leading, spacing: 12) {
+                articleLink("Workout 101", destination: Workout101View())
+                articleLink("Movements 101", destination: Movements101View())
+                articleLink("Anatomy 101", destination: Anatomy101View())
+                articleLink("Training insight", destination: TrainingInsightView())
+            }
+            .padding(.top, 8)
+        } label: {
             Text("Learn")
                 .font(.title3.weight(.bold))
-            articleLink("Workout 101", destination: Workout101View())
-            articleLink("Movements 101", destination: Movements101View())
-            articleLink("Anatomy 101", destination: Anatomy101View())
-            articleLink("Training insight", destination: TrainingInsightView())
+                .foregroundStyle(.primary)
         }
+        .tint(.secondary)
     }
 
     private func articleLink<D: View>(_ title: String, destination: D) -> some View {
@@ -174,6 +168,37 @@ struct Workout101View: View {
             ArticleCard(
                 title: "Empty workouts",
                 bodyText: "Use an empty workout for extras, make-up work, or days off-template. Because they are not tied to a program day, they never advance “next workout.”"
+            )
+        }
+    }
+}
+
+struct RIRGuideView: View {
+    var body: some View {
+        ArticleScreen(title: "RIR") {
+            ArticleCard(
+                title: "What RIR is",
+                bodyText: "RIR means reps in reserve — how many more clean reps you could have done. A set of 8 at RIR 2 means you had about two reps left. Log the set you actually did, then mark RIR honestly."
+            )
+            ArticleCard(
+                title: "0–1 grind",
+                bodyText: "Near failure. Useful for testing a top set, but these cost a lot of fatigue. Keep them scarce if you train often."
+            )
+            ArticleCard(
+                title: "2–3 productive",
+                bodyText: "Hard, useful work. Most working sets belong here: challenging enough to drive progress, with a little room left so form stays solid."
+            )
+            ArticleCard(
+                title: "4 easy",
+                bodyText: "Comfortable sets. Good for warm-ups, back-off work, or days you are managing fatigue instead of pushing."
+            )
+            ArticleCard(
+                title: "5+ technique",
+                bodyText: "Easy leftover reps. Use these for skill work, first warm-up plates, or when the load is just there to groove the pattern."
+            )
+            ArticleCard(
+                title: "Why honest RIR matters",
+                bodyText: "RIR is how the app reads how hard a set really was — not just the weight and reps. Low RIR raises fatigue and stress estimates. If you sandbag the number, trends look easier than the work you did. If you always log 0, everything looks like a grind. Match the color to how the set felt so volume, stress, and estimated 1RM stay trustworthy."
             )
         }
     }
@@ -261,7 +286,7 @@ struct TrainingInsightView: View {
         ArticleScreen(title: "Training insight") {
             ArticleCard(
                 title: "RIR colors",
-                bodyText: "0–1 red: near failure, high fatigue. 2–3 yellow: hard, useful work. 4 green: productive easier sets. 5+ blue: easy, technique, or leftover reps."
+                bodyText: "0–1 red: near failure, high fatigue. 2–3 yellow-orange: hard, useful work. 4 green: productive easier sets. 5+ blue: easy, technique, or leftover reps."
             )
             ArticleCard(
                 title: "Estimated 1RM",

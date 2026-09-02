@@ -39,6 +39,8 @@ struct HomeView: View {
                         showTrends = true
                     }
 
+                    TodayStressCard(estimate: todayStress, accent: accent, compact: true)
+
                     if let program = programs.first(where: \.isActive), let day = nextDay {
                         NextWorkoutCard(program: program, day: day) {
                             sessionStore.start(program: program, programDay: day)
@@ -65,8 +67,6 @@ struct HomeView: View {
                             .padding(.vertical, 14)
                     }
                     .buttonStyle(.borderedProminent)
-
-                    TodayStressCard(estimate: todayStress, accent: accent, compact: true)
                 }
                 .padding(16)
             }

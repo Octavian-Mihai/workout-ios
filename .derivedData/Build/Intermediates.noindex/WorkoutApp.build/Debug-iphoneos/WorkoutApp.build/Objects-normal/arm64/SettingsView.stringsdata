@@ -1,0 +1,448 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Settings/SettingsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Settings",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 183
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete all local data?",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 184
+        }
+      },
+      {
+        "comment": "",
+        "key": "Couldn’t import workout data",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 190
+        }
+      },
+      {
+        "comment": "",
+        "key": "Accent",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 41
+        }
+      },
+      {
+        "comment": "",
+        "key": "Appearance",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 47
+        }
+      },
+      {
+        "comment": "",
+        "key": "Units",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 67
+        }
+      },
+      {
+        "comment": "",
+        "key": "Session",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 88
+        }
+      },
+      {
+        "comment": "",
+        "key": "Equipment",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 93
+        }
+      },
+      {
+        "comment": "",
+        "key": "Body weight",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 126
+        }
+      },
+      {
+        "comment": "",
+        "key": "Health",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 132
+        }
+      },
+      {
+        "comment": "",
+        "key": "Privacy",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
+        "key": "Data",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 152
+        }
+      },
+      {
+        "comment": "",
+        "key": "About",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 171
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cards use opaque fills and borders — no glass or ultra-thin materials.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 62
+        }
+      },
+      {
+        "comment": "",
+        "key": "Mode",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 48
+        }
+      },
+      {
+        "comment": "",
+        "key": "Lifting loads and body weight are stored in kilograms and converted for display.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 74
+        }
+      },
+      {
+        "comment": "",
+        "key": "Running distance and pace use this unit. Values from Health stay in meters internally.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 83
+        }
+      },
+      {
+        "comment": "",
+        "key": "Weight",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 68
+        }
+      },
+      {
+        "comment": "",
+        "key": "Distance",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 77
+        }
+      },
+      {
+        "comment": "",
+        "key": "Default rest %llds",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "Rest-timer haptics",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 90
+        }
+      },
+      {
+        "comment": "",
+        "key": "The plate calculator subtracts bar or functional-trainer base weight, then shows plates per side.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 121
+        }
+      },
+      {
+        "comment": "",
+        "key": "Barbell bar %@ kg",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 96
+        }
+      },
+      {
+        "comment": "",
+        "key": "FT increment %@ kg",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 102
+        }
+      },
+      {
+        "comment": "",
+        "key": "Barbell bar %@ lb",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "FT increment %@ lb",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 115
+        }
+      },
+      {
+        "comment": "",
+        "key": "Weight log",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 127
+        }
+      },
+      {
+        "comment": "",
+        "key": "Running is read from Apple Health. Body weight is read from and saved to Health. Strength sessions stay in this app and are not written to HealthKit.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 133
+        }
+      },
+      {
+        "comment": "",
+        "key": "Re-request HealthKit access",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 136
+        }
+      },
+      {
+        "comment": "",
+        "key": "Open Apple Health",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 139
+        }
+      },
+      {
+        "comment": "",
+        "key": "What we store",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 147
+        }
+      },
+      {
+        "comment": "",
+        "key": "Workout data",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 159
+        }
+      },
+      {
+        "comment": "",
+        "key": "Import workout data",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 163
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete all local data",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 166
+        }
+      },
+      {
+        "comment": "",
+        "key": "Export workout data",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 161
+        }
+      },
+      {
+        "comment": "",
+        "key": "Version",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 173
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 185
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 186
+        }
+      },
+      {
+        "comment": "",
+        "key": "This removes programs, workout history, and body-weight entries from this device. Apple Health data is not deleted.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 188
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 191
+        }
+      },
+      {
+        "comment": "",
+        "key": "Privacy",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 260
+        }
+      },
+      {
+        "comment": "",
+        "key": "On this device",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 244
+        }
+      },
+      {
+        "comment": "",
+        "key": "Apple Health",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 249
+        }
+      },
+      {
+        "comment": "",
+        "key": "Encryption",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 254
+        }
+      },
+      {
+        "comment": "",
+        "key": "Programs, workout sessions, sets (weight, reps, RIR), and body-weight entries are stored locally with SwiftData. Nothing is uploaded to a server.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 245
+        }
+      },
+      {
+        "comment": "",
+        "key": "Running workouts, GPS routes, distance, and heart rate are read only. Body weight is read from and written to Apple Health when you use the weight log. This app never writes strength sessions to HealthKit.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 250
+        }
+      },
+      {
+        "comment": "",
+        "key": "The app does not use non-exempt encryption. Workout data stays in the device’s standard app container.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 255
+        }
+      },
+      {
+        "comment": "",
+        "key": "Weight log",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 294
+        }
+      },
+      {
+        "comment": "",
+        "key": "No entries yet. Log body weight to keep a simple history. Relative volume can use this later.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 277
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add entry",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 365
+        }
+      },
+      {
+        "comment": "",
+        "key": "Date",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 355
+        }
+      },
+      {
+        "comment": "",
+        "key": "Weight (%@)",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 357
+        }
+      },
+      {
+        "comment": "",
+        "key": "Weight",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 359
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 369
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 372
+        }
+      }
+    ]
+  },
+  "version": 1
+}

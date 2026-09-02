@@ -1,0 +1,264 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Running/RunningView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Running",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 204
+        }
+      },
+      {
+        "comment": "",
+        "key": "Health data is not available on this device.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 117
+        }
+      },
+      {
+        "comment": "",
+        "key": "Try again",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "No running workouts found in Apple Health. Record a run in the Fitness or Health app, then pull to refresh.",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "No runs match these filters.",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 152
+        }
+      },
+      {
+        "comment": "",
+        "key": "Older than 2 weeks (%lld)",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 174
+        }
+      },
+      {
+        "comment": "",
+        "key": "Recent runs",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 136
+        }
+      },
+      {
+        "comment": "",
+        "key": "Filtered",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 140
+        }
+      },
+      {
+        "comment": "",
+        "key": "Last 7 days",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 230
+        }
+      },
+      {
+        "comment": "",
+        "key": "Date",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 243
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 244
+        }
+      },
+      {
+        "comment": "",
+        "key": "Date",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 248
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 249
+        }
+      },
+      {
+        "comment": "",
+        "key": "Filters",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 334
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear filters",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 322
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 338
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@  ·  %@",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 584
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress %lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 595
+        }
+      },
+      {
+        "comment": "",
+        "key": "Run",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 665
+        }
+      },
+      {
+        "comment": "",
+        "key": "Recovery context: %@",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 653
+        }
+      },
+      {
+        "comment": "",
+        "key": "Route",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 694
+        }
+      },
+      {
+        "comment": "",
+        "key": "No route recorded.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 705
+        }
+      },
+      {
+        "comment": "",
+        "key": "Heart rate",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 718
+        }
+      },
+      {
+        "comment": "",
+        "key": "No heart-rate samples for this run.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 730
+        }
+      },
+      {
+        "comment": "",
+        "key": "Time",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 723
+        }
+      },
+      {
+        "comment": "",
+        "key": "bpm",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 724
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pace",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 743
+        }
+      },
+      {
+        "comment": "",
+        "key": "No pace series for this run.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 760
+        }
+      },
+      {
+        "comment": "",
+        "key": "Time",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 752
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pace",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 753
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 806
+        }
+      },
+      {
+        "comment": "",
+        "key": "End",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 809
+        }
+      }
+    ]
+  },
+  "version": 1
+}

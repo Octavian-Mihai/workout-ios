@@ -155,10 +155,10 @@ struct WorkoutSummaryView: View {
 
     private var brandingFooter: some View {
         VStack(spacing: 10) {
-            Rectangle()
-                .fill(accent)
-                .frame(height: 3)
-                .clipShape(Capsule())
+        //    Rectangle()
+        //        .fill(accent)
+        //        .frame(height: 3)
+        //        .clipShape(Capsule())
             HStack {
                 Image(systemName: "figure.strengthtraining.traditional")
                     .foregroundStyle(accent)

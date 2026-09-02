@@ -94,6 +94,31 @@ struct YearActivityGrid: View {
         YearGridBuilder.cells(year: year, sessions: sessions, runDates: runDates, calendar: calendar)
     }
 
+    private var workoutsThisYear: Int {
+        sessions.filter { session in
+            session.endDate != nil && calendar.component(.year, from: session.startDate) == year
+        }.count
+    }
+
+    private var runsThisYear: Int {
+        Set(runDates.map { calendar.startOfDay(for: $0) })
+            .filter { calendar.component(.year, from: $0) == year }
+            .count
+    }
+
+    private var dayOfYear: Int {
+        let now = Date()
+        if calendar.component(.year, from: now) == year {
+            return calendar.ordinality(of: .day, in: .year, for: now) ?? 1
+        }
+        return daysInYear
+    }
+
+    private var daysInYear: Int {
+        let jan1 = calendar.date(from: DateComponents(year: year, month: 1, day: 1)) ?? Date()
+        return calendar.range(of: .day, in: .year, for: jan1)?.count ?? 365
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -101,11 +126,18 @@ struct YearActivityGrid: View {
                     .font(.headline)
                 Spacer()
                 HStack(spacing: 8) {
-                    legendLabel("Weights", color: YearActivityPalette.weights)
-                    legendLabel("Running", color: YearActivityPalette.running)
+                    legendLabel("Weights (\(workoutsThisYear))", color: YearActivityPalette.weights)
+                    legendLabel("Running (\(runsThisYear))", color: YearActivityPalette.running)
                     legendLabel("Both", color: YearActivityPalette.both)
                 }
             }
+
+            HStack(spacing: 8) {
+                Text("\(dayOfYear) / \(daysInYear) days")
+                Spacer(minLength: 0)
+            }
+            .font(.caption.monospacedDigit().weight(.medium))
+            .foregroundStyle(.secondary)
 
             GeometryReader { geo in
                 let spacing: CGFloat = 1.5

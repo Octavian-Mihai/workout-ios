@@ -1,0 +1,48 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Session/SessionInputKeyboard.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "About RIR",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 93
+        }
+      },
+      {
+        "comment": "",
+        "key": "RIR",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 82
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
+        "key": "rem %@ %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 232
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ %@",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 249
+        }
+      }
+    ]
+  },
+  "version": 1
+}

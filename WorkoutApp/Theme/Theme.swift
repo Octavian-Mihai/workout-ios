@@ -378,7 +378,7 @@ enum RIRPalette {
     static func color(for rir: Int, accent _: Color) -> Color {
         switch rir {
         case ...1: return Color(red: 0.90, green: 0.22, blue: 0.25)
-        case 2, 3: return Color(red: 0.95, green: 0.78, blue: 0.12)
+        case 2, 3: return Color(red: 0.88, green: 0.50, blue: 0.08)
         case 4: return Color(red: 0.22, green: 0.70, blue: 0.38)
         default: return Color(red: 0.25, green: 0.55, blue: 0.90)
         }

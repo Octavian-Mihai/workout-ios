@@ -5,7 +5,10 @@ struct RootTabView: View {
     @StateObject private var sessionStore = ActiveSessionStore()
     @StateObject private var health = HealthKitService()
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(AppTheme.self) private var appTheme
+    @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
+    @Query(sort: \Program.createdAt) private var programs: [Program]
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
 
     private var accent: Color {
@@ -72,7 +75,36 @@ struct RootTabView: View {
             if health.isAvailable {
                 await health.requestAndLoad()
             }
+            refreshWidgetSnapshot()
         }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                refreshWidgetSnapshot()
+            }
+        }
+        .onChange(of: sessionStore.isPresented) { _, presented in
+            if !presented && sessionStore.controller == nil {
+                refreshWidgetSnapshot()
+            }
+        }
+        .onChange(of: sessions.count) { _, _ in
+            refreshWidgetSnapshot()
+        }
+        .onChange(of: health.cardioWorkouts.count) { _, _ in
+            refreshWidgetSnapshot()
+        }
+    }
+
+    private func refreshWidgetSnapshot() {
+        WidgetSnapshotSync.write(
+            sessions: sessions,
+            programs: programs,
+            cardioWorkouts: health.cardioWorkouts,
+            runDates: health.activityRunDays,
+            restingHeartRate: health.restingHeartRate,
+            maxHeartRate: health.maxHeartRate,
+            accentHex: appTheme.accent.toHex()
+        )
     }
 }
 

@@ -7,17 +7,21 @@ struct SessionInputKeyboard: View {
     }
 
     let mode: Mode
+    let focusIdentity: SessionField
     let accent: Color
     let unit: WeightUnit
     let equipment: ExerciseEquipment
     @Binding var weightText: String
     @Binding var repsText: String
     @Binding var rir: Int
+    var completeTitle: String = "Complete Set"
     var onDismiss: () -> Void
     var onNext: () -> Void
     var onCompleteSet: () -> Void
 
     @Environment(AppTheme.self) private var theme
+    @State private var replacePending = true
+    @State private var showRIRGuide = false
 
     @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
     @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
@@ -71,7 +75,25 @@ struct SessionInputKeyboard: View {
                 plateStrip(breakdown)
             }
             if mode == .reps {
-                RIRSelector(rir: $rir, accent: accent, compact: true)
+                HStack(alignment: .center, spacing: 6) {
+                    Button {
+                        showRIRGuide = true
+                    } label: {
+                        Text("RIR")
+                            .font(.caption.weight(.semibold))
+                            .frame(width: 36)
+                            .padding(.vertical, 6)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(theme.mutedFill)
+                            )
+                            .foregroundStyle(.primary)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("About RIR")
+
+                    RIRSelector(rir: $rir, accent: accent, compact: true)
+                }
             }
             padGrid
         }
@@ -81,6 +103,23 @@ struct SessionInputKeyboard: View {
         .background(theme.cardFill.ignoresSafeArea(edges: .bottom))
         .overlay(alignment: .top) {
             Divider()
+        }
+        .onChange(of: focusIdentity) { _, _ in
+            replacePending = true
+        }
+        .onAppear {
+            replacePending = true
+        }
+        .sheet(isPresented: $showRIRGuide) {
+            NavigationStack {
+                RIRGuideView()
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Done") { showRIRGuide = false }
+                        }
+                    }
+            }
+            .presentationDetents([.medium, .large])
         }
     }
 
@@ -116,7 +155,7 @@ struct SessionInputKeyboard: View {
                     .frame(height: rowHeight * 2 + gap)
                 } else {
                     actionKey(
-                        title: "Complete Set",
+                        title: completeTitle,
                         fill: accent,
                         foreground: .white,
                         action: onCompleteSet
@@ -258,6 +297,14 @@ struct SessionInputKeyboard: View {
     }
 
     private func appendDigit(_ digit: String) {
+        if consumeReplacePending() {
+            if mode == .weight {
+                weightText = digit
+            } else {
+                repsText = digit
+            }
+            return
+        }
         if mode == .weight {
             var text = weightText
             if text == "0" { text = digit }
@@ -273,6 +320,10 @@ struct SessionInputKeyboard: View {
 
     private func appendDecimal() {
         guard mode == .weight else { return }
+        if consumeReplacePending() {
+            weightText = "0."
+            return
+        }
         var text = weightText
         if text.isEmpty { text = "0." }
         else if !text.contains(".") { text += "." }
@@ -280,6 +331,7 @@ struct SessionInputKeyboard: View {
     }
 
     private func backspace() {
+        replacePending = false
         if mode == .weight {
             if !weightText.isEmpty {
                 weightText.removeLast()
@@ -287,5 +339,11 @@ struct SessionInputKeyboard: View {
         } else if !repsText.isEmpty {
             repsText.removeLast()
         }
+    }
+
+    private func consumeReplacePending() -> Bool {
+        guard replacePending else { return false }
+        replacePending = false
+        return true
     }
 }

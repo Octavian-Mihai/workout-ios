@@ -62,9 +62,6 @@ struct WorkoutTabView: View {
 
 struct StrengthAnalyticsView: View {
     let sets: [SetLog]
-    let runStress: Double
-    var hrvSDNN: Double? = nil
-    var sleepHours: Double? = nil
     let accent: Color
 
     @Environment(AppTheme.self) private var theme
@@ -72,22 +69,14 @@ struct StrengthAnalyticsView: View {
 
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
     private var recent: [SetLog] { StressCalculator.sets(inLastDays: 7, from: sets) }
-    private var csi: Double { StressCalculator.centralStress(sets: sets) }
-    private var tsi: Double { StressCalculator.totalStress(sets: sets, runStress: runStress) }
-    private var recovery: Double {
-        StressCalculator.adjustedRecoveryScore(
-            totalStress: tsi,
-            hrvSDNN: hrvSDNN,
-            sleepHours: sleepHours
-        )
-    }
-    private var recoveryContext: String? {
-        StressCalculator.recoveryContextLabel(hrvSDNN: hrvSDNN, sleepHours: sleepHours)
-    }
     private var muscleVolume: [(String, Double)] {
         StressCalculator.muscleVolume(from: recent)
             .map { ($0.key, $0.value) }
             .sorted { $0.1 > $1.1 }
+    }
+    private var muscleLoads: [(name: String, tonnageKg: Double, reps: Double)] {
+        let reps = StressCalculator.muscleReps(from: recent)
+        return muscleVolume.map { ($0.0, $0.1, reps[$0.0] ?? 0) }
     }
 
     var body: some View {
@@ -95,32 +84,55 @@ struct StrengthAnalyticsView: View {
             Text("Analytics")
                 .font(.title3.weight(.bold))
 
-            VStack(alignment: .leading, spacing: 16) {
-                StressMeter(title: "Central stress (7d)", score: csi, accent: accent)
-                StressMeter(title: "Total stress (7d)", score: tsi, accent: accent)
-                StressMeter(title: "Recovery", score: recovery, accent: accent)
-                if let recoveryContext {
-                    Text(recoveryContext)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                HStack {
-                    Text("Total volume (7d)")
-                    Spacer()
-                    Text("\(Formatters.compactNumber(unit.fromKg(StressCalculator.totalVolume(from: recent)))) \(unit.rawValue)·reps")
-                        .monospacedDigit()
-                }
-                .font(.subheadline)
-                StressLegendView(compact: true)
-            }
-            .padding(16)
-            .opaqueCard()
+            tonnageSummary
 
             volumeChart
             oneRMChart
             engagementChart
             intensityMap
         }
+    }
+
+    private var tonnageSummary: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            if recent.isEmpty {
+                Text("Log sets to see tonnage.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            } else {
+                HStack {
+                    Text("Tonnage (7d)")
+                    Spacer()
+                    Text("\(Formatters.compactNumber(unit.fromKg(StressCalculator.totalVolume(from: recent)))) \(unit.rawValue)·reps")
+                        .monospacedDigit()
+                }
+                .font(.subheadline)
+                HStack {
+                    Text("Reps (7d)")
+                    Spacer()
+                    Text("\(StressCalculator.totalReps(from: recent))")
+                        .monospacedDigit()
+                }
+                .font(.subheadline)
+                ForEach(muscleLoads, id: \.name) { row in
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(row.name)
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 2) {
+                            Text("\(Formatters.compactNumber(unit.fromKg(row.tonnageKg))) \(unit.rawValue)·reps")
+                                .monospacedDigit()
+                            Text("\(Formatters.trimmedNumber(row.reps, decimals: 1)) reps")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
+                    }
+                    .font(.subheadline)
+                }
+            }
+        }
+        .padding(16)
+        .opaqueCard()
     }
 
     private var volumeChart: some View {

@@ -4,6 +4,10 @@ import SwiftData
 struct ProgramEditorView: View {
     @Bindable var program: Program
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @Environment(AppTheme.self) private var theme
+    @State private var showOverview = false
+    @State private var popAfterOverview = false
 
     var body: some View {
         List {
@@ -24,7 +28,7 @@ struct ProgramEditorView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            Section("Days (rotation)") {
+            Section {
                 ForEach(program.orderedDays) { day in
                     NavigationLink {
                         DayEditorView(day: day)
@@ -45,11 +49,41 @@ struct ProgramEditorView: View {
                 } label: {
                     Label("Add day", systemImage: "plus")
                 }
+            } header: {
+                HStack {
+                    Text("Days (rotation)")
+                    Spacer()
+                    EditButton()
+                        .font(.subheadline)
+                        .textCase(.none)
+                }
             }
         }
         .navigationTitle("Program")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar { EditButton() }
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Done") {
+                    try? modelContext.save()
+                    showOverview = true
+                }
+                .fontWeight(.semibold)
+            }
+        }
+        .sheet(isPresented: $showOverview, onDismiss: {
+            if popAfterOverview {
+                popAfterOverview = false
+                dismiss()
+            }
+        }) {
+            ProgramOverviewView(program: program) {
+                popAfterOverview = true
+                showOverview = false
+            }
+            .environment(theme)
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+        }
         .onDisappear { try? modelContext.save() }
     }
 
@@ -131,8 +165,8 @@ struct DayEditorView: View {
             name: name,
             primaryMuscles: primary,
             secondaryMuscles: secondary,
-            targetSets: 0,
-            targetReps: 0,
+            targetSets: 3,
+            targetReps: 8,
             sortIndex: day.exercises.count
         )
         item.day = day
@@ -168,11 +202,25 @@ struct DayExerciseEditorRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(exercise.name)
-                .font(.headline)
+            HStack(alignment: .center, spacing: 8) {
+                Text(exercise.name)
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Stepper(value: $exercise.targetSets, in: 0...30) {
+                    Text("\(exercise.targetSets) sets")
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+                .fixedSize()
+            }
             Text(exercise.primaryMuscles.joined(separator: ", "))
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            if !exercise.secondaryMuscles.isEmpty {
+                Text("Secondary: \(exercise.secondaryMuscles.joined(separator: ", "))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .padding(.vertical, 4)
     }

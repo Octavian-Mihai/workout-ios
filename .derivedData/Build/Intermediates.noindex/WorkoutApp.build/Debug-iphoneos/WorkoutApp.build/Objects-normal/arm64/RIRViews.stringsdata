@@ -1,0 +1,16 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Shared/RIRViews.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "RIR %@",
+        "location": {
+          "startingColumn": 14,
+          "startingLine": 36
+        }
+      }
+    ]
+  },
+  "version": 1
+}

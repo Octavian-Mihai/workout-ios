@@ -7,6 +7,7 @@ struct WorkoutHistoryView: View {
     let unit: WeightUnit
 
     @Environment(AppTheme.self) private var theme
+    @State private var isExpanded = false
 
     private var finished: [WorkoutSession] {
         sessions.filter { $0.endDate != nil }
@@ -25,44 +26,54 @@ struct WorkoutHistoryView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        DisclosureGroup(isExpanded: $isExpanded) {
+            VStack(alignment: .leading, spacing: 8) {
+                if finished.isEmpty {
+                    Text("No completed workouts yet. Finish a session to see it here.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .padding(16)
+                        .opaqueCard()
+                } else {
+                    ForEach(recentSessions) { session in
+                        NavigationLink {
+                            WorkoutSessionDetailView(session: session, accent: accent, unit: unit)
+                        } label: {
+                            WorkoutSessionRow(session: session, accent: accent, unit: unit)
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    if !olderSessions.isEmpty {
+                        DisclosureGroup("Older than 2 weeks (\(olderSessions.count))") {
+                            VStack(spacing: 8) {
+                                ForEach(olderSessions) { session in
+                                    NavigationLink {
+                                        WorkoutSessionDetailView(session: session, accent: accent, unit: unit)
+                                    } label: {
+                                        WorkoutSessionRow(session: session, accent: accent, unit: unit)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            .padding(.top, 8)
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .padding(14)
+                        .opaqueCard()
+                    }
+                }
+            }
+            .padding(.top, 8)
+        } label: {
             Text("History")
                 .font(.headline)
-
+                .foregroundStyle(.primary)
+        }
+        .tint(.secondary)
+        .onAppear {
             if finished.isEmpty {
-                Text("No completed workouts yet. Finish a session to see it here.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .padding(16)
-                    .opaqueCard()
-            } else {
-                ForEach(recentSessions) { session in
-                    NavigationLink {
-                        WorkoutSessionDetailView(session: session, accent: accent, unit: unit)
-                    } label: {
-                        WorkoutSessionRow(session: session, accent: accent, unit: unit)
-                    }
-                    .buttonStyle(.plain)
-                }
-
-                if !olderSessions.isEmpty {
-                    DisclosureGroup("Older than 2 weeks (\(olderSessions.count))") {
-                        VStack(spacing: 8) {
-                            ForEach(olderSessions) { session in
-                                NavigationLink {
-                                    WorkoutSessionDetailView(session: session, accent: accent, unit: unit)
-                                } label: {
-                                    WorkoutSessionRow(session: session, accent: accent, unit: unit)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        .padding(.top, 8)
-                    }
-                    .font(.subheadline.weight(.semibold))
-                    .padding(14)
-                    .opaqueCard()
-                }
+                isExpanded = true
             }
         }
     }

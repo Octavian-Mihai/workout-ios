@@ -67,8 +67,27 @@ enum StressCalculator {
         return result
     }
 
+    /// Primary muscles get full reps; secondary muscles get half.
+    static func muscleReps(from sets: [SetLog]) -> [String: Double] {
+        var result: [String: Double] = [:]
+        for set in sets {
+            let reps = Double(set.reps)
+            for muscle in set.primaryMuscles {
+                result[muscle, default: 0] += reps
+            }
+            for muscle in set.secondaryMuscles {
+                result[muscle, default: 0] += reps * 0.5
+            }
+        }
+        return result
+    }
+
     static func totalVolume(from sets: [SetLog]) -> Double {
         sets.reduce(0) { $0 + setVolume($1) }
+    }
+
+    static func totalReps(from sets: [SetLog]) -> Int {
+        sets.reduce(0) { $0 + $1.reps }
     }
 
     static func sets(inLastDays days: Double, from sets: [SetLog], now: Date = Date()) -> [SetLog] {
