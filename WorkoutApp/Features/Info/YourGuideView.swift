@@ -26,10 +26,38 @@ struct MovementPattern: Identifiable {
     let exampleExercises: String
 }
 
+enum GuideTrainingSplit: String, CaseIterable, Identifiable {
+    case push
+    case pull
+    case lowerBody
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .push: return "Push"
+        case .pull: return "Pull"
+        case .lowerBody: return "Lower Body"
+        }
+    }
+
+    var summary: String {
+        switch self {
+        case .push:
+            return "Pressing and lockout work. Chest, delts, and triceps drive the load away from the torso; the core braces so the spine stays stacked."
+        case .pull:
+            return "Rows, pulldowns, and the upper-back wall. Lats, scapular retractors, and the arms that finish every pull."
+        case .lowerBody:
+            return "Squat, hinge, and single-leg tissue. Quads, posterior chain, hips, and the lower-leg muscles that support stance and gait."
+        }
+    }
+}
+
 struct GuideMuscleGroup: Identifiable {
     var id: String { GuideVisuals.slug(name) }
     let name: String
     let region: String
+    let trainingSplit: GuideTrainingSplit
     let trainingRole: String
     let function: String
     let exampleExercises: String
@@ -84,6 +112,10 @@ final class AnatomyStore: ObservableObject {
 
     func relatedMuscles(for pattern: MovementPattern) -> [GuideMuscleGroup] {
         muscleGroups.filter { $0.movementPatterns.contains(pattern.name) }
+    }
+
+    func muscles(in split: GuideTrainingSplit) -> [GuideMuscleGroup] {
+        muscleGroups.filter { $0.trainingSplit == split }
     }
 
     func loadData() {
@@ -275,56 +307,117 @@ final class AnatomyStore: ObservableObject {
 
         muscleGroups = [
             GuideMuscleGroup(
-                name: "Biceps",
-                region: "Arms",
-                trainingRole: "Elbow flexor and pull accessory. Direct curls plus indirect work on every vertical and horizontal pull.",
-                function: "Elbow flexion, supination. Long head contributes to shoulder flexion.",
-                exampleExercises: "BB Curl, Hammer Curl, Preacher Curl, Reverse Curl",
-                movementPatterns: ["Horizontal Pull", "Vertical Pull"]
-            ),
-            GuideMuscleGroup(
-                name: "Triceps",
-                region: "Arms",
-                trainingRole: "Elbow extensor and press lockout. Shows up on every vertical and horizontal push, then again on isolation extensions.",
-                function: "Elbow extension. Long head extends shoulder, lateral head stabilizes.",
-                exampleExercises: "Pushdown, Skullcrusher, Diamond Push-up, Overhead Extension",
-                movementPatterns: ["Vertical Push", "Horizontal Push"]
-            ),
-            GuideMuscleGroup(
-                name: "Back (Lats, Rhomboids, Traps)",
-                region: "Upper body",
-                trainingRole: "Prime mover on pulls and the postural wall behind presses and carries.",
-                function: "Scapular retraction, depression, shoulder extension, adduction.",
-                exampleExercises: "Pull-up, Row, Meadows Row, Seal Row, Face Pull",
-                movementPatterns: ["Vertical Pull", "Horizontal Pull", "Loaded Carries"]
-            ),
-            GuideMuscleGroup(
                 name: "Chest (Pectorals)",
                 region: "Upper body",
+                trainingSplit: .push,
                 trainingRole: "Prime mover on horizontal push; upper fibers assist incline and some overhead work.",
                 function: "Shoulder horizontal adduction, flexion, internal rotation.",
                 exampleExercises: "Bench Press, Incline Press, DB Fly, Decline Fly",
                 movementPatterns: ["Horizontal Push", "Deceleration / Catching"]
             ),
             GuideMuscleGroup(
-                name: "Shoulders (Deltoids)",
+                name: "Anterior Delts",
                 region: "Upper body",
-                trainingRole: "Overhead pressing, arm path, and the three heads that keep pressing and pulling balanced.",
-                function: "Abduction, flexion, extension, rotation of arm.",
-                exampleExercises: "OHP, Lateral Raise, Rear Delt Fly, Face Pull",
-                movementPatterns: ["Vertical Push", "Horizontal Push", "Power / Triple Extension"]
+                trainingSplit: .push,
+                trainingRole: "Prime mover on overhead pressing and the front-of-shoulder contribution to incline and bench work.",
+                function: "Shoulder flexion. Front head of the deltoid on vertical and horizontal pushes.",
+                exampleExercises: "OHP, Incline Press",
+                movementPatterns: ["Vertical Push", "Horizontal Push"]
+            ),
+            GuideMuscleGroup(
+                name: "Lateral Delts",
+                region: "Upper body",
+                trainingSplit: .push,
+                trainingRole: "Shoulder abduction and the cap of the deltoid on overhead presses and raises.",
+                function: "Shoulder abduction. Lateral head that sets the arm path on vertical push.",
+                exampleExercises: "Lateral Raise, DB Shoulder Press",
+                movementPatterns: ["Vertical Push"]
+            ),
+            GuideMuscleGroup(
+                name: "Triceps",
+                region: "Arms",
+                trainingSplit: .push,
+                trainingRole: "Elbow extensor and press lockout. Shows up on every vertical and horizontal push, then again on isolation extensions.",
+                function: "Elbow extension. Long head extends shoulder, lateral head stabilizes.",
+                exampleExercises: "Pushdown, Skullcrusher, Diamond Push-up, Overhead Extension",
+                movementPatterns: ["Vertical Push", "Horizontal Push"]
             ),
             GuideMuscleGroup(
                 name: "Core & Abs",
                 region: "Trunk",
+                trainingSplit: .push,
                 trainingRole: "Brace, anti-motion, and some flexion/rotation. Treat it as a cylinder on compounds, then add anti-series and flexion work as needed.",
                 function: "Spinal flexion, rotation, anti-extension, anti-rotation.",
                 exampleExercises: "Cable Crunch, Dragon Fly, Russian Twist, Plank",
                 movementPatterns: ["Anti-Rotation & Anti-Lateral", "Rotational Acceleration", "Loaded Carries"]
             ),
             GuideMuscleGroup(
+                name: "Lats",
+                region: "Upper body",
+                trainingSplit: .pull,
+                trainingRole: "Prime mover on vertical and horizontal pulls. Width and shoulder extension from overhead and from a row.",
+                function: "Shoulder extension and adduction. Depresses the scapula on vertical pulls.",
+                exampleExercises: "Pull-up, Lat Pulldown, Meadows Row",
+                movementPatterns: ["Vertical Pull", "Horizontal Pull"]
+            ),
+            GuideMuscleGroup(
+                name: "Rhomboids",
+                region: "Upper body",
+                trainingSplit: .pull,
+                trainingRole: "Scapular retractors that build the upper-back wall behind every press.",
+                function: "Scapular retraction. Pull the shoulder blades toward the spine.",
+                exampleExercises: "Barbell Row, Seal Row, Face Pull",
+                movementPatterns: ["Horizontal Pull"]
+            ),
+            GuideMuscleGroup(
+                name: "Traps",
+                region: "Upper body",
+                trainingSplit: .pull,
+                trainingRole: "Postural wall on rows and the packed-shoulder work of carries.",
+                function: "Scapular retraction, elevation, and upward rotation. Middle fibers retract; upper fibers support loaded carries.",
+                exampleExercises: "Face Pull, Loaded Carry, Shrug-style work from pulls",
+                movementPatterns: ["Horizontal Pull", "Loaded Carries"]
+            ),
+            GuideMuscleGroup(
+                name: "Erectors",
+                region: "Trunk",
+                trainingSplit: .pull,
+                trainingRole: "Spinal extensors that keep the trunk rigid on hinges and squats.",
+                function: "Spinal extension and isometric bracing under axial load.",
+                exampleExercises: "Deadlift, RDL, Back Squat",
+                movementPatterns: ["Hinge Pattern", "Squat Pattern"]
+            ),
+            GuideMuscleGroup(
+                name: "Posterior Delts",
+                region: "Upper body",
+                trainingSplit: .pull,
+                trainingRole: "The rear head that balances pressing volume with horizontal pulling.",
+                function: "Shoulder extension and external rotation. Posterior head of the deltoid.",
+                exampleExercises: "Rear Delt Fly, Face Pull",
+                movementPatterns: ["Horizontal Pull"]
+            ),
+            GuideMuscleGroup(
+                name: "Biceps",
+                region: "Arms",
+                trainingSplit: .pull,
+                trainingRole: "Elbow flexor and pull accessory. Direct curls plus indirect work on every vertical and horizontal pull.",
+                function: "Elbow flexion, supination. Long head contributes to shoulder flexion.",
+                exampleExercises: "BB Curl, Hammer Curl, Preacher Curl, Reverse Curl",
+                movementPatterns: ["Horizontal Pull", "Vertical Pull"]
+            ),
+            GuideMuscleGroup(
+                name: "Forearms & Grip",
+                region: "Arms",
+                trainingSplit: .pull,
+                trainingRole: "Limiters on pulls, hinges, and carries. Train grip so the hands are not the first thing to quit.",
+                function: "Wrist flexion, extension, pronation, supination.",
+                exampleExercises: "Wrist Curl, Reverse Curl, Pronation/Supination Twists",
+                movementPatterns: ["Loaded Carries", "Vertical Pull", "Horizontal Pull"]
+            ),
+            GuideMuscleGroup(
                 name: "Quadriceps",
                 region: "Lower body",
+                trainingSplit: .lowerBody,
                 trainingRole: "Knee extension on squats, lunges, and jumps. The main knee-dominant engine.",
                 function: "Knee extension, hip flexion.",
                 exampleExercises: "Squat, Leg Extension, Bulgarian Split Squat, Goblet Squat",
@@ -333,6 +426,7 @@ final class AnatomyStore: ObservableObject {
             GuideMuscleGroup(
                 name: "Hamstrings",
                 region: "Lower body",
+                trainingSplit: .lowerBody,
                 trainingRole: "Hip extension on hinges plus knee flexion on curls. Pair with quads so the posterior chain is not an afterthought.",
                 function: "Knee flexion, hip extension.",
                 exampleExercises: "Nordic Curl, RDL, Glute Ham Raise, Leg Curl",
@@ -341,38 +435,52 @@ final class AnatomyStore: ObservableObject {
             GuideMuscleGroup(
                 name: "Glutes",
                 region: "Lower body",
+                trainingSplit: .lowerBody,
                 trainingRole: "Hip extension, abduction, and the finish of squats, hinges, and jumps.",
                 function: "Hip extension, abduction, external rotation.",
                 exampleExercises: "Step-ups, Lunges, Hip Thrust, RDL",
                 movementPatterns: ["Squat Pattern", "Hinge Pattern", "Power / Triple Extension"]
             ),
             GuideMuscleGroup(
-                name: "Calves & Tibialis",
+                name: "Calves",
                 region: "Lower body",
-                trainingRole: "Ankle plantarflexion and dorsiflexion. Elastic stiffness for gait, jumps, and single-leg work.",
-                function: "Plantarflexion (gastrocnemius/soleus), dorsiflexion (tibialis anterior).",
-                exampleExercises: "Standing Calf Raise, Seated Calf Raise, Tibialis Raise",
+                trainingSplit: .lowerBody,
+                trainingRole: "Ankle plantarflexion and elastic stiffness for gait, jumps, and single-leg work.",
+                function: "Plantarflexion (gastrocnemius and soleus).",
+                exampleExercises: "Standing / Seated Calf Raise",
                 movementPatterns: ["Single-Leg Pattern", "Power / Triple Extension"]
             ),
             GuideMuscleGroup(
-                name: "Forearms & Grip",
-                region: "Arms",
-                trainingRole: "Limiters on pulls, hinges, and carries. Train grip so the hands are not the first thing to quit.",
-                function: "Wrist flexion, extension, pronation, supination.",
-                exampleExercises: "Wrist Curl, Reverse Curl, Pronation/Supination Twists",
-                movementPatterns: ["Loaded Carries", "Vertical Pull", "Horizontal Pull"]
+                name: "Tibialis",
+                region: "Lower body",
+                trainingSplit: .lowerBody,
+                trainingRole: "Ankle dorsiflexion. The front-of-shin counterpart to the calves.",
+                function: "Dorsiflexion (tibialis anterior).",
+                exampleExercises: "Tibialis Raise",
+                movementPatterns: ["Single-Leg Pattern"]
             ),
             GuideMuscleGroup(
-                name: "Adductors / Abductors",
+                name: "Adductors",
                 region: "Lower body",
-                trainingRole: "Pelvic stability on squats and lunges. Abductors keep the pelvis level; adductors share squat depth and stance control.",
-                function: "Adduction (pull leg in), Abduction (push leg out), pelvic stability.",
-                exampleExercises: "Copenhagen Adductor, Lateral Lunge, Cable Side Extension",
-                movementPatterns: ["Squat Pattern", "Single-Leg Pattern", "Anti-Rotation & Anti-Lateral"]
+                trainingSplit: .lowerBody,
+                trainingRole: "Share squat depth and stance control. Pelvic stability on squats and lunges.",
+                function: "Adduction (pull the leg in) and pelvic stability.",
+                exampleExercises: "Copenhagen Adductor, Lateral Lunge",
+                movementPatterns: ["Squat Pattern", "Single-Leg Pattern"]
+            ),
+            GuideMuscleGroup(
+                name: "Abductors",
+                region: "Lower body",
+                trainingSplit: .lowerBody,
+                trainingRole: "Keep the pelvis level on lunges and single-leg work.",
+                function: "Abduction (push the leg out) and pelvic stability.",
+                exampleExercises: "Cable Side Extension, side-lying abduction",
+                movementPatterns: ["Single-Leg Pattern", "Anti-Rotation & Anti-Lateral"]
             ),
             GuideMuscleGroup(
                 name: "Hip Flexors",
                 region: "Lower body",
+                trainingSplit: .lowerBody,
                 trainingRole: "Swing-leg and knee-drive muscles. They stabilize the pelvis and show up in sprinting, hanging leg raises, and split-stance work.",
                 function: "Hip flexion, stabilizes pelvis.",
                 exampleExercises: "Reverse Squat, Hanging Leg Raise, Reverse Lunge",
@@ -582,27 +690,35 @@ struct KeyMuscleGroupsView: View {
         ArticleScreen(title: "Key muscle groups") {
             ArticleCard(
                 title: "Train the tissue, not just the lift",
-                bodyText: "These are the muscle groups the guide tracks — function, training role, example lifts, and the movement patterns they belong to. Tap a muscle for the full note."
+                bodyText: "These are the muscle groups the guide tracks — function, training role, example lifts, and the movement patterns they belong to. Grouped by a push / pull / lower-body split. Tap a muscle for the full note."
             )
 
-            VStack(alignment: .leading, spacing: 12) {
-                ForEach(Array(store.muscleGroups.enumerated()), id: \.element.id) { index, muscle in
-                    if index > 0 {
+            ForEach(GuideTrainingSplit.allCases) { split in
+                let muscles = store.muscles(in: split)
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(split.title)
+                        .font(.headline)
+                    Text(split.summary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    ForEach(muscles) { muscle in
                         Divider()
-                    }
-                    GuideRowLink {
-                        MuscleDetailView(muscle: muscle, store: store)
-                    } label: {
-                        GuideNavRow(
-                            title: muscle.name,
-                            subtitle: "\(muscle.region) · \(muscle.exampleExercises)"
-                        )
+                        GuideRowLink {
+                            MuscleDetailView(muscle: muscle, store: store)
+                        } label: {
+                            GuideNavRow(
+                                title: muscle.name,
+                                subtitle: "\(muscle.region) · \(muscle.exampleExercises)"
+                            )
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .opaqueCard()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(16)
-            .opaqueCard()
         }
     }
 }
@@ -675,7 +791,7 @@ struct CategoryDetailView: View {
     var body: some View {
         ArticleScreen(title: category.title) {
             GuideArticleCard {
-                GuideMediaSlot(
+                ExercisePhotoView(
                     assetName: "guide-\(category.id)",
                     caption: category.title,
                     symbolName: GuideVisuals.symbol(for: category.key)
@@ -714,7 +830,7 @@ struct MovementDetailView: View {
     var body: some View {
         ArticleScreen(title: pattern.name) {
             GuideArticleCard {
-                GuideMediaSlot(
+                ExercisePhotoView(
                     assetName: "guide-\(pattern.id)",
                     caption: pattern.name,
                     symbolName: GuideVisuals.symbol(for: pattern.category)
@@ -756,7 +872,7 @@ struct MuscleDetailView: View {
     var body: some View {
         ArticleScreen(title: muscle.name) {
             GuideArticleCard {
-                GuideMediaSlot(
+                ExercisePhotoView(
                     assetName: "guide-\(muscle.id)",
                     caption: muscle.name,
                     symbolName: "figure.strengthtraining.traditional"
@@ -936,54 +1052,6 @@ private struct GuideRelatedSection<Content: View>: View {
             Text(title)
                 .font(.headline)
             content
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
-private struct GuideMediaSlot: View {
-    let assetName: String
-    let caption: String
-    var symbolName: String = "photo"
-
-    @Environment(AppTheme.self) private var theme
-
-    private var catalogImage: UIImage? {
-        UIImage(named: assetName)
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Group {
-                if let catalogImage {
-                    Image(uiImage: catalogImage)
-                        .resizable()
-                        .scaledToFill()
-                        .accessibilityLabel(caption)
-                } else {
-                    ZStack {
-                        theme.mutedFill
-                        VStack(spacing: 8) {
-                            Image(systemName: symbolName)
-                                .font(.title2.weight(.semibold))
-                                .foregroundStyle(theme.accent.opacity(0.9))
-                            Text("Photo coming soon")
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(caption), photo coming soon")
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .aspectRatio(16 / 9, contentMode: .fit)
-            .clipped()
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-            Text(caption)
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

@@ -69,6 +69,14 @@ struct ProgramEditorView: View {
                 }
                 .fontWeight(.semibold)
             }
+            ToolbarItem(placement: .primaryAction) {
+                ShareLink(
+                    item: ProgramTemplateService.make(from: program),
+                    preview: SharePreview("Export plan")
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                }
+            }
         }
         .sheet(isPresented: $showOverview, onDismiss: {
             if popAfterOverview {
@@ -147,30 +155,55 @@ struct DayEditorView: View {
         .toolbar { EditButton() }
         .sheet(isPresented: $showPicker) {
             NavigationStack {
-                ExercisePickerView { catalog in
-                    addExercise(
-                        name: catalog.name,
-                        primary: catalog.primaryNames,
-                        secondary: catalog.secondaryNames
-                    )
-                } onCustom: { name, primary, secondary in
-                    addExercise(name: name, primary: primary, secondary: secondary)
-                }
+                ExercisePickerView(
+                    initialAddedCatalogIDs: existingCatalogIDs,
+                    onAdd: { catalog in
+                        addExercise(
+                            name: catalog.name,
+                            primary: catalog.primaryNames,
+                            secondary: catalog.secondaryNames,
+                            equipment: catalog.equipment
+                        )
+                    },
+                    onRemove: { catalog in
+                        removeExercise(matching: catalog)
+                    },
+                    onCustom: { name, equipment, primary, secondary in
+                        addExercise(name: name, primary: primary, secondary: secondary, equipment: equipment)
+                    }
+                )
             }
         }
     }
 
-    private func addExercise(name: String, primary: [String], secondary: [String]) {
+    private var existingCatalogIDs: Set<String> {
+        Set(day.orderedExercises.compactMap { ExerciseCatalog.match(name: $0.name)?.id })
+    }
+
+    private func addExercise(
+        name: String,
+        primary: [String],
+        secondary: [String],
+        equipment: ExerciseEquipment
+    ) {
         let item = DayExercise(
             name: name,
             primaryMuscles: primary,
             secondaryMuscles: secondary,
             targetSets: 3,
             targetReps: 8,
-            sortIndex: day.exercises.count
+            sortIndex: day.exercises.count,
+            equipment: equipment
         )
         item.day = day
         modelContext.insert(item)
+        try? modelContext.save()
+    }
+
+    private func removeExercise(matching catalog: CatalogExercise) {
+        guard let item = day.orderedExercises.last(where: { $0.name == catalog.name }) else { return }
+        modelContext.delete(item)
+        reindex()
         try? modelContext.save()
     }
 

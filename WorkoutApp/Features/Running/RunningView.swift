@@ -57,6 +57,7 @@ struct RunningView: View {
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
     @State private var filters = RunningFilters()
     @State private var showFilters = false
+    @State private var olderExpanded = false
 
     private var accent: Color {
         theme.accent
@@ -80,6 +81,18 @@ struct RunningView: View {
 
     private var olderRuns: [CardioWorkout] {
         filtered.filter { $0.start < twoWeekCutoff }
+    }
+
+    private var needsOlderForFilters: Bool {
+        filters.useStartDate && filters.startDate < twoWeekCutoff
+    }
+
+    private var shouldShowOlderFolder: Bool {
+        health.olderRunCount > 0 || !olderRuns.isEmpty || health.isLoadingOlder
+    }
+
+    private var olderFolderCount: Int {
+        health.olderCardioWorkouts.isEmpty ? health.olderRunCount : olderRuns.count
     }
 
     private var last7: [CardioWorkout] {
@@ -146,8 +159,8 @@ struct RunningView: View {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                        } else if filtered.isEmpty {
-                            Text(health.runs.isEmpty
+                        } else if recentRuns.isEmpty && !shouldShowOlderFolder {
+                            Text(health.runs.isEmpty && health.olderRunCount == 0
                                  ? "No running workouts found in Apple Health. Record a run in the Fitness or Health app, then pull to refresh."
                                  : "No runs match these filters.")
                                 .font(.subheadline)
@@ -170,26 +183,34 @@ struct RunningView: View {
                                 }
                                 .buttonStyle(.plain)
                             }
-                            if !olderRuns.isEmpty {
-                                DisclosureGroup("Older than 2 weeks (\(olderRuns.count))") {
+                            if shouldShowOlderFolder {
+                                DisclosureGroup(isExpanded: $olderExpanded) {
                                     VStack(spacing: 8) {
-                                        ForEach(olderRuns) { run in
-                                            NavigationLink {
-                                                RunDetailView(
-                                                    run: run,
-                                                    accent: accent,
-                                                    unit: unit,
-                                                    restingHeartRate: health.restingHeartRate,
-                                                    maxHeartRate: health.maxHeartRate
-                                                )
-                                                .environmentObject(health)
-                                            } label: {
-                                                RunRow(run: run, accent: accent, unit: unit, stressScore: runStress(for: run))
+                                        if health.isLoadingOlder {
+                                            ProgressView()
+                                                .frame(maxWidth: .infinity)
+                                                .padding()
+                                        } else {
+                                            ForEach(olderRuns) { run in
+                                                NavigationLink {
+                                                    RunDetailView(
+                                                        run: run,
+                                                        accent: accent,
+                                                        unit: unit,
+                                                        restingHeartRate: health.restingHeartRate,
+                                                        maxHeartRate: health.maxHeartRate
+                                                    )
+                                                    .environmentObject(health)
+                                                } label: {
+                                                    RunRow(run: run, accent: accent, unit: unit, stressScore: runStress(for: run))
+                                                }
+                                                .buttonStyle(.plain)
                                             }
-                                            .buttonStyle(.plain)
                                         }
                                     }
                                     .padding(.top, 8)
+                                } label: {
+                                    Text("Older than 2 weeks (\(olderFolderCount))")
                                 }
                                 .font(.subheadline.weight(.semibold))
                                 .padding(14)
@@ -221,6 +242,16 @@ struct RunningView: View {
             }
             .sheet(isPresented: $showFilters) {
                 RunningFilterSheet(filters: $filters, unit: unit)
+            }
+            .onChange(of: olderExpanded) { _, expanded in
+                if expanded {
+                    Task { await health.loadOlderCardioWorkouts() }
+                }
+            }
+            .onChange(of: filters) { _, _ in
+                if needsOlderForFilters {
+                    Task { await health.loadOlderCardioWorkouts() }
+                }
             }
         }
     }

@@ -44,32 +44,80 @@ enum ExerciseCategory: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable {
+enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable, Codable {
     case barbell
-    case functionalTrainer
-    case other
+    case machine
+    case kettlebell
+    case dumbbell
+    case bodyweight
 
     var id: String { rawValue }
 
+    var displayTitle: String {
+        switch self {
+        case .barbell: return "Barbell"
+        case .machine: return "Machine"
+        case .kettlebell: return "Kettlebell"
+        case .dumbbell: return "Dumbbell"
+        case .bodyweight: return "Bodyweight"
+        }
+    }
+
+    var shortBadge: String {
+        switch self {
+        case .barbell: return "BB"
+        case .machine: return "MC"
+        case .kettlebell: return "KB"
+        case .dumbbell: return "DB"
+        case .bodyweight: return "BW"
+        }
+    }
+
+    var showsPlateCalculator: Bool {
+        self == .barbell || self == .machine
+    }
+
+    static func from(raw: String) -> ExerciseEquipment? {
+        switch raw {
+        case "functionalTrainer": return .machine
+        case "other": return nil
+        default: return ExerciseEquipment(rawValue: raw)
+        }
+    }
+
+    static func resolve(raw: String?, name: String) -> ExerciseEquipment {
+        if let raw, let resolved = from(raw: raw) {
+            return resolved
+        }
+        return infer(from: name)
+    }
+
     static func infer(from name: String) -> ExerciseEquipment {
         let n = name.lowercased()
-        if n.contains("functional trainer")
-            || n.contains("cable")
-            || n.contains("lat pulldown")
-            || n.contains("pulldown")
-            || n.contains("face pull")
-            || n.contains("pushdown") {
-            return .functionalTrainer
+        if n.contains("kettlebell") || n.contains("goblet") {
+            return .kettlebell
         }
-        if n.contains("dumbbell") || n.contains("kettlebell") || n.contains("machine") {
-            return .other
+        if n.contains("dumbbell") {
+            return .dumbbell
         }
-        if n.contains("barbell")
-            || n.contains("deadlift")
-            || n.contains("ohp")
-            || n.contains("overhead press")
-            || n.contains("hip thrust")
-            || n.contains("bench") {
+        if n.contains("push-up") || n.contains("push up")
+            || n.contains("pull-up") || n.contains("pull up")
+            || n.contains("chin-up") || n.contains("chin up")
+            || (n.contains("dip") && !n.contains("machine"))
+            || n.contains("plank") || n.contains("bodyweight")
+            || n.contains("pistol") || n.contains("ab wheel") {
+            return .bodyweight
+        }
+        if n.contains("machine") || n.contains("leg press") || n.contains("leg extension")
+            || n.contains("leg curl") || n.contains("calf raise")
+            || n.contains("functional trainer") || n.contains("cable")
+            || n.contains("lat pulldown") || n.contains("pulldown")
+            || n.contains("face pull") || n.contains("pushdown") || n.contains("smith") {
+            return .machine
+        }
+        if n.contains("barbell") || n.contains("deadlift") || n.contains("ohp")
+            || n.contains("overhead press") || n.contains("hip thrust") || n.contains("bench")
+            || n.contains("skull crusher") {
             return .barbell
         }
         if n.contains("squat"),
@@ -79,7 +127,11 @@ enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable {
            !n.contains("pistol") {
             return .barbell
         }
-        return .other
+        if n.contains("lunge") || n.contains("split squat") || n.contains("curl")
+            || n.contains("raise") || n.contains("fly") {
+            return .dumbbell
+        }
+        return .bodyweight
     }
 }
 
@@ -91,6 +143,7 @@ struct CatalogExercise: Identifiable, Hashable {
     let secondary: [MuscleGroup]
     let cues: String
     let equipment: ExerciseEquipment
+    let imageAssetName: String?
 
     var primaryNames: [String] { primary.map(\.rawValue) }
     var secondaryNames: [String] { secondary.map(\.rawValue) }
@@ -102,7 +155,8 @@ struct CatalogExercise: Identifiable, Hashable {
         primary: [MuscleGroup],
         secondary: [MuscleGroup],
         cues: String,
-        equipment: ExerciseEquipment = .other
+        equipment: ExerciseEquipment? = nil,
+        imageAssetName: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -110,7 +164,8 @@ struct CatalogExercise: Identifiable, Hashable {
         self.primary = primary
         self.secondary = secondary
         self.cues = cues
-        self.equipment = equipment
+        self.equipment = equipment ?? ExerciseEquipment.infer(from: name)
+        self.imageAssetName = imageAssetName
     }
 }
 
@@ -282,7 +337,7 @@ enum ExerciseCatalog {
             primary: [.chest],
             secondary: [.frontDelts],
             cues: "Soft elbows, sweep in an arc, and squeeze without shrugging.",
-            equipment: .functionalTrainer
+            equipment: .machine
         ),
         CatalogExercise(
             id: "tricep-pushdown",
@@ -291,7 +346,7 @@ enum ExerciseCatalog {
             primary: [.triceps],
             secondary: [],
             cues: "Elbows pinned by the sides. Full extension, then a controlled return.",
-            equipment: .functionalTrainer
+            equipment: .machine
         ),
         CatalogExercise(
             id: "skull-crusher",
@@ -317,7 +372,7 @@ enum ExerciseCatalog {
             primary: [.lats, .upperBack],
             secondary: [.biceps, .rearDelts],
             cues: "Start from a long arm. Pull elbows back, pause, then reach forward without rounding hard.",
-            equipment: .functionalTrainer
+            equipment: .machine
         ),
         CatalogExercise(
             id: "lat-pulldown",
@@ -326,7 +381,7 @@ enum ExerciseCatalog {
             primary: [.lats],
             secondary: [.biceps, .upperBack],
             cues: "Set the scaps first. Pull the bar to the upper chest, elbows down, not behind the body.",
-            equipment: .functionalTrainer
+            equipment: .machine
         ),
         CatalogExercise(
             id: "pull-up",
@@ -351,7 +406,7 @@ enum ExerciseCatalog {
             primary: [.rearDelts, .traps],
             secondary: [.upperBack],
             cues: "Pull toward the face, externally rotate at the end, and keep the ribs down.",
-            equipment: .functionalTrainer
+            equipment: .machine
         ),
         CatalogExercise(
             id: "barbell-curl",
@@ -401,7 +456,7 @@ enum ExerciseCatalog {
             primary: [.core],
             secondary: [],
             cues: "Round the spine to shorten the abs. Hips stay relatively still.",
-            equipment: .functionalTrainer
+            equipment: .machine
         ),
         CatalogExercise(
             id: "ab-wheel",
@@ -427,5 +482,9 @@ enum ExerciseCatalog {
 
     static func equipment(forName name: String) -> ExerciseEquipment {
         match(name: name)?.equipment ?? ExerciseEquipment.infer(from: name)
+    }
+
+    static func imageAssetName(for exercise: CatalogExercise) -> String {
+        exercise.imageAssetName ?? "exercise-\(exercise.id)"
     }
 }

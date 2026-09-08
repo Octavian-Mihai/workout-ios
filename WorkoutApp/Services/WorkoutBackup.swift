@@ -42,6 +42,7 @@ struct ExerciseBackup: Codable {
     var targetSets: Int
     var targetReps: Int
     var sortIndex: Int
+    var equipment: String?
 }
 
 struct SessionBackup: Codable {
@@ -73,6 +74,33 @@ struct BodyWeightBackup: Codable {
 }
 
 enum WorkoutBackupService {
+    static func programBackup(from program: Program) -> ProgramBackup {
+        ProgramBackup(
+            uuid: program.uuid,
+            name: program.name,
+            isActive: program.isActive,
+            createdAt: program.createdAt,
+            days: program.orderedDays.map { day in
+                DayBackup(
+                    uuid: day.uuid,
+                    name: day.name,
+                    sortIndex: day.sortIndex,
+                    exercises: day.orderedExercises.map { item in
+                        ExerciseBackup(
+                            name: item.name,
+                            primaryMuscles: item.primaryMuscles,
+                            secondaryMuscles: item.secondaryMuscles,
+                            targetSets: item.targetSets,
+                            targetReps: item.targetReps,
+                            sortIndex: item.sortIndex,
+                            equipment: item.equipmentRaw
+                        )
+                    }
+                )
+            }
+        )
+    }
+
     static func make(
         programs: [Program],
         sessions: [WorkoutSession],
@@ -81,31 +109,7 @@ enum WorkoutBackupService {
         WorkoutBackupFile(
             version: 1,
             exportedAt: Date(),
-            programs: programs.map { program in
-                ProgramBackup(
-                    uuid: program.uuid,
-                    name: program.name,
-                    isActive: program.isActive,
-                    createdAt: program.createdAt,
-                    days: program.orderedDays.map { day in
-                        DayBackup(
-                            uuid: day.uuid,
-                            name: day.name,
-                            sortIndex: day.sortIndex,
-                            exercises: day.orderedExercises.map { item in
-                                ExerciseBackup(
-                                    name: item.name,
-                                    primaryMuscles: item.primaryMuscles,
-                                    secondaryMuscles: item.secondaryMuscles,
-                                    targetSets: item.targetSets,
-                                    targetReps: item.targetReps,
-                                    sortIndex: item.sortIndex
-                                )
-                            }
-                        )
-                    }
-                )
-            },
+            programs: programs.map { programBackup(from: $0) },
             sessions: sessions.map { session in
                 SessionBackup(
                     uuid: session.uuid,
@@ -176,13 +180,15 @@ enum WorkoutBackupService {
                 dayModel.program = model
                 context.insert(dayModel)
                 for item in day.exercises {
+                    let equipment = ExerciseEquipment.resolve(raw: item.equipment, name: item.name)
                     let exercise = DayExercise(
                         name: item.name,
                         primaryMuscles: item.primaryMuscles,
                         secondaryMuscles: item.secondaryMuscles,
                         targetSets: item.targetSets,
                         targetReps: item.targetReps,
-                        sortIndex: item.sortIndex
+                        sortIndex: item.sortIndex,
+                        equipment: equipment
                     )
                     exercise.day = dayModel
                     context.insert(exercise)

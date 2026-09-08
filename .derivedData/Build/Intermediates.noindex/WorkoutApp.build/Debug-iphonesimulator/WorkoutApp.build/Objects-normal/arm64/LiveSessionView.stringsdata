@@ -1,0 +1,216 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Session/LiveSessionView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Save this day as a template?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 415
+        }
+      },
+      {
+        "comment": "",
+        "key": "Discard this workout?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 426
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add an exercise to start logging sets.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 337
+        }
+      },
+      {
+        "comment": "",
+        "key": "Discard workout",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 369
+        }
+      },
+      {
+        "comment": "",
+        "key": "Finish workout",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 360
+        }
+      },
+      {
+        "comment": "",
+        "key": "Close",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 390
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save template",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 416
+        }
+      },
+      {
+        "comment": "",
+        "key": "Don’t save",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 420
+        }
+      },
+      {
+        "comment": "",
+        "key": "Exercises were added, removed, or reordered. Save them to this program day, or keep the original template.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 424
+        }
+      },
+      {
+        "comment": "",
+        "key": "Discard",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 427
+        }
+      },
+      {
+        "comment": "",
+        "key": "Keep",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 428
+        }
+      },
+      {
+        "comment": "",
+        "key": "Logged sets will be lost.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 430
+        }
+      },
+      {
+        "comment": "",
+        "key": "Rest",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 529
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reset",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 553
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 553
+        }
+      },
+      {
+        "comment": "",
+        "key": "%llds",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 547
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld out of %lld sets done",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 693
+        }
+      },
+      {
+        "comment": "",
+        "key": "Exercise history and 1RM",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 711
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 756
+        }
+      },
+      {
+        "comment": "",
+        "key": "Close",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 805
+        }
+      },
+      {
+        "comment": "",
+        "key": "Set",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 814
+        }
+      },
+      {
+        "comment": "",
+        "key": "Last",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 816
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reps",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 820
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 847
+        }
+      },
+      {
+        "comment": "",
+        "key": "—",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 883
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ × %lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 875
+        }
+      }
+    ]
+  },
+  "version": 1
+}

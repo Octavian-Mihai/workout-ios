@@ -6,7 +6,7 @@
 	<integer>12</integer>
 	<key>logs</key>
 	<dict>
-		<key>D6A81533-0352-404A-B92F-126D33A3CD0B</key>
+		<key>A0FC9427-4D68-43E6-BA9E-F255098C83C7</key>
 		<dict>
 			<key>className</key>
 			<string>IDECommandLineBuildLog</string>
@@ -15,7 +15,7 @@
 			<key>domainType</key>
 			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
 			<key>fileName</key>
-			<string>D6A81533-0352-404A-B92F-126D33A3CD0B.xcactivitylog</string>
+			<string>A0FC9427-4D68-43E6-BA9E-F255098C83C7.xcactivitylog</string>
 			<key>hasPrimaryLog</key>
 			<true/>
 			<key>primaryObservable</key>
@@ -38,15 +38,15 @@
 			<key>schemeIdentifier-sharedScheme</key>
 			<integer>1</integer>
 			<key>signature</key>
-			<string>Building project WorkoutApp with scheme WorkoutApp and configuration Debug</string>
+			<string>Building project WorkoutApp with scheme WorkoutApp</string>
 			<key>timeStartedRecording</key>
-			<real>810022180.82131195</real>
+			<real>810588778.37833297</real>
 			<key>timeStoppedRecording</key>
-			<real>810022191.39197004</real>
+			<real>810588813.29903495</real>
 			<key>title</key>
-			<string>Building project WorkoutApp with scheme WorkoutApp and configuration Debug</string>
+			<string>Building project WorkoutApp with scheme WorkoutApp</string>
 			<key>uniqueIdentifier</key>
-			<string>D6A81533-0352-404A-B92F-126D33A3CD0B</string>
+			<string>A0FC9427-4D68-43E6-BA9E-F255098C83C7</string>
 		</dict>
 	</dict>
 </dict>

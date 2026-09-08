@@ -71,6 +71,7 @@ final class DayExercise {
     var targetSets: Int
     var targetReps: Int
     var sortIndex: Int
+    var equipmentRaw: String = ""
     var day: ProgramDay?
 
     init(
@@ -79,7 +80,8 @@ final class DayExercise {
         secondaryMuscles: [String],
         targetSets: Int,
         targetReps: Int,
-        sortIndex: Int
+        sortIndex: Int,
+        equipment: ExerciseEquipment? = nil
     ) {
         self.name = name
         self.primaryMusclesCSV = MuscleCSV.encode(primaryMuscles)
@@ -87,6 +89,12 @@ final class DayExercise {
         self.targetSets = targetSets
         self.targetReps = targetReps
         self.sortIndex = sortIndex
+        self.equipmentRaw = equipment?.rawValue ?? ExerciseEquipment.infer(from: name).rawValue
+    }
+
+    var equipment: ExerciseEquipment {
+        get { ExerciseEquipment.resolve(raw: equipmentRaw, name: name) }
+        set { equipmentRaw = newValue.rawValue }
     }
 
     var primaryMuscles: [String] {

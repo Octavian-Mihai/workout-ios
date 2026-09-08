@@ -1,0 +1,56 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutWidgets/WorkoutWidgets.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Year",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 38
+        }
+      },
+      {
+        "comment": "",
+        "key": "Year-in-pixels grid plus workout count for the current year.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 39
+        }
+      },
+      {
+        "comment": "",
+        "key": "Today’s stress",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 51
+        }
+      },
+      {
+        "comment": "",
+        "key": "Today’s training stress score and a 7-day trend.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 52
+        }
+      },
+      {
+        "comment": "",
+        "key": "Next workout",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "Last session and the next programmed day.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 65
+        }
+      }
+    ]
+  },
+  "version": 1
+}

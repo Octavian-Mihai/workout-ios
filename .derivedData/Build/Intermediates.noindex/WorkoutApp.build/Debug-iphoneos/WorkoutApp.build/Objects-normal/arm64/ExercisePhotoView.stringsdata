@@ -1,0 +1,24 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Session/ExercisePhotoView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "%@, photo coming soon",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 37
+        }
+      },
+      {
+        "comment": "",
+        "key": "Photo coming soon",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 31
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,16 +1,28 @@
 import SwiftUI
 
 struct ExercisePickerView: View {
-    var onPick: (CatalogExercise) -> Void
-    var onCustom: (String, [String], [String]) -> Void
+    var initialAddedCatalogIDs: Set<String> = []
+    var shouldConfirmRemove: ((CatalogExercise) -> Bool)? = nil
+    var onAdd: (CatalogExercise) -> Void
+    var onRemove: (CatalogExercise) -> Void
+    var onCustom: (String, ExerciseEquipment, [String], [String]) -> Void
 
     @Environment(\.dismiss) private var dismiss
     @Environment(AppTheme.self) private var theme
+    @AppStorage(ExerciseSubmissionService.adminEmailKey) private var adminEmail = ""
     @State private var query = ""
     @State private var showCustom = false
+    @State private var previewExercise: CatalogExercise?
     @State private var categoryFilter: ExerciseCategory?
     @State private var equipmentFilter: ExerciseEquipment?
     @State private var muscleFilter: MuscleGroup?
+    @State private var pendingCustom: (name: String, equipment: ExerciseEquipment, primary: [String], secondary: [String])?
+    @State private var showCustomNotifyAlert = false
+    @State private var showConfigureAdminAlert = false
+    @State private var addedCatalogIDs: Set<String> = []
+    @State private var addFeedbackTrigger = 0
+    @State private var removeFeedbackTrigger = 0
+    @State private var pendingRemoveExercise: CatalogExercise?
 
     private var accent: Color {
         theme.accent
@@ -51,12 +63,12 @@ struct ExercisePickerView: View {
                     ForEach(groupedFiltered, id: \.0) { category, items in
                         Section(category.rawValue) {
                             ForEach(items) { item in
-                                Button {
-                                    onPick(item)
-                                    dismiss()
-                                } label: {
-                                    ExercisePickerRow(exercise: item)
-                                }
+                                ExercisePickerRow(
+                                    exercise: item,
+                                    isAdded: addedCatalogIDs.contains(item.id),
+                                    onPreview: { previewExercise = item },
+                                    onToggle: { toggleExercise(item) }
+                                )
                             }
                         }
                     }
@@ -79,12 +91,101 @@ struct ExercisePickerView: View {
         }
         .sheet(isPresented: $showCustom) {
             NavigationStack {
-                CustomExerciseForm { name, primary, secondary in
-                    onCustom(name, primary, secondary)
-                    dismiss()
+                CustomExerciseForm { name, equipment, primary, secondary in
+                    pendingCustom = (name, equipment, primary, secondary)
+                    showCustomNotifyAlert = true
                 }
             }
         }
+        .sheet(item: $previewExercise) { exercise in
+            ExercisePreviewSheet(
+                exercise: exercise,
+                isAdded: addedCatalogIDs.contains(exercise.id)
+            ) {
+                if !addedCatalogIDs.contains(exercise.id) {
+                    toggleExercise(exercise)
+                }
+            }
+        }
+        .onAppear {
+            addedCatalogIDs = initialAddedCatalogIDs
+        }
+        .sensoryFeedback(.selection, trigger: addFeedbackTrigger)
+        .sensoryFeedback(.impact, trigger: removeFeedbackTrigger)
+        .alert("Add custom exercise", isPresented: $showCustomNotifyAlert) {
+            Button("Add only") {
+                finalizeCustom(notifyAdmin: false)
+            }
+            Button("Add & notify admin") {
+                finalizeCustom(notifyAdmin: true)
+            }
+            Button("Cancel", role: .cancel) {
+                pendingCustom = nil
+            }
+        } message: {
+            Text("Request inclusion in the global catalog by notifying the admin, or add this exercise to your program only.")
+        }
+        .alert("Configure admin email", isPresented: $showConfigureAdminAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Set the catalog admin email in Settings before sending a submission.")
+        }
+        .alert("Remove exercise?", isPresented: Binding(
+            get: { pendingRemoveExercise != nil },
+            set: { if !$0 { pendingRemoveExercise = nil } }
+        )) {
+            Button("Remove", role: .destructive) {
+                if let exercise = pendingRemoveExercise {
+                    performRemove(exercise)
+                    pendingRemoveExercise = nil
+                }
+            }
+            Button("Cancel", role: .cancel) {
+                pendingRemoveExercise = nil
+            }
+        } message: {
+            if let exercise = pendingRemoveExercise {
+                Text("\(exercise.name) has logged sets. Removing it will delete those sets.")
+            }
+        }
+    }
+
+    private func finalizeCustom(notifyAdmin: Bool) {
+        guard let pending = pendingCustom else { return }
+        onCustom(pending.name, pending.equipment, pending.primary, pending.secondary)
+        pendingCustom = nil
+        if notifyAdmin {
+            let opened = ExerciseSubmissionService.openMail(
+                adminEmail: adminEmail,
+                exerciseName: pending.name,
+                equipment: pending.equipment,
+                primaryMuscles: pending.primary,
+                secondaryMuscles: pending.secondary
+            )
+            if !opened {
+                showConfigureAdminAlert = true
+            }
+        }
+    }
+
+    private func toggleExercise(_ exercise: CatalogExercise) {
+        if addedCatalogIDs.contains(exercise.id) {
+            if shouldConfirmRemove?(exercise) == true {
+                pendingRemoveExercise = exercise
+                return
+            }
+            performRemove(exercise)
+        } else {
+            onAdd(exercise)
+            addedCatalogIDs.insert(exercise.id)
+            addFeedbackTrigger += 1
+        }
+    }
+
+    private func performRemove(_ exercise: CatalogExercise) {
+        onRemove(exercise)
+        addedCatalogIDs.remove(exercise.id)
+        removeFeedbackTrigger += 1
     }
 
     private var filterBar: some View {
@@ -113,11 +214,11 @@ struct ExercisePickerView: View {
                     Button("All equipment") { equipmentFilter = nil }
                     Divider()
                     ForEach(ExerciseEquipment.allCases) { eq in
-                        Button(equipmentTitle(eq)) { equipmentFilter = eq }
+                        Button(eq.displayTitle) { equipmentFilter = eq }
                     }
                 } label: {
                     FilterChipLabel(
-                        title: equipmentFilter.map(equipmentTitle) ?? "Equipment",
+                        title: equipmentFilter?.displayTitle ?? "Equipment",
                         selected: equipmentFilter != nil
                     )
                 }
@@ -141,53 +242,53 @@ struct ExercisePickerView: View {
         .background(theme.cardFill)
         .overlay(alignment: .bottom) { Divider() }
     }
-
-    private func equipmentTitle(_ equipment: ExerciseEquipment) -> String {
-        switch equipment {
-        case .barbell: return "Barbell"
-        case .functionalTrainer: return "Cable / FT"
-        case .other: return "Other"
-        }
-    }
 }
 
 private struct ExercisePickerRow: View {
     let exercise: CatalogExercise
+    var isAdded: Bool
+    var onPreview: () -> Void
+    var onToggle: () -> Void
     @Environment(AppTheme.self) private var theme
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(exercise.name)
-                .font(.body.weight(.semibold))
-                .foregroundStyle(.primary)
-            HStack(spacing: 8) {
-                Text(exercise.primaryNames.joined(separator: ", "))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-                Spacer(minLength: 0)
-                equipmentBadge
+        HStack(spacing: 12) {
+            Button(action: onPreview) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(exercise.name)
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    HStack(spacing: 8) {
+                        Text(exercise.primaryNames.joined(separator: ", "))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                        Spacer(minLength: 0)
+                        Text(exercise.equipment.shortBadge)
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(theme.mutedFill)
+                            .clipShape(Capsule())
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 4)
             }
-        }
-        .padding(.vertical, 4)
-    }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Preview \(exercise.name)")
 
-    @ViewBuilder
-    private var equipmentBadge: some View {
-        let label: String = {
-            switch exercise.equipment {
-            case .barbell: return "BB"
-            case .functionalTrainer: return "FT"
-            case .other: return "Other"
+            Button(action: onToggle) {
+                Image(systemName: isAdded ? "checkmark.circle.fill" : "plus.circle.fill")
+                    .font(.title2)
+                    .symbolRenderingMode(.monochrome)
+                    .foregroundStyle(theme.accent)
+                    .contentTransition(.symbolEffect(.replace))
             }
-        }()
-        Text(label)
-            .font(.caption2.weight(.bold))
-            .foregroundStyle(.secondary)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(theme.mutedFill)
-            .clipShape(Capsule())
+            .buttonStyle(.plain)
+            .accessibilityLabel(isAdded ? "Remove \(exercise.name)" : "Add \(exercise.name)")
+        }
     }
 }
 
@@ -221,16 +322,25 @@ private struct FilterChipLabel: View {
 }
 
 struct CustomExerciseForm: View {
-    var onSave: (String, [String], [String]) -> Void
+    var onSave: (String, ExerciseEquipment, [String], [String]) -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
+    @State private var equipment: ExerciseEquipment = .barbell
     @State private var primary: Set<String> = []
     @State private var secondary: Set<String> = []
 
     var body: some View {
         Form {
             TextField("Exercise name", text: $name)
+            Section("Equipment") {
+                Picker("Equipment type", selection: $equipment) {
+                    ForEach(ExerciseEquipment.allCases) { item in
+                        Text(item.displayTitle).tag(item)
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
             Section("Primary muscles") {
                 ForEach(MuscleGroup.allCases) { muscle in
                     Toggle(muscle.rawValue, isOn: binding(muscle.rawValue, in: $primary))
@@ -249,7 +359,7 @@ struct CustomExerciseForm: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
-                    onSave(name, Array(primary), Array(secondary))
+                    onSave(name.trimmingCharacters(in: .whitespaces), equipment, Array(primary), Array(secondary))
                     dismiss()
                 }
                 .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)

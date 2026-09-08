@@ -7,6 +7,7 @@ struct DraftExercise: Identifiable {
     var name: String
     var primaryMuscles: [String]
     var secondaryMuscles: [String]
+    var equipment: ExerciseEquipment
     var targetSets: Int
     var logged: [DraftSet]
 
@@ -15,6 +16,7 @@ struct DraftExercise: Identifiable {
         name: String,
         primaryMuscles: [String],
         secondaryMuscles: [String],
+        equipment: ExerciseEquipment? = nil,
         targetSets: Int = 0,
         logged: [DraftSet] = []
     ) {
@@ -22,6 +24,7 @@ struct DraftExercise: Identifiable {
         self.name = name
         self.primaryMuscles = primaryMuscles
         self.secondaryMuscles = secondaryMuscles
+        self.equipment = equipment ?? ExerciseEquipment.infer(from: name)
         self.targetSets = targetSets
         self.logged = logged
     }
@@ -113,6 +116,7 @@ final class SessionController: ObservableObject {
                     name: item.name,
                     primaryMuscles: item.primaryMuscles,
                     secondaryMuscles: item.secondaryMuscles,
+                    equipment: item.equipment,
                     targetSets: item.targetSets
                 )
             }
@@ -254,20 +258,34 @@ final class SessionController: ObservableObject {
         let exercise = DraftExercise(
             name: catalog.name,
             primaryMuscles: catalog.primaryNames,
-            secondaryMuscles: catalog.secondaryNames
+            secondaryMuscles: catalog.secondaryNames,
+            equipment: catalog.equipment
         )
         exercises.append(exercise)
         drafts[exercise.id] = ExerciseDraft()
     }
 
-    func addCustom(name: String, primary: [String], secondary: [String]) {
+    func addCustom(name: String, equipment: ExerciseEquipment, primary: [String], secondary: [String]) {
         let exercise = DraftExercise(
             name: name,
             primaryMuscles: primary,
-            secondaryMuscles: secondary
+            secondaryMuscles: secondary,
+            equipment: equipment
         )
         exercises.append(exercise)
         drafts[exercise.id] = ExerciseDraft()
+    }
+
+    func removeExercise(matching catalog: CatalogExercise) {
+        guard let index = exercises.lastIndex(where: { $0.name == catalog.name }) else { return }
+        let removed = exercises.remove(at: index)
+        drafts.removeValue(forKey: removed.id)
+        if focusedField?.exerciseID == removed.id {
+            focusedField = nil
+        }
+        for set in removed.logged {
+            loggedEdits.removeValue(forKey: set.id)
+        }
     }
 
     func draft(for id: UUID) -> ExerciseDraft {
@@ -384,11 +402,20 @@ struct LiveSessionView: View {
         }
         .sheet(isPresented: $showAddExercise) {
             NavigationStack {
-                ExercisePickerView { catalog in
-                    controller.addExercise(catalog)
-                } onCustom: { name, primary, secondary in
-                    controller.addCustom(name: name, primary: primary, secondary: secondary)
-                }
+                ExercisePickerView(
+                    initialAddedCatalogIDs: Set(controller.exercises.compactMap { ExerciseCatalog.match(name: $0.name)?.id }),
+                    shouldConfirmRemove: { catalog in
+                        guard let exercise = controller.exercises.last(where: { $0.name == catalog.name }) else {
+                            return false
+                        }
+                        return !exercise.logged.isEmpty
+                    },
+                    onAdd: { controller.addExercise($0) },
+                    onRemove: { controller.removeExercise(matching: $0) },
+                    onCustom: { name, equipment, primary, secondary in
+                        controller.addCustom(name: name, equipment: equipment, primary: primary, secondary: secondary)
+                    }
+                )
             }
         }
         .alert("Save this day as a template?", isPresented: $showSaveTemplate) {
@@ -431,12 +458,14 @@ struct LiveSessionView: View {
         if let field = controller.focusedField {
             let id = field.exerciseID
             let exerciseName = controller.exercises.first(where: { $0.id == id })?.name ?? ""
+            let equipment = controller.exercises.first(where: { $0.id == id })?.equipment
+                ?? ExerciseCatalog.equipment(forName: exerciseName)
             SessionInputKeyboard(
                 mode: field.isWeight ? .weight : .reps,
                 focusIdentity: field,
                 accent: accent,
                 unit: unit,
-                equipment: ExerciseCatalog.equipment(forName: exerciseName),
+                equipment: equipment,
                 weightText: Binding(
                     get: { controller.activeDraft(for: field).weightText },
                     set: { newValue in controller.updateActiveDraft(for: field) { $0.weightText = newValue } }
@@ -620,7 +649,8 @@ struct LiveSessionView: View {
                 secondaryMuscles: exercise.secondaryMuscles,
                 targetSets: exercise.targetSets,
                 targetReps: 0,
-                sortIndex: index
+                sortIndex: index,
+                equipment: exercise.equipment
             )
             item.day = day
             modelContext.insert(item)

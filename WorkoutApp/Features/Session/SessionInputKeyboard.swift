@@ -38,24 +38,24 @@ struct SessionInputKeyboard: View {
     ]
 
     private var showsPlates: Bool {
-        mode == .weight && (equipment == .barbell || equipment == .functionalTrainer)
+        mode == .weight && equipment.showsPlateCalculator
     }
 
     private var baseWeight: Double {
-        if equipment == .functionalTrainer {
+        if equipment == .machine {
             return unit == .kg ? ftIncrementKg : ftIncrementLb
         }
         return unit == .kg ? barbellBarKg : barbellBarLb
     }
 
     private var baseStep: Double {
-        equipment == .functionalTrainer
+        equipment == .machine
             ? EquipmentSettings.ftStep(for: unit)
             : EquipmentSettings.barStep(for: unit)
     }
 
     private var baseLabel: String {
-        equipment == .functionalTrainer ? "Base" : "Bar"
+        equipment == .machine ? "Base" : "Bar"
     }
 
     private var breakdown: PlateBreakdown? {
@@ -280,10 +280,10 @@ struct SessionInputKeyboard: View {
     }
 
     private func adjustBase(_ delta: Double) {
-        let minimum: Double = equipment == .functionalTrainer ? (unit == .kg ? 0.5 : 1) : (unit == .kg ? 5 : 15)
-        let maximum: Double = equipment == .functionalTrainer ? (unit == .kg ? 20 : 45) : (unit == .kg ? 40 : 70)
+        let minimum: Double = equipment == .machine ? (unit == .kg ? 0.5 : 1) : (unit == .kg ? 5 : 15)
+        let maximum: Double = equipment == .machine ? (unit == .kg ? 20 : 45) : (unit == .kg ? 40 : 70)
         let next = Swift.min(Swift.max(baseWeight + delta, minimum), maximum)
-        if equipment == .functionalTrainer {
+        if equipment == .machine {
             if unit == .kg {
                 ftIncrementKg = next
             } else {

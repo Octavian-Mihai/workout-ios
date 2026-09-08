@@ -1,10 +1,14 @@
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct ProgramListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Program.createdAt) private var programs: [Program]
     @State private var createdUUID: UUID?
+    @State private var showImporter = false
+    @State private var importError: String?
+    @State private var showImportError = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -12,6 +16,12 @@ struct ProgramListView: View {
                 Text("Programs")
                     .font(.headline)
                 Spacer()
+                Button {
+                    showImporter = true
+                } label: {
+                    Label("Import", systemImage: "square.and.arrow.down")
+                        .font(.subheadline.weight(.semibold))
+                }
                 Button {
                     createProgram()
                 } label: {
@@ -50,6 +60,12 @@ struct ProgramListView: View {
                     .padding(12)
                     .opaqueCard()
                     .contextMenu {
+                        ShareLink(
+                            item: ProgramTemplateService.make(from: program),
+                            preview: SharePreview("Export plan")
+                        ) {
+                            Label("Export plan", systemImage: "square.and.arrow.up")
+                        }
                         Button("Set active") { setActive(program, true) }
                         Button("Delete", role: .destructive) {
                             modelContext.delete(program)
@@ -65,6 +81,40 @@ struct ProgramListView: View {
             if let uuid = createdUUID, let program = programs.first(where: { $0.uuid == uuid }) {
                 ProgramEditorView(program: program)
             }
+        }
+        .fileImporter(
+            isPresented: $showImporter,
+            allowedContentTypes: [.json],
+            allowsMultipleSelection: false
+        ) { result in
+            switch result {
+            case .success(let urls):
+                guard let url = urls.first else { return }
+                importPlan(from: url)
+            case .failure(let error):
+                importError = error.localizedDescription
+                showImportError = true
+            }
+        }
+        .alert("Couldn’t import plan", isPresented: $showImportError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(importError ?? "The file could not be read.")
+        }
+    }
+
+    private func importPlan(from url: URL) {
+        let access = url.startAccessingSecurityScopedResource()
+        defer {
+            if access { url.stopAccessingSecurityScopedResource() }
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            let template = try ProgramTemplateService.decode(data)
+            try ProgramTemplateService.importTemplate(template, context: modelContext, existingPrograms: programs)
+        } catch {
+            importError = error.localizedDescription
+            showImportError = true
         }
     }
 

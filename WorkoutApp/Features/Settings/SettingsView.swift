@@ -24,6 +24,7 @@ struct SettingsView: View {
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
     @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
     @AppStorage(HealthKitService.writeStrengthToHealthKitKey) private var writeStrengthToHealthKit = false
+    @AppStorage(ExerciseSubmissionService.adminEmailKey) private var adminEmail = "octavian.mihai321@gmail.com"
     @State private var showDeleteConfirm = false
     @State private var showImporter = false
     @State private var dataError: String?
@@ -168,6 +169,14 @@ struct SettingsView: View {
                 }
 
                 Section("Data") {
+                    TextField("Catalog admin email", text: $adminEmail)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                    Text("Used when you submit a custom exercise for inclusion in the global catalog. Opens your Mail app via mailto — nothing is uploaded automatically.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                     ShareLink(
                         item: WorkoutBackupService.make(
                             programs: programs,

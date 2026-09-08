@@ -1,0 +1,16 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Settings/BackgroundPickerDashboard.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Custom background color",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 99
+        }
+      }
+    ]
+  },
+  "version": 1
+}

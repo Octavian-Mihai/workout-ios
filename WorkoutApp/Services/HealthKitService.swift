@@ -62,22 +62,45 @@ final class HealthKitService: ObservableObject {
     /// Opt-in: when true, finishing a strength session writes an `HKWorkout` to Health.
     static let writeStrengthToHealthKitKey = "writeStrengthToHealthKit"
 
+    static let recentCardioInterval: TimeInterval = 14 * 86_400
+
     @Published var isAuthorized = false
     @Published var cardioWorkouts: [CardioWorkout] = []
+    @Published var olderCardioWorkouts: [CardioWorkout] = []
+    @Published var olderRunCount = 0
     @Published var runDays: Set<Date> = []
     @Published var lastError: String?
     @Published var isLoading = false
+    @Published var isLoadingOlder = false
     @Published var restingHeartRate: Double?
     @Published var hrvSDNN: Double?
     @Published var lastNightSleepHours: Double?
     @Published var dateOfBirth: Date?
 
     private let store = HKHealthStore()
+    private var hasLoadedOlder = false
 
     var isAvailable: Bool { HKHealthStore.isHealthDataAvailable() }
 
+    static var recentCardioCutoff: Date {
+        Date().addingTimeInterval(-recentCardioInterval)
+    }
+
+    static var currentYearStart: Date {
+        let cal = Calendar.current
+        let now = Date()
+        return cal.date(from: DateComponents(year: cal.component(.year, from: now), month: 1, day: 1)) ?? now
+    }
+
+    /// Recent running plus older running once that folder has been loaded.
     var runs: [CardioWorkout] {
-        cardioWorkouts.filter { $0.activityType == .running }
+        var seen = Set<UUID>()
+        var result: [CardioWorkout] = []
+        for workout in cardioWorkouts + olderCardioWorkouts {
+            guard workout.activityType == .running, seen.insert(workout.id).inserted else { continue }
+            result.append(workout)
+        }
+        return result.sorted { $0.start > $1.start }
     }
 
     var maxHeartRate: Double {
@@ -87,7 +110,7 @@ final class HealthKitService: ObservableObject {
     var activityRunDays: Set<Date> {
         var days = runDays
         let cal = Calendar.current
-        for run in runs {
+        for run in cardioWorkouts where run.activityType == .running {
             days.insert(cal.startOfDay(for: run.start))
         }
         return days
@@ -108,6 +131,7 @@ final class HealthKitService: ObservableObject {
             loadDateOfBirth()
             try await loadCardioWorkouts()
             try await loadRunDays()
+            try await loadOlderRunCount()
             try await loadRestingHeartRate()
             try await loadHRV()
             try await loadSleep()
@@ -200,23 +224,14 @@ final class HealthKitService: ObservableObject {
 
     func loadRunDays() async throws {
         let cal = Calendar.current
-
-        let workouts: [HKWorkout] = try await withCheckedThrowingContinuation { continuation in
-            let predicate = HKQuery.predicateForWorkouts(with: .running)
-            let query = HKSampleQuery(
-                sampleType: .workoutType(),
-                predicate: predicate,
-                limit: HKObjectQueryNoLimit,
-                sortDescriptors: nil
-            ) { _, samples, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-                continuation.resume(returning: (samples as? [HKWorkout]) ?? [])
-            }
-            store.execute(query)
-        }
+        let running = HKQuery.predicateForWorkouts(with: .running)
+        let dates = HKQuery.predicateForSamples(
+            withStart: Self.currentYearStart,
+            end: Date(),
+            options: .strictStartDate
+        )
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [running, dates])
+        let workouts = try await fetchWorkouts(predicate: predicate)
         runDays = Set(workouts.map { cal.startOfDay(for: $0.startDate) })
     }
 
@@ -258,47 +273,49 @@ final class HealthKitService: ObservableObject {
     }
 
     func loadCardioWorkouts(limit: Int = HKObjectQueryNoLimit) async throws {
-        let activityTypes: [HKWorkoutActivityType] = [.running, .walking, .hiking, .cycling]
-        let typePredicates = activityTypes.map { HKQuery.predicateForWorkouts(with: $0) }
-        let workoutPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: typePredicates)
+        let dates = HKQuery.predicateForSamples(
+            withStart: Self.recentCardioCutoff,
+            end: Date(),
+            options: .strictStartDate
+        )
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [cardioActivityPredicate, dates])
+        let workouts = try await fetchWorkouts(predicate: predicate, limit: limit)
+        cardioWorkouts = await mapCardioWorkouts(workouts)
+    }
 
-        let workouts: [HKWorkout] = try await withCheckedThrowingContinuation { continuation in
-            let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
-            let query = HKSampleQuery(
-                sampleType: .workoutType(),
-                predicate: workoutPredicate,
-                limit: limit,
-                sortDescriptors: [sort]
-            ) { _, samples, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-                continuation.resume(returning: (samples as? [HKWorkout]) ?? [])
-            }
-            store.execute(query)
-        }
+    /// Cheap count of older running workouts (no route walk) so the Running folder can show N before expand.
+    func loadOlderRunCount() async throws {
+        let running = HKQuery.predicateForWorkouts(with: .running)
+        let dates = HKQuery.predicateForSamples(
+            withStart: nil,
+            end: Self.recentCardioCutoff,
+            options: .strictStartDate
+        )
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [running, dates])
+        let workouts = try await fetchWorkouts(predicate: predicate)
+        olderRunCount = workouts.count
+    }
 
-        var results: [CardioWorkout] = []
-        for workout in workouts {
-            var elevation = elevationFromMetadata(workout)
-            if elevation == nil {
-                elevation = await elevationFromRoute(workout)
-            }
-            let distance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
-            results.append(CardioWorkout(
-                id: workout.uuid,
-                start: workout.startDate,
-                end: workout.endDate,
-                duration: workout.duration,
-                distanceMeters: distance,
-                averageHeartRate: averageHeartRate(from: workout),
-                activityType: workout.workoutActivityType,
-                elevationGainMeters: elevation,
-                workout: workout
-            ))
+    /// Full older cardio (same activity types, start before the 14-day cutoff), including elevation.
+    func loadOlderCardioWorkouts() async {
+        guard isAvailable, !hasLoadedOlder, !isLoadingOlder else { return }
+        isLoadingOlder = true
+        defer { isLoadingOlder = false }
+
+        do {
+            let dates = HKQuery.predicateForSamples(
+                withStart: nil,
+                end: Self.recentCardioCutoff,
+                options: .strictStartDate
+            )
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [cardioActivityPredicate, dates])
+            let workouts = try await fetchWorkouts(predicate: predicate)
+            olderCardioWorkouts = await mapCardioWorkouts(workouts)
+            olderRunCount = olderCardioWorkouts.filter { $0.activityType == .running }.count
+            hasLoadedOlder = true
+        } catch {
+            lastError = error.localizedDescription
         }
-        cardioWorkouts = results
     }
 
     func loadRestingHeartRate() async throws {
@@ -420,6 +437,54 @@ final class HealthKitService: ObservableObject {
             pace: paceSeries(from: dist),
             route: locations
         )
+    }
+
+    private var cardioActivityPredicate: NSPredicate {
+        let activityTypes: [HKWorkoutActivityType] = [.running, .walking, .hiking, .cycling]
+        let typePredicates = activityTypes.map { HKQuery.predicateForWorkouts(with: $0) }
+        return NSCompoundPredicate(orPredicateWithSubpredicates: typePredicates)
+    }
+
+    private func fetchWorkouts(predicate: NSPredicate, limit: Int = HKObjectQueryNoLimit) async throws -> [HKWorkout] {
+        try await withCheckedThrowingContinuation { continuation in
+            let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+            let query = HKSampleQuery(
+                sampleType: .workoutType(),
+                predicate: predicate,
+                limit: limit,
+                sortDescriptors: [sort]
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: (samples as? [HKWorkout]) ?? [])
+            }
+            store.execute(query)
+        }
+    }
+
+    private func mapCardioWorkouts(_ workouts: [HKWorkout]) async -> [CardioWorkout] {
+        var results: [CardioWorkout] = []
+        for workout in workouts {
+            var elevation = elevationFromMetadata(workout)
+            if elevation == nil {
+                elevation = await elevationFromRoute(workout)
+            }
+            let distance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
+            results.append(CardioWorkout(
+                id: workout.uuid,
+                start: workout.startDate,
+                end: workout.endDate,
+                duration: workout.duration,
+                distanceMeters: distance,
+                averageHeartRate: averageHeartRate(from: workout),
+                activityType: workout.workoutActivityType,
+                elevationGainMeters: elevation,
+                workout: workout
+            ))
+        }
+        return results
     }
 
     private func elevationFromMetadata(_ workout: HKWorkout) -> Double? {

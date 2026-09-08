@@ -1,0 +1,16 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Settings/AccentPickerDashboard.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Custom accent color",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 85
+        }
+      }
+    ]
+  },
+  "version": 1
+}

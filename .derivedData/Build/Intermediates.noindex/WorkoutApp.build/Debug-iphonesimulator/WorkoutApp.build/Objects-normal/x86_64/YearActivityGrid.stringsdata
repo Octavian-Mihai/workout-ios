@@ -1,0 +1,24 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Shared/YearActivityGrid.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Year activity grid",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 166
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld / %lld days",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 136
+        }
+      }
+    ]
+  },
+  "version": 1
+}
