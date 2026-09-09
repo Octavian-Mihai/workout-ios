@@ -33,11 +33,12 @@ struct ExercisePhotoView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity)
+                .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .accessibilityLabel(caption)
         } else {
             ZStack {
-                theme.mutedFill
+                Color.white
                 VStack(spacing: 8) {
                     Image(systemName: symbolName)
                         .font(.title2.weight(.semibold))
