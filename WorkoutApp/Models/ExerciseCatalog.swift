@@ -39,9 +39,147 @@ enum ExerciseCategory: String, CaseIterable, Identifiable {
     case push = "Push"
     case pull = "Pull"
     case legs = "Legs"
+    case explosive = "Explosive"
     case core = "Core"
 
     var id: String { rawValue }
+}
+
+/// In-category picker/catalog order. `allCases` is the sort key; unused cases in a
+/// category are skipped. Hinge is shared by Pull deadlifts and Legs posterior chain.
+enum ExerciseMovementPattern: String, CaseIterable, Identifiable {
+    case verticalPull = "Vertical Pull"
+    case horizontalPull = "Horizontal Pull"
+    case squat = "Squat"
+    case lunge = "Lunge / Split"
+    case hinge = "Hinge"
+    case biceps = "Biceps"
+    case pullAccessory = "Accessory"
+    case horizontalPush = "Horizontal Push"
+    case chestIsolation = "Chest Isolation"
+    case verticalPush = "Vertical Push"
+    case deltIsolation = "Delt Isolation"
+    case triceps = "Triceps"
+    case kneeFlexion = "Knee Flexion"
+    case kneeExtension = "Knee Extension"
+    case gluteIsolation = "Glute Isolation"
+    case otherIsolation = "Other Isolation"
+    case snatch = "Snatch"
+    case clean = "Clean"
+    case plyometric = "Plyometric"
+    case antiExtension = "Anti-Extension"
+    case flexion = "Flexion"
+    case rotation = "Rotation"
+    case carry = "Carry"
+
+    var id: String { rawValue }
+
+    var sortRank: Int {
+        Self.allCases.firstIndex(of: self) ?? Int.max
+    }
+
+    static func infer(name: String, category: ExerciseCategory) -> ExerciseMovementPattern {
+        let n = name.lowercased()
+        switch category {
+        case .pull: return inferPull(n)
+        case .push: return inferPush(n)
+        case .legs: return inferLegs(n)
+        case .explosive: return inferExplosive(n)
+        case .core: return inferCore(n)
+        }
+    }
+
+    private static func contains(_ n: String, _ needles: String...) -> Bool {
+        needles.contains { n.contains($0) }
+    }
+
+    /// Vertical before rows; upright row / wrist curl / rear-delt work are accessory.
+    private static func inferPull(_ n: String) -> ExerciseMovementPattern {
+        if contains(n, "wrist", "shrug", "face pull", "rear delt", "reverse pec", "upright") {
+            return .pullAccessory
+        }
+        if contains(n, "pulldown", "pull-up", "pull up", "chin-up", "chin up") {
+            return .verticalPull
+        }
+        if n.contains("row") {
+            return .horizontalPull
+        }
+        if n.contains("deadlift") {
+            return .hinge
+        }
+        if n.contains("curl") {
+            return .biceps
+        }
+        return .pullAccessory
+    }
+
+    /// Close-grip bench is triceps, not a chest press.
+    private static func inferPush(_ n: String) -> ExerciseMovementPattern {
+        if contains(n, "pushdown", "skull", "triceps") || (n.contains("close-grip") && n.contains("bench")) {
+            return .triceps
+        }
+        if contains(n, "fly", "pec deck") {
+            return .chestIsolation
+        }
+        if contains(n, "lateral raise", "front raise") {
+            return .deltIsolation
+        }
+        if contains(n, "overhead press", "shoulder press", "landmine press") {
+            return .verticalPush
+        }
+        if contains(n, "bench", "dip", "push-up", "chest press") {
+            return .horizontalPush
+        }
+        return .horizontalPush
+    }
+
+    /// Split squat / lunge / step-up before generic squat. Jefferson curl is a hinge.
+    private static func inferLegs(_ n: String) -> ExerciseMovementPattern {
+        if contains(n, "lunge", "split squat", "step-up", "bulgarian") {
+            return .lunge
+        }
+        if contains(
+            n,
+            "romanian",
+            "good morning",
+            "jefferson",
+            "back extension",
+            "reverse hyper",
+            "hip thrust",
+            "glute-ham"
+        ) {
+            return .hinge
+        }
+        if contains(n, "nordic", "leg curl") {
+            return .kneeFlexion
+        }
+        if n.contains("leg extension") {
+            return .kneeExtension
+        }
+        if contains(n, "kickback", "abduction") {
+            return .gluteIsolation
+        }
+        if contains(n, "adduction", "calf", "tibialis") {
+            return .otherIsolation
+        }
+        if contains(n, "squat", "leg press") {
+            return .squat
+        }
+        return .otherIsolation
+    }
+
+    private static func inferExplosive(_ n: String) -> ExerciseMovementPattern {
+        if n.contains("snatch") { return .snatch }
+        if n.contains("clean") { return .clean }
+        return .plyometric
+    }
+
+    private static func inferCore(_ n: String) -> ExerciseMovementPattern {
+        if contains(n, "plank", "ab wheel") { return .antiExtension }
+        if contains(n, "woodchop", "rotation") { return .rotation }
+        if contains(n, "walk", "carry") { return .carry }
+        return .flexion
+    }
 }
 
 enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable, Codable {
@@ -144,6 +282,7 @@ struct CatalogExercise: Identifiable, Hashable {
     let cues: String
     let equipment: ExerciseEquipment
     let imageAssetName: String?
+    let pattern: ExerciseMovementPattern
 
     var primaryNames: [String] { primary.map(\.rawValue) }
     var secondaryNames: [String] { secondary.map(\.rawValue) }
@@ -156,7 +295,8 @@ struct CatalogExercise: Identifiable, Hashable {
         secondary: [MuscleGroup],
         cues: String,
         equipment: ExerciseEquipment? = nil,
-        imageAssetName: String? = nil
+        imageAssetName: String? = nil,
+        pattern: ExerciseMovementPattern? = nil
     ) {
         self.id = id
         self.name = name
@@ -166,6 +306,7 @@ struct CatalogExercise: Identifiable, Hashable {
         self.cues = cues
         self.equipment = equipment ?? ExerciseEquipment.infer(from: name)
         self.imageAssetName = imageAssetName
+        self.pattern = pattern ?? ExerciseMovementPattern.infer(name: name, category: category)
     }
 }
 
@@ -338,7 +479,7 @@ enum ExerciseCatalog {
         CatalogExercise(
             id: "box-jump",
             name: "Box Jump",
-            category: .legs,
+            category: .explosive,
             primary: [.quads, .glutes],
             secondary: [.hamstrings, .calves, .core],
             cues: "Load the hips, then jump onto the box and land softly with the whole foot. Stand tall to finish; don’t rebound off a bouncing landing.",
@@ -485,7 +626,7 @@ enum ExerciseCatalog {
         CatalogExercise(
             id: "snatch",
             name: "Snatch",
-            category: .pull,
+            category: .explosive,
             primary: [.hamstrings, .glutes, .traps],
             secondary: [.quads, .core, .frontDelts, .lats],
             cues: "Keep the bar close, then explode and punch under to lockout. Catch in a full squat with arms locked; don’t press it out.",
@@ -494,7 +635,7 @@ enum ExerciseCatalog {
         CatalogExercise(
             id: "power-snatch",
             name: "Power Snatch",
-            category: .pull,
+            category: .explosive,
             primary: [.hamstrings, .glutes, .traps],
             secondary: [.quads, .core, .frontDelts],
             cues: "Same pull as the snatch, catch higher. Bar close, explode, and punch under without riding into a deep squat.",
@@ -503,7 +644,7 @@ enum ExerciseCatalog {
         CatalogExercise(
             id: "snatch-pull",
             name: "Snatch Pull",
-            category: .pull,
+            category: .explosive,
             primary: [.hamstrings, .glutes, .traps],
             secondary: [.quads, .lats],
             cues: "Pull like a snatch without going overhead. Bar close, explode through the hips, and finish tall; don’t lean back and yank.",
@@ -512,7 +653,7 @@ enum ExerciseCatalog {
         CatalogExercise(
             id: "clean",
             name: "Clean",
-            category: .pull,
+            category: .explosive,
             primary: [.hamstrings, .glutes, .traps],
             secondary: [.quads, .core, .biceps],
             cues: "Bar close off the floor, then explode and pull under to the front rack. Catch with elbows high; don’t crash the bar onto the shoulders.",
@@ -521,7 +662,7 @@ enum ExerciseCatalog {
         CatalogExercise(
             id: "clean-and-jerk",
             name: "Clean and Jerk",
-            category: .pull,
+            category: .explosive,
             primary: [.hamstrings, .glutes, .traps],
             secondary: [.quads, .core, .frontDelts, .triceps],
             cues: "Clean to a solid front rack, then dip and drive the bar overhead. Punch under the jerk and lock out; don’t press it out from the shoulders.",
@@ -610,7 +751,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.triceps, .chest],
             secondary: [.frontDelts],
-            cues: "Grip just inside shoulder width. Elbows stay tucked; lower to the chest and press without bouncing."
+            cues: "Grip just inside shoulder width. Elbows stay tucked; lower to the chest and press without bouncing.",
+            pattern: .triceps
         ),
         CatalogExercise(
             id: "incline-dumbbell-press",
@@ -895,7 +1037,8 @@ enum ExerciseCatalog {
             primary: [.traps, .sideDelts],
             secondary: [.biceps],
             cues: "Lead with the elbows, bar close to the body. Stop around chest height; don’t yank the bar into the neck.",
-            equipment: .barbell
+            equipment: .barbell,
+            pattern: .pullAccessory
         ),
         CatalogExercise(
             id: "dumbbell-shrug",
@@ -992,7 +1135,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.forearms],
             secondary: [],
-            cues: "Forearms supported, wrists hanging. Curl through a full range and don’t let the elbows take over."
+            cues: "Forearms supported, wrists hanging. Curl through a full range and don’t let the elbows take over.",
+            pattern: .pullAccessory
         ),
         CatalogExercise(
             id: "reverse-wrist-curl",
@@ -1000,7 +1144,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.forearms],
             secondary: [],
-            cues: "Forearms supported, palms down. Extend the wrists through a full range; keep it slow."
+            cues: "Forearms supported, palms down. Extend the wrists through a full range; keep it slow.",
+            pattern: .pullAccessory
         ),
         CatalogExercise(
             id: "plank",
@@ -1080,9 +1225,19 @@ enum ExerciseCatalog {
         )
     ]
 
+    /// Catalog list order: movement pattern (`ExerciseMovementPattern.allCases`), then name.
+    static func displaySorted(_ items: [CatalogExercise]) -> [CatalogExercise] {
+        items.sorted { lhs, rhs in
+            if lhs.pattern.sortRank != rhs.pattern.sortRank {
+                return lhs.pattern.sortRank < rhs.pattern.sortRank
+            }
+            return lhs.name.localizedCompare(rhs.name) == .orderedAscending
+        }
+    }
+
     static func grouped() -> [(ExerciseCategory, [CatalogExercise])] {
         ExerciseCategory.allCases.compactMap { category in
-            let items = all.filter { $0.category == category }
+            let items = displaySorted(all.filter { $0.category == category })
             return items.isEmpty ? nil : (category, items)
         }
     }

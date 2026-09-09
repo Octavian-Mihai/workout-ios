@@ -29,18 +29,19 @@ struct ExercisePickerView: View {
     }
 
     private var filtered: [CatalogExercise] {
-        ExerciseCatalog.all.filter { item in
-            let matchesQuery = query.isEmpty
-                || item.name.localizedCaseInsensitiveContains(query)
-                || item.primaryNames.contains { $0.localizedCaseInsensitiveContains(query) }
-            let matchesCategory = categoryFilter == nil || item.category == categoryFilter
-            let matchesEquipment = equipmentFilter == nil || item.equipment == equipmentFilter
-            let matchesMuscle = muscleFilter == nil
-                || item.primary.contains(muscleFilter!)
-                || item.secondary.contains(muscleFilter!)
-            return matchesQuery && matchesCategory && matchesEquipment && matchesMuscle
-        }
-        .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
+        ExerciseCatalog.displaySorted(
+            ExerciseCatalog.all.filter { item in
+                let matchesQuery = query.isEmpty
+                    || item.name.localizedCaseInsensitiveContains(query)
+                    || item.primaryNames.contains { $0.localizedCaseInsensitiveContains(query) }
+                let matchesCategory = categoryFilter == nil || item.category == categoryFilter
+                let matchesEquipment = equipmentFilter == nil || item.equipment == equipmentFilter
+                let matchesMuscle = muscleFilter == nil
+                    || item.primary.contains(muscleFilter!)
+                    || item.secondary.contains(muscleFilter!)
+                return matchesQuery && matchesCategory && matchesEquipment && matchesMuscle
+            }
+        )
     }
 
     private var groupedFiltered: [(ExerciseCategory, [CatalogExercise])] {
