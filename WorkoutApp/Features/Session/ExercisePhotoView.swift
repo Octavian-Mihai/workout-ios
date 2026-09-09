@@ -15,32 +15,7 @@ struct ExercisePhotoView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Group {
-                if let catalogImage {
-                    Image(uiImage: catalogImage)
-                        .resizable()
-                        .scaledToFill()
-                        .accessibilityLabel(caption)
-                } else {
-                    ZStack {
-                        theme.mutedFill
-                        VStack(spacing: 8) {
-                            Image(systemName: symbolName)
-                                .font(.title2.weight(.semibold))
-                                .foregroundStyle(theme.accent.opacity(0.9))
-                            Text("Photo coming soon")
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(caption), photo coming soon")
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .aspectRatio(16 / 9, contentMode: .fit)
-            .clipped()
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            photoContent
 
             if showCaption {
                 Text(caption)
@@ -49,5 +24,34 @@ struct ExercisePhotoView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private var photoContent: some View {
+        if let catalogImage {
+            Image(uiImage: catalogImage)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .accessibilityLabel(caption)
+        } else {
+            ZStack {
+                theme.mutedFill
+                VStack(spacing: 8) {
+                    Image(systemName: symbolName)
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(theme.accent.opacity(0.9))
+                    Text("Photo coming soon")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .aspectRatio(16 / 9, contentMode: .fit)
+            .frame(maxWidth: .infinity)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(caption), photo coming soon")
+        }
     }
 }
