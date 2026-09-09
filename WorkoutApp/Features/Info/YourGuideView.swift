@@ -830,12 +830,6 @@ struct MovementDetailView: View {
     var body: some View {
         ArticleScreen(title: pattern.name) {
             GuideArticleCard {
-                ExercisePhotoView(
-                    assetName: "guide-\(pattern.id)",
-                    caption: pattern.name,
-                    symbolName: GuideVisuals.symbol(for: pattern.category)
-                )
-
                 GuideEyebrow(
                     symbolName: GuideVisuals.symbol(for: pattern.category),
                     text: GuideVisuals.title(for: pattern.category),

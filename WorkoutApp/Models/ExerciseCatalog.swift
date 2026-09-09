@@ -46,7 +46,7 @@ enum ExerciseCategory: String, CaseIterable, Identifiable {
 }
 
 /// In-category picker/catalog order. `allCases` is the sort key; unused cases in a
-/// category are skipped. Hinge is shared by Pull deadlifts and Legs posterior chain.
+/// category are skipped. Hinge covers Legs deadlifts and posterior-chain work.
 enum ExerciseMovementPattern: String, CaseIterable, Identifiable {
     case verticalPull = "Vertical Pull"
     case horizontalPull = "Horizontal Pull"
@@ -140,6 +140,7 @@ enum ExerciseMovementPattern: String, CaseIterable, Identifiable {
         }
         if contains(
             n,
+            "deadlift",
             "romanian",
             "good morning",
             "jefferson",
@@ -494,14 +495,6 @@ enum ExerciseCatalog {
             cues: "Control the top squeeze. Avoid slamming the stack; pause briefly at lockout."
         ),
         CatalogExercise(
-            id: "leg-curl",
-            name: "Leg Curl",
-            category: .legs,
-            primary: [.hamstrings],
-            secondary: [.calves],
-            cues: "Hips stay pinned. Curl through a full range and lower slowly."
-        ),
-        CatalogExercise(
             id: "seated-leg-curl",
             name: "Seated Leg Curl",
             category: .legs,
@@ -545,6 +538,23 @@ enum ExerciseCatalog {
             equipment: .barbell
         ),
         CatalogExercise(
+            id: "deadlift",
+            name: "Deadlift",
+            category: .legs,
+            primary: [.hamstrings, .glutes, .lowerBack],
+            secondary: [.quads, .traps, .lats, .core],
+            cues: "Wedge in, brace, and push the floor away. The bar stays over mid-foot from floor to lockout.",
+            equipment: .barbell
+        ),
+        CatalogExercise(
+            id: "zercher-deadlift",
+            name: "Zercher Deadlift",
+            category: .legs,
+            primary: [.hamstrings, .glutes, .lowerBack],
+            secondary: [.quads, .core, .traps],
+            cues: "Bar in the elbow crook from the floor. Brace, then stand tall without losing the torso."
+        ),
+        CatalogExercise(
             id: "good-morning",
             name: "Good Morning",
             category: .legs,
@@ -554,13 +564,13 @@ enum ExerciseCatalog {
             equipment: .barbell
         ),
         CatalogExercise(
-            id: "zercher-good-morning",
-            name: "Zercher Good Morning",
+            id: "seated-good-morning",
+            name: "Seated Good Morning",
             category: .legs,
-            primary: [.hamstrings, .lowerBack],
-            secondary: [.glutes, .core],
-            cues: "Hold the bar in the elbow crook and brace. Hinge until the hamstrings stop you; don’t collapse the torso.",
-            equipment: .barbell
+            primary: [.hamstrings, .glutes, .lowerBack],
+            secondary: [.core, .lats],
+            cues: "Sit tall, then hinge and pull with the posterior chain. Brace; don’t round through the low back to finish.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "jefferson-curl",
@@ -595,32 +605,6 @@ enum ExerciseCatalog {
             primary: [.glutes, .hamstrings],
             secondary: [.lowerBack],
             cues: "Hips on the pad, swing the legs with the glutes. Stop in line with the torso; don’t hyperextend the low back.",
-            equipment: .machine
-        ),
-        CatalogExercise(
-            id: "deadlift",
-            name: "Deadlift",
-            category: .pull,
-            primary: [.hamstrings, .glutes, .lowerBack],
-            secondary: [.quads, .traps, .lats, .core],
-            cues: "Wedge in, brace, and push the floor away. The bar stays over mid-foot from floor to lockout.",
-            equipment: .barbell
-        ),
-        CatalogExercise(
-            id: "zercher-deadlift",
-            name: "Zercher Deadlift",
-            category: .pull,
-            primary: [.hamstrings, .glutes, .lowerBack],
-            secondary: [.quads, .core, .traps],
-            cues: "Bar in the elbow crook from the floor. Brace, then stand tall without losing the torso."
-        ),
-        CatalogExercise(
-            id: "seated-deadlift",
-            name: "Seated Deadlift",
-            category: .pull,
-            primary: [.hamstrings, .glutes, .lowerBack],
-            secondary: [.core, .lats],
-            cues: "Sit tall, then hinge and pull with the posterior chain. Brace; don’t round through the low back to finish.",
             equipment: .machine
         ),
         CatalogExercise(
