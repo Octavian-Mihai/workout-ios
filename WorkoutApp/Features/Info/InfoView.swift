@@ -148,7 +148,7 @@ struct LearnLinksView: View {
 
             learnLink("Core movement categories", destination: CoreMovementCategoriesView())
             learnLink("Key muscle groups", destination: KeyMuscleGroupsView())
-            learnLink("More strength patterns", destination: MoreStrengthPatternsView())
+            learnLink("Strength patterns", destination: MoreStrengthPatternsView())
         }
     }
 

@@ -727,7 +727,7 @@ struct MoreStrengthPatternsView: View {
     @ObservedObject private var store = AnatomyStore.shared
 
     var body: some View {
-        ArticleScreen(title: "More strength patterns") {
+        ArticleScreen(title: "Strength patterns") {
             ArticleCard(
                 title: "Beyond the six",
                 bodyText: "The six fundamentals cover the main strength patterns. A complete week also checks the Big 7 (pushes and pulls split by plane), the anti-series core, athletic transfers, and joint-prep around the shoulders, hips, knees, elbows, and spine. Tap any row for the longer note."
