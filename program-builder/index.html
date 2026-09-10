@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Program Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <p class="eyebrow">Workout</p>
+        <h1>Program Builder</h1>
+        <p class="subtitle">Assemble a rotating program from the catalog, then export JSON for iPhone import.</p>
+      </div>
+      <div class="header-actions">
+        <button id="import-btn" type="button" class="btn">Import JSON</button>
+        <button id="export-btn" type="button" class="btn btn-primary" disabled>Export JSON</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="pane pane-left" aria-label="Program days">
+        <label class="field">
+          <span>Program name</span>
+          <input id="program-name" type="text" maxlength="80" placeholder="Push Pull Legs" autocomplete="off" />
+        </label>
+
+        <div class="section-heading">
+          <h2>Days</h2>
+          <span id="day-count" class="muted">0</span>
+        </div>
+        <p class="hint">Workouts cycle through these days in order.</p>
+        <ul id="day-list" class="day-list"></ul>
+        <button id="add-day-btn" type="button" class="btn btn-block">Add day</button>
+      </section>
+
+      <section class="pane pane-right" aria-label="Selected day">
+        <div id="day-empty" class="empty-state">
+          <h2>No day selected</h2>
+          <p>Add a day on the left, then pick exercises from the catalog.</p>
+        </div>
+        <div id="day-editor" class="day-editor hidden">
+          <div class="day-editor-header">
+            <label class="field grow">
+              <span>Day name</span>
+              <input id="day-name" type="text" maxlength="60" placeholder="Push" autocomplete="off" />
+            </label>
+            <button id="add-exercise-btn" type="button" class="btn btn-primary">Add exercise</button>
+          </div>
+          <ul id="exercise-list" class="exercise-list"></ul>
+          <p id="exercise-empty" class="empty-row hidden">No exercises yet. Add from the catalog.</p>
+        </div>
+      </section>
+    </main>
+
+    <div id="picker" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="picker-title">
+      <div class="picker-sheet">
+        <div class="picker-header">
+          <div>
+            <h2 id="picker-title">Add exercise</h2>
+            <p class="muted">Catalog only — names must match the iOS app.</p>
+          </div>
+          <button id="picker-close" type="button" class="btn btn-ghost" aria-label="Close">Close</button>
+        </div>
+        <div class="picker-toolbar">
+          <input id="picker-search" type="search" placeholder="Search exercises or muscles" autocomplete="off" />
+          <div class="filter-row">
+            <button type="button" class="chip selected" data-filter-reset>All</button>
+            <label class="chip-select">
+              <span>Category</span>
+              <select id="filter-category">
+                <option value="">All categories</option>
+              </select>
+            </label>
+            <label class="chip-select">
+              <span>Equipment</span>
+              <select id="filter-equipment">
+                <option value="">All equipment</option>
+              </select>
+            </label>
+            <label class="chip-select">
+              <span>Muscle</span>
+              <select id="filter-muscle">
+                <option value="">All muscles</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div id="picker-body" class="picker-body"></div>
+      </div>
+    </div>
+
+    <input id="import-file" type="file" accept="application/json,.json" hidden />
+    <div id="toast" class="toast hidden" role="status"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

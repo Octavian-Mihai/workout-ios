@@ -1,0 +1,1438 @@
+[
+  {
+    "id": "back-squat",
+    "name": "Back Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Adductors",
+      "Core",
+      "Lower Back"
+    ],
+    "equipment": "barbell",
+    "image": "back-squat.jpeg"
+  },
+  {
+    "id": "front-squat",
+    "name": "Front Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Core"
+    ],
+    "secondary": [
+      "Glutes",
+      "Upper Back"
+    ],
+    "equipment": "barbell",
+    "image": "front-squat.jpg"
+  },
+  {
+    "id": "zercher-squat",
+    "name": "Zercher Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Core",
+      "Lower Back",
+      "Adductors"
+    ],
+    "equipment": "barbell",
+    "image": "zercher-squat.png"
+  },
+  {
+    "id": "hack-squat",
+    "name": "Hack Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "hack-squat.jpg"
+  },
+  {
+    "id": "smith-machine-squat",
+    "name": "Smith Machine Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "smith-machine-squat.jpg"
+  },
+  {
+    "id": "belt-squat",
+    "name": "Belt Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "belt-squat.jpg"
+  },
+  {
+    "id": "sissy-squat",
+    "name": "Sissy Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads"
+    ],
+    "secondary": [],
+    "equipment": "bodyweight",
+    "image": "sissy-squat.png"
+  },
+  {
+    "id": "reverse-squat",
+    "name": "Reverse Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads"
+    ],
+    "secondary": [
+      "Core"
+    ],
+    "equipment": "machine",
+    "image": "reverse-squat.png"
+  },
+  {
+    "id": "landmine-squat",
+    "name": "Landmine Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Core",
+      "Adductors"
+    ],
+    "equipment": "barbell",
+    "image": "landmine-squat.jpg"
+  },
+  {
+    "id": "leg-press",
+    "name": "Leg Press",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Adductors"
+    ],
+    "equipment": "machine",
+    "image": "leg-press.jpg"
+  },
+  {
+    "id": "bulgarian-split-squat",
+    "name": "Bulgarian Split Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Adductors",
+      "Core"
+    ],
+    "equipment": "dumbbell",
+    "image": "bulgarian-split-squat.jpg"
+  },
+  {
+    "id": "zercher-split-squat",
+    "name": "Zercher Split Squat",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Adductors",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "step-up",
+    "name": "Step-Up",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "dumbbell",
+    "image": "step-up.jpg"
+  },
+  {
+    "id": "zercher-step-up",
+    "name": "Zercher Step-Up",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "walking-lunge",
+    "name": "Walking Lunge",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "dumbbell",
+    "image": "walking-lunge.jpg"
+  },
+  {
+    "id": "zercher-lunge",
+    "name": "Zercher Lunge",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "reverse-lunge",
+    "name": "Reverse Lunge",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "dumbbell",
+    "image": "reverse-lunge.jpg"
+  },
+  {
+    "id": "zercher-reverse-lunge",
+    "name": "Zercher Reverse Lunge",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "forward-lunge",
+    "name": "Forward Lunge",
+    "category": "Legs",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "dumbbell",
+    "image": "forward-lunge.jpg"
+  },
+  {
+    "id": "box-jump",
+    "name": "Box Jump",
+    "category": "Explosive",
+    "primary": [
+      "Quads",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Calves",
+      "Core"
+    ],
+    "equipment": "bodyweight",
+    "image": "box-jump.png"
+  },
+  {
+    "id": "leg-extension",
+    "name": "Leg Extension",
+    "category": "Legs",
+    "primary": [
+      "Quads"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "leg-extension.png"
+  },
+  {
+    "id": "seated-leg-curl",
+    "name": "Seated Leg Curl",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings"
+    ],
+    "secondary": [
+      "Calves"
+    ],
+    "equipment": "machine",
+    "image": "seated-leg-curl.jpg"
+  },
+  {
+    "id": "lying-leg-curl",
+    "name": "Lying Leg Curl",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings"
+    ],
+    "secondary": [
+      "Calves"
+    ],
+    "equipment": "machine",
+    "image": "lying-leg-curl.png"
+  },
+  {
+    "id": "nordic-curl",
+    "name": "Nordic Curl",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings"
+    ],
+    "secondary": [
+      "Glutes"
+    ],
+    "equipment": "bodyweight",
+    "image": "nordic-curl.jpg"
+  },
+  {
+    "id": "glute-ham-raise",
+    "name": "Glute-Ham Raise",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Glutes"
+    ],
+    "secondary": [
+      "Lower Back"
+    ],
+    "equipment": "machine",
+    "image": "glute-ham-raise.jpg"
+  },
+  {
+    "id": "romanian-deadlift",
+    "name": "Romanian Deadlift",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Glutes"
+    ],
+    "secondary": [
+      "Lower Back",
+      "Traps"
+    ],
+    "equipment": "barbell",
+    "image": "romanian-deadlift.png"
+  },
+  {
+    "id": "deadlift",
+    "name": "Deadlift",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Lower Back"
+    ],
+    "secondary": [
+      "Quads",
+      "Traps",
+      "Lats",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": "deadlift.png"
+  },
+  {
+    "id": "zercher-deadlift",
+    "name": "Zercher Deadlift",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Lower Back"
+    ],
+    "secondary": [
+      "Quads",
+      "Core",
+      "Traps"
+    ],
+    "equipment": "barbell",
+    "image": "zercher-deadlift.jpg"
+  },
+  {
+    "id": "good-morning",
+    "name": "Good Morning",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Lower Back"
+    ],
+    "secondary": [
+      "Glutes"
+    ],
+    "equipment": "barbell",
+    "image": "good-morning.jpg"
+  },
+  {
+    "id": "seated-good-morning",
+    "name": "Seated Good Morning",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Lower Back"
+    ],
+    "secondary": [
+      "Core",
+      "Lats"
+    ],
+    "equipment": "machine",
+    "image": "seated-good-morning.png"
+  },
+  {
+    "id": "jefferson-curl",
+    "name": "Jefferson Curl",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Lower Back"
+    ],
+    "secondary": [
+      "Glutes",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": "jefferson-curl.jpg"
+  },
+  {
+    "id": "zercher-jefferson-curl",
+    "name": "Zercher Jefferson Curl",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Lower Back"
+    ],
+    "secondary": [
+      "Glutes",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": "zercher-jefferson-curl.jpg"
+  },
+  {
+    "id": "back-extension",
+    "name": "Back Extension",
+    "category": "Legs",
+    "primary": [
+      "Lower Back",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings"
+    ],
+    "equipment": "bodyweight",
+    "image": "back-extension.jpg"
+  },
+  {
+    "id": "reverse-hyper",
+    "name": "Reverse Hyper",
+    "category": "Legs",
+    "primary": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "secondary": [
+      "Lower Back"
+    ],
+    "equipment": "machine",
+    "image": "reverse-hyper.jpg"
+  },
+  {
+    "id": "snatch",
+    "name": "Snatch",
+    "category": "Explosive",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Traps"
+    ],
+    "secondary": [
+      "Quads",
+      "Core",
+      "Front Delts",
+      "Lats"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "power-snatch",
+    "name": "Power Snatch",
+    "category": "Explosive",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Traps"
+    ],
+    "secondary": [
+      "Quads",
+      "Core",
+      "Front Delts"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "snatch-pull",
+    "name": "Snatch Pull",
+    "category": "Explosive",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Traps"
+    ],
+    "secondary": [
+      "Quads",
+      "Lats"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "clean",
+    "name": "Clean",
+    "category": "Explosive",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Traps"
+    ],
+    "secondary": [
+      "Quads",
+      "Core",
+      "Biceps"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "clean-and-jerk",
+    "name": "Clean and Jerk",
+    "category": "Explosive",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Traps"
+    ],
+    "secondary": [
+      "Quads",
+      "Core",
+      "Front Delts",
+      "Triceps"
+    ],
+    "equipment": "barbell",
+    "image": null
+  },
+  {
+    "id": "hip-thrust",
+    "name": "Hip Thrust",
+    "category": "Legs",
+    "primary": [
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": "hip-thrust.png"
+  },
+  {
+    "id": "barbell-hip-thrust",
+    "name": "Barbell Hip Thrust",
+    "category": "Legs",
+    "primary": [
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": "barbell-hip-thrust.jpg"
+  },
+  {
+    "id": "glute-kickback",
+    "name": "Glute Kickback",
+    "category": "Legs",
+    "primary": [
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings"
+    ],
+    "equipment": "machine",
+    "image": "glute-kickback.jpg"
+  },
+  {
+    "id": "machine-hip-abduction",
+    "name": "Machine Hip Abduction",
+    "category": "Legs",
+    "primary": [
+      "Glutes"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "machine-hip-abduction.jpg"
+  },
+  {
+    "id": "machine-hip-adduction",
+    "name": "Machine Hip Adduction",
+    "category": "Legs",
+    "primary": [
+      "Adductors"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "machine-hip-adduction.png"
+  },
+  {
+    "id": "calf-raise",
+    "name": "Calf Raise",
+    "category": "Legs",
+    "primary": [
+      "Calves"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "calf-raise.jpg"
+  },
+  {
+    "id": "tibialis-raise",
+    "name": "Tibialis Raise",
+    "category": "Legs",
+    "primary": [
+      "Calves"
+    ],
+    "secondary": [],
+    "equipment": "bodyweight",
+    "image": "tibialis-raise.jpg"
+  },
+  {
+    "id": "barbell-bench-press",
+    "name": "Barbell Bench Press",
+    "category": "Push",
+    "primary": [
+      "Chest"
+    ],
+    "secondary": [
+      "Triceps",
+      "Front Delts"
+    ],
+    "equipment": "barbell",
+    "image": "barbell-bench-press.jpg"
+  },
+  {
+    "id": "incline-barbell-bench-press",
+    "name": "Incline Barbell Bench Press",
+    "category": "Push",
+    "primary": [
+      "Chest",
+      "Front Delts"
+    ],
+    "secondary": [
+      "Triceps"
+    ],
+    "equipment": "barbell",
+    "image": "incline-barbell-bench-press.jpeg"
+  },
+  {
+    "id": "close-grip-bench-press",
+    "name": "Close-Grip Bench Press",
+    "category": "Push",
+    "primary": [
+      "Triceps",
+      "Chest"
+    ],
+    "secondary": [
+      "Front Delts"
+    ],
+    "equipment": "barbell",
+    "image": "close-grip-bench-press.jpg"
+  },
+  {
+    "id": "incline-dumbbell-press",
+    "name": "Incline Dumbbell Press",
+    "category": "Push",
+    "primary": [
+      "Chest",
+      "Front Delts"
+    ],
+    "secondary": [
+      "Triceps"
+    ],
+    "equipment": "dumbbell",
+    "image": "incline-dumbbell-press.jpg"
+  },
+  {
+    "id": "dumbbell-bench-press",
+    "name": "Dumbbell Bench Press",
+    "category": "Push",
+    "primary": [
+      "Chest"
+    ],
+    "secondary": [
+      "Triceps",
+      "Front Delts"
+    ],
+    "equipment": "dumbbell",
+    "image": "dumbbell-bench-press.png"
+  },
+  {
+    "id": "machine-chest-press",
+    "name": "Machine Chest Press",
+    "category": "Push",
+    "primary": [
+      "Chest"
+    ],
+    "secondary": [
+      "Triceps",
+      "Front Delts"
+    ],
+    "equipment": "machine",
+    "image": "machine-chest-press.png"
+  },
+  {
+    "id": "dips",
+    "name": "Dips",
+    "category": "Push",
+    "primary": [
+      "Chest",
+      "Triceps"
+    ],
+    "secondary": [
+      "Front Delts"
+    ],
+    "equipment": "bodyweight",
+    "image": "dips.jpg"
+  },
+  {
+    "id": "push-up",
+    "name": "Push-Up",
+    "category": "Push",
+    "primary": [
+      "Chest"
+    ],
+    "secondary": [
+      "Triceps",
+      "Front Delts",
+      "Core"
+    ],
+    "equipment": "bodyweight",
+    "image": "push-up.png"
+  },
+  {
+    "id": "overhead-press",
+    "name": "Overhead Press",
+    "category": "Push",
+    "primary": [
+      "Front Delts"
+    ],
+    "secondary": [
+      "Triceps",
+      "Traps",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": "overhead-press.png"
+  },
+  {
+    "id": "landmine-press",
+    "name": "Landmine Press",
+    "category": "Push",
+    "primary": [
+      "Chest",
+      "Front Delts"
+    ],
+    "secondary": [
+      "Triceps",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": "landmine-press.jpg"
+  },
+  {
+    "id": "dumbbell-shoulder-press",
+    "name": "Dumbbell Shoulder Press",
+    "category": "Push",
+    "primary": [
+      "Front Delts",
+      "Side Delts"
+    ],
+    "secondary": [
+      "Triceps"
+    ],
+    "equipment": "dumbbell",
+    "image": "dumbbell-shoulder-press.jpg"
+  },
+  {
+    "id": "machine-shoulder-press",
+    "name": "Machine Shoulder Press",
+    "category": "Push",
+    "primary": [
+      "Front Delts",
+      "Side Delts"
+    ],
+    "secondary": [
+      "Triceps"
+    ],
+    "equipment": "machine",
+    "image": null
+  },
+  {
+    "id": "lateral-raise",
+    "name": "Lateral Raise",
+    "category": "Push",
+    "primary": [
+      "Side Delts"
+    ],
+    "secondary": [
+      "Traps"
+    ],
+    "equipment": "dumbbell",
+    "image": "lateral-raise.jpg"
+  },
+  {
+    "id": "cable-lateral-raise",
+    "name": "Cable Lateral Raise",
+    "category": "Push",
+    "primary": [
+      "Side Delts"
+    ],
+    "secondary": [
+      "Traps"
+    ],
+    "equipment": "machine",
+    "image": "cable-lateral-raise.jpg"
+  },
+  {
+    "id": "front-raise",
+    "name": "Front Raise",
+    "category": "Push",
+    "primary": [
+      "Front Delts"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "front-raise.jpg"
+  },
+  {
+    "id": "cable-fly",
+    "name": "Cable Fly",
+    "category": "Push",
+    "primary": [
+      "Chest"
+    ],
+    "secondary": [
+      "Front Delts"
+    ],
+    "equipment": "machine",
+    "image": "cable-fly.jpg"
+  },
+  {
+    "id": "dumbbell-fly",
+    "name": "Dumbbell Fly",
+    "category": "Push",
+    "primary": [
+      "Chest"
+    ],
+    "secondary": [
+      "Front Delts"
+    ],
+    "equipment": "dumbbell",
+    "image": "dumbbell-fly.jpg"
+  },
+  {
+    "id": "pec-deck",
+    "name": "Pec Deck",
+    "category": "Push",
+    "primary": [
+      "Chest"
+    ],
+    "secondary": [
+      "Front Delts"
+    ],
+    "equipment": "machine",
+    "image": "pec-deck.jpg"
+  },
+  {
+    "id": "tricep-pushdown",
+    "name": "Tricep Pushdown",
+    "category": "Push",
+    "primary": [
+      "Triceps"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "tricep-pushdown.png"
+  },
+  {
+    "id": "overhead-cable-triceps-extension",
+    "name": "Overhead Cable Triceps Extension",
+    "category": "Push",
+    "primary": [
+      "Triceps"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "overhead-cable-triceps-extension.png"
+  },
+  {
+    "id": "skull-crusher",
+    "name": "Skull Crusher",
+    "category": "Push",
+    "primary": [
+      "Triceps"
+    ],
+    "secondary": [],
+    "equipment": "barbell",
+    "image": "skull-crusher.jpg"
+  },
+  {
+    "id": "barbell-row",
+    "name": "Barbell Row",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Upper Back"
+    ],
+    "secondary": [
+      "Biceps",
+      "Rear Delts",
+      "Lower Back"
+    ],
+    "equipment": "barbell",
+    "image": "barbell-row.jpg"
+  },
+  {
+    "id": "landmine-row",
+    "name": "Landmine Row",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Upper Back"
+    ],
+    "secondary": [
+      "Biceps",
+      "Rear Delts",
+      "Core"
+    ],
+    "equipment": "barbell",
+    "image": "landmine-row.jpg"
+  },
+  {
+    "id": "chest-supported-dumbbell-row",
+    "name": "Chest-Supported Dumbbell Row",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Upper Back"
+    ],
+    "secondary": [
+      "Biceps",
+      "Rear Delts"
+    ],
+    "equipment": "dumbbell",
+    "image": "chest-supported-dumbbell-row.png"
+  },
+  {
+    "id": "chest-supported-t-bar-row",
+    "name": "Chest-Supported T-Bar Row",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Upper Back"
+    ],
+    "secondary": [
+      "Biceps",
+      "Rear Delts"
+    ],
+    "equipment": "machine",
+    "image": "chest-supported-t-bar-row.jpg"
+  },
+  {
+    "id": "one-arm-dumbbell-row",
+    "name": "One-Arm Dumbbell Row",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Upper Back"
+    ],
+    "secondary": [
+      "Biceps",
+      "Rear Delts"
+    ],
+    "equipment": "dumbbell",
+    "image": "one-arm-dumbbell-row.jpg"
+  },
+  {
+    "id": "one-arm-cable-row",
+    "name": "One-Arm Cable Row",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Upper Back"
+    ],
+    "secondary": [
+      "Biceps",
+      "Rear Delts"
+    ],
+    "equipment": "machine",
+    "image": "one-arm-cable-row.jpg"
+  },
+  {
+    "id": "seated-cable-row",
+    "name": "Seated Cable Row",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Upper Back"
+    ],
+    "secondary": [
+      "Biceps",
+      "Rear Delts"
+    ],
+    "equipment": "machine",
+    "image": "seated-cable-row.jpg"
+  },
+  {
+    "id": "lat-pulldown",
+    "name": "Lat Pulldown",
+    "category": "Pull",
+    "primary": [
+      "Lats"
+    ],
+    "secondary": [
+      "Biceps",
+      "Upper Back"
+    ],
+    "equipment": "machine",
+    "image": "lat-pulldown.jpg"
+  },
+  {
+    "id": "close-grip-lat-pulldown",
+    "name": "Close-Grip Lat Pulldown",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Biceps"
+    ],
+    "secondary": [
+      "Upper Back"
+    ],
+    "equipment": "machine",
+    "image": "close-grip-lat-pulldown.jpeg"
+  },
+  {
+    "id": "wide-grip-lat-pulldown",
+    "name": "Wide-Grip Lat Pulldown",
+    "category": "Pull",
+    "primary": [
+      "Lats"
+    ],
+    "secondary": [
+      "Biceps",
+      "Upper Back"
+    ],
+    "equipment": "machine",
+    "image": "wide-grip-lat-pulldown.jpg"
+  },
+  {
+    "id": "pull-up",
+    "name": "Pull-Up",
+    "category": "Pull",
+    "primary": [
+      "Lats"
+    ],
+    "secondary": [
+      "Biceps",
+      "Upper Back"
+    ],
+    "equipment": "bodyweight",
+    "image": "pull-up.jpg"
+  },
+  {
+    "id": "chin-up",
+    "name": "Chin-Up",
+    "category": "Pull",
+    "primary": [
+      "Lats",
+      "Biceps"
+    ],
+    "secondary": [
+      "Upper Back"
+    ],
+    "equipment": "bodyweight",
+    "image": "chin-up.jpg"
+  },
+  {
+    "id": "face-pull",
+    "name": "Face Pull",
+    "category": "Pull",
+    "primary": [
+      "Rear Delts",
+      "Traps"
+    ],
+    "secondary": [
+      "Upper Back"
+    ],
+    "equipment": "machine",
+    "image": "face-pull.jpg"
+  },
+  {
+    "id": "rear-delt-fly",
+    "name": "Rear Delt Fly",
+    "category": "Pull",
+    "primary": [
+      "Rear Delts"
+    ],
+    "secondary": [
+      "Upper Back"
+    ],
+    "equipment": "dumbbell",
+    "image": "rear-delt-fly.jpg"
+  },
+  {
+    "id": "reverse-pec-deck",
+    "name": "Reverse Pec Deck",
+    "category": "Pull",
+    "primary": [
+      "Rear Delts"
+    ],
+    "secondary": [
+      "Upper Back"
+    ],
+    "equipment": "machine",
+    "image": "reverse-pec-deck.jpg"
+  },
+  {
+    "id": "upright-row",
+    "name": "Upright Row",
+    "category": "Pull",
+    "primary": [
+      "Traps",
+      "Side Delts"
+    ],
+    "secondary": [
+      "Biceps"
+    ],
+    "equipment": "barbell",
+    "image": "upright-row.jpg"
+  },
+  {
+    "id": "dumbbell-shrug",
+    "name": "Dumbbell Shrug",
+    "category": "Pull",
+    "primary": [
+      "Traps"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "dumbbell-shrug.jpg"
+  },
+  {
+    "id": "barbell-shrug",
+    "name": "Barbell Shrug",
+    "category": "Pull",
+    "primary": [
+      "Traps"
+    ],
+    "secondary": [],
+    "equipment": "barbell",
+    "image": "barbell-shrug.png"
+  },
+  {
+    "id": "barbell-curl",
+    "name": "Barbell Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps"
+    ],
+    "secondary": [
+      "Forearms"
+    ],
+    "equipment": "barbell",
+    "image": "barbell-curl.jpg"
+  },
+  {
+    "id": "dumbbell-curl",
+    "name": "Dumbbell Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps"
+    ],
+    "secondary": [
+      "Forearms"
+    ],
+    "equipment": "dumbbell",
+    "image": "dumbbell-curl.jpg"
+  },
+  {
+    "id": "hammer-curl",
+    "name": "Hammer Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps",
+      "Forearms"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "hammer-curl.png"
+  },
+  {
+    "id": "preacher-curl",
+    "name": "Preacher Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "preacher-curl.jpg"
+  },
+  {
+    "id": "incline-dumbbell-curl",
+    "name": "Incline Dumbbell Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "incline-dumbbell-curl.jpg"
+  },
+  {
+    "id": "cable-curl",
+    "name": "Cable Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "cable-curl.jpg"
+  },
+  {
+    "id": "concentration-curl",
+    "name": "Concentration Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "concentration-curl.jpg"
+  },
+  {
+    "id": "spider-curl",
+    "name": "Spider Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "spider-curl.jpg"
+  },
+  {
+    "id": "reverse-curl",
+    "name": "Reverse Curl",
+    "category": "Pull",
+    "primary": [
+      "Biceps",
+      "Forearms"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "reverse-curl.jpg"
+  },
+  {
+    "id": "wrist-curl",
+    "name": "Wrist Curl",
+    "category": "Pull",
+    "primary": [
+      "Forearms"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "wrist-curl.jpg"
+  },
+  {
+    "id": "reverse-wrist-curl",
+    "name": "Reverse Wrist Curl",
+    "category": "Pull",
+    "primary": [
+      "Forearms"
+    ],
+    "secondary": [],
+    "equipment": "dumbbell",
+    "image": "reverse-wrist-curl.jpg"
+  },
+  {
+    "id": "plank",
+    "name": "Plank",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [
+      "Front Delts",
+      "Glutes"
+    ],
+    "equipment": "bodyweight",
+    "image": "plank.jpg"
+  },
+  {
+    "id": "zercher-carry",
+    "name": "Zercher Carry",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [
+      "Quads",
+      "Glutes",
+      "Upper Back"
+    ],
+    "equipment": "barbell",
+    "image": "zercher-carry.jpg"
+  },
+  {
+    "id": "farmers-walk",
+    "name": "Farmer's Walk",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [
+      "Traps",
+      "Forearms",
+      "Quads"
+    ],
+    "equipment": "dumbbell",
+    "image": "farmers-walk.jpg"
+  },
+  {
+    "id": "hanging-leg-raise",
+    "name": "Hanging Leg Raise",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [
+      "Forearms"
+    ],
+    "equipment": "dumbbell",
+    "image": "hanging-leg-raise.jpg"
+  },
+  {
+    "id": "sit-up",
+    "name": "Sit-Up",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [],
+    "equipment": "bodyweight",
+    "image": "sit-up.jpg"
+  },
+  {
+    "id": "cable-crunch",
+    "name": "Cable Crunch",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "cable-crunch.jpg"
+  },
+  {
+    "id": "cable-woodchop",
+    "name": "Cable Woodchop",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [],
+    "equipment": "machine",
+    "image": "cable-woodchop.jpg"
+  },
+  {
+    "id": "landmine-rotation",
+    "name": "Landmine Rotation",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [],
+    "equipment": "barbell",
+    "image": "landmine-rotation.jpg"
+  },
+  {
+    "id": "ab-wheel",
+    "name": "Ab Wheel",
+    "category": "Core",
+    "primary": [
+      "Core"
+    ],
+    "secondary": [
+      "Lats",
+      "Front Delts"
+    ],
+    "equipment": "bodyweight",
+    "image": "ab-wheel.jpg"
+  }
+]
