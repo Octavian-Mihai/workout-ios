@@ -1,8 +1,13 @@
 # Workout
 
-A native iPhone app for strength training. Log sessions with a custom keypad and RIR, build rotating programs, follow recovery and volume, and pull runs from Apple Health.
+A native iPhone app for strength training, plus a desktop **Program Builder** website. Log sessions with a custom keypad and RIR, build rotating programs, follow recovery and volume, and pull runs from Apple Health. The website assembles programs from the same exercise catalog and exports JSON the app can import.
 
 Requires **iOS 17+**.
+
+This repo has two parts:
+
+- **iPhone app** — SwiftUI client in `WorkoutApp/`
+- **Program Builder** — static site in `program-builder/`
 
 ---
 
@@ -42,6 +47,7 @@ Requires **iOS 17+**.
 - Multi-day programs with a rotating next workout
 - Sets per exercise while building a day
 - Overview after you tap Done: planned sets, muscle breakdown, and split notes
+- Import a program JSON from the desktop builder via Workout → Programs → Import
 
 ### Learn
 - Core movement categories
@@ -96,3 +102,33 @@ Requires **iOS 17+**.
 - Strength sessions stay on-device unless the user turns on **Write finished workouts to Apple Health**
 - Cardio workouts from Health are read-only
 - Replace `com.local.WorkoutApp` with your production bundle ID and App Icon before submit
+
+---
+
+## Program Builder (web)
+
+Desktop site to assemble rotating programs from the same exercise catalog (names and photos). Overview analysis covers 20 muscles, with views for **Upper / lower**, **Push / pull / legs**, and **Antagonists**. Export JSON and import it in the app via Workout → Programs → Import.
+
+**Live site:** [Program Builder](https://YOUR-DEPLOY-URL) — paste your deployed URL here after you publish.
+
+### Run locally
+
+```bash
+cd program-builder && python3 -m http.server
+```
+
+Then open the local URL (default `http://127.0.0.1:8000/`).
+
+### Deploy
+
+Static files live in `program-builder/`. On Vercel, set the project **Root Directory** to `program-builder`.
+
+### Screenshots
+
+| Builder | Exercise picker |
+|:---:|:---:|
+| ![Program Builder workspace](docs/screenshots/program-builder.png) | ![Exercise picker](docs/screenshots/program-builder-picker.png) |
+
+| Overview | Antagonists |
+|:---:|:---:|
+| ![Push / pull / legs overview](docs/screenshots/program-builder-overview.png) | ![Antagonists overview](docs/screenshots/program-builder-antagonists.png) |

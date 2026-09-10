@@ -396,8 +396,8 @@ enum ExerciseCatalog {
             id: "leg-press",
             name: "Leg Press",
             category: .legs,
-            primary: [.quads, .glutes],
-            secondary: [.hamstrings, .adductors],
+            primary: [.quads, .hamstrings],
+            secondary: [.glutes, .adductors],
             cues: "Full foot on the platform. Lower with control and stop before the low back rounds."
         ),
         CatalogExercise(
@@ -413,7 +413,7 @@ enum ExerciseCatalog {
             name: "Zercher Split Squat",
             category: .legs,
             primary: [.quads, .glutes],
-            secondary: [.adductors, .core],
+            secondary: [.hamstrings, .adductors, .core],
             cues: "Bar in the elbow crook, most of the load on the front leg. Stay tall; keep the front knee tracking over the toes.",
             equipment: .barbell
         ),
@@ -421,8 +421,8 @@ enum ExerciseCatalog {
             id: "step-up",
             name: "Step-Up",
             category: .legs,
-            primary: [.quads, .glutes],
-            secondary: [.hamstrings, .core],
+            primary: [.hamstrings, .glutes],
+            secondary: [.quads, .core],
             cues: "Drive through the whole foot on the box. Stand tall; don’t push off the trailing leg.",
             equipment: .dumbbell
         ),
@@ -439,16 +439,16 @@ enum ExerciseCatalog {
             id: "walking-lunge",
             name: "Walking Lunge",
             category: .legs,
-            primary: [.quads, .glutes],
-            secondary: [.hamstrings, .core],
+            primary: [.hamstrings, .glutes],
+            secondary: [.quads, .core],
             cues: "Long enough stride to load the glute. Front knee tracks the toes; trail knee drops under the hip."
         ),
         CatalogExercise(
             id: "zercher-lunge",
             name: "Zercher Lunge",
             category: .legs,
-            primary: [.quads, .glutes],
-            secondary: [.hamstrings, .core],
+            primary: [.hamstrings, .glutes],
+            secondary: [.quads, .core],
             cues: "Hold the bar in the elbow crook and stay tall. Long enough stride to load the glute; front knee tracks the toes.",
             equipment: .barbell
         ),
@@ -456,16 +456,16 @@ enum ExerciseCatalog {
             id: "reverse-lunge",
             name: "Reverse Lunge",
             category: .legs,
-            primary: [.quads, .glutes],
-            secondary: [.hamstrings, .core],
+            primary: [.hamstrings, .glutes],
+            secondary: [.quads, .core],
             cues: "Step back far enough to load the front glute. Front knee tracks the toes; don’t crash the trail knee."
         ),
         CatalogExercise(
             id: "zercher-reverse-lunge",
             name: "Zercher Reverse Lunge",
             category: .legs,
-            primary: [.quads, .glutes],
-            secondary: [.hamstrings, .core],
+            primary: [.hamstrings, .glutes],
+            secondary: [.quads, .core],
             cues: "Hold the bar in the elbow crook. Step back far enough to load the front glute; stay tall through the torso.",
             equipment: .barbell
         ),
@@ -499,7 +499,7 @@ enum ExerciseCatalog {
             name: "Seated Leg Curl",
             category: .legs,
             primary: [.hamstrings],
-            secondary: [.calves],
+            secondary: [],
             cues: "Hips stay pinned to the pad. Curl through a full range and lower slowly."
         ),
         CatalogExercise(
@@ -507,7 +507,7 @@ enum ExerciseCatalog {
             name: "Lying Leg Curl",
             category: .legs,
             primary: [.hamstrings],
-            secondary: [.calves],
+            secondary: [.lowerBack],
             cues: "Hips stay glued to the pad. Curl fully and lower without lifting the pelvis."
         ),
         CatalogExercise(
@@ -515,7 +515,7 @@ enum ExerciseCatalog {
             name: "Nordic Curl",
             category: .legs,
             primary: [.hamstrings],
-            secondary: [.glutes],
+            secondary: [],
             cues: "Brace and lower as far as you can control. Catch with the hamstrings; don’t fold at the hips.",
             equipment: .bodyweight
         ),
@@ -533,7 +533,7 @@ enum ExerciseCatalog {
             name: "Romanian Deadlift",
             category: .legs,
             primary: [.hamstrings, .glutes],
-            secondary: [.lowerBack, .traps],
+            secondary: [.lowerBack],
             cues: "Soft knees, push the hips back, bar close to the legs. Stop when the hamstrings run out of range.",
             equipment: .barbell
         ),
@@ -542,7 +542,7 @@ enum ExerciseCatalog {
             name: "Deadlift",
             category: .legs,
             primary: [.hamstrings, .glutes, .lowerBack],
-            secondary: [.quads, .traps, .lats, .core],
+            secondary: [.quads, .traps, .core],
             cues: "Wedge in, brace, and push the floor away. The bar stays over mid-foot from floor to lockout.",
             equipment: .barbell
         ),
