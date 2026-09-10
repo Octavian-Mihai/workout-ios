@@ -608,8 +608,31 @@ select {
 
 .overview-card {
   background: var(--pane-raised);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
+}
+
+.overview-card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.category-card.is-compact {
+  padding: 12px 14px;
+}
+
+.category-card > .volume-bar + .muscle-row,
+.antagonist-breakdown {
+  margin-top: 12px;
+}
+
+.antagonist-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .overview-empty {
@@ -783,15 +806,22 @@ select {
   color: var(--muted);
 }
 
+.compare-duel-side.is-empty,
+.muscle-row.is-empty {
+  opacity: 0.42;
+}
+
 .compare-group + .compare-group,
 .compare-bucket + .compare-bucket,
 .compare-duel + .compare-group,
-.compare-duel + .compare-bucket {
+.compare-duel + .compare-bucket,
+.compare-duel + .antagonist-breakdown {
   margin-top: 16px;
 }
 
 .compare-group.is-empty,
-.compare-bucket.is-empty {
+.compare-bucket.is-empty,
+.category-card.is-empty {
   opacity: 0.42;
 }
 

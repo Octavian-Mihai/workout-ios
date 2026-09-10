@@ -10,42 +10,68 @@ const EQUIPMENT = [
   { id: "dumbbell", title: "Dumbbell" },
   { id: "bodyweight", title: "Bodyweight" },
 ];
-const MUSCLES = [
+const ANALYSIS_MUSCLES = [
   "Chest",
-  "Lats",
-  "Traps",
-  "Front Delts",
-  "Side Delts",
-  "Rear Delts",
-  "Biceps",
+  "Anterior Delts",
+  "Lateral Delts",
   "Triceps",
-  "Forearms",
-  "Quads",
+  "Core & Abs",
+  "Lats",
+  "Rhomboids",
+  "Traps",
+  "Erectors",
+  "Posterior Delts",
+  "Biceps",
+  "Forearms & Grip",
+  "Quadriceps",
   "Hamstrings",
   "Glutes",
   "Calves",
+  "Tibialis",
   "Adductors",
-  "Core",
-  "Lower Back",
+  "Abductors",
+  "Hip Flexors",
 ];
+const CATALOG_TO_ANALYSIS = {
+  Chest: "Chest",
+  "Front Delts": "Anterior Delts",
+  "Side Delts": "Lateral Delts",
+  Triceps: "Triceps",
+  Core: "Core & Abs",
+  Lats: "Lats",
+  "Upper Back": "Rhomboids",
+  Traps: "Traps",
+  "Lower Back": "Erectors",
+  "Rear Delts": "Posterior Delts",
+  Biceps: "Biceps",
+  Forearms: "Forearms & Grip",
+  Quads: "Quadriceps",
+  Hamstrings: "Hamstrings",
+  Glutes: "Glutes",
+  Calves: "Calves",
+  Adductors: "Adductors",
+};
 const MUSCLE_REGIONS = {
   Chest: "Upper body",
+  "Anterior Delts": "Upper body",
+  "Lateral Delts": "Upper body",
   Lats: "Upper body",
+  Rhomboids: "Upper body",
   Traps: "Upper body",
-  "Front Delts": "Upper body",
-  "Side Delts": "Upper body",
-  "Rear Delts": "Upper body",
-  Biceps: "Arms",
+  "Posterior Delts": "Upper body",
   Triceps: "Arms",
-  Forearms: "Arms",
-  Quads: "Lower body",
+  Biceps: "Arms",
+  "Forearms & Grip": "Arms",
+  Quadriceps: "Lower body",
   Hamstrings: "Lower body",
   Glutes: "Lower body",
   Calves: "Lower body",
-  Adductors: "Lower body",
-  Core: "Trunk",
-  "Lower Back": "Trunk",
   Tibialis: "Lower body",
+  Adductors: "Lower body",
+  Abductors: "Lower body",
+  "Hip Flexors": "Lower body",
+  "Core & Abs": "Trunk",
+  Erectors: "Trunk",
 };
 const MUSCLE_VIEW_OPTIONS = [
   { id: "upper-lower", label: "Upper / lower" },
@@ -53,70 +79,106 @@ const MUSCLE_VIEW_OPTIONS = [
   { id: "antagonists", label: "Antagonists" },
 ];
 const DEFAULT_MUSCLE_VIEW = "push-pull-legs";
-const LOWER_BODY_MUSCLES = ["Quads", "Hamstrings", "Glutes", "Calves", "Adductors", "Tibialis"];
-const UPPER_BODY_MUSCLES = [
+const UPPER_MUSCLES = [
   "Chest",
-  "Lats",
-  "Traps",
-  "Front Delts",
-  "Side Delts",
-  "Rear Delts",
-  "Biceps",
+  "Anterior Delts",
+  "Lateral Delts",
   "Triceps",
-  "Forearms",
-  "Core",
-  "Lower Back",
+  "Core & Abs",
+  "Lats",
+  "Rhomboids",
+  "Traps",
+  "Erectors",
+  "Posterior Delts",
+  "Biceps",
+  "Forearms & Grip",
 ];
-const PUSH_MUSCLES = ["Chest", "Front Delts", "Side Delts", "Triceps"];
-const PULL_MUSCLES = ["Lats", "Traps", "Rear Delts", "Biceps"];
-const LEG_MUSCLES = ["Quads", "Hamstrings", "Glutes", "Calves", "Adductors", "Tibialis"];
-const PPL_OTHER_MUSCLES = ["Core", "Forearms", "Lower Back"];
+const LOWER_MUSCLES = [
+  "Quadriceps",
+  "Hamstrings",
+  "Glutes",
+  "Calves",
+  "Tibialis",
+  "Adductors",
+  "Abductors",
+  "Hip Flexors",
+];
+const PUSH_MUSCLES = ["Chest", "Anterior Delts", "Lateral Delts", "Triceps"];
+const PULL_MUSCLES = ["Lats", "Rhomboids", "Traps", "Erectors", "Posterior Delts", "Biceps", "Forearms & Grip"];
+const LEG_MUSCLES = [
+  "Quadriceps",
+  "Hamstrings",
+  "Glutes",
+  "Calves",
+  "Tibialis",
+  "Adductors",
+  "Abductors",
+  "Hip Flexors",
+];
+const CORE_MUSCLES = ["Core & Abs"];
+const PULL_INSIGHT_MUSCLES = ["Lats", "Rhomboids", "Traps", "Posterior Delts", "Biceps", "Forearms & Grip"];
 const ANTAGONIST_GROUPS = [
   {
-    title: "Biceps / Triceps",
+    title: "Chest vs Back",
+    sides: [
+      { label: "Chest", muscles: ["Chest"] },
+      { label: "Back", muscles: ["Lats", "Rhomboids", "Traps"] },
+    ],
+  },
+  {
+    title: "Delts",
+    sides: [
+      { label: "Anterior Delts", muscles: ["Anterior Delts"] },
+      { label: "Lateral Delts", muscles: ["Lateral Delts"] },
+      { label: "Posterior Delts", muscles: ["Posterior Delts"] },
+    ],
+  },
+  {
+    title: "Biceps vs Triceps",
     sides: [
       { label: "Biceps", muscles: ["Biceps"] },
       { label: "Triceps", muscles: ["Triceps"] },
     ],
   },
   {
-    title: "Chest / Lats + Traps",
+    title: "Quadriceps vs Hamstrings",
+    note: "Glutes are compared with Hip Flexors.",
     sides: [
-      { label: "Chest", muscles: ["Chest"] },
-      { label: "Lats + Traps", muscles: ["Lats", "Traps"], foldBack: true },
-    ],
-  },
-  {
-    title: "Delts",
-    sides: [
-      { label: "Front Delts", muscles: ["Front Delts"] },
-      { label: "Side Delts", muscles: ["Side Delts"] },
-      { label: "Rear Delts", muscles: ["Rear Delts"] },
-    ],
-  },
-  {
-    title: "Quads / Hamstrings",
-    sides: [
-      { label: "Quads", muscles: ["Quads"] },
+      { label: "Quadriceps", muscles: ["Quadriceps"] },
       { label: "Hamstrings", muscles: ["Hamstrings"] },
     ],
   },
   {
-    title: "Calves / Tibialis",
+    title: "Glutes vs Hip Flexors",
+    sides: [
+      { label: "Glutes", muscles: ["Glutes"] },
+      { label: "Hip Flexors", muscles: ["Hip Flexors"] },
+    ],
+  },
+  {
+    title: "Calves vs Tibialis",
     sides: [
       { label: "Calves", muscles: ["Calves"] },
       { label: "Tibialis", muscles: ["Tibialis"] },
     ],
   },
   {
-    title: "Other",
+    title: "Adductors vs Abductors",
     sides: [
-      { label: "Forearms", muscles: ["Forearms"] },
-      { label: "Core", muscles: ["Core"] },
       { label: "Adductors", muscles: ["Adductors"] },
-      { label: "Glutes", muscles: ["Glutes"] },
-      { label: "Lower Back", muscles: ["Lower Back"] },
+      { label: "Abductors", muscles: ["Abductors"] },
     ],
+  },
+  {
+    title: "Core & Abs vs Erectors",
+    sides: [
+      { label: "Core & Abs", muscles: ["Core & Abs"] },
+      { label: "Erectors", muscles: ["Erectors"] },
+    ],
+  },
+  {
+    title: "Other",
+    sides: [{ label: "Forearms & Grip", muscles: ["Forearms & Grip"] }],
   },
 ];
 const PATTERN_RANK = [
@@ -172,7 +234,6 @@ const els = {
 
 let catalog = [];
 let byName = new Map();
-let foldedBackMuscles = [];
 let state = emptyState();
 let selectedDayId = null;
 let toastTimer = 0;
@@ -477,7 +538,7 @@ function render() {
           ${photoMarkup(catalogItem)}
           <div class="exercise-copy">
             <h3>${escapeHTML(item.name)}</h3>
-            <p>${escapeHTML(displayMuscles(item.primaryMuscles).join(" · ") || "—")}</p>
+            <p>${escapeHTML(analysisTargets(item).primary.join(" · ") || "—")}</p>
           </div>
           <div class="stepper" data-field="targetSets" data-index="${index}">
             <span class="label">Sets</span>
@@ -504,30 +565,54 @@ function uniqueMuscles(names) {
   return result;
 }
 
-function refreshFoldedBackMuscles() {
-  const names = new Set();
-  for (const item of catalog) {
-    for (const muscle of [...(item.primary || []), ...(item.secondary || [])]) {
-      if (muscle) names.add(muscle);
-    }
+function mapCatalogMuscle(tag) {
+  return CATALOG_TO_ANALYSIS[tag] || null;
+}
+
+function mapCatalogMuscles(names) {
+  return uniqueMuscles((names || []).map(mapCatalogMuscle).filter(Boolean));
+}
+
+function replaceMuscle(names, from, to) {
+  return uniqueMuscles(names.map((name) => (name === from ? to : name)));
+}
+
+function analysisTargets(exercise) {
+  const id = String(exercise.catalogId || exercise.id || "").toLowerCase();
+  const name = String(exercise.name || "").toLowerCase();
+  let primary = mapCatalogMuscles(exercise.primary || exercise.primaryMuscles);
+  let secondary = mapCatalogMuscles(exercise.secondary || exercise.secondaryMuscles);
+
+  if (id === "tibialis-raise" || name === "tibialis raise") {
+    primary = replaceMuscle(primary, "Calves", "Tibialis");
+    secondary = replaceMuscle(secondary, "Calves", "Tibialis");
+    if (!primary.includes("Tibialis") && !secondary.includes("Tibialis")) primary.unshift("Tibialis");
   }
-  foldedBackMuscles = [...names].filter(
-    (name) => !MUSCLES.includes(name) && !LOWER_BODY_MUSCLES.includes(name)
-  );
-}
 
-function isFoldedBackMuscle(name) {
-  return foldedBackMuscles.includes(name);
-}
+  if (id === "machine-hip-abduction" || name === "machine hip abduction") {
+    primary = replaceMuscle(primary, "Glutes", "Abductors");
+    secondary = replaceMuscle(secondary, "Glutes", "Abductors");
+    if (!primary.includes("Abductors") && !secondary.includes("Abductors")) primary.unshift("Abductors");
+  }
 
-function displayMuscles(names) {
-  return uniqueMuscles(names).filter((name) => !isFoldedBackMuscle(name));
+  const isSitUp = id === "sit-up" || name === "sit-up";
+  const isHangingLegRaise = id === "hanging-leg-raise" || name === "hanging leg raise";
+  const isNamedHipFlexor = name.includes("hip flexor");
+  if (isSitUp || isHangingLegRaise || isNamedHipFlexor) {
+    const hadCore = primary.includes("Core & Abs") || secondary.includes("Core & Abs");
+    primary = primary.filter((muscle) => muscle !== "Hip Flexors" && muscle !== "Core & Abs");
+    secondary = secondary.filter((muscle) => muscle !== "Hip Flexors" && muscle !== "Core & Abs");
+    primary.unshift("Hip Flexors");
+    if (hadCore || isSitUp || isHangingLegRaise) secondary.unshift("Core & Abs");
+  }
+
+  const primarySet = new Set(primary);
+  secondary = secondary.filter((muscle) => !primarySet.has(muscle));
+  return { primary, secondary };
 }
 
 function regionName(muscle) {
-  if (MUSCLE_REGIONS[muscle]) return MUSCLE_REGIONS[muscle];
-  if (isFoldedBackMuscle(muscle)) return "Upper body";
-  return "Other";
+  return MUSCLE_REGIONS[muscle] || "Other";
 }
 
 function trimmedNumber(value, decimals = 1) {
@@ -581,54 +666,61 @@ function overviewInsights(rows, exerciseCount, plannedSets) {
 
   for (const region of missing) {
     if (region === "Lower body") {
-      notes.push("No lower-body credit — quads, glutes, and hamstrings never appear as primary or secondary.");
+      notes.push("No lower-body credit — quadriceps, glutes, and hamstrings never appear as primary or secondary.");
     } else if (region === "Upper body") {
       notes.push("No upper-body work — chest, back, and delts are absent from the rotation.");
     } else if (region === "Trunk") {
-      notes.push("Trunk is neglected. Core and lower back have no credit, even as secondary on compounds.");
+      notes.push("Trunk is neglected. Core & abs and erectors have no credit, even as secondary on compounds.");
     } else if (region === "Arms" && trained.includes("Upper body")) {
-      notes.push("No arm credit yet. Biceps and triceps aren’t tagged, even as secondary on presses or pulls.");
+      notes.push("No arm credit yet. Biceps, triceps, and forearms & grip aren’t tagged, even as secondary on presses or pulls.");
     }
   }
 
   const push = credit(PUSH_MUSCLES);
-  const pull = credit([...PULL_MUSCLES, ...foldedBackMuscles]);
+  const pull = credit(PULL_INSIGHT_MUSCLES);
   if (push > 0 || pull > 0) {
     const heavier = Math.max(push, pull);
     const lighter = Math.min(push, pull);
     if (heavier > 0 && lighter < heavier * 0.6) {
       if (push > pull) {
-        notes.push("Pressing outweighs pulling. Add rows or pulldowns so the back keeps up with chest and delts.");
+        notes.push("Pressing outweighs pulling. Add rows or pulldowns so lats, rhomboids, and posterior delts keep up with chest and delts.");
       } else {
         notes.push("Pull volume is well ahead of pressing. The split leans toward rows and vertical pulls.");
       }
     }
   }
 
-  const quads = credit(["Quads"]);
+  const quads = credit(["Quadriceps"]);
   const posterior = credit(["Hamstrings", "Glutes"]);
   if (quads > 0 || posterior > 0) {
     if (quads > posterior * 1.6) {
-      notes.push("Quad-dominant lower body. Hinges are light next to squat patterns.");
+      notes.push("Quadriceps-dominant lower body. Hinges are light next to squat patterns.");
     } else if (posterior > quads * 1.6) {
-      notes.push("Hinge-heavy lower body. Quads are light compared with hamstrings and glutes.");
+      notes.push("Hinge-heavy lower body. Quadriceps are light compared with hamstrings and glutes.");
     }
   }
 
-  const frontPress = credit(["Chest", "Front Delts"]);
-  const rearSupport = credit(["Rear Delts", "Traps", ...foldedBackMuscles]);
+  const frontPress = credit(["Chest", "Anterior Delts"]);
+  const rearSupport = credit(["Posterior Delts", "Traps", "Rhomboids"]);
   if (frontPress > 0 && rearSupport < frontPress * 0.45) {
-    notes.push("Pressing is loaded relative to rear delts and traps. Rows or face pulls would even the shoulder.");
+    notes.push("Pressing is loaded relative to posterior delts, traps, and rhomboids. Rows or face pulls would even the shoulder.");
   }
 
-  const visibleRows = rows.filter((row) => !isFoldedBackMuscle(row.name));
-  if (visibleRows[0] && visibleRows.length >= 2) {
-    const total = visibleRows.reduce((sum, row) => sum + sortCredit(row, usingSets), 0);
-    const second = sortCredit(visibleRows[1], usingSets);
-    const topValue = sortCredit(visibleRows[0], usingSets);
+  const ranked = [...rows]
+    .filter((row) => sortCredit(row, usingSets) > 0)
+    .sort((lhs, rhs) => {
+      const l = sortCredit(lhs, usingSets);
+      const r = sortCredit(rhs, usingSets);
+      if (l !== r) return r - l;
+      return lhs.name.localeCompare(rhs.name);
+    });
+  if (ranked[0] && ranked.length >= 2) {
+    const total = ranked.reduce((sum, row) => sum + sortCredit(row, usingSets), 0);
+    const second = sortCredit(ranked[1], usingSets);
+    const topValue = sortCredit(ranked[0], usingSets);
     if (total > 0 && topValue >= total * 0.32 && topValue >= second * 1.8) {
       const unit = usingSets ? "set credit" : "exercise credit";
-      notes.push(`${visibleRows[0].name} dominates the split with the largest share of ${unit}.`);
+      notes.push(`${ranked[0].name} dominates the split with the largest share of ${unit}.`);
     }
   }
 
@@ -651,36 +743,25 @@ function buildOverviewSnapshot() {
   const setCredit = {};
 
   for (const exercise of exercises) {
-    const primary = uniqueMuscles(exercise.primaryMuscles);
-    const primarySet = new Set(primary);
-    const secondary = uniqueMuscles(exercise.secondaryMuscles).filter((muscle) => !primarySet.has(muscle));
+    const mapped = analysisTargets(exercise);
     const sets = Math.max(Number(exercise.targetSets) || 0, 0);
-    for (const muscle of primary) {
+    for (const muscle of mapped.primary) {
       exerciseCredit[muscle] = (exerciseCredit[muscle] || 0) + 1;
       setCredit[muscle] = (setCredit[muscle] || 0) + sets;
     }
-    for (const muscle of secondary) {
+    for (const muscle of mapped.secondary) {
       exerciseCredit[muscle] = (exerciseCredit[muscle] || 0) + 0.5;
       setCredit[muscle] = (setCredit[muscle] || 0) + sets * 0.5;
     }
   }
 
-  const names = new Set([...Object.keys(exerciseCredit), ...Object.keys(setCredit)]);
-  const usingSets = exercises.some((item) => Number(item.targetSets) > 0);
   const plannedSets = exercises.reduce((sum, item) => sum + Math.max(Number(item.targetSets) || 0, 0), 0);
-  const rows = [...names]
-    .map((muscle) => ({
-      name: muscle,
-      region: regionName(muscle),
-      exerciseCredit: exerciseCredit[muscle] || 0,
-      setCredit: setCredit[muscle] || 0,
-    }))
-    .sort((lhs, rhs) => {
-      const l = sortCredit(lhs, usingSets);
-      const r = sortCredit(rhs, usingSets);
-      if (l !== r) return r - l;
-      return lhs.name.localeCompare(rhs.name);
-    });
+  const rows = ANALYSIS_MUSCLES.map((muscle) => ({
+    name: muscle,
+    region: regionName(muscle),
+    exerciseCredit: exerciseCredit[muscle] || 0,
+    setCredit: setCredit[muscle] || 0,
+  }));
 
   return {
     programName: state.name.trim() || "Untitled program",
@@ -712,34 +793,18 @@ function muscleLookup(rows) {
     };
 }
 
-function makeSide(lookup, label, names, usingSets, options = {}) {
-  const itemNames = names.filter((name) => !isFoldedBackMuscle(name));
-  const foldNames = options.foldBack ? foldedBackMuscles : [];
-  const items = itemNames.map(lookup);
-  const folded = foldNames.map(lookup);
-  const exerciseCredit =
-    items.reduce((sum, row) => sum + row.exerciseCredit, 0) +
-    folded.reduce((sum, row) => sum + row.exerciseCredit, 0);
-  const setCredit =
-    items.reduce((sum, row) => sum + row.setCredit, 0) + folded.reduce((sum, row) => sum + row.setCredit, 0);
+function makeSide(lookup, label, names, usingSets) {
+  const items = names.map(lookup);
+  const exerciseCredit = items.reduce((sum, row) => sum + row.exerciseCredit, 0);
+  const setCredit = items.reduce((sum, row) => sum + row.setCredit, 0);
   return {
     label,
-    names: itemNames,
+    names,
     items,
     exerciseCredit,
     setCredit,
     value: usingSets ? setCredit : exerciseCredit,
   };
-}
-
-function markFoldedBackUsed(used) {
-  for (const name of foldedBackMuscles) used.add(name);
-}
-
-function leftoverNames(rows, used) {
-  return rows
-    .filter((row) => !used.has(row.name) && (row.exerciseCredit > 0 || row.setCredit > 0))
-    .map((row) => row.name);
 }
 
 function shareLabel(value, total) {
@@ -754,29 +819,24 @@ function renderVolumeBar(value, max, tone = 0, align = "start") {
   return `<div class="volume-bar${alignClass}"><span class="volume-bar-fill tone-${tone % 4}" style="width:${width}%"></span></div>`;
 }
 
-function renderMuscleLines(items, usesSetVolume, hideZero) {
-  const visible = hideZero ? items.filter((row) => sortCredit(row, usesSetVolume) > 0) : items;
-  if (!visible.length) return "";
-  const max = Math.max(...visible.map((row) => sortCredit(row, usesSetVolume)), 0.01);
-  return visible
-    .map((row) => {
+function renderMuscleLines(items, usesSetVolume, options = {}) {
+  const dimZero = options.dimZero !== false;
+  if (!items.length) return "";
+  const max = Math.max(...items.map((row) => sortCredit(row, usesSetVolume)), 0.01);
+  return items
+    .map((row, index) => {
       const value = sortCredit(row, usesSetVolume);
-      return `<div class="muscle-row">
+      const empty = dimZero && value <= 0;
+      const tone = options.toneByIndex ? index : 0;
+      return `<div class="muscle-row${empty ? " is-empty" : ""}">
         <div class="muscle-row-head">
           <span>${escapeHTML(row.name)}</span>
           <span class="muted">${escapeHTML(volumeDetail(row.exerciseCredit, row.setCredit, usesSetVolume))}</span>
         </div>
-        ${renderVolumeBar(value, max, 0)}
+        ${renderVolumeBar(value, max, tone)}
       </div>`;
     })
     .join("");
-}
-
-function renderSideSub(side, usesSetVolume) {
-  if (side.items.length < 2 || side.items.length > 3) return "";
-  return `<p class="compare-sub">${side.items
-    .map((item) => `${escapeHTML(item.name)} ${escapeHTML(volumeDetail(item.exerciseCredit, item.setCredit, usesSetVolume))}`)
-    .join(" · ")}</p>`;
 }
 
 function duelMeta(side, usesSetVolume) {
@@ -786,133 +846,103 @@ function duelMeta(side, usesSetVolume) {
 
 function renderDuel(left, right, usesSetVolume) {
   const max = Math.max(left.value, right.value, 0.01);
+  const bothEmpty = left.value <= 0 && right.value <= 0;
   return `<div class="compare-duel">
-    <div class="compare-duel-side">
+    <div class="compare-duel-side${left.value <= 0 && !bothEmpty ? " is-empty" : ""}">
       <span class="compare-duel-name">${escapeHTML(left.label)}</span>
       ${renderVolumeBar(left.value, max, 0, "end")}
       <span class="muted">${escapeHTML(duelMeta(left, usesSetVolume))}</span>
-      ${renderSideSub(left, usesSetVolume)}
     </div>
     <span class="compare-duel-vs">vs</span>
-    <div class="compare-duel-side is-right">
+    <div class="compare-duel-side is-right${right.value <= 0 && !bothEmpty ? " is-empty" : ""}">
       <span class="compare-duel-name">${escapeHTML(right.label)}</span>
       ${renderVolumeBar(right.value, max, 1, "start")}
       <span class="muted">${escapeHTML(duelMeta(right, usesSetVolume))}</span>
-      ${renderSideSub(right, usesSetVolume)}
     </div>
   </div>`;
 }
 
 function renderSideStack(sides, usesSetVolume) {
   const max = Math.max(...sides.map((side) => side.value), 0.01);
+  const allEmpty = sides.every((side) => side.value <= 0);
   return sides
     .map(
       (side, index) => `
-      <div class="muscle-row">
+      <div class="muscle-row${side.value <= 0 && !allEmpty ? " is-empty" : ""}">
         <div class="muscle-row-head">
           <span>${escapeHTML(side.label)}</span>
           <span class="muted">${escapeHTML(volumeDetail(side.exerciseCredit, side.setCredit, usesSetVolume))}</span>
         </div>
         ${renderVolumeBar(side.value, max, index)}
-        ${renderSideSub(side, usesSetVolume)}
       </div>`
     )
     .join("");
 }
 
-function renderBucketCard(bucket, max, tone, usesSetVolume, hideZero) {
+function renderCategoryCard(bucket, max, tone, usesSetVolume, options = {}) {
   const empty = bucket.value <= 0;
-  return `<div class="compare-bucket${empty ? " is-empty" : ""}">
+  const compact = Boolean(options.compact);
+  const lines = compact ? "" : renderMuscleLines(bucket.items, usesSetVolume, { dimZero: !empty });
+  return `<article class="overview-card category-card${empty ? " is-empty" : ""}${compact ? " is-compact" : ""}">
     <div class="compare-bucket-head">
       <span>${escapeHTML(bucket.label)}${bucket.share ? ` <em>${escapeHTML(bucket.share)}</em>` : ""}</span>
       <span class="muted">${escapeHTML(volumeDetail(bucket.exerciseCredit, bucket.setCredit, usesSetVolume))}</span>
     </div>
     ${renderVolumeBar(bucket.value, max, tone)}
-    ${renderMuscleLines(bucket.items, usesSetVolume, hideZero)}
-  </div>`;
-}
-
-function renderNamedBreakdown(title, side, usesSetVolume) {
-  const lines = renderMuscleLines(side.items, usesSetVolume, true);
-  return `<div class="compare-group">
-    <div class="region-head">
-      <span>${escapeHTML(title)}</span>
-      <span class="muted">${escapeHTML(volumeDetail(side.exerciseCredit, side.setCredit, usesSetVolume))}</span>
-    </div>
-    ${lines || `<p class="overview-empty">No credit yet.</p>`}
-  </div>`;
+    ${lines}
+  </article>`;
 }
 
 function renderUpperLowerView(rows, usesSetVolume) {
   const lookup = muscleLookup(rows);
-  const used = new Set([...UPPER_BODY_MUSCLES, ...LOWER_BODY_MUSCLES]);
-  markFoldedBackUsed(used);
-  const extras = leftoverNames(rows, used);
-  const extraLower = extras.filter((name) => regionName(name) === "Lower body");
-  const extraUpper = extras.filter((name) => regionName(name) !== "Lower body");
-  const upper = makeSide(lookup, "Upper", [...UPPER_BODY_MUSCLES, ...extraUpper], usesSetVolume, { foldBack: true });
-  const lower = makeSide(lookup, "Lower", [...LOWER_BODY_MUSCLES, ...extraLower], usesSetVolume);
+  const upper = makeSide(lookup, "Upper", UPPER_MUSCLES, usesSetVolume);
+  const lower = makeSide(lookup, "Lower", LOWER_MUSCLES, usesSetVolume);
   const total = upper.value + lower.value;
   upper.share = shareLabel(upper.value, total);
   lower.share = shareLabel(lower.value, total);
-  return `<div class="overview-card">
-    ${renderDuel(upper, lower, usesSetVolume)}
-    ${renderNamedBreakdown("Upper", upper, usesSetVolume)}
-    ${renderNamedBreakdown("Lower", lower, usesSetVolume)}
+  const max = Math.max(upper.value, lower.value, 0.01);
+  return `<div class="overview-card-stack">
+    ${renderCategoryCard(upper, max, 0, usesSetVolume)}
+    ${renderCategoryCard(lower, max, 1, usesSetVolume)}
   </div>`;
 }
 
 function renderPushPullLegsView(rows, usesSetVolume) {
   const lookup = muscleLookup(rows);
-  const used = new Set([...PUSH_MUSCLES, ...PULL_MUSCLES, ...LEG_MUSCLES, ...PPL_OTHER_MUSCLES]);
-  markFoldedBackUsed(used);
-  const extra = leftoverNames(rows, used);
-  const buckets = [
-    makeSide(lookup, "Push", PUSH_MUSCLES, usesSetVolume),
-    makeSide(lookup, "Pull", PULL_MUSCLES, usesSetVolume, { foldBack: true }),
-    makeSide(lookup, "Legs", LEG_MUSCLES, usesSetVolume),
-    { ...makeSide(lookup, "Other", [...PPL_OTHER_MUSCLES, ...extra], usesSetVolume), optional: true },
-  ];
-  const visible = buckets.filter((bucket) => !bucket.optional || bucket.value > 0);
-  const total = visible.reduce((sum, bucket) => sum + bucket.value, 0);
-  for (const bucket of visible) bucket.share = shareLabel(bucket.value, total);
-  const max = Math.max(...visible.map((bucket) => bucket.value), 0.01);
-  return `<div class="overview-card">${visible
-    .map((bucket, index) => renderBucketCard(bucket, max, index, usesSetVolume, true))
-    .join("")}</div>`;
-}
-
-function markUsed(used, names) {
-  for (const name of names) used.add(name);
+  const push = makeSide(lookup, "Push", PUSH_MUSCLES, usesSetVolume);
+  const pull = makeSide(lookup, "Pull", PULL_MUSCLES, usesSetVolume);
+  const legs = makeSide(lookup, "Legs", LEG_MUSCLES, usesSetVolume);
+  const core = makeSide(lookup, "Core & Abs", CORE_MUSCLES, usesSetVolume);
+  const buckets = [push, pull, legs, core];
+  const total = buckets.reduce((sum, bucket) => sum + bucket.value, 0);
+  for (const bucket of buckets) bucket.share = shareLabel(bucket.value, total);
+  const max = Math.max(...buckets.map((bucket) => bucket.value), 0.01);
+  return `<div class="overview-card-stack">
+    ${renderCategoryCard(push, max, 0, usesSetVolume)}
+    ${renderCategoryCard(pull, max, 1, usesSetVolume)}
+    ${renderCategoryCard(legs, max, 2, usesSetVolume)}
+    ${renderCategoryCard(core, max, 3, usesSetVolume, { compact: true })}
+  </div>`;
 }
 
 function renderAntagonistView(rows, usesSetVolume) {
   const lookup = muscleLookup(rows);
-  const used = new Set();
-  markFoldedBackUsed(used);
-  const groups = ANTAGONIST_GROUPS.map((group) => {
-    const sides = group.sides.map((side) => {
-      markUsed(used, side.muscles);
-      return makeSide(lookup, side.label, side.muscles, usesSetVolume, { foldBack: Boolean(side.foldBack) });
-    });
-    return { title: group.title, sides };
-  });
-  const extras = leftoverNames(rows, used);
-  const other = groups.find((group) => group.title === "Other");
-  if (other) {
-    for (const name of extras) other.sides.push(makeSide(lookup, name, [name], usesSetVolume));
-  }
-  return `<div class="overview-card">${groups
-    .map((group) => {
-      const empty = group.sides.every((side) => side.value <= 0);
-      const pair = group.sides.length === 2;
-      const body = pair ? renderDuel(group.sides[0], group.sides[1], usesSetVolume) : renderSideStack(group.sides, usesSetVolume);
-      return `<div class="compare-group${empty ? " is-empty" : ""}">
-        <div class="region-head"><span>${escapeHTML(group.title)}</span></div>
-        ${body}
-      </div>`;
-    })
-    .join("")}</div>`;
+  return `<div class="overview-card-stack">${ANTAGONIST_GROUPS.map((group) => {
+    const sides = group.sides.map((side) => makeSide(lookup, side.label, side.muscles, usesSetVolume));
+    const empty = sides.every((side) => side.value <= 0);
+    const pair = sides.length === 2;
+    let body = pair ? renderDuel(sides[0], sides[1], usesSetVolume) : renderSideStack(sides, usesSetVolume);
+    const breakdown = sides.filter((side) => side.items.length > 1).flatMap((side) => side.items);
+    if (breakdown.length) {
+      body += `<div class="antagonist-breakdown">${renderMuscleLines(breakdown, usesSetVolume, { dimZero: !empty })}</div>`;
+    }
+    const note = group.note ? `<p class="antagonist-note">${escapeHTML(group.note)}</p>` : "";
+    return `<article class="overview-card category-card${empty ? " is-empty" : ""}">
+      <div class="region-head"><span>${escapeHTML(group.title)}</span></div>
+      ${body}
+      ${note}
+    </article>`;
+  }).join("")}</div>`;
 }
 
 function renderMuscleView(snapshot) {
@@ -922,7 +952,7 @@ function renderMuscleView(snapshot) {
   }).join("")}</div>`;
 
   let body;
-  if (!snapshot.rows.length) {
+  if (!snapshot.exerciseCount) {
     body = `<div class="overview-card"><p class="overview-empty">Add exercises to see how the split loads each muscle.</p></div>`;
   } else if (muscleView === "upper-lower") {
     body = renderUpperLowerView(snapshot.rows, snapshot.usesSetVolume);
@@ -1162,8 +1192,8 @@ function populateFilters() {
   for (const item of EQUIPMENT) {
     els.filterEquipment.insertAdjacentHTML("beforeend", `<option value="${item.id}">${item.title}</option>`);
   }
-  for (const muscle of MUSCLES) {
-    els.filterMuscle.insertAdjacentHTML("beforeend", `<option value="${muscle}">${muscle}</option>`);
+  for (const muscle of ANALYSIS_MUSCLES) {
+    els.filterMuscle.insertAdjacentHTML("beforeend", `<option value="${escapeHTML(muscle)}">${escapeHTML(muscle)}</option>`);
   }
 }
 
@@ -1174,13 +1204,14 @@ function filteredCatalog() {
   const muscle = els.filterMuscle.value;
   return displaySorted(
     catalog.filter((item) => {
-      const matchesQuery =
-        !query ||
-        item.name.toLowerCase().includes(query) ||
-        item.primary.some((name) => name.toLowerCase().includes(query));
+      const mapped = analysisTargets(item);
+      const haystack = [item.name, ...(item.primary || []), ...(item.secondary || []), ...mapped.primary, ...mapped.secondary]
+        .join(" ")
+        .toLowerCase();
+      const matchesQuery = !query || haystack.includes(query);
       const matchesCategory = !category || item.category === category;
       const matchesEquipment = !equipment || item.equipment === equipment;
-      const matchesMuscle = !muscle || item.primary.includes(muscle) || item.secondary.includes(muscle);
+      const matchesMuscle = !muscle || mapped.primary.includes(muscle) || mapped.secondary.includes(muscle);
       return matchesQuery && matchesCategory && matchesEquipment && matchesMuscle;
     })
   );
@@ -1214,7 +1245,7 @@ function renderPicker() {
                   ${photoMarkup(item, true)}
                   <div class="card-body">
                     <h4>${escapeHTML(item.name)}</h4>
-                    <p>${escapeHTML(displayMuscles(item.primary).join(" · "))}</p>
+                    <p>${escapeHTML(analysisTargets(item).primary.join(" · "))}</p>
                     <span class="badge${added ? " on" : ""}">${added ? "Added" : equipmentTitle(item.equipment)}</span>
                   </div>
                 </button>`;
@@ -1251,7 +1282,6 @@ async function init() {
   if (!response.ok) throw new Error("Could not load exercise catalog");
   catalog = await response.json();
   byName = new Map(catalog.map((item) => [item.name.toLowerCase(), item]));
-  refreshFoldedBackMuscles();
   restore();
   render();
 
