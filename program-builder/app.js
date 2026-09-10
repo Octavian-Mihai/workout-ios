@@ -1,4 +1,5 @@
 const STORAGE_KEY = "program-builder:draft";
+const MUSCLE_VIEW_KEY = "program-builder:muscle-view";
 const DEFAULT_SETS = 3;
 const DEFAULT_REPS = 8;
 const CATEGORIES = ["Push", "Pull", "Legs", "Explosive", "Core"];
@@ -12,7 +13,6 @@ const EQUIPMENT = [
 const MUSCLES = [
   "Chest",
   "Lats",
-  "Upper Back",
   "Traps",
   "Front Delts",
   "Side Delts",
@@ -27,6 +27,97 @@ const MUSCLES = [
   "Adductors",
   "Core",
   "Lower Back",
+];
+const MUSCLE_REGIONS = {
+  Chest: "Upper body",
+  Lats: "Upper body",
+  Traps: "Upper body",
+  "Front Delts": "Upper body",
+  "Side Delts": "Upper body",
+  "Rear Delts": "Upper body",
+  Biceps: "Arms",
+  Triceps: "Arms",
+  Forearms: "Arms",
+  Quads: "Lower body",
+  Hamstrings: "Lower body",
+  Glutes: "Lower body",
+  Calves: "Lower body",
+  Adductors: "Lower body",
+  Core: "Trunk",
+  "Lower Back": "Trunk",
+  Tibialis: "Lower body",
+};
+const MUSCLE_VIEW_OPTIONS = [
+  { id: "upper-lower", label: "Upper / lower" },
+  { id: "push-pull-legs", label: "Push / pull / legs" },
+  { id: "antagonists", label: "Antagonists" },
+];
+const DEFAULT_MUSCLE_VIEW = "push-pull-legs";
+const LOWER_BODY_MUSCLES = ["Quads", "Hamstrings", "Glutes", "Calves", "Adductors", "Tibialis"];
+const UPPER_BODY_MUSCLES = [
+  "Chest",
+  "Lats",
+  "Traps",
+  "Front Delts",
+  "Side Delts",
+  "Rear Delts",
+  "Biceps",
+  "Triceps",
+  "Forearms",
+  "Core",
+  "Lower Back",
+];
+const PUSH_MUSCLES = ["Chest", "Front Delts", "Side Delts", "Triceps"];
+const PULL_MUSCLES = ["Lats", "Traps", "Rear Delts", "Biceps"];
+const LEG_MUSCLES = ["Quads", "Hamstrings", "Glutes", "Calves", "Adductors", "Tibialis"];
+const PPL_OTHER_MUSCLES = ["Core", "Forearms", "Lower Back"];
+const ANTAGONIST_GROUPS = [
+  {
+    title: "Biceps / Triceps",
+    sides: [
+      { label: "Biceps", muscles: ["Biceps"] },
+      { label: "Triceps", muscles: ["Triceps"] },
+    ],
+  },
+  {
+    title: "Chest / Lats + Traps",
+    sides: [
+      { label: "Chest", muscles: ["Chest"] },
+      { label: "Lats + Traps", muscles: ["Lats", "Traps"], foldBack: true },
+    ],
+  },
+  {
+    title: "Delts",
+    sides: [
+      { label: "Front Delts", muscles: ["Front Delts"] },
+      { label: "Side Delts", muscles: ["Side Delts"] },
+      { label: "Rear Delts", muscles: ["Rear Delts"] },
+    ],
+  },
+  {
+    title: "Quads / Hamstrings",
+    sides: [
+      { label: "Quads", muscles: ["Quads"] },
+      { label: "Hamstrings", muscles: ["Hamstrings"] },
+    ],
+  },
+  {
+    title: "Calves / Tibialis",
+    sides: [
+      { label: "Calves", muscles: ["Calves"] },
+      { label: "Tibialis", muscles: ["Tibialis"] },
+    ],
+  },
+  {
+    title: "Other",
+    sides: [
+      { label: "Forearms", muscles: ["Forearms"] },
+      { label: "Core", muscles: ["Core"] },
+      { label: "Adductors", muscles: ["Adductors"] },
+      { label: "Glutes", muscles: ["Glutes"] },
+      { label: "Lower Back", muscles: ["Lower Back"] },
+    ],
+  },
 ];
 const PATTERN_RANK = [
   "Vertical Pull",
@@ -76,13 +167,16 @@ const els = {
   filterEquipment: document.getElementById("filter-equipment"),
   filterMuscle: document.getElementById("filter-muscle"),
   toast: document.getElementById("toast"),
+  overview: document.getElementById("overview"),
 };
 
 let catalog = [];
 let byName = new Map();
+let foldedBackMuscles = [];
 let state = emptyState();
 let selectedDayId = null;
 let toastTimer = 0;
+let muscleView = loadMuscleView();
 
 function emptyState() {
   return {
@@ -273,6 +367,27 @@ function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function loadMuscleView() {
+  try {
+    const stored = localStorage.getItem(MUSCLE_VIEW_KEY);
+    if (MUSCLE_VIEW_OPTIONS.some((option) => option.id === stored)) return stored;
+  } catch {
+    /* ignore quota / private-mode failures */
+  }
+  return DEFAULT_MUSCLE_VIEW;
+}
+
+function setMuscleView(view) {
+  if (!MUSCLE_VIEW_OPTIONS.some((option) => option.id === view) || view === muscleView) return;
+  muscleView = view;
+  try {
+    localStorage.setItem(MUSCLE_VIEW_KEY, view);
+  } catch {
+    /* ignore quota / private-mode failures */
+  }
+  renderOverview();
+}
+
 function restore() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -303,11 +418,10 @@ function showToast(message) {
 }
 
 function photoMarkup(exercise, large = false) {
-  if (exercise?.image) {
-    const src = `images/exercises/${exercise.image}`;
-    return `<img class="thumb" src="${src}" alt="" />`;
-  }
-  return `<div class="placeholder${large ? " large" : ""}">Photo coming soon</div>`;
+  const inner = exercise?.image
+    ? `<img class="thumb" src="images/exercises/${exercise.image}" alt="" />`
+    : `<span class="placeholder">Photo coming soon</span>`;
+  return `<div class="photo-box${large ? " large" : ""}">${inner}</div>`;
 }
 
 function escapeHTML(value) {
@@ -345,6 +459,7 @@ function render() {
   if (!day) {
     els.dayEmpty.classList.remove("hidden");
     els.dayEditor.classList.add("hidden");
+    renderOverview();
     return;
   }
 
@@ -362,7 +477,7 @@ function render() {
           ${photoMarkup(catalogItem)}
           <div class="exercise-copy">
             <h3>${escapeHTML(item.name)}</h3>
-            <p>${escapeHTML((item.primaryMuscles || []).join(" · ") || "—")}</p>
+            <p>${escapeHTML(displayMuscles(item.primaryMuscles).join(" · ") || "—")}</p>
           </div>
           <div class="stepper" data-field="targetSets" data-index="${index}">
             <span class="label">Sets</span>
@@ -370,16 +485,489 @@ function render() {
             <strong>${item.targetSets}</strong>
             <button type="button" data-delta="1" aria-label="More sets">+</button>
           </div>
-          <div class="stepper" data-field="targetReps" data-index="${index}">
-            <span class="label">Reps</span>
-            <button type="button" data-delta="-1" aria-label="Fewer reps">−</button>
-            <strong>${item.targetReps}</strong>
-            <button type="button" data-delta="1" aria-label="More reps">+</button>
-          </div>
           <button type="button" class="btn btn-danger remove-exercise" data-index="${index}">Remove</button>
         </li>`;
     })
     .join("");
+  renderOverview();
+}
+
+function uniqueMuscles(names) {
+  const seen = new Set();
+  const result = [];
+  for (const raw of names || []) {
+    const name = String(raw).trim();
+    if (!name || seen.has(name)) continue;
+    seen.add(name);
+    result.push(name);
+  }
+  return result;
+}
+
+function refreshFoldedBackMuscles() {
+  const names = new Set();
+  for (const item of catalog) {
+    for (const muscle of [...(item.primary || []), ...(item.secondary || [])]) {
+      if (muscle) names.add(muscle);
+    }
+  }
+  foldedBackMuscles = [...names].filter(
+    (name) => !MUSCLES.includes(name) && !LOWER_BODY_MUSCLES.includes(name)
+  );
+}
+
+function isFoldedBackMuscle(name) {
+  return foldedBackMuscles.includes(name);
+}
+
+function displayMuscles(names) {
+  return uniqueMuscles(names).filter((name) => !isFoldedBackMuscle(name));
+}
+
+function regionName(muscle) {
+  if (MUSCLE_REGIONS[muscle]) return MUSCLE_REGIONS[muscle];
+  if (isFoldedBackMuscle(muscle)) return "Upper body";
+  return "Other";
+}
+
+function trimmedNumber(value, decimals = 1) {
+  const raw = (Number(value) || 0).toFixed(Math.max(decimals, 0));
+  const [integer, fraction = ""] = raw.split(".");
+  const trimmed = fraction.replace(/0+$/, "");
+  return trimmed ? `${integer}.${trimmed}` : integer;
+}
+
+function listPhrase(items) {
+  if (!items.length) return "";
+  const lower = items.map((item) => item.toLowerCase());
+  if (lower.length === 1) return lower[0];
+  if (lower.length === 2) return `${lower[0]} and ${lower[1]}`;
+  return `${lower.slice(0, -1).join(", ")}, and ${lower[lower.length - 1]}`;
+}
+
+function sortCredit(row, usingSets) {
+  return usingSets ? row.setCredit : row.exerciseCredit;
+}
+
+function overviewInsights(rows, exerciseCount, plannedSets) {
+  if (exerciseCount === 0) {
+    return ["No exercises in this rotation yet. Add days and lifts to see the split."];
+  }
+
+  const notes = [];
+  const usingSets = plannedSets > 0;
+  const byNameMap = Object.fromEntries(rows.map((row) => [row.name, row]));
+
+  function credit(muscles) {
+    return muscles.reduce((sum, name) => {
+      const row = byNameMap[name];
+      return sum + (usingSets ? row?.setCredit ?? 0 : row?.exerciseCredit ?? 0);
+    }, 0);
+  }
+
+  function regionCredit(region) {
+    return rows
+      .filter((row) => row.region === region)
+      .reduce((sum, row) => sum + (usingSets ? row.setCredit : row.exerciseCredit), 0);
+  }
+
+  if (!usingSets) {
+    notes.push("Target sets are still 0. Exercise counts are shown; set planned sets on each lift to see volume.");
+  }
+
+  const regionOrder = ["Upper body", "Arms", "Lower body", "Trunk"];
+  const missing = regionOrder.filter((region) => regionCredit(region) === 0);
+  const trained = regionOrder.filter((region) => regionCredit(region) > 0);
+
+  for (const region of missing) {
+    if (region === "Lower body") {
+      notes.push("No lower-body credit — quads, glutes, and hamstrings never appear as primary or secondary.");
+    } else if (region === "Upper body") {
+      notes.push("No upper-body work — chest, back, and delts are absent from the rotation.");
+    } else if (region === "Trunk") {
+      notes.push("Trunk is neglected. Core and lower back have no credit, even as secondary on compounds.");
+    } else if (region === "Arms" && trained.includes("Upper body")) {
+      notes.push("No arm credit yet. Biceps and triceps aren’t tagged, even as secondary on presses or pulls.");
+    }
+  }
+
+  const push = credit(PUSH_MUSCLES);
+  const pull = credit([...PULL_MUSCLES, ...foldedBackMuscles]);
+  if (push > 0 || pull > 0) {
+    const heavier = Math.max(push, pull);
+    const lighter = Math.min(push, pull);
+    if (heavier > 0 && lighter < heavier * 0.6) {
+      if (push > pull) {
+        notes.push("Pressing outweighs pulling. Add rows or pulldowns so the back keeps up with chest and delts.");
+      } else {
+        notes.push("Pull volume is well ahead of pressing. The split leans toward rows and vertical pulls.");
+      }
+    }
+  }
+
+  const quads = credit(["Quads"]);
+  const posterior = credit(["Hamstrings", "Glutes"]);
+  if (quads > 0 || posterior > 0) {
+    if (quads > posterior * 1.6) {
+      notes.push("Quad-dominant lower body. Hinges are light next to squat patterns.");
+    } else if (posterior > quads * 1.6) {
+      notes.push("Hinge-heavy lower body. Quads are light compared with hamstrings and glutes.");
+    }
+  }
+
+  const frontPress = credit(["Chest", "Front Delts"]);
+  const rearSupport = credit(["Rear Delts", "Traps", ...foldedBackMuscles]);
+  if (frontPress > 0 && rearSupport < frontPress * 0.45) {
+    notes.push("Pressing is loaded relative to rear delts and traps. Rows or face pulls would even the shoulder.");
+  }
+
+  const visibleRows = rows.filter((row) => !isFoldedBackMuscle(row.name));
+  if (visibleRows[0] && visibleRows.length >= 2) {
+    const total = visibleRows.reduce((sum, row) => sum + sortCredit(row, usingSets), 0);
+    const second = sortCredit(visibleRows[1], usingSets);
+    const topValue = sortCredit(visibleRows[0], usingSets);
+    if (total > 0 && topValue >= total * 0.32 && topValue >= second * 1.8) {
+      const unit = usingSets ? "set credit" : "exercise credit";
+      notes.push(`${visibleRows[0].name} dominates the split with the largest share of ${unit}.`);
+    }
+  }
+
+  if (!notes.length) {
+    if (trained.length >= 3) {
+      notes.push(`Coverage spans ${listPhrase(trained)}. Push/pull and lower-body credit are in the same ballpark.`);
+    } else if (trained.length === 2) {
+      notes.push(`Work is concentrated in ${listPhrase(trained)}.`);
+    } else if (trained[0]) {
+      notes.push(`This rotation is all ${trained[0].toLowerCase()} — other regions never appear.`);
+    }
+  }
+
+  return notes.slice(0, 4);
+}
+
+function buildOverviewSnapshot() {
+  const exercises = state.days.flatMap((day) => day.exercises);
+  const exerciseCredit = {};
+  const setCredit = {};
+
+  for (const exercise of exercises) {
+    const primary = uniqueMuscles(exercise.primaryMuscles);
+    const primarySet = new Set(primary);
+    const secondary = uniqueMuscles(exercise.secondaryMuscles).filter((muscle) => !primarySet.has(muscle));
+    const sets = Math.max(Number(exercise.targetSets) || 0, 0);
+    for (const muscle of primary) {
+      exerciseCredit[muscle] = (exerciseCredit[muscle] || 0) + 1;
+      setCredit[muscle] = (setCredit[muscle] || 0) + sets;
+    }
+    for (const muscle of secondary) {
+      exerciseCredit[muscle] = (exerciseCredit[muscle] || 0) + 0.5;
+      setCredit[muscle] = (setCredit[muscle] || 0) + sets * 0.5;
+    }
+  }
+
+  const names = new Set([...Object.keys(exerciseCredit), ...Object.keys(setCredit)]);
+  const usingSets = exercises.some((item) => Number(item.targetSets) > 0);
+  const plannedSets = exercises.reduce((sum, item) => sum + Math.max(Number(item.targetSets) || 0, 0), 0);
+  const rows = [...names]
+    .map((muscle) => ({
+      name: muscle,
+      region: regionName(muscle),
+      exerciseCredit: exerciseCredit[muscle] || 0,
+      setCredit: setCredit[muscle] || 0,
+    }))
+    .sort((lhs, rhs) => {
+      const l = sortCredit(lhs, usingSets);
+      const r = sortCredit(rhs, usingSets);
+      if (l !== r) return r - l;
+      return lhs.name.localeCompare(rhs.name);
+    });
+
+  return {
+    programName: state.name.trim() || "Untitled program",
+    dayCount: state.days.length,
+    exerciseCount: exercises.length,
+    plannedSets,
+    rows,
+    usesSetVolume: plannedSets > 0,
+    insights: overviewInsights(rows, exercises.length, plannedSets),
+  };
+}
+
+function volumeDetail(exerciseCredit, setCredit, usesSetVolume) {
+  const exercises = trimmedNumber(exerciseCredit, 1);
+  if (usesSetVolume) {
+    return `${exercises} ex · ${trimmedNumber(setCredit, 1)} sets`;
+  }
+  return `${exercises} ex`;
+}
+
+function muscleLookup(rows) {
+  const map = new Map(rows.map((row) => [row.name, row]));
+  return (name) =>
+    map.get(name) || {
+      name,
+      region: regionName(name),
+      exerciseCredit: 0,
+      setCredit: 0,
+    };
+}
+
+function makeSide(lookup, label, names, usingSets, options = {}) {
+  const itemNames = names.filter((name) => !isFoldedBackMuscle(name));
+  const foldNames = options.foldBack ? foldedBackMuscles : [];
+  const items = itemNames.map(lookup);
+  const folded = foldNames.map(lookup);
+  const exerciseCredit =
+    items.reduce((sum, row) => sum + row.exerciseCredit, 0) +
+    folded.reduce((sum, row) => sum + row.exerciseCredit, 0);
+  const setCredit =
+    items.reduce((sum, row) => sum + row.setCredit, 0) + folded.reduce((sum, row) => sum + row.setCredit, 0);
+  return {
+    label,
+    names: itemNames,
+    items,
+    exerciseCredit,
+    setCredit,
+    value: usingSets ? setCredit : exerciseCredit,
+  };
+}
+
+function markFoldedBackUsed(used) {
+  for (const name of foldedBackMuscles) used.add(name);
+}
+
+function leftoverNames(rows, used) {
+  return rows
+    .filter((row) => !used.has(row.name) && (row.exerciseCredit > 0 || row.setCredit > 0))
+    .map((row) => row.name);
+}
+
+function shareLabel(value, total) {
+  if (total <= 0) return "0%";
+  return `${Math.round((value / total) * 100)}%`;
+}
+
+function renderVolumeBar(value, max, tone = 0, align = "start") {
+  const fraction = max > 0 ? Math.min(Math.max(value / max, 0), 1) : 0;
+  const width = fraction > 0 ? Math.max(fraction, 0.04) * 100 : 0;
+  const alignClass = align === "end" ? " bar-end" : "";
+  return `<div class="volume-bar${alignClass}"><span class="volume-bar-fill tone-${tone % 4}" style="width:${width}%"></span></div>`;
+}
+
+function renderMuscleLines(items, usesSetVolume, hideZero) {
+  const visible = hideZero ? items.filter((row) => sortCredit(row, usesSetVolume) > 0) : items;
+  if (!visible.length) return "";
+  const max = Math.max(...visible.map((row) => sortCredit(row, usesSetVolume)), 0.01);
+  return visible
+    .map((row) => {
+      const value = sortCredit(row, usesSetVolume);
+      return `<div class="muscle-row">
+        <div class="muscle-row-head">
+          <span>${escapeHTML(row.name)}</span>
+          <span class="muted">${escapeHTML(volumeDetail(row.exerciseCredit, row.setCredit, usesSetVolume))}</span>
+        </div>
+        ${renderVolumeBar(value, max, 0)}
+      </div>`;
+    })
+    .join("");
+}
+
+function renderSideSub(side, usesSetVolume) {
+  if (side.items.length < 2 || side.items.length > 3) return "";
+  return `<p class="compare-sub">${side.items
+    .map((item) => `${escapeHTML(item.name)} ${escapeHTML(volumeDetail(item.exerciseCredit, item.setCredit, usesSetVolume))}`)
+    .join(" · ")}</p>`;
+}
+
+function duelMeta(side, usesSetVolume) {
+  const detail = volumeDetail(side.exerciseCredit, side.setCredit, usesSetVolume);
+  return side.share ? `${detail} · ${side.share}` : detail;
+}
+
+function renderDuel(left, right, usesSetVolume) {
+  const max = Math.max(left.value, right.value, 0.01);
+  return `<div class="compare-duel">
+    <div class="compare-duel-side">
+      <span class="compare-duel-name">${escapeHTML(left.label)}</span>
+      ${renderVolumeBar(left.value, max, 0, "end")}
+      <span class="muted">${escapeHTML(duelMeta(left, usesSetVolume))}</span>
+      ${renderSideSub(left, usesSetVolume)}
+    </div>
+    <span class="compare-duel-vs">vs</span>
+    <div class="compare-duel-side is-right">
+      <span class="compare-duel-name">${escapeHTML(right.label)}</span>
+      ${renderVolumeBar(right.value, max, 1, "start")}
+      <span class="muted">${escapeHTML(duelMeta(right, usesSetVolume))}</span>
+      ${renderSideSub(right, usesSetVolume)}
+    </div>
+  </div>`;
+}
+
+function renderSideStack(sides, usesSetVolume) {
+  const max = Math.max(...sides.map((side) => side.value), 0.01);
+  return sides
+    .map(
+      (side, index) => `
+      <div class="muscle-row">
+        <div class="muscle-row-head">
+          <span>${escapeHTML(side.label)}</span>
+          <span class="muted">${escapeHTML(volumeDetail(side.exerciseCredit, side.setCredit, usesSetVolume))}</span>
+        </div>
+        ${renderVolumeBar(side.value, max, index)}
+        ${renderSideSub(side, usesSetVolume)}
+      </div>`
+    )
+    .join("");
+}
+
+function renderBucketCard(bucket, max, tone, usesSetVolume, hideZero) {
+  const empty = bucket.value <= 0;
+  return `<div class="compare-bucket${empty ? " is-empty" : ""}">
+    <div class="compare-bucket-head">
+      <span>${escapeHTML(bucket.label)}${bucket.share ? ` <em>${escapeHTML(bucket.share)}</em>` : ""}</span>
+      <span class="muted">${escapeHTML(volumeDetail(bucket.exerciseCredit, bucket.setCredit, usesSetVolume))}</span>
+    </div>
+    ${renderVolumeBar(bucket.value, max, tone)}
+    ${renderMuscleLines(bucket.items, usesSetVolume, hideZero)}
+  </div>`;
+}
+
+function renderNamedBreakdown(title, side, usesSetVolume) {
+  const lines = renderMuscleLines(side.items, usesSetVolume, true);
+  return `<div class="compare-group">
+    <div class="region-head">
+      <span>${escapeHTML(title)}</span>
+      <span class="muted">${escapeHTML(volumeDetail(side.exerciseCredit, side.setCredit, usesSetVolume))}</span>
+    </div>
+    ${lines || `<p class="overview-empty">No credit yet.</p>`}
+  </div>`;
+}
+
+function renderUpperLowerView(rows, usesSetVolume) {
+  const lookup = muscleLookup(rows);
+  const used = new Set([...UPPER_BODY_MUSCLES, ...LOWER_BODY_MUSCLES]);
+  markFoldedBackUsed(used);
+  const extras = leftoverNames(rows, used);
+  const extraLower = extras.filter((name) => regionName(name) === "Lower body");
+  const extraUpper = extras.filter((name) => regionName(name) !== "Lower body");
+  const upper = makeSide(lookup, "Upper", [...UPPER_BODY_MUSCLES, ...extraUpper], usesSetVolume, { foldBack: true });
+  const lower = makeSide(lookup, "Lower", [...LOWER_BODY_MUSCLES, ...extraLower], usesSetVolume);
+  const total = upper.value + lower.value;
+  upper.share = shareLabel(upper.value, total);
+  lower.share = shareLabel(lower.value, total);
+  return `<div class="overview-card">
+    ${renderDuel(upper, lower, usesSetVolume)}
+    ${renderNamedBreakdown("Upper", upper, usesSetVolume)}
+    ${renderNamedBreakdown("Lower", lower, usesSetVolume)}
+  </div>`;
+}
+
+function renderPushPullLegsView(rows, usesSetVolume) {
+  const lookup = muscleLookup(rows);
+  const used = new Set([...PUSH_MUSCLES, ...PULL_MUSCLES, ...LEG_MUSCLES, ...PPL_OTHER_MUSCLES]);
+  markFoldedBackUsed(used);
+  const extra = leftoverNames(rows, used);
+  const buckets = [
+    makeSide(lookup, "Push", PUSH_MUSCLES, usesSetVolume),
+    makeSide(lookup, "Pull", PULL_MUSCLES, usesSetVolume, { foldBack: true }),
+    makeSide(lookup, "Legs", LEG_MUSCLES, usesSetVolume),
+    { ...makeSide(lookup, "Other", [...PPL_OTHER_MUSCLES, ...extra], usesSetVolume), optional: true },
+  ];
+  const visible = buckets.filter((bucket) => !bucket.optional || bucket.value > 0);
+  const total = visible.reduce((sum, bucket) => sum + bucket.value, 0);
+  for (const bucket of visible) bucket.share = shareLabel(bucket.value, total);
+  const max = Math.max(...visible.map((bucket) => bucket.value), 0.01);
+  return `<div class="overview-card">${visible
+    .map((bucket, index) => renderBucketCard(bucket, max, index, usesSetVolume, true))
+    .join("")}</div>`;
+}
+
+function markUsed(used, names) {
+  for (const name of names) used.add(name);
+}
+
+function renderAntagonistView(rows, usesSetVolume) {
+  const lookup = muscleLookup(rows);
+  const used = new Set();
+  markFoldedBackUsed(used);
+  const groups = ANTAGONIST_GROUPS.map((group) => {
+    const sides = group.sides.map((side) => {
+      markUsed(used, side.muscles);
+      return makeSide(lookup, side.label, side.muscles, usesSetVolume, { foldBack: Boolean(side.foldBack) });
+    });
+    return { title: group.title, sides };
+  });
+  const extras = leftoverNames(rows, used);
+  const other = groups.find((group) => group.title === "Other");
+  if (other) {
+    for (const name of extras) other.sides.push(makeSide(lookup, name, [name], usesSetVolume));
+  }
+  return `<div class="overview-card">${groups
+    .map((group) => {
+      const empty = group.sides.every((side) => side.value <= 0);
+      const pair = group.sides.length === 2;
+      const body = pair ? renderDuel(group.sides[0], group.sides[1], usesSetVolume) : renderSideStack(group.sides, usesSetVolume);
+      return `<div class="compare-group${empty ? " is-empty" : ""}">
+        <div class="region-head"><span>${escapeHTML(group.title)}</span></div>
+        ${body}
+      </div>`;
+    })
+    .join("")}</div>`;
+}
+
+function renderMuscleView(snapshot) {
+  const switcher = `<div class="view-switcher" role="tablist" aria-label="Muscle comparison view">${MUSCLE_VIEW_OPTIONS.map((option) => {
+    const selected = option.id === muscleView;
+    return `<button type="button" role="tab" class="view-chip${selected ? " selected" : ""}" data-muscle-view="${option.id}" aria-selected="${selected}">${escapeHTML(option.label)}</button>`;
+  }).join("")}</div>`;
+
+  let body;
+  if (!snapshot.rows.length) {
+    body = `<div class="overview-card"><p class="overview-empty">Add exercises to see how the split loads each muscle.</p></div>`;
+  } else if (muscleView === "upper-lower") {
+    body = renderUpperLowerView(snapshot.rows, snapshot.usesSetVolume);
+  } else if (muscleView === "antagonists") {
+    body = renderAntagonistView(snapshot.rows, snapshot.usesSetVolume);
+  } else {
+    body = renderPushPullLegsView(snapshot.rows, snapshot.usesSetVolume);
+  }
+
+  return `${switcher}${body}`;
+}
+
+function renderOverview() {
+  const pane = els.overview.closest(".pane-overview");
+  const scrollTop = pane?.scrollTop ?? 0;
+  const snapshot = buildOverviewSnapshot();
+  const dayWord = snapshot.dayCount === 1 ? "day" : "days";
+  const insightIcon = `<svg class="insight-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M3.2 2.5h9.6c.7 0 1.2.5 1.2 1.2v6.2c0 .7-.5 1.2-1.2 1.2H8.4L5 13.8V11.1H3.2c-.7 0-1.2-.5-1.2-1.2V3.7c0-.7.5-1.2 1.2-1.2Z"/></svg>`;
+  const insights = snapshot.insights.length
+    ? `<div class="overview-block">
+        <h3>Insight</h3>
+        <div class="overview-card">
+          ${snapshot.insights
+            .map((note) => `<div class="insight-row">${insightIcon}<p>${escapeHTML(note)}</p></div>`)
+            .join("")}
+        </div>
+      </div>`
+    : "";
+
+  els.overview.innerHTML = `
+    <h2 class="overview-kicker">Program overview</h2>
+    <p class="overview-title">${escapeHTML(snapshot.programName)}</p>
+    <p class="overview-subtitle">${snapshot.dayCount} ${dayWord} in the rotation</p>
+    <div class="overview-stats">
+      <div class="overview-stat"><strong>${snapshot.dayCount}</strong><span>Days</span></div>
+      <div class="overview-stat"><strong>${snapshot.exerciseCount}</strong><span>Exercises</span></div>
+      <div class="overview-stat"><strong>${snapshot.plannedSets}</strong><span>Sets</span></div>
+    </div>
+    <p class="overview-caption">Primary muscles get full exercise and set credit. Secondary muscles get half, matching Anatomy 101 volume. Totals count each lift once; per-muscle numbers can add up to more because compounds credit more than one muscle.</p>
+    ${insights}
+    <div class="overview-block">
+      <h3>By muscle</h3>
+      ${renderMuscleView(snapshot)}
+    </div>`;
+  if (pane) pane.scrollTop = scrollTop;
 }
 
 function bindListDrag(list, onDrop) {
@@ -493,7 +1081,7 @@ function buildExportObject() {
           primaryMuscles: item.primaryMuscles || [],
           secondaryMuscles: item.secondaryMuscles || [],
           targetSets: item.targetSets,
-          targetReps: item.targetReps,
+          targetReps: DEFAULT_REPS,
           sortIndex: exerciseIndex,
           equipment: item.equipment || inferEquipment(item.name),
         })),
@@ -626,7 +1214,7 @@ function renderPicker() {
                   ${photoMarkup(item, true)}
                   <div class="card-body">
                     <h4>${escapeHTML(item.name)}</h4>
-                    <p>${escapeHTML(item.primary.join(" · "))}</p>
+                    <p>${escapeHTML(displayMuscles(item.primary).join(" · "))}</p>
                     <span class="badge${added ? " on" : ""}">${added ? "Added" : equipmentTitle(item.equipment)}</span>
                   </div>
                 </button>`;
@@ -663,6 +1251,7 @@ async function init() {
   if (!response.ok) throw new Error("Could not load exercise catalog");
   catalog = await response.json();
   byName = new Map(catalog.map((item) => [item.name.toLowerCase(), item]));
+  refreshFoldedBackMuscles();
   restore();
   render();
 
@@ -673,6 +1262,7 @@ async function init() {
     els.exportBtn.title = canExport()
       ? "Download ProgramTemplateFile JSON"
       : "Add a program name and at least one day to export";
+    renderOverview();
   });
 
   els.addDayBtn.addEventListener("click", addDay);
@@ -761,6 +1351,12 @@ async function init() {
     if (!exercise) return;
     if (dayHasExercise(exercise.name)) removeCatalogExercise(exercise);
     else addCatalogExercise(exercise);
+  });
+
+  els.overview.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-muscle-view]");
+    if (!button || !els.overview.contains(button)) return;
+    setMuscleView(button.dataset.muscleView);
   });
 
   els.exportBtn.addEventListener("click", downloadExport);
