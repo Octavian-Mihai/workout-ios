@@ -32,25 +32,20 @@ const ANALYSIS_MUSCLES = [
   "Abductors",
   "Hip Flexors",
 ];
-const CATALOG_TO_ANALYSIS = {
-  Chest: "Chest",
+const LEGACY_MUSCLE_NAMES = {
   "Front Delts": "Anterior Delts",
   "Side Delts": "Lateral Delts",
-  Triceps: "Triceps",
-  Core: "Core & Abs",
-  Lats: "Lats",
-  "Upper Back": "Rhomboids",
-  Traps: "Traps",
-  "Lower Back": "Erectors",
   "Rear Delts": "Posterior Delts",
-  Biceps: "Biceps",
+  Core: "Core & Abs",
+  "Upper Back": "Rhomboids",
+  "Lower Back": "Erectors",
   Forearms: "Forearms & Grip",
   Quads: "Quadriceps",
-  Hamstrings: "Hamstrings",
-  Glutes: "Glutes",
-  Calves: "Calves",
-  Adductors: "Adductors",
 };
+const CATALOG_TO_ANALYSIS = Object.fromEntries([
+  ...ANALYSIS_MUSCLES.map((muscle) => [muscle, muscle]),
+  ...Object.entries(LEGACY_MUSCLE_NAMES),
+]);
 const MUSCLE_REGIONS = {
   Chest: "Upper body",
   "Anterior Delts": "Upper body",
@@ -1106,15 +1101,18 @@ function buildExportObject() {
         uuid: day.uuid,
         name: day.name.trim() || `Day ${dayIndex + 1}`,
         sortIndex: dayIndex,
-        exercises: day.exercises.map((item, exerciseIndex) => ({
-          name: item.name,
-          primaryMuscles: item.primaryMuscles || [],
-          secondaryMuscles: item.secondaryMuscles || [],
-          targetSets: item.targetSets,
-          targetReps: DEFAULT_REPS,
-          sortIndex: exerciseIndex,
-          equipment: item.equipment || inferEquipment(item.name),
-        })),
+        exercises: day.exercises.map((item, exerciseIndex) => {
+          const mapped = analysisTargets(item);
+          return {
+            name: item.name,
+            primaryMuscles: mapped.primary,
+            secondaryMuscles: mapped.secondary,
+            targetSets: item.targetSets,
+            targetReps: DEFAULT_REPS,
+            sortIndex: exerciseIndex,
+            equipment: item.equipment || inferEquipment(item.name),
+          };
+        }),
       })),
     },
   };

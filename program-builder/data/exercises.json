@@ -4,13 +4,13 @@
     "name": "Back Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Adductors",
-      "Core",
-      "Lower Back"
+      "Core & Abs",
+      "Erectors"
     ],
     "equipment": "barbell",
     "image": "back-squat.jpeg"
@@ -20,12 +20,12 @@
     "name": "Front Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
-      "Core"
+      "Quadriceps",
+      "Core & Abs"
     ],
     "secondary": [
       "Glutes",
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "barbell",
     "image": "front-squat.jpg"
@@ -35,12 +35,12 @@
     "name": "Zercher Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
-      "Core",
-      "Lower Back",
+      "Core & Abs",
+      "Erectors",
       "Adductors"
     ],
     "equipment": "barbell",
@@ -51,7 +51,7 @@
     "name": "Hack Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [],
@@ -63,7 +63,7 @@
     "name": "Smith Machine Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [],
@@ -75,7 +75,7 @@
     "name": "Belt Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [],
@@ -87,7 +87,7 @@
     "name": "Sissy Squat",
     "category": "Legs",
     "primary": [
-      "Quads"
+      "Quadriceps"
     ],
     "secondary": [],
     "equipment": "bodyweight",
@@ -98,10 +98,10 @@
     "name": "Reverse Squat",
     "category": "Legs",
     "primary": [
-      "Quads"
+      "Quadriceps"
     ],
     "secondary": [
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "machine",
     "image": "reverse-squat.png"
@@ -111,11 +111,11 @@
     "name": "Landmine Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
-      "Core",
+      "Core & Abs",
       "Adductors"
     ],
     "equipment": "barbell",
@@ -126,7 +126,7 @@
     "name": "Leg Press",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
@@ -141,12 +141,12 @@
     "name": "Bulgarian Split Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Adductors",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "dumbbell",
     "image": "bulgarian-split-squat.jpg"
@@ -156,12 +156,12 @@
     "name": "Zercher Split Squat",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Adductors",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": null
@@ -171,12 +171,12 @@
     "name": "Step-Up",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "dumbbell",
     "image": "step-up.jpg"
@@ -186,12 +186,12 @@
     "name": "Zercher Step-Up",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": null
@@ -201,12 +201,12 @@
     "name": "Walking Lunge",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "dumbbell",
     "image": "walking-lunge.jpg"
@@ -216,12 +216,12 @@
     "name": "Zercher Lunge",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": null
@@ -231,12 +231,12 @@
     "name": "Reverse Lunge",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "dumbbell",
     "image": "reverse-lunge.jpg"
@@ -246,12 +246,12 @@
     "name": "Zercher Reverse Lunge",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": null
@@ -261,12 +261,12 @@
     "name": "Forward Lunge",
     "category": "Legs",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "dumbbell",
     "image": "forward-lunge.jpg"
@@ -276,13 +276,13 @@
     "name": "Box Jump",
     "category": "Explosive",
     "primary": [
-      "Quads",
+      "Quadriceps",
       "Glutes"
     ],
     "secondary": [
       "Hamstrings",
       "Calves",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "bodyweight",
     "image": "box-jump.png"
@@ -292,7 +292,7 @@
     "name": "Leg Extension",
     "category": "Legs",
     "primary": [
-      "Quads"
+      "Quadriceps"
     ],
     "secondary": [],
     "equipment": "machine",
@@ -346,7 +346,7 @@
       "Glutes"
     ],
     "secondary": [
-      "Lower Back"
+      "Erectors"
     ],
     "equipment": "machine",
     "image": "glute-ham-raise.jpg"
@@ -360,7 +360,7 @@
       "Glutes"
     ],
     "secondary": [
-      "Lower Back",
+      "Erectors",
       "Traps"
     ],
     "equipment": "barbell",
@@ -373,13 +373,13 @@
     "primary": [
       "Hamstrings",
       "Glutes",
-      "Lower Back"
+      "Erectors"
     ],
     "secondary": [
-      "Quads",
+      "Quadriceps",
       "Traps",
       "Lats",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": "deadlift.png"
@@ -391,11 +391,11 @@
     "primary": [
       "Hamstrings",
       "Glutes",
-      "Lower Back"
+      "Erectors"
     ],
     "secondary": [
-      "Quads",
-      "Core",
+      "Quadriceps",
+      "Core & Abs",
       "Traps"
     ],
     "equipment": "barbell",
@@ -407,7 +407,7 @@
     "category": "Legs",
     "primary": [
       "Hamstrings",
-      "Lower Back"
+      "Erectors"
     ],
     "secondary": [
       "Glutes"
@@ -422,10 +422,10 @@
     "primary": [
       "Hamstrings",
       "Glutes",
-      "Lower Back"
+      "Erectors"
     ],
     "secondary": [
-      "Core",
+      "Core & Abs",
       "Lats"
     ],
     "equipment": "machine",
@@ -437,11 +437,11 @@
     "category": "Legs",
     "primary": [
       "Hamstrings",
-      "Lower Back"
+      "Erectors"
     ],
     "secondary": [
       "Glutes",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": "jefferson-curl.jpg"
@@ -452,11 +452,11 @@
     "category": "Legs",
     "primary": [
       "Hamstrings",
-      "Lower Back"
+      "Erectors"
     ],
     "secondary": [
       "Glutes",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": "zercher-jefferson-curl.jpg"
@@ -466,7 +466,7 @@
     "name": "Back Extension",
     "category": "Legs",
     "primary": [
-      "Lower Back",
+      "Erectors",
       "Glutes"
     ],
     "secondary": [
@@ -484,7 +484,7 @@
       "Hamstrings"
     ],
     "secondary": [
-      "Lower Back"
+      "Erectors"
     ],
     "equipment": "machine",
     "image": "reverse-hyper.jpg"
@@ -499,9 +499,9 @@
       "Traps"
     ],
     "secondary": [
-      "Quads",
-      "Core",
-      "Front Delts",
+      "Quadriceps",
+      "Core & Abs",
+      "Anterior Delts",
       "Lats"
     ],
     "equipment": "barbell",
@@ -517,9 +517,9 @@
       "Traps"
     ],
     "secondary": [
-      "Quads",
-      "Core",
-      "Front Delts"
+      "Quadriceps",
+      "Core & Abs",
+      "Anterior Delts"
     ],
     "equipment": "barbell",
     "image": null
@@ -534,7 +534,7 @@
       "Traps"
     ],
     "secondary": [
-      "Quads",
+      "Quadriceps",
       "Lats"
     ],
     "equipment": "barbell",
@@ -550,8 +550,8 @@
       "Traps"
     ],
     "secondary": [
-      "Quads",
-      "Core",
+      "Quadriceps",
+      "Core & Abs",
       "Biceps"
     ],
     "equipment": "barbell",
@@ -567,9 +567,9 @@
       "Traps"
     ],
     "secondary": [
-      "Quads",
-      "Core",
-      "Front Delts",
+      "Quadriceps",
+      "Core & Abs",
+      "Anterior Delts",
       "Triceps"
     ],
     "equipment": "barbell",
@@ -584,7 +584,7 @@
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": "hip-thrust.png"
@@ -598,7 +598,7 @@
     ],
     "secondary": [
       "Hamstrings",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": "barbell-hip-thrust.jpg"
@@ -621,7 +621,7 @@
     "name": "Machine Hip Abduction",
     "category": "Legs",
     "primary": [
-      "Glutes"
+      "Abductors"
     ],
     "secondary": [],
     "equipment": "machine",
@@ -654,7 +654,7 @@
     "name": "Tibialis Raise",
     "category": "Legs",
     "primary": [
-      "Calves"
+      "Tibialis"
     ],
     "secondary": [],
     "equipment": "bodyweight",
@@ -669,7 +669,7 @@
     ],
     "secondary": [
       "Triceps",
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "barbell",
     "image": "barbell-bench-press.jpg"
@@ -680,7 +680,7 @@
     "category": "Push",
     "primary": [
       "Chest",
-      "Front Delts"
+      "Anterior Delts"
     ],
     "secondary": [
       "Triceps"
@@ -697,7 +697,7 @@
       "Chest"
     ],
     "secondary": [
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "barbell",
     "image": "close-grip-bench-press.jpg"
@@ -708,7 +708,7 @@
     "category": "Push",
     "primary": [
       "Chest",
-      "Front Delts"
+      "Anterior Delts"
     ],
     "secondary": [
       "Triceps"
@@ -725,7 +725,7 @@
     ],
     "secondary": [
       "Triceps",
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "dumbbell",
     "image": "dumbbell-bench-press.png"
@@ -739,7 +739,7 @@
     ],
     "secondary": [
       "Triceps",
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "machine",
     "image": "machine-chest-press.png"
@@ -753,7 +753,7 @@
       "Triceps"
     ],
     "secondary": [
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "bodyweight",
     "image": "dips.jpg"
@@ -767,8 +767,8 @@
     ],
     "secondary": [
       "Triceps",
-      "Front Delts",
-      "Core"
+      "Anterior Delts",
+      "Core & Abs"
     ],
     "equipment": "bodyweight",
     "image": "push-up.png"
@@ -778,12 +778,12 @@
     "name": "Overhead Press",
     "category": "Push",
     "primary": [
-      "Front Delts"
+      "Anterior Delts"
     ],
     "secondary": [
       "Triceps",
       "Traps",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": "overhead-press.png"
@@ -794,11 +794,11 @@
     "category": "Push",
     "primary": [
       "Chest",
-      "Front Delts"
+      "Anterior Delts"
     ],
     "secondary": [
       "Triceps",
-      "Core"
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": "landmine-press.jpg"
@@ -808,8 +808,8 @@
     "name": "Dumbbell Shoulder Press",
     "category": "Push",
     "primary": [
-      "Front Delts",
-      "Side Delts"
+      "Anterior Delts",
+      "Lateral Delts"
     ],
     "secondary": [
       "Triceps"
@@ -822,8 +822,8 @@
     "name": "Machine Shoulder Press",
     "category": "Push",
     "primary": [
-      "Front Delts",
-      "Side Delts"
+      "Anterior Delts",
+      "Lateral Delts"
     ],
     "secondary": [
       "Triceps"
@@ -836,7 +836,7 @@
     "name": "Lateral Raise",
     "category": "Push",
     "primary": [
-      "Side Delts"
+      "Lateral Delts"
     ],
     "secondary": [
       "Traps"
@@ -849,7 +849,7 @@
     "name": "Cable Lateral Raise",
     "category": "Push",
     "primary": [
-      "Side Delts"
+      "Lateral Delts"
     ],
     "secondary": [
       "Traps"
@@ -862,7 +862,7 @@
     "name": "Front Raise",
     "category": "Push",
     "primary": [
-      "Front Delts"
+      "Anterior Delts"
     ],
     "secondary": [],
     "equipment": "dumbbell",
@@ -876,7 +876,7 @@
       "Chest"
     ],
     "secondary": [
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "machine",
     "image": "cable-fly.jpg"
@@ -889,7 +889,7 @@
       "Chest"
     ],
     "secondary": [
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "dumbbell",
     "image": "dumbbell-fly.jpg"
@@ -902,7 +902,7 @@
       "Chest"
     ],
     "secondary": [
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "machine",
     "image": "pec-deck.jpg"
@@ -946,12 +946,12 @@
     "category": "Pull",
     "primary": [
       "Lats",
-      "Upper Back"
+      "Rhomboids"
     ],
     "secondary": [
       "Biceps",
-      "Rear Delts",
-      "Lower Back"
+      "Posterior Delts",
+      "Erectors"
     ],
     "equipment": "barbell",
     "image": "barbell-row.jpg"
@@ -962,12 +962,12 @@
     "category": "Pull",
     "primary": [
       "Lats",
-      "Upper Back"
+      "Rhomboids"
     ],
     "secondary": [
       "Biceps",
-      "Rear Delts",
-      "Core"
+      "Posterior Delts",
+      "Core & Abs"
     ],
     "equipment": "barbell",
     "image": "landmine-row.jpg"
@@ -978,11 +978,11 @@
     "category": "Pull",
     "primary": [
       "Lats",
-      "Upper Back"
+      "Rhomboids"
     ],
     "secondary": [
       "Biceps",
-      "Rear Delts"
+      "Posterior Delts"
     ],
     "equipment": "dumbbell",
     "image": "chest-supported-dumbbell-row.png"
@@ -993,11 +993,11 @@
     "category": "Pull",
     "primary": [
       "Lats",
-      "Upper Back"
+      "Rhomboids"
     ],
     "secondary": [
       "Biceps",
-      "Rear Delts"
+      "Posterior Delts"
     ],
     "equipment": "machine",
     "image": "chest-supported-t-bar-row.jpg"
@@ -1008,11 +1008,11 @@
     "category": "Pull",
     "primary": [
       "Lats",
-      "Upper Back"
+      "Rhomboids"
     ],
     "secondary": [
       "Biceps",
-      "Rear Delts"
+      "Posterior Delts"
     ],
     "equipment": "dumbbell",
     "image": "one-arm-dumbbell-row.jpg"
@@ -1023,11 +1023,11 @@
     "category": "Pull",
     "primary": [
       "Lats",
-      "Upper Back"
+      "Rhomboids"
     ],
     "secondary": [
       "Biceps",
-      "Rear Delts"
+      "Posterior Delts"
     ],
     "equipment": "machine",
     "image": "one-arm-cable-row.jpg"
@@ -1038,11 +1038,11 @@
     "category": "Pull",
     "primary": [
       "Lats",
-      "Upper Back"
+      "Rhomboids"
     ],
     "secondary": [
       "Biceps",
-      "Rear Delts"
+      "Posterior Delts"
     ],
     "equipment": "machine",
     "image": "seated-cable-row.jpg"
@@ -1056,7 +1056,7 @@
     ],
     "secondary": [
       "Biceps",
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "machine",
     "image": "lat-pulldown.jpg"
@@ -1070,7 +1070,7 @@
       "Biceps"
     ],
     "secondary": [
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "machine",
     "image": "close-grip-lat-pulldown.jpeg"
@@ -1084,7 +1084,7 @@
     ],
     "secondary": [
       "Biceps",
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "machine",
     "image": "wide-grip-lat-pulldown.jpg"
@@ -1098,7 +1098,7 @@
     ],
     "secondary": [
       "Biceps",
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "bodyweight",
     "image": "pull-up.jpg"
@@ -1112,7 +1112,7 @@
       "Biceps"
     ],
     "secondary": [
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "bodyweight",
     "image": "chin-up.jpg"
@@ -1122,11 +1122,11 @@
     "name": "Face Pull",
     "category": "Pull",
     "primary": [
-      "Rear Delts",
+      "Posterior Delts",
       "Traps"
     ],
     "secondary": [
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "machine",
     "image": "face-pull.jpg"
@@ -1136,10 +1136,10 @@
     "name": "Rear Delt Fly",
     "category": "Pull",
     "primary": [
-      "Rear Delts"
+      "Posterior Delts"
     ],
     "secondary": [
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "dumbbell",
     "image": "rear-delt-fly.jpg"
@@ -1149,10 +1149,10 @@
     "name": "Reverse Pec Deck",
     "category": "Pull",
     "primary": [
-      "Rear Delts"
+      "Posterior Delts"
     ],
     "secondary": [
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "machine",
     "image": "reverse-pec-deck.jpg"
@@ -1163,7 +1163,7 @@
     "category": "Pull",
     "primary": [
       "Traps",
-      "Side Delts"
+      "Lateral Delts"
     ],
     "secondary": [
       "Biceps"
@@ -1201,7 +1201,7 @@
       "Biceps"
     ],
     "secondary": [
-      "Forearms"
+      "Forearms & Grip"
     ],
     "equipment": "barbell",
     "image": "barbell-curl.jpg"
@@ -1214,7 +1214,7 @@
       "Biceps"
     ],
     "secondary": [
-      "Forearms"
+      "Forearms & Grip"
     ],
     "equipment": "dumbbell",
     "image": "dumbbell-curl.jpg"
@@ -1225,7 +1225,7 @@
     "category": "Pull",
     "primary": [
       "Biceps",
-      "Forearms"
+      "Forearms & Grip"
     ],
     "secondary": [],
     "equipment": "dumbbell",
@@ -1292,7 +1292,7 @@
     "category": "Pull",
     "primary": [
       "Biceps",
-      "Forearms"
+      "Forearms & Grip"
     ],
     "secondary": [],
     "equipment": "dumbbell",
@@ -1303,7 +1303,7 @@
     "name": "Wrist Curl",
     "category": "Pull",
     "primary": [
-      "Forearms"
+      "Forearms & Grip"
     ],
     "secondary": [],
     "equipment": "dumbbell",
@@ -1314,7 +1314,7 @@
     "name": "Reverse Wrist Curl",
     "category": "Pull",
     "primary": [
-      "Forearms"
+      "Forearms & Grip"
     ],
     "secondary": [],
     "equipment": "dumbbell",
@@ -1325,10 +1325,10 @@
     "name": "Plank",
     "category": "Core",
     "primary": [
-      "Core"
+      "Core & Abs"
     ],
     "secondary": [
-      "Front Delts",
+      "Anterior Delts",
       "Glutes"
     ],
     "equipment": "bodyweight",
@@ -1339,12 +1339,12 @@
     "name": "Zercher Carry",
     "category": "Core",
     "primary": [
-      "Core"
+      "Core & Abs"
     ],
     "secondary": [
-      "Quads",
+      "Quadriceps",
       "Glutes",
-      "Upper Back"
+      "Rhomboids"
     ],
     "equipment": "barbell",
     "image": "zercher-carry.jpg"
@@ -1354,12 +1354,12 @@
     "name": "Farmer's Walk",
     "category": "Core",
     "primary": [
-      "Core"
+      "Core & Abs"
     ],
     "secondary": [
       "Traps",
-      "Forearms",
-      "Quads"
+      "Forearms & Grip",
+      "Quadriceps"
     ],
     "equipment": "dumbbell",
     "image": "farmers-walk.jpg"
@@ -1369,10 +1369,11 @@
     "name": "Hanging Leg Raise",
     "category": "Core",
     "primary": [
-      "Core"
+      "Hip Flexors"
     ],
     "secondary": [
-      "Forearms"
+      "Core & Abs",
+      "Forearms & Grip"
     ],
     "equipment": "dumbbell",
     "image": "hanging-leg-raise.jpg"
@@ -1382,9 +1383,11 @@
     "name": "Sit-Up",
     "category": "Core",
     "primary": [
-      "Core"
+      "Hip Flexors"
     ],
-    "secondary": [],
+    "secondary": [
+      "Core & Abs"
+    ],
     "equipment": "bodyweight",
     "image": "sit-up.jpg"
   },
@@ -1393,7 +1396,7 @@
     "name": "Cable Crunch",
     "category": "Core",
     "primary": [
-      "Core"
+      "Core & Abs"
     ],
     "secondary": [],
     "equipment": "machine",
@@ -1404,7 +1407,7 @@
     "name": "Cable Woodchop",
     "category": "Core",
     "primary": [
-      "Core"
+      "Core & Abs"
     ],
     "secondary": [],
     "equipment": "machine",
@@ -1415,7 +1418,7 @@
     "name": "Landmine Rotation",
     "category": "Core",
     "primary": [
-      "Core"
+      "Core & Abs"
     ],
     "secondary": [],
     "equipment": "barbell",
@@ -1426,11 +1429,11 @@
     "name": "Ab Wheel",
     "category": "Core",
     "primary": [
-      "Core"
+      "Core & Abs"
     ],
     "secondary": [
       "Lats",
-      "Front Delts"
+      "Anterior Delts"
     ],
     "equipment": "bodyweight",
     "image": "ab-wheel.jpg"

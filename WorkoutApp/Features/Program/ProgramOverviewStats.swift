@@ -120,7 +120,8 @@ private extension ProgramOverviewSnapshot {
         var seen = Set<String>()
         var result: [String] = []
         for raw in names {
-            let name = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+            let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+            let name = MuscleGroup.parse(trimmed)?.rawValue ?? trimmed
             guard !name.isEmpty, seen.insert(name).inserted else { continue }
             result.append(name)
         }
@@ -128,7 +129,7 @@ private extension ProgramOverviewSnapshot {
     }
 
     static func regionName(for muscle: String) -> String {
-        MuscleGroup(rawValue: muscle)?.region ?? "Other"
+        MuscleGroup.parse(muscle)?.region ?? "Other"
     }
 
     static func insights(rows: [ProgramMuscleRow], exerciseCount: Int, plannedSets: Int) -> [String] {
@@ -178,8 +179,8 @@ private extension ProgramOverviewSnapshot {
             }
         }
 
-        let push = credit(["Chest", "Front Delts", "Side Delts", "Triceps"])
-        let pull = credit(["Lats", "Upper Back", "Traps", "Rear Delts", "Biceps", "Forearms"])
+        let push = credit(["Chest", "Anterior Delts", "Lateral Delts", "Triceps"])
+        let pull = credit(["Lats", "Rhomboids", "Traps", "Posterior Delts", "Biceps", "Forearms & Grip"])
         if push > 0 || pull > 0 {
             let heavier = max(push, pull)
             let lighter = min(push, pull)
@@ -192,7 +193,7 @@ private extension ProgramOverviewSnapshot {
             }
         }
 
-        let quads = credit(["Quads"])
+        let quads = credit(["Quadriceps"])
         let posterior = credit(["Hamstrings", "Glutes"])
         if quads > 0 || posterior > 0 {
             if quads > posterior * 1.6 {
@@ -202,8 +203,8 @@ private extension ProgramOverviewSnapshot {
             }
         }
 
-        let frontPress = credit(["Chest", "Front Delts"])
-        let rearSupport = credit(["Rear Delts", "Upper Back"])
+        let frontPress = credit(["Chest", "Anterior Delts"])
+        let rearSupport = credit(["Posterior Delts", "Rhomboids"])
         if frontPress > 0, rearSupport < frontPress * 0.45 {
             notes.append("Pressing is loaded relative to rear delts and upper back. Rows or face pulls would even the shoulder.")
         }
