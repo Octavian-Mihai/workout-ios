@@ -467,6 +467,38 @@ function restore() {
   }
 }
 
+function catalogMatch(item) {
+  if (item?.catalogId) {
+    const byId = catalog.find((exercise) => exercise.id === item.catalogId);
+    if (byId) return byId;
+  }
+  return byName.get(String(item?.name || "").toLowerCase()) || null;
+}
+
+function applyCatalogToDraft() {
+  let changed = false;
+  for (const day of state.days) {
+    for (const item of day.exercises) {
+      const cat = catalogMatch(item);
+      if (!cat) continue;
+      const same =
+        item.catalogId === cat.id &&
+        item.name === cat.name &&
+        JSON.stringify(item.primaryMuscles) === JSON.stringify(cat.primary) &&
+        JSON.stringify(item.secondaryMuscles) === JSON.stringify(cat.secondary) &&
+        item.equipment === cat.equipment;
+      if (same) continue;
+      item.catalogId = cat.id;
+      item.name = cat.name;
+      item.primaryMuscles = [...cat.primary];
+      item.secondaryMuscles = [...cat.secondary];
+      item.equipment = cat.equipment;
+      changed = true;
+    }
+  }
+  if (changed) persist();
+}
+
 function showToast(message) {
   els.toast.textContent = message;
   els.toast.classList.remove("hidden");
@@ -569,39 +601,9 @@ function mapCatalogMuscles(names) {
   return uniqueMuscles((names || []).map(mapCatalogMuscle).filter(Boolean));
 }
 
-function replaceMuscle(names, from, to) {
-  return uniqueMuscles(names.map((name) => (name === from ? to : name)));
-}
-
 function analysisTargets(exercise) {
-  const id = String(exercise.catalogId || exercise.id || "").toLowerCase();
-  const name = String(exercise.name || "").toLowerCase();
   let primary = mapCatalogMuscles(exercise.primary || exercise.primaryMuscles);
   let secondary = mapCatalogMuscles(exercise.secondary || exercise.secondaryMuscles);
-
-  if (id === "tibialis-raise" || name === "tibialis raise") {
-    primary = replaceMuscle(primary, "Calves", "Tibialis");
-    secondary = replaceMuscle(secondary, "Calves", "Tibialis");
-    if (!primary.includes("Tibialis") && !secondary.includes("Tibialis")) primary.unshift("Tibialis");
-  }
-
-  if (id === "machine-hip-abduction" || name === "machine hip abduction") {
-    primary = replaceMuscle(primary, "Glutes", "Abductors");
-    secondary = replaceMuscle(secondary, "Glutes", "Abductors");
-    if (!primary.includes("Abductors") && !secondary.includes("Abductors")) primary.unshift("Abductors");
-  }
-
-  const isSitUp = id === "sit-up" || name === "sit-up";
-  const isHangingLegRaise = id === "hanging-leg-raise" || name === "hanging leg raise";
-  const isNamedHipFlexor = name.includes("hip flexor");
-  if (isSitUp || isHangingLegRaise || isNamedHipFlexor) {
-    const hadCore = primary.includes("Core & Abs") || secondary.includes("Core & Abs");
-    primary = primary.filter((muscle) => muscle !== "Hip Flexors" && muscle !== "Core & Abs");
-    secondary = secondary.filter((muscle) => muscle !== "Hip Flexors" && muscle !== "Core & Abs");
-    primary.unshift("Hip Flexors");
-    if (hadCore || isSitUp || isHangingLegRaise) secondary.unshift("Core & Abs");
-  }
-
   const primarySet = new Set(primary);
   secondary = secondary.filter((muscle) => !primarySet.has(muscle));
   return { primary, secondary };
@@ -1277,11 +1279,12 @@ function clamp(value) {
 
 async function init() {
   populateFilters();
-  const response = await fetch("data/exercises.json");
+  const response = await fetch("data/exercises.json", { cache: "no-store" });
   if (!response.ok) throw new Error("Could not load exercise catalog");
   catalog = await response.json();
   byName = new Map(catalog.map((item) => [item.name.toLowerCase(), item]));
   restore();
+  applyCatalogToDraft();
   render();
 
   els.programName.addEventListener("input", () => {
