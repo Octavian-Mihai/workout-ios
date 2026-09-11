@@ -347,7 +347,8 @@ function containsAny(n, needles) {
   return needles.some((needle) => n.includes(needle));
 }
 
-function inferPattern(name, category) {
+function inferPattern(name, category, explicit) {
+  if (explicit) return explicit;
   const n = name.toLowerCase();
   if (category === "Pull") {
     if (containsAny(n, ["wrist", "shrug", "face pull", "rear delt", "reverse pec", "upright"])) {
@@ -405,8 +406,8 @@ function inferPattern(name, category) {
 
 function displaySorted(items) {
   return [...items].sort((a, b) => {
-    const ra = PATTERN_RANK.indexOf(inferPattern(a.name, a.category));
-    const rb = PATTERN_RANK.indexOf(inferPattern(b.name, b.category));
+    const ra = PATTERN_RANK.indexOf(inferPattern(a.name, a.category, a.pattern));
+    const rb = PATTERN_RANK.indexOf(inferPattern(b.name, b.category, b.pattern));
     if (ra !== rb) return ra - rb;
     return a.name.localeCompare(b.name);
   });
