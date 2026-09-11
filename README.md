@@ -7,7 +7,7 @@ Requires **iOS 17+**.
 This repo has two parts:
 
 - **iPhone app** — SwiftUI client in `WorkoutApp/`
-- **Program Builder** — static site in `program-builder/`
+- **Program Builder** — static site in `program-builder/` or [live website](https://program-builder-mu.vercel.app/)
 
 ---
 
@@ -109,7 +109,7 @@ This repo has two parts:
 
 Desktop site to assemble rotating programs from the same exercise catalog (names and photos). Overview analysis covers 20 muscles, with views for **Upper / lower**, **Push / pull / legs**, and **Antagonists**. Export JSON and import it in the app via Workout → Programs → Import.
 
-**Live site:** [Program Builder](https://YOUR-DEPLOY-URL) — paste your deployed URL here after you publish.
+### **Live site:** *[Program Builder](https://program-builder-mu.vercel.app/)*
 
 ### Run locally
 
@@ -125,9 +125,11 @@ Static files live in `program-builder/`. On Vercel, set the project **Root Direc
 
 ### Screenshots
 
-| Builder | Exercise picker |
-|:---:|:---:|
-| ![Program Builder workspace](docs/screenshots/program-builder.png) | ![Exercise picker](docs/screenshots/program-builder-picker.png) |
+#### Builder
+![Program Builder workspace](docs/screenshots/program-builder.png) 
+
+#### Exercise picker
+![Exercise picker](docs/screenshots/program-builder-picker.png)
 
 | Overview | Antagonists |
 |:---:|:---:|
