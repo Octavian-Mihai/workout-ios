@@ -90,7 +90,7 @@
       "Quadriceps"
     ],
     "secondary": [],
-    "equipment": "bodyweight",
+    "equipment": "dumbbell",
     "image": "sissy-squat.png"
   },
   {
@@ -98,10 +98,11 @@
     "name": "Reverse Squat",
     "category": "Legs",
     "primary": [
-      "Quadriceps"
+      "Hip Flexors"
     ],
     "secondary": [
-      "Core & Abs"
+      "Core & Abs",
+      "Quadriceps"
     ],
     "equipment": "machine",
     "image": "reverse-squat.png"
@@ -127,10 +128,10 @@
     "category": "Legs",
     "primary": [
       "Quadriceps",
-      "Glutes"
+      "Hamstrings"
     ],
     "secondary": [
-      "Hamstrings",
+      "Glutes",
       "Adductors"
     ],
     "equipment": "machine",
@@ -145,6 +146,7 @@
       "Glutes"
     ],
     "secondary": [
+      "Hamstrings",
       "Adductors",
       "Core & Abs"
     ],
@@ -160,6 +162,7 @@
       "Glutes"
     ],
     "secondary": [
+      "Hamstrings",
       "Adductors",
       "Core & Abs"
     ],
@@ -171,11 +174,11 @@
     "name": "Step-Up",
     "category": "Legs",
     "primary": [
-      "Quadriceps",
+      "Hamstrings",
       "Glutes"
     ],
     "secondary": [
-      "Hamstrings",
+      "Quadriceps",
       "Core & Abs"
     ],
     "equipment": "dumbbell",
@@ -186,11 +189,11 @@
     "name": "Zercher Step-Up",
     "category": "Legs",
     "primary": [
-      "Quadriceps",
+      "Hamstrings",
       "Glutes"
     ],
     "secondary": [
-      "Hamstrings",
+      "Quadriceps",
       "Core & Abs"
     ],
     "equipment": "barbell",
@@ -201,11 +204,11 @@
     "name": "Walking Lunge",
     "category": "Legs",
     "primary": [
-      "Quadriceps",
+      "Hamstrings",
       "Glutes"
     ],
     "secondary": [
-      "Hamstrings",
+      "Quadriceps",
       "Core & Abs"
     ],
     "equipment": "dumbbell",
@@ -216,11 +219,11 @@
     "name": "Zercher Lunge",
     "category": "Legs",
     "primary": [
-      "Quadriceps",
+      "Hamstrings",
       "Glutes"
     ],
     "secondary": [
-      "Hamstrings",
+      "Quadriceps",
       "Core & Abs"
     ],
     "equipment": "barbell",
@@ -231,11 +234,11 @@
     "name": "Reverse Lunge",
     "category": "Legs",
     "primary": [
-      "Quadriceps",
+      "Hamstrings",
       "Glutes"
     ],
     "secondary": [
-      "Hamstrings",
+      "Quadriceps",
       "Core & Abs"
     ],
     "equipment": "dumbbell",
@@ -246,11 +249,11 @@
     "name": "Zercher Reverse Lunge",
     "category": "Legs",
     "primary": [
-      "Quadriceps",
+      "Hamstrings",
       "Glutes"
     ],
     "secondary": [
-      "Hamstrings",
+      "Quadriceps",
       "Core & Abs"
     ],
     "equipment": "barbell",
@@ -305,9 +308,7 @@
     "primary": [
       "Hamstrings"
     ],
-    "secondary": [
-      "Calves"
-    ],
+    "secondary": [],
     "equipment": "machine",
     "image": "seated-leg-curl.jpg"
   },
@@ -319,7 +320,7 @@
       "Hamstrings"
     ],
     "secondary": [
-      "Calves"
+      "Erectors"
     ],
     "equipment": "machine",
     "image": "lying-leg-curl.png"
@@ -331,9 +332,7 @@
     "primary": [
       "Hamstrings"
     ],
-    "secondary": [
-      "Glutes"
-    ],
+    "secondary": [],
     "equipment": "bodyweight",
     "image": "nordic-curl.jpg"
   },
@@ -360,10 +359,9 @@
       "Glutes"
     ],
     "secondary": [
-      "Erectors",
-      "Traps"
+      "Erectors"
     ],
-    "equipment": "barbell",
+    "equipment": "dumbbell",
     "image": "romanian-deadlift.png"
   },
   {
@@ -378,7 +376,6 @@
     "secondary": [
       "Quadriceps",
       "Traps",
-      "Lats",
       "Core & Abs"
     ],
     "equipment": "barbell",
@@ -420,15 +417,14 @@
     "name": "Seated Good Morning",
     "category": "Legs",
     "primary": [
-      "Hamstrings",
-      "Glutes",
+      "Adductors",
       "Erectors"
     ],
     "secondary": [
       "Core & Abs",
-      "Lats"
+      "Hamstrings"
     ],
-    "equipment": "machine",
+    "equipment": "barbell",
     "image": "seated-good-morning.png"
   },
   {
@@ -472,7 +468,7 @@
     "secondary": [
       "Hamstrings"
     ],
-    "equipment": "bodyweight",
+    "equipment": "machine",
     "image": "back-extension.jpg"
   },
   {
@@ -576,6 +572,112 @@
     "image": null
   },
   {
+    "id": "kettlebell-swing",
+    "name": "Kettlebell Swing",
+    "category": "Explosive",
+    "primary": [
+      "Hamstrings"
+    ],
+    "secondary": [
+      "Glutes",
+      "Erectors",
+      "Core & Abs",
+      "Adductors",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-snatch",
+    "name": "Kettlebell Snatch",
+    "category": "Explosive",
+    "primary": [
+      "Glutes",
+      "Hamstrings",
+      "Anterior Delts"
+    ],
+    "secondary": [
+      "Biceps",
+      "Core & Abs",
+      "Erectors",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-clean",
+    "name": "Kettlebell Clean",
+    "category": "Explosive",
+    "primary": [
+      "Glutes",
+      "Hamstrings",
+      "Biceps"
+    ],
+    "secondary": [
+      "Anterior Delts",
+      "Core & Abs",
+      "Erectors",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-clean-and-jerk",
+    "name": "Kettlebell Clean and Jerk",
+    "category": "Explosive",
+    "primary": [
+      "Glutes",
+      "Hamstrings",
+      "Anterior Delts"
+    ],
+    "secondary": [
+      "Triceps",
+      "Core & Abs",
+      "Biceps",
+      "Quadriceps",
+      "Erectors"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-high-pull",
+    "name": "Kettlebell High Pull",
+    "category": "Explosive",
+    "primary": [
+      "Traps",
+      "Lateral Delts"
+    ],
+    "secondary": [
+      "Glutes",
+      "Hamstrings",
+      "Biceps",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-push-press",
+    "name": "Kettlebell Push Press",
+    "category": "Explosive",
+    "primary": [
+      "Anterior Delts",
+      "Triceps"
+    ],
+    "secondary": [
+      "Quadriceps",
+      "Glutes",
+      "Core & Abs",
+      "Lateral Delts"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
     "id": "hip-thrust",
     "name": "Hip Thrust",
     "category": "Legs",
@@ -583,10 +685,9 @@
       "Glutes"
     ],
     "secondary": [
-      "Hamstrings",
-      "Core & Abs"
+      "Hamstrings"
     ],
-    "equipment": "barbell",
+    "equipment": "machine",
     "image": "hip-thrust.png"
   },
   {
@@ -657,7 +758,7 @@
       "Tibialis"
     ],
     "secondary": [],
-    "equipment": "bodyweight",
+    "equipment": "machine",
     "image": "tibialis-raise.jpg"
   },
   {
@@ -679,13 +780,13 @@
     "name": "Incline Barbell Bench Press",
     "category": "Push",
     "primary": [
-      "Chest",
-      "Anterior Delts"
+      "Chest"
     ],
     "secondary": [
-      "Triceps"
+      "Triceps",
+      "Anterior Delts"
     ],
-    "equipment": "barbell",
+    "equipment": "machine",
     "image": "incline-barbell-bench-press.jpeg"
   },
   {
@@ -693,13 +794,13 @@
     "name": "Close-Grip Bench Press",
     "category": "Push",
     "primary": [
-      "Triceps",
-      "Chest"
+      "Triceps"
     ],
     "secondary": [
+      "Chest",
       "Anterior Delts"
     ],
-    "equipment": "barbell",
+    "equipment": "machine",
     "image": "close-grip-bench-press.jpg"
   },
   {
@@ -854,7 +955,7 @@
     "secondary": [
       "Traps"
     ],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "cable-lateral-raise.jpg"
   },
   {
@@ -878,7 +979,7 @@
     "secondary": [
       "Anterior Delts"
     ],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "cable-fly.jpg"
   },
   {
@@ -915,7 +1016,7 @@
       "Triceps"
     ],
     "secondary": [],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "tricep-pushdown.png"
   },
   {
@@ -926,7 +1027,7 @@
       "Triceps"
     ],
     "secondary": [],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "overhead-cable-triceps-extension.png"
   },
   {
@@ -1029,7 +1130,7 @@
       "Biceps",
       "Posterior Delts"
     ],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "one-arm-cable-row.jpg"
   },
   {
@@ -1044,7 +1145,7 @@
       "Biceps",
       "Posterior Delts"
     ],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "seated-cable-row.jpg"
   },
   {
@@ -1058,7 +1159,7 @@
       "Biceps",
       "Rhomboids"
     ],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "lat-pulldown.jpg"
   },
   {
@@ -1072,7 +1173,7 @@
     "secondary": [
       "Rhomboids"
     ],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "close-grip-lat-pulldown.jpeg"
   },
   {
@@ -1086,7 +1187,7 @@
       "Biceps",
       "Rhomboids"
     ],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "wide-grip-lat-pulldown.jpg"
   },
   {
@@ -1128,7 +1229,7 @@
     "secondary": [
       "Rhomboids"
     ],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "face-pull.jpg"
   },
   {
@@ -1261,7 +1362,7 @@
       "Biceps"
     ],
     "secondary": [],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "cable-curl.jpg"
   },
   {
@@ -1306,7 +1407,7 @@
       "Forearms & Grip"
     ],
     "secondary": [],
-    "equipment": "dumbbell",
+    "equipment": "functionalTrainer",
     "image": "wrist-curl.jpg"
   },
   {
@@ -1317,7 +1418,7 @@
       "Forearms & Grip"
     ],
     "secondary": [],
-    "equipment": "dumbbell",
+    "equipment": "functionalTrainer",
     "image": "reverse-wrist-curl.jpg"
   },
   {
@@ -1399,7 +1500,7 @@
       "Core & Abs"
     ],
     "secondary": [],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "cable-crunch.jpg"
   },
   {
@@ -1410,7 +1511,7 @@
       "Core & Abs"
     ],
     "secondary": [],
-    "equipment": "machine",
+    "equipment": "functionalTrainer",
     "image": "cable-woodchop.jpg"
   },
   {
@@ -1437,129 +1538,5 @@
     ],
     "equipment": "bodyweight",
     "image": "ab-wheel.jpg"
-  },
-  {
-    "id": "kettlebell-swing",
-    "name": "Kettlebell Swing",
-    "category": "Explosive",
-    "primary": [
-      "Glutes",
-      "Hamstrings"
-    ],
-    "secondary": [
-      "Erectors",
-      "Core & Abs",
-      "Traps",
-      "Forearms & Grip"
-    ],
-    "equipment": "kettlebell",
-    "image": null
-  },
-  {
-    "id": "kettlebell-snatch",
-    "name": "Kettlebell Snatch",
-    "category": "Explosive",
-    "primary": [
-      "Glutes",
-      "Hamstrings",
-      "Traps"
-    ],
-    "secondary": [
-      "Anterior Delts",
-      "Core & Abs",
-      "Erectors",
-      "Forearms & Grip"
-    ],
-    "equipment": "kettlebell",
-    "image": null
-  },
-  {
-    "id": "kettlebell-clean",
-    "name": "Kettlebell Clean",
-    "category": "Explosive",
-    "primary": [
-      "Glutes",
-      "Hamstrings",
-      "Traps"
-    ],
-    "secondary": [
-      "Anterior Delts",
-      "Core & Abs",
-      "Erectors",
-      "Forearms & Grip"
-    ],
-    "equipment": "kettlebell",
-    "image": null
-  },
-  {
-    "id": "kettlebell-clean-and-jerk",
-    "name": "Kettlebell Clean and Jerk",
-    "category": "Explosive",
-    "primary": [
-      "Glutes",
-      "Hamstrings",
-      "Anterior Delts"
-    ],
-    "secondary": [
-      "Triceps",
-      "Core & Abs",
-      "Traps",
-      "Quadriceps",
-      "Erectors"
-    ],
-    "equipment": "kettlebell",
-    "image": null
-  },
-  {
-    "id": "kettlebell-high-pull",
-    "name": "Kettlebell High Pull",
-    "category": "Explosive",
-    "primary": [
-      "Traps",
-      "Lateral Delts"
-    ],
-    "secondary": [
-      "Glutes",
-      "Hamstrings",
-      "Biceps",
-      "Forearms & Grip"
-    ],
-    "equipment": "kettlebell",
-    "image": null
-  },
-  {
-    "id": "double-kettlebell-swing",
-    "name": "Double Kettlebell Swing",
-    "category": "Explosive",
-    "primary": [
-      "Glutes",
-      "Hamstrings"
-    ],
-    "secondary": [
-      "Erectors",
-      "Core & Abs",
-      "Traps",
-      "Rhomboids",
-      "Forearms & Grip"
-    ],
-    "equipment": "kettlebell",
-    "image": null
-  },
-  {
-    "id": "kettlebell-push-press",
-    "name": "Kettlebell Push Press",
-    "category": "Explosive",
-    "primary": [
-      "Anterior Delts",
-      "Triceps"
-    ],
-    "secondary": [
-      "Quadriceps",
-      "Glutes",
-      "Core & Abs",
-      "Lateral Delts"
-    ],
-    "equipment": "kettlebell",
-    "image": null
   }
 ]

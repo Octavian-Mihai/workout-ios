@@ -6,6 +6,7 @@ const CATEGORIES = ["Push", "Pull", "Legs", "Explosive", "Core"];
 const EQUIPMENT = [
   { id: "barbell", title: "Barbell" },
   { id: "machine", title: "Machine" },
+  { id: "functionalTrainer", title: "Functional Trainer" },
   { id: "kettlebell", title: "Kettlebell" },
   { id: "dumbbell", title: "Dumbbell" },
   { id: "bodyweight", title: "Bodyweight" },
