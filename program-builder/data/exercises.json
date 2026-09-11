@@ -1437,5 +1437,129 @@
     ],
     "equipment": "bodyweight",
     "image": "ab-wheel.jpg"
+  },
+  {
+    "id": "kettlebell-swing",
+    "name": "Kettlebell Swing",
+    "category": "Explosive",
+    "primary": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "secondary": [
+      "Erectors",
+      "Core & Abs",
+      "Traps",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-snatch",
+    "name": "Kettlebell Snatch",
+    "category": "Explosive",
+    "primary": [
+      "Glutes",
+      "Hamstrings",
+      "Traps"
+    ],
+    "secondary": [
+      "Anterior Delts",
+      "Core & Abs",
+      "Erectors",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-clean",
+    "name": "Kettlebell Clean",
+    "category": "Explosive",
+    "primary": [
+      "Glutes",
+      "Hamstrings",
+      "Traps"
+    ],
+    "secondary": [
+      "Anterior Delts",
+      "Core & Abs",
+      "Erectors",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-clean-and-jerk",
+    "name": "Kettlebell Clean and Jerk",
+    "category": "Explosive",
+    "primary": [
+      "Glutes",
+      "Hamstrings",
+      "Anterior Delts"
+    ],
+    "secondary": [
+      "Triceps",
+      "Core & Abs",
+      "Traps",
+      "Quadriceps",
+      "Erectors"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-high-pull",
+    "name": "Kettlebell High Pull",
+    "category": "Explosive",
+    "primary": [
+      "Traps",
+      "Lateral Delts"
+    ],
+    "secondary": [
+      "Glutes",
+      "Hamstrings",
+      "Biceps",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "double-kettlebell-swing",
+    "name": "Double Kettlebell Swing",
+    "category": "Explosive",
+    "primary": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "secondary": [
+      "Erectors",
+      "Core & Abs",
+      "Traps",
+      "Rhomboids",
+      "Forearms & Grip"
+    ],
+    "equipment": "kettlebell",
+    "image": null
+  },
+  {
+    "id": "kettlebell-push-press",
+    "name": "Kettlebell Push Press",
+    "category": "Explosive",
+    "primary": [
+      "Anterior Delts",
+      "Triceps"
+    ],
+    "secondary": [
+      "Quadriceps",
+      "Glutes",
+      "Core & Abs",
+      "Lateral Delts"
+    ],
+    "equipment": "kettlebell",
+    "image": null
   }
 ]

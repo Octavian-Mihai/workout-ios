@@ -205,6 +205,7 @@ enum ExerciseMovementPattern: String, CaseIterable, Identifiable {
 enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable, Codable {
     case barbell
     case machine
+    case functionalTrainer
     case kettlebell
     case dumbbell
     case bodyweight
@@ -215,6 +216,7 @@ enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable, Codable {
         switch self {
         case .barbell: return "Barbell"
         case .machine: return "Machine"
+        case .functionalTrainer: return "Functional Trainer"
         case .kettlebell: return "Kettlebell"
         case .dumbbell: return "Dumbbell"
         case .bodyweight: return "Bodyweight"
@@ -225,6 +227,7 @@ enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable, Codable {
         switch self {
         case .barbell: return "BB"
         case .machine: return "MC"
+        case .functionalTrainer: return "FT"
         case .kettlebell: return "KB"
         case .dumbbell: return "DB"
         case .bodyweight: return "BW"
@@ -356,7 +359,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.quadriceps, .glutes],
             secondary: [.coreAndAbs, .erectors, .adductors],
-            cues: "Hold the bar in the elbow crook and keep a tall torso. Brace, sit between the hips, and stand without folding forward."
+            cues: "Hold the bar in the elbow crook and keep a tall torso. Brace, sit between the hips, and stand without folding forward.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "hack-squat",
@@ -373,7 +377,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.quadriceps, .glutes],
             secondary: [],
-            cues: "Brace and sit between the hips. Keep mid-foot pressure; don’t collapse the chest or ride the bar forward."
+            cues: "Brace and sit between the hips. Keep mid-foot pressure; don’t collapse the chest or ride the bar forward.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "belt-squat",
@@ -391,14 +396,14 @@ enum ExerciseCatalog {
             primary: [.quadriceps],
             secondary: [],
             cues: "Knees travel forward as the hips stay relatively high. Control the descent; don’t dump into the low back.",
-            equipment: .bodyweight
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "reverse-squat",
             name: "Reverse Squat",
             category: .legs,
-            primary: [.quadriceps],
-            secondary: [.coreAndAbs],
+            primary: [.hipFlexors],
+            secondary: [.coreAndAbs, .quadriceps],
             cues: "Drive the knees up against the load without dumping the pelvis. Control the return; don’t swing.",
             equipment: .machine
         ),
@@ -417,15 +422,17 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.quadriceps, .hamstrings],
             secondary: [.glutes, .adductors],
-            cues: "Full foot on the platform. Lower with control and stop before the low back rounds."
+            cues: "Full foot on the platform. Lower with control and stop before the low back rounds.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "bulgarian-split-squat",
             name: "Bulgarian Split Squat",
             category: .legs,
             primary: [.quadriceps, .glutes],
-            secondary: [.adductors, .coreAndAbs],
-            cues: "Most of the load on the front leg. Slight forward lean is fine; keep the front knee tracking over the toes."
+            secondary: [.hamstrings, .adductors, .coreAndAbs],
+            cues: "Most of the load on the front leg. Slight forward lean is fine; keep the front knee tracking over the toes.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "zercher-split-squat",
@@ -449,8 +456,8 @@ enum ExerciseCatalog {
             id: "zercher-step-up",
             name: "Zercher Step-Up",
             category: .legs,
-            primary: [.quadriceps, .glutes],
-            secondary: [.hamstrings, .coreAndAbs],
+            primary: [.hamstrings, .glutes],
+            secondary: [.quadriceps, .coreAndAbs],
             cues: "Bar in the elbow crook, drive through the whole foot on the box. Stand tall; don’t push off the trailing leg.",
             equipment: .barbell
         ),
@@ -460,7 +467,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.hamstrings, .glutes],
             secondary: [.quadriceps, .coreAndAbs],
-            cues: "Long enough stride to load the glute. Front knee tracks the toes; trail knee drops under the hip."
+            cues: "Long enough stride to load the glute. Front knee tracks the toes; trail knee drops under the hip.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "zercher-lunge",
@@ -477,7 +485,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.hamstrings, .glutes],
             secondary: [.quadriceps, .coreAndAbs],
-            cues: "Step back far enough to load the front glute. Front knee tracks the toes; don’t crash the trail knee."
+            cues: "Step back far enough to load the front glute. Front knee tracks the toes; don’t crash the trail knee.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "zercher-reverse-lunge",
@@ -494,7 +503,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.quadriceps, .glutes],
             secondary: [.hamstrings, .coreAndAbs],
-            cues: "Step forward and drop the trail knee under the hip. Front knee tracks; don’t slam into the bottom."
+            cues: "Step forward and drop the trail knee under the hip. Front knee tracks; don’t slam into the bottom.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "box-jump",
@@ -511,7 +521,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.quadriceps],
             secondary: [],
-            cues: "Control the top squeeze. Avoid slamming the stack; pause briefly at lockout."
+            cues: "Control the top squeeze. Avoid slamming the stack; pause briefly at lockout.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "seated-leg-curl",
@@ -519,7 +530,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.hamstrings],
             secondary: [],
-            cues: "Hips stay pinned to the pad. Curl through a full range and lower slowly."
+            cues: "Hips stay pinned to the pad. Curl through a full range and lower slowly.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "lying-leg-curl",
@@ -527,7 +539,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.hamstrings],
             secondary: [.erectors],
-            cues: "Hips stay glued to the pad. Curl fully and lower without lifting the pelvis."
+            cues: "Hips stay glued to the pad. Curl fully and lower without lifting the pelvis.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "nordic-curl",
@@ -554,7 +567,7 @@ enum ExerciseCatalog {
             primary: [.hamstrings, .glutes],
             secondary: [.erectors],
             cues: "Soft knees, push the hips back, bar close to the legs. Stop when the hamstrings run out of range.",
-            equipment: .barbell
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "deadlift",
@@ -571,7 +584,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.hamstrings, .glutes, .erectors],
             secondary: [.quadriceps, .coreAndAbs, .traps],
-            cues: "Bar in the elbow crook from the floor. Brace, then stand tall without losing the torso."
+            cues: "Bar in the elbow crook from the floor. Brace, then stand tall without losing the torso.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "good-morning",
@@ -586,10 +600,10 @@ enum ExerciseCatalog {
             id: "seated-good-morning",
             name: "Seated Good Morning",
             category: .legs,
-            primary: [.hamstrings, .glutes, .erectors],
-            secondary: [.coreAndAbs, .lats],
+            primary: [.adductors, .erectors],
+            secondary: [.coreAndAbs, .hamstrings],
             cues: "Sit tall, then hinge and pull with the posterior chain. Brace; don’t round through the low back to finish.",
-            equipment: .machine
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "jefferson-curl",
@@ -615,7 +629,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.erectors, .glutes],
             secondary: [.hamstrings],
-            cues: "Hinge at the hips, not the spine. Rise until the body is in line; don’t hyperextend the low back."
+            cues: "Hinge at the hips, not the spine. Rise until the body is in line; don’t hyperextend the low back.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "reverse-hyper",
@@ -672,13 +687,68 @@ enum ExerciseCatalog {
             equipment: .barbell
         ),
         CatalogExercise(
+            id: "kettlebell-swing",
+            name: "Kettlebell Swing",
+            category: .explosive,
+            primary: [.hamstrings],
+            secondary: [.glutes, .erectors, .coreAndAbs, .adductors, .forearmsAndGrip],
+            cues: "Hinge hard, then snap the hips to float the bell to chest height. Keep the arms loose; don’t squat the swing or lift with the shoulders.",
+            equipment: .kettlebell,
+            pattern: .hinge
+        ),
+        CatalogExercise(
+            id: "kettlebell-snatch",
+            name: "Kettlebell Snatch",
+            category: .explosive,
+            primary: [.glutes, .hamstrings, .anteriorDelts],
+            secondary: [.biceps, .coreAndAbs, .erectors, .forearmsAndGrip],
+            cues: "Hike the bell, explode the hips, and punch through to lockout overhead. The bell should roll around the wrist, not slam onto it.",
+            equipment: .kettlebell
+        ),
+        CatalogExercise(
+            id: "kettlebell-clean",
+            name: "Kettlebell Clean",
+            category: .explosive,
+            primary: [.glutes, .hamstrings, .biceps],
+            secondary: [.anteriorDelts, .coreAndAbs, .erectors, .forearmsAndGrip],
+            cues: "Hinge and snap the hips, then guide the bell into a tight rack. Elbow close, wrist stacked; don’t let the bell crash onto the forearm.",
+            equipment: .kettlebell
+        ),
+        CatalogExercise(
+            id: "kettlebell-clean-and-jerk",
+            name: "Kettlebell Clean and Jerk",
+            category: .explosive,
+            primary: [.glutes, .hamstrings, .anteriorDelts],
+            secondary: [.triceps, .coreAndAbs, .biceps, .quadriceps, .erectors],
+            cues: "Clean to a solid rack, then dip and drive the bell overhead. Punch under to lockout; don’t press it out from a stalled rack.",
+            equipment: .kettlebell
+        ),
+        CatalogExercise(
+            id: "kettlebell-high-pull",
+            name: "Kettlebell High Pull",
+            category: .explosive,
+            primary: [.traps, .lateralDelts],
+            secondary: [.glutes, .hamstrings, .biceps, .forearmsAndGrip],
+            cues: "Hinge and explode the hips, then pull the bell to the chest with high elbows. Keep it close; don’t shrug it out in front of you.",
+            equipment: .kettlebell
+        ),
+        CatalogExercise(
+            id: "kettlebell-push-press",
+            name: "Kettlebell Push Press",
+            category: .explosive,
+            primary: [.anteriorDelts, .triceps],
+            secondary: [.quadriceps, .glutes, .coreAndAbs, .lateralDelts],
+            cues: "Dip the knees slightly, then drive the bell overhead and finish with the arm. Use the legs to start the press; don’t turn it into a strict press.",
+            equipment: .kettlebell
+        ),
+        CatalogExercise(
             id: "hip-thrust",
             name: "Hip Thrust",
             category: .legs,
             primary: [.glutes],
-            secondary: [.hamstrings, .coreAndAbs],
+            secondary: [.hamstrings],
             cues: "Chin tucked, ribs down. Finish with a hard glute squeeze and a flat torso at the top.",
-            equipment: .barbell
+            equipment: .machine
         ),
         CatalogExercise(
             id: "barbell-hip-thrust",
@@ -704,7 +774,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.abductors],
             secondary: [],
-            cues: "Sit tall, then drive the knees out. Pause at the end range; don’t lean to cheat."
+            cues: "Sit tall, then drive the knees out. Pause at the end range; don’t lean to cheat.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "machine-hip-adduction",
@@ -712,7 +783,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.adductors],
             secondary: [],
-            cues: "Sit tall and squeeze the thighs together. Control the return; don’t slam the stack."
+            cues: "Sit tall and squeeze the thighs together. Control the return; don’t slam the stack.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "calf-raise",
@@ -720,7 +792,8 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.calves],
             secondary: [],
-            cues: "Full stretch at the bottom, pause at the top. Knee position stays consistent."
+            cues: "Full stretch at the bottom, pause at the top. Knee position stays consistent.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "tibialis-raise",
@@ -729,7 +802,7 @@ enum ExerciseCatalog {
             primary: [.tibialis],
             secondary: [],
             cues: "Heels planted, lift the toes as high as you can. Pause at the top; don’t rock the torso.",
-            equipment: .bodyweight
+            equipment: .machine
         ),
         CatalogExercise(
             id: "barbell-bench-press",
@@ -744,17 +817,19 @@ enum ExerciseCatalog {
             id: "incline-barbell-bench-press",
             name: "Incline Barbell Bench Press",
             category: .push,
-            primary: [.chest, .anteriorDelts],
-            secondary: [.triceps],
-            cues: "Set the scaps and keep a slight arch. Lower to the upper chest with control; don’t bounce or flare the elbows out wide."
+            primary: [.chest],
+            secondary: [.triceps, .anteriorDelts],
+            cues: "Set the scaps and keep a slight arch. Lower to the upper chest with control; don’t bounce or flare the elbows out wide.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "close-grip-bench-press",
             name: "Close-Grip Bench Press",
             category: .push,
-            primary: [.triceps, .chest],
-            secondary: [.anteriorDelts],
+            primary: [.triceps],
+            secondary: [.chest, .anteriorDelts],
             cues: "Grip just inside shoulder width. Elbows stay tucked; lower to the chest and press without bouncing.",
+            equipment: .machine,
             pattern: .triceps
         ),
         CatalogExercise(
@@ -763,7 +838,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.chest, .anteriorDelts],
             secondary: [.triceps],
-            cues: "30–45° bench. Lower until the elbows are in line with the torso, then press without flaring wildly."
+            cues: "30–45° bench. Lower until the elbows are in line with the torso, then press without flaring wildly.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "dumbbell-bench-press",
@@ -771,7 +847,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.chest],
             secondary: [.triceps, .anteriorDelts],
-            cues: "Slight arch, dumbbells travel in a gentle arc. Control the bottom stretch."
+            cues: "Slight arch, dumbbells travel in a gentle arc. Control the bottom stretch.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "machine-chest-press",
@@ -779,7 +856,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.chest],
             secondary: [.triceps, .anteriorDelts],
-            cues: "Brace and keep the shoulders packed. Press through a full range and stop short of locking out aggressively."
+            cues: "Brace and keep the shoulders packed. Press through a full range and stop short of locking out aggressively.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "dips",
@@ -821,7 +899,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.anteriorDelts, .lateralDelts],
             secondary: [.triceps],
-            cues: "Press slightly in front of the head. Don’t over-arch the low back."
+            cues: "Press slightly in front of the head. Don’t over-arch the low back.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "machine-shoulder-press",
@@ -837,7 +916,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.lateralDelts],
             secondary: [.traps],
-            cues: "Lead with the elbows, slight lean, and stop around shoulder height. Control the lower."
+            cues: "Lead with the elbows, slight lean, and stop around shoulder height. Control the lower.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "cable-lateral-raise",
@@ -845,7 +925,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.lateralDelts],
             secondary: [.traps],
-            cues: "Lead with the elbows and keep tension through the whole arc. Stop around shoulder height; don’t swing."
+            cues: "Lead with the elbows and keep tension through the whole arc. Stop around shoulder height; don’t swing.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "front-raise",
@@ -853,7 +934,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.anteriorDelts],
             secondary: [],
-            cues: "Raise to eye height with a slight elbow bend. Don’t use the low back to heave the weight up."
+            cues: "Raise to eye height with a slight elbow bend. Don’t use the low back to heave the weight up.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "cable-fly",
@@ -862,7 +944,7 @@ enum ExerciseCatalog {
             primary: [.chest],
             secondary: [.anteriorDelts],
             cues: "Soft elbows, sweep in an arc, and squeeze without shrugging.",
-            equipment: .machine
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "dumbbell-fly",
@@ -870,7 +952,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.chest],
             secondary: [.anteriorDelts],
-            cues: "Slight bend in the elbows and a wide arc. Stop when the chest is stretched; don’t turn it into a press."
+            cues: "Slight bend in the elbows and a wide arc. Stop when the chest is stretched; don’t turn it into a press.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "pec-deck",
@@ -888,7 +971,7 @@ enum ExerciseCatalog {
             primary: [.triceps],
             secondary: [],
             cues: "Elbows pinned by the sides. Full extension, then a controlled return.",
-            equipment: .machine
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "overhead-cable-triceps-extension",
@@ -896,7 +979,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.triceps],
             secondary: [],
-            cues: "Elbows stay high and close. Extend fully, then control the stretch; don’t flare."
+            cues: "Elbows stay high and close. Extend fully, then control the stretch; don’t flare.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "skull-crusher",
@@ -930,7 +1014,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats, .rhomboids],
             secondary: [.biceps, .posteriorDelts],
-            cues: "Chest stays on the pad. Row the elbows back and squeeze; don’t yank from the neck."
+            cues: "Chest stays on the pad. Row the elbows back and squeeze; don’t yank from the neck.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "chest-supported-t-bar-row",
@@ -947,7 +1032,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats, .rhomboids],
             secondary: [.biceps, .posteriorDelts],
-            cues: "Hinge, brace, and row the elbow to the hip. Don’t rotate the torso to cheat the last inches."
+            cues: "Hinge, brace, and row the elbow to the hip. Don’t rotate the torso to cheat the last inches.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "one-arm-cable-row",
@@ -955,7 +1041,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats, .rhomboids],
             secondary: [.biceps, .posteriorDelts],
-            cues: "Start from a long arm. Pull the elbow back, pause, then reach without rounding hard."
+            cues: "Start from a long arm. Pull the elbow back, pause, then reach without rounding hard.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "seated-cable-row",
@@ -964,7 +1051,7 @@ enum ExerciseCatalog {
             primary: [.lats, .rhomboids],
             secondary: [.biceps, .posteriorDelts],
             cues: "Start from a long arm. Pull elbows back, pause, then reach forward without rounding hard.",
-            equipment: .machine
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "lat-pulldown",
@@ -973,7 +1060,7 @@ enum ExerciseCatalog {
             primary: [.lats],
             secondary: [.biceps, .rhomboids],
             cues: "Set the scaps first. Pull the bar to the upper chest, elbows down, not behind the body.",
-            equipment: .machine
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "close-grip-lat-pulldown",
@@ -981,7 +1068,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats, .biceps],
             secondary: [.rhomboids],
-            cues: "Set the scaps, then pull the handle to the upper chest. Elbows stay in; don’t lean way back."
+            cues: "Set the scaps, then pull the handle to the upper chest. Elbows stay in; don’t lean way back.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "wide-grip-lat-pulldown",
@@ -989,7 +1077,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats],
             secondary: [.biceps, .rhomboids],
-            cues: "Wide grip, scaps set. Pull to the upper chest with elbows down, not behind the body."
+            cues: "Wide grip, scaps set. Pull to the upper chest with elbows down, not behind the body.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "pull-up",
@@ -1014,7 +1103,7 @@ enum ExerciseCatalog {
             primary: [.posteriorDelts, .traps],
             secondary: [.rhomboids],
             cues: "Pull toward the face, externally rotate at the end, and keep the ribs down.",
-            equipment: .machine
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "rear-delt-fly",
@@ -1022,7 +1111,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.posteriorDelts],
             secondary: [.rhomboids],
-            cues: "Hinge, soft elbows, and sweep the arms out. Stop at torso height; don’t yank with the traps."
+            cues: "Hinge, soft elbows, and sweep the arms out. Stop at torso height; don’t yank with the traps.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "reverse-pec-deck",
@@ -1049,7 +1139,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.traps],
             secondary: [],
-            cues: "Stand tall and shrug straight up. Pause at the top; don’t roll the shoulders."
+            cues: "Stand tall and shrug straight up. Pause at the top; don’t roll the shoulders.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "barbell-shrug",
@@ -1057,7 +1148,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.traps],
             secondary: [],
-            cues: "Brace, then shrug the bar straight up. Pause and lower; don’t roll or heave."
+            cues: "Brace, then shrug the bar straight up. Pause and lower; don’t roll or heave.",
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "barbell-curl",
@@ -1074,7 +1166,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps],
             secondary: [.forearmsAndGrip],
-            cues: "Supinate through the lift. Keep the upper arm still."
+            cues: "Supinate through the lift. Keep the upper arm still.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "hammer-curl",
@@ -1082,7 +1175,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps, .forearmsAndGrip],
             secondary: [],
-            cues: "Neutral grip. Control both directions; this is also a forearm builder."
+            cues: "Neutral grip. Control both directions; this is also a forearm builder.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "preacher-curl",
@@ -1090,7 +1184,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps],
             secondary: [],
-            cues: "Upper arms pinned to the pad. Curl through a full range and lower slowly; don’t hyperextend the elbows."
+            cues: "Upper arms pinned to the pad. Curl through a full range and lower slowly; don’t hyperextend the elbows.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "incline-dumbbell-curl",
@@ -1098,7 +1193,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps],
             secondary: [],
-            cues: "Let the arms hang. Curl without swinging, and keep the shoulders from rolling forward."
+            cues: "Let the arms hang. Curl without swinging, and keep the shoulders from rolling forward.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "cable-curl",
@@ -1106,7 +1202,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps],
             secondary: [],
-            cues: "Elbows close, constant tension. Squeeze at the top and don’t lean back to finish."
+            cues: "Elbows close, constant tension. Squeeze at the top and don’t lean back to finish.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "concentration-curl",
@@ -1114,7 +1211,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps],
             secondary: [],
-            cues: "Elbow braced. Curl to the shoulder and lower fully; no body English."
+            cues: "Elbow braced. Curl to the shoulder and lower fully; no body English.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "spider-curl",
@@ -1122,7 +1220,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps],
             secondary: [],
-            cues: "Chest on the bench, arms hanging. Curl without swinging; control the stretch at the bottom."
+            cues: "Chest on the bench, arms hanging. Curl without swinging; control the stretch at the bottom.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "reverse-curl",
@@ -1130,7 +1229,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.biceps, .forearmsAndGrip],
             secondary: [],
-            cues: "Pronated grip, elbows close. Curl without swinging; this loads the forearms too."
+            cues: "Pronated grip, elbows close. Curl without swinging; this loads the forearms too.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "wrist-curl",
@@ -1139,6 +1239,7 @@ enum ExerciseCatalog {
             primary: [.forearmsAndGrip],
             secondary: [],
             cues: "Forearms supported, wrists hanging. Curl through a full range and don’t let the elbows take over.",
+            equipment: .functionalTrainer,
             pattern: .pullAccessory
         ),
         CatalogExercise(
@@ -1148,6 +1249,7 @@ enum ExerciseCatalog {
             primary: [.forearmsAndGrip],
             secondary: [],
             cues: "Forearms supported, palms down. Extend the wrists through a full range; keep it slow.",
+            equipment: .functionalTrainer,
             pattern: .pullAccessory
         ),
         CatalogExercise(
@@ -1199,7 +1301,7 @@ enum ExerciseCatalog {
             primary: [.coreAndAbs],
             secondary: [],
             cues: "Round the spine to shorten the abs. Hips stay relatively still.",
-            equipment: .machine
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "cable-woodchop",
@@ -1207,7 +1309,8 @@ enum ExerciseCatalog {
             category: .core,
             primary: [.coreAndAbs],
             secondary: [],
-            cues: "Brace and rotate through the torso, not the arms. Control both directions; don’t twist from the knees."
+            cues: "Brace and rotate through the torso, not the arms. Control both directions; don’t twist from the knees.",
+            equipment: .functionalTrainer
         ),
         CatalogExercise(
             id: "landmine-rotation",
