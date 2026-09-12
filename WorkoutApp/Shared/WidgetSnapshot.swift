@@ -27,6 +27,8 @@ struct WidgetSnapshot: Equatable {
     var accentHex: String
     /// Finished lifting sessions whose startDate falls in the last 7 calendar days.
     var workoutsLast7Days: Int = 0
+    /// When false, widgets hide running dots and R / B year-grid legends.
+    var showsRunningActivity: Bool = true
 
     static let empty = WidgetSnapshot(
         version: 1,
@@ -47,7 +49,8 @@ struct WidgetSnapshot: Equatable {
         nextDayName: nil,
         nextProgramName: nil,
         accentHex: "FA6B2E",
-        workoutsLast7Days: 0
+        workoutsLast7Days: 0,
+        showsRunningActivity: true
     )
 
     static let preview: WidgetSnapshot = {
@@ -90,7 +93,8 @@ struct WidgetSnapshot: Equatable {
             nextDayName: "Pull B",
             nextProgramName: "Hypertrophy",
             accentHex: "FA6B2E",
-            workoutsLast7Days: 6
+            workoutsLast7Days: 6,
+            showsRunningActivity: true
         )
     }()
 }
@@ -104,6 +108,7 @@ extension WidgetSnapshot: Codable {
         case lastWorkoutTitle, lastWorkoutDate
         case nextDayName, nextProgramName, accentHex
         case workoutsLast7Days
+        case showsRunningActivity
     }
 
     init(from decoder: Decoder) throws {
@@ -127,7 +132,8 @@ extension WidgetSnapshot: Codable {
             nextDayName: try c.decodeIfPresent(String.self, forKey: .nextDayName),
             nextProgramName: try c.decodeIfPresent(String.self, forKey: .nextProgramName),
             accentHex: try c.decode(String.self, forKey: .accentHex),
-            workoutsLast7Days: try c.decodeIfPresent(Int.self, forKey: .workoutsLast7Days) ?? 0
+            workoutsLast7Days: try c.decodeIfPresent(Int.self, forKey: .workoutsLast7Days) ?? 0,
+            showsRunningActivity: try c.decodeIfPresent(Bool.self, forKey: .showsRunningActivity) ?? true
         )
     }
 
@@ -152,6 +158,7 @@ extension WidgetSnapshot: Codable {
         try c.encodeIfPresent(nextProgramName, forKey: .nextProgramName)
         try c.encode(accentHex, forKey: .accentHex)
         try c.encode(workoutsLast7Days, forKey: .workoutsLast7Days)
+        try c.encode(showsRunningActivity, forKey: .showsRunningActivity)
     }
 }
 

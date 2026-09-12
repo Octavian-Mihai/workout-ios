@@ -103,8 +103,10 @@ struct WorkoutYearWidgetView: View {
                 Spacer(minLength: 4)
                 HStack(spacing: 7) {
                     legend("W(\(snap.liftSessionCount))", color: WidgetChrome.weights)
-                    legend("R(\(snap.runDayStarts.count))", color: WidgetChrome.running)
-                    legend("B(\(bothCount))", color: WidgetChrome.both)
+                    if snap.showsRunningActivity {
+                        legend("R(\(snap.runDayStarts.count))", color: WidgetChrome.running)
+                        legend("B(\(bothCount))", color: WidgetChrome.both)
+                    }
                 }
             }
             WidgetYearGridView(snapshot: snap, dense: true)
@@ -225,7 +227,9 @@ struct WorkoutStressWidgetView: View {
 
                     HStack {
                         split("Lift", snap.todayLift)
-                        split("Run", snap.todayRun)
+                        if snap.showsRunningActivity {
+                            split("Run", snap.todayRun)
+                        }
                     }
                     .font(.caption2)
                     .foregroundStyle(.secondary)

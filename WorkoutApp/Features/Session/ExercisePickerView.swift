@@ -9,7 +9,6 @@ struct ExercisePickerView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(AppTheme.self) private var theme
-    @AppStorage(ExerciseSubmissionService.adminEmailKey) private var adminEmail = ""
     @State private var query = ""
     @State private var showCustom = false
     @State private var previewExercise: CatalogExercise?
@@ -18,7 +17,6 @@ struct ExercisePickerView: View {
     @State private var muscleFilter: MuscleGroup?
     @State private var pendingCustom: (name: String, equipment: ExerciseEquipment, primary: [String], secondary: [String])?
     @State private var showCustomNotifyAlert = false
-    @State private var showConfigureAdminAlert = false
     @State private var addedCatalogIDs: Set<String> = []
     @State private var addFeedbackTrigger = 0
     @State private var removeFeedbackTrigger = 0
@@ -126,11 +124,6 @@ struct ExercisePickerView: View {
         } message: {
             Text("Request inclusion in the global catalog by notifying the admin, or add this exercise to your program only.")
         }
-        .alert("Configure admin email", isPresented: $showConfigureAdminAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("Set the catalog admin email in Settings before sending a submission.")
-        }
         .alert("Remove exercise?", isPresented: Binding(
             get: { pendingRemoveExercise != nil },
             set: { if !$0 { pendingRemoveExercise = nil } }
@@ -156,16 +149,12 @@ struct ExercisePickerView: View {
         onCustom(pending.name, pending.equipment, pending.primary, pending.secondary)
         pendingCustom = nil
         if notifyAdmin {
-            let opened = ExerciseSubmissionService.openMail(
-                adminEmail: adminEmail,
+            _ = ExerciseSubmissionService.openMail(
                 exerciseName: pending.name,
                 equipment: pending.equipment,
                 primaryMuscles: pending.primary,
                 secondaryMuscles: pending.secondary
             )
-            if !opened {
-                showConfigureAdminAlert = true
-            }
         }
     }
 
@@ -334,22 +323,31 @@ struct CustomExerciseForm: View {
     var body: some View {
         Form {
             TextField("Exercise name", text: $name)
-            Section("Equipment") {
-                Picker("Equipment type", selection: $equipment) {
+            HStack {
+                Text("Equipment")
+                Spacer()
+                Menu {
                     ForEach(ExerciseEquipment.allCases) { item in
-                        Text(item.displayTitle).tag(item)
+                        Button(item.displayTitle) { equipment = item }
                     }
+                } label: {
+                    FilterChipLabel(
+                        title: equipment.displayTitle,
+                        selected: true
+                    )
                 }
-                .pickerStyle(.segmented)
+                .buttonStyle(.plain)
             }
             Section("Primary muscles") {
                 ForEach(MuscleGroup.allCases) { muscle in
-                    Toggle(muscle.rawValue, isOn: binding(muscle.rawValue, in: $primary))
+                    Toggle(muscle.rawValue, isOn: primaryBinding(muscle.rawValue))
+                        .disabled(secondary.contains(muscle.rawValue))
                 }
             }
             Section("Secondary muscles") {
                 ForEach(MuscleGroup.allCases) { muscle in
-                    Toggle(muscle.rawValue, isOn: binding(muscle.rawValue, in: $secondary))
+                    Toggle(muscle.rawValue, isOn: secondaryBinding(muscle.rawValue))
+                        .disabled(primary.contains(muscle.rawValue))
                 }
             }
         }
@@ -368,11 +366,30 @@ struct CustomExerciseForm: View {
         }
     }
 
-    private func binding(_ value: String, in set: Binding<Set<String>>) -> Binding<Bool> {
+    private func primaryBinding(_ value: String) -> Binding<Bool> {
         Binding(
-            get: { set.wrappedValue.contains(value) },
+            get: { primary.contains(value) },
             set: { isOn in
-                if isOn { set.wrappedValue.insert(value) } else { set.wrappedValue.remove(value) }
+                if isOn {
+                    primary.insert(value)
+                    secondary.remove(value)
+                } else {
+                    primary.remove(value)
+                }
+            }
+        )
+    }
+
+    private func secondaryBinding(_ value: String) -> Binding<Bool> {
+        Binding(
+            get: { secondary.contains(value) },
+            set: { isOn in
+                if isOn {
+                    secondary.insert(value)
+                    primary.remove(value)
+                } else {
+                    secondary.remove(value)
+                }
             }
         )
     }

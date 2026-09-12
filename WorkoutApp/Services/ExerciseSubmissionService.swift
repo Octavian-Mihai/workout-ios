@@ -2,19 +2,15 @@ import Foundation
 import UIKit
 
 enum ExerciseSubmissionService {
-    static let adminEmailKey = "adminEmail"
+    static let adminEmail = "octavian.mihai321@gmail.com"
 
     static func mailtoURL(
-        adminEmail: String,
         exerciseName: String,
         equipment: ExerciseEquipment,
         primaryMuscles: [String],
         secondaryMuscles: [String],
         userNote: String? = nil
     ) -> URL? {
-        let trimmedEmail = adminEmail.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedEmail.isEmpty else { return nil }
-
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
 
@@ -37,7 +33,7 @@ enum ExerciseSubmissionService {
 
         var components = URLComponents()
         components.scheme = "mailto"
-        components.path = trimmedEmail
+        components.path = adminEmail
         components.queryItems = [
             URLQueryItem(name: "subject", value: subject),
             URLQueryItem(name: "body", value: body)
@@ -47,14 +43,12 @@ enum ExerciseSubmissionService {
 
     @MainActor
     static func openMail(
-        adminEmail: String,
         exerciseName: String,
         equipment: ExerciseEquipment,
         primaryMuscles: [String],
         secondaryMuscles: [String]
     ) -> Bool {
         guard let url = mailtoURL(
-            adminEmail: adminEmail,
             exerciseName: exerciseName,
             equipment: equipment,
             primaryMuscles: primaryMuscles,

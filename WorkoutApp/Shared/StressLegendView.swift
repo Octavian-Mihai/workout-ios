@@ -99,6 +99,7 @@ struct StressMeter: View {
 struct TodayStressCard: View {
     let estimate: StressEstimate
     var showSplit: Bool = false
+    var showRunSplit: Bool = true
     var trend: [DailyStress] = []
     let accent: Color
     var compact: Bool = false
@@ -111,7 +112,9 @@ struct TodayStressCard: View {
             if showSplit {
                 HStack(spacing: 16) {
                     splitMeter(title: "Lift", score: estimate.lift)
-                    splitMeter(title: "Run", score: estimate.run)
+                    if showRunSplit {
+                        splitMeter(title: "Run", score: estimate.run)
+                    }
                 }
             }
             if !compact, trend.count >= 2 {

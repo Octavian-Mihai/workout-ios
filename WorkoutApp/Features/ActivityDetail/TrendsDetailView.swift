@@ -4,7 +4,9 @@ import Charts
 
 struct TrendsDetailView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
+    @EnvironmentObject private var health: HealthKitService
     @Environment(AppTheme.self) private var theme
+    @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
 
     private var accent: Color {
         theme.accent
@@ -110,7 +112,11 @@ struct TrendsDetailView: View {
                 .padding(16)
                 .opaqueCard()
 
-                YearActivityGrid(sessions: sessions)
+                YearActivityGrid(
+                    sessions: sessions,
+                    runDates: showRunningActivity ? health.activityRunDays : [],
+                    showsRunningActivity: showRunningActivity
+                )
             }
             .padding(16)
         }

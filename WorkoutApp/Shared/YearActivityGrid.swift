@@ -82,6 +82,7 @@ enum YearGridBuilder {
 struct YearActivityGrid: View {
     let sessions: [WorkoutSession]
     var runDates: Set<Date> = []
+    var showsRunningActivity: Bool = true
     var year: Int = Calendar.current.component(.year, from: Date())
     var onSelect: ((Date) -> Void)? = nil
 
@@ -127,8 +128,10 @@ struct YearActivityGrid: View {
                 Spacer()
                 HStack(spacing: 8) {
                     legendLabel("Weights (\(workoutsThisYear))", color: YearActivityPalette.weights)
-                    legendLabel("Running (\(runsThisYear))", color: YearActivityPalette.running)
-                    legendLabel("Both", color: YearActivityPalette.both)
+                    if showsRunningActivity {
+                        legendLabel("Running (\(runsThisYear))", color: YearActivityPalette.running)
+                        legendLabel("Both", color: YearActivityPalette.both)
+                    }
                 }
             }
 

@@ -10,6 +10,8 @@ struct RootTabView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @Query(sort: \Program.createdAt) private var programs: [Program]
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
+    @AppStorage(RunningVisibility.showTabKey) private var showRunningTab = true
+    @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
 
     private var accent: Color {
         appTheme.accent
@@ -23,8 +25,10 @@ struct RootTabView: View {
             WorkoutTabView()
                 .tabItem { Label("Workout", systemImage: "figure.strengthtraining.traditional") }
 
-            RunningView()
-                .tabItem { Label("Running", systemImage: "figure.run") }
+            if showRunningTab {
+                RunningView()
+                    .tabItem { Label("Running", systemImage: "figure.run") }
+            }
 
             InfoView()
                 .tabItem { Label("Info", systemImage: "chart.bar.fill") }
@@ -94,6 +98,12 @@ struct RootTabView: View {
         .onChange(of: health.cardioWorkouts.count) { _, _ in
             refreshWidgetSnapshot()
         }
+        .onChange(of: showRunningTab) { _, _ in
+            refreshWidgetSnapshot()
+        }
+        .onChange(of: showRunningActivity) { _, _ in
+            refreshWidgetSnapshot()
+        }
     }
 
     private func refreshWidgetSnapshot() {
@@ -104,7 +114,8 @@ struct RootTabView: View {
             runDates: health.activityRunDays,
             restingHeartRate: health.restingHeartRate,
             maxHeartRate: health.maxHeartRate,
-            accentHex: appTheme.accent.toHex()
+            accentHex: appTheme.accent.toHex(),
+            showsRunningActivity: showRunningActivity
         )
     }
 }

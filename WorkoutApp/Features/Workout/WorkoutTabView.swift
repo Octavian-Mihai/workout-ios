@@ -74,9 +74,13 @@ struct StrengthAnalyticsView: View {
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
     private var recent: [SetLog] { StressCalculator.sets(inLastDays: 7, from: sets) }
     private var muscleVolume: [(String, Double)] {
-        StressCalculator.muscleVolume(from: recent)
+        let recorded = StressCalculator.muscleVolume(from: recent)
             .map { ($0.key, $0.value) }
             .sorted { $0.1 > $1.1 }
+        if recorded.isEmpty {
+            return MuscleGroup.allCases.map { ($0.rawValue, 0) }
+        }
+        return recorded
     }
     private var muscleLoads: [(name: String, tonnageKg: Double, reps: Double)] {
         let reps = StressCalculator.muscleReps(from: recent)
@@ -103,40 +107,34 @@ struct StrengthAnalyticsView: View {
 
     private var tonnageSummary: some View {
         VStack(alignment: .leading, spacing: 12) {
-            if recent.isEmpty {
-                Text("Log sets to see tonnage.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            } else {
-                HStack {
-                    Text("Tonnage (7d)")
+            HStack {
+                Text("Tonnage (7d)")
+                Spacer()
+                Text("\(Formatters.compactNumber(unit.fromKg(StressCalculator.totalVolume(from: recent)))) \(unit.rawValue)·reps")
+                    .monospacedDigit()
+            }
+            .font(.subheadline)
+            HStack {
+                Text("Reps (7d)")
+                Spacer()
+                Text("\(StressCalculator.totalReps(from: recent))")
+                    .monospacedDigit()
+            }
+            .font(.subheadline)
+            ForEach(muscleLoads, id: \.name) { row in
+                HStack(alignment: .firstTextBaseline) {
+                    Text(row.name)
                     Spacer()
-                    Text("\(Formatters.compactNumber(unit.fromKg(StressCalculator.totalVolume(from: recent)))) \(unit.rawValue)·reps")
-                        .monospacedDigit()
-                }
-                .font(.subheadline)
-                HStack {
-                    Text("Reps (7d)")
-                    Spacer()
-                    Text("\(StressCalculator.totalReps(from: recent))")
-                        .monospacedDigit()
-                }
-                .font(.subheadline)
-                ForEach(muscleLoads, id: \.name) { row in
-                    HStack(alignment: .firstTextBaseline) {
-                        Text(row.name)
-                        Spacer()
-                        VStack(alignment: .trailing, spacing: 2) {
-                            Text("\(Formatters.compactNumber(unit.fromKg(row.tonnageKg))) \(unit.rawValue)·reps")
-                                .monospacedDigit()
-                            Text("\(Formatters.trimmedNumber(row.reps, decimals: 1)) reps")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .monospacedDigit()
-                        }
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text("\(Formatters.compactNumber(unit.fromKg(row.tonnageKg))) \(unit.rawValue)·reps")
+                            .monospacedDigit()
+                        Text("\(Formatters.trimmedNumber(row.reps, decimals: 1)) reps")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
                     }
-                    .font(.subheadline)
                 }
+                .font(.subheadline)
             }
         }
         .padding(16)
@@ -150,21 +148,16 @@ struct StrengthAnalyticsView: View {
             Text("Primary gets full set volume; secondary gets half.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            if muscleVolume.isEmpty {
-                Text("Log sets to see muscle volume.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            } else {
-                Chart(muscleVolume, id: \.0) { item in
-                    BarMark(
-                        x: .value("Volume", unit.fromKg(item.1)),
-                        y: .value("Muscle", item.0)
-                    )
-                    .foregroundStyle(accent)
-                }
-                .frame(height: max(160, CGFloat(muscleVolume.count) * 22))
-                .chartXAxisLabel(unit.rawValue + "·reps")
+            Chart(muscleVolume, id: \.0) { item in
+                BarMark(
+                    x: .value("Volume", unit.fromKg(item.1)),
+                    y: .value("Muscle", item.0)
+                )
+                .foregroundStyle(accent)
             }
+            .chartXScale(domain: recent.isEmpty ? 0...1 : 0...max(1, unit.fromKg(muscleVolume.map(\.1).max() ?? 0)))
+            .frame(height: max(160, CGFloat(muscleVolume.count) * 22))
+            .chartXAxisLabel(unit.rawValue + "·reps")
         }
         .padding(16)
         .opaqueCard()
@@ -178,25 +171,7 @@ struct StrengthAnalyticsView: View {
             Text("weight × (1 + (reps + RIR) / 30)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            if series.isEmpty {
-                Text("Squat, bench, deadlift, OHP, and row will appear here.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            } else {
-                Chart(series) { point in
-                    LineMark(
-                        x: .value("Date", point.date),
-                        y: .value("1RM", unit.fromKg(point.value))
-                    )
-                    .foregroundStyle(by: .value("Lift", point.lift))
-                    PointMark(
-                        x: .value("Date", point.date),
-                        y: .value("1RM", unit.fromKg(point.value))
-                    )
-                    .foregroundStyle(by: .value("Lift", point.lift))
-                }
-                .frame(height: 220)
-            }
+            oneRMPlot(series)
         }
         .padding(16)
         .opaqueCard()
@@ -207,25 +182,20 @@ struct StrengthAnalyticsView: View {
         return VStack(alignment: .leading, spacing: 8) {
             Text("Muscle engagement (7d)")
                 .font(.headline)
-            if data.isEmpty {
-                Text("No sets in the last 7 days.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            } else {
-                Chart(data, id: \.0) { item in
-                    BarMark(
-                        x: .value("Muscle", item.0),
-                        y: .value("Volume", unit.fromKg(item.1))
-                    )
-                    .foregroundStyle(accent.opacity(0.85))
-                }
-                .chartXAxis {
-                    AxisMarks { _ in
-                        AxisValueLabel(orientation: .vertical)
-                    }
-                }
-                .frame(height: 200)
+            Chart(data, id: \.0) { item in
+                BarMark(
+                    x: .value("Muscle", item.0),
+                    y: .value("Volume", unit.fromKg(item.1))
+                )
+                .foregroundStyle(accent.opacity(0.85))
             }
+            .chartYScale(domain: recent.isEmpty ? 0...1 : 0...max(1, unit.fromKg(data.map(\.1).max() ?? 0)))
+            .chartXAxis {
+                AxisMarks { _ in
+                    AxisValueLabel(orientation: .vertical)
+                }
+            }
+            .frame(height: 200)
         }
         .padding(16)
         .opaqueCard()
@@ -240,9 +210,12 @@ struct StrengthAnalyticsView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if rows.isEmpty {
-                Text("Intensity appears after you log sets.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                GeometryReader { geo in
+                    Capsule()
+                        .fill(theme.mutedFill)
+                        .frame(width: geo.size.width, height: 8)
+                }
+                .frame(height: 88)
             } else {
                 ForEach(rows) { row in
                     HStack {
@@ -271,6 +244,29 @@ struct StrengthAnalyticsView: View {
         }
         .padding(16)
         .opaqueCard()
+    }
+
+    @ViewBuilder
+    private func oneRMPlot(_ series: [LiftPoint]) -> some View {
+        let chart = Chart(series) { point in
+            LineMark(
+                x: .value("Date", point.date),
+                y: .value("1RM", unit.fromKg(point.value))
+            )
+            .foregroundStyle(by: .value("Lift", point.lift))
+            PointMark(
+                x: .value("Date", point.date),
+                y: .value("1RM", unit.fromKg(point.value))
+            )
+            .foregroundStyle(by: .value("Lift", point.lift))
+        }
+        .frame(height: 220)
+
+        if series.isEmpty {
+            chart.chartYScale(domain: 0...1)
+        } else {
+            chart
+        }
     }
 
     private func oneRMSeries() -> [LiftPoint] {

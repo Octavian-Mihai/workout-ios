@@ -10,7 +10,8 @@ enum WidgetSnapshotSync {
         runDates: Set<Date>,
         restingHeartRate: Double?,
         maxHeartRate: Double?,
-        accentHex: String
+        accentHex: String,
+        showsRunningActivity: Bool = true
     ) {
         let snapshot = makeSnapshot(
             sessions: sessions,
@@ -19,7 +20,8 @@ enum WidgetSnapshotSync {
             runDates: runDates,
             restingHeartRate: restingHeartRate,
             maxHeartRate: maxHeartRate,
-            accentHex: accentHex
+            accentHex: accentHex,
+            showsRunningActivity: showsRunningActivity
         )
         WidgetSnapshotStore.save(snapshot)
         WidgetCenter.shared.reloadAllTimelines()
@@ -34,6 +36,7 @@ enum WidgetSnapshotSync {
         restingHeartRate: Double?,
         maxHeartRate: Double?,
         accentHex: String,
+        showsRunningActivity: Bool = true,
         now: Date = Date()
     ) -> WidgetSnapshot {
         let cal = Calendar.current
@@ -56,10 +59,12 @@ enum WidgetSnapshotSync {
         }
 
         var runDays: Set<TimeInterval> = []
-        for date in runDates {
-            let day = cal.startOfDay(for: date)
-            if cal.component(.year, from: day) == year {
-                runDays.insert(day.timeIntervalSince1970)
+        if showsRunningActivity {
+            for date in runDates {
+                let day = cal.startOfDay(for: date)
+                if cal.component(.year, from: day) == year {
+                    runDays.insert(day.timeIntervalSince1970)
+                }
             }
         }
 
@@ -69,17 +74,20 @@ enum WidgetSnapshotSync {
             return day >= recentStart
         }.count
 
+        let stressCardio = showsRunningActivity
+            ? cardioWorkouts
+            : cardioWorkouts.filter { $0.activityType != .running }
         let sets = sessions.flatMap(\.sets)
         let today = StressCalculator.todayEstimate(
             sets: sets,
-            cardioWorkouts: cardioWorkouts,
+            cardioWorkouts: stressCardio,
             restingHeartRate: restingHeartRate,
             maxHeartRate: maxHeartRate,
             now: now
         )
         let trend = StressCalculator.dailyTrend(
             sets: sets,
-            cardioWorkouts: cardioWorkouts,
+            cardioWorkouts: stressCardio,
             restingHeartRate: restingHeartRate,
             maxHeartRate: maxHeartRate,
             days: 7,
@@ -115,7 +123,8 @@ enum WidgetSnapshotSync {
             nextDayName: next?.name,
             nextProgramName: active?.name,
             accentHex: accentHex,
-            workoutsLast7Days: workoutsLast7Days
+            workoutsLast7Days: workoutsLast7Days,
+            showsRunningActivity: showsRunningActivity
         )
     }
 }

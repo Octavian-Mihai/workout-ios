@@ -7,6 +7,7 @@ struct HomeView: View {
     @EnvironmentObject private var sessionStore: ActiveSessionStore
     @EnvironmentObject private var health: HealthKitService
     @Environment(AppTheme.self) private var theme
+    @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
 
     @State private var showTrends = false
 
@@ -22,10 +23,16 @@ struct HomeView: View {
         sessions.flatMap(\.sets)
     }
 
+    private var stressCardio: [CardioWorkout] {
+        showRunningActivity
+            ? health.cardioWorkouts
+            : health.cardioWorkouts.filter { $0.activityType != .running }
+    }
+
     private var todayStress: StressEstimate {
         StressCalculator.todayEstimate(
             sets: allSets,
-            cardioWorkouts: health.cardioWorkouts,
+            cardioWorkouts: stressCardio,
             restingHeartRate: health.restingHeartRate,
             maxHeartRate: health.maxHeartRate
         )
@@ -35,7 +42,11 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    YearActivityGrid(sessions: sessions, runDates: health.activityRunDays) { _ in
+                    YearActivityGrid(
+                        sessions: sessions,
+                        runDates: showRunningActivity ? health.activityRunDays : [],
+                        showsRunningActivity: showRunningActivity
+                    ) { _ in
                         showTrends = true
                     }
 

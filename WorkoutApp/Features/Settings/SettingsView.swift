@@ -23,8 +23,9 @@ struct SettingsView: View {
     @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
     @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
+    @AppStorage(RunningVisibility.showTabKey) private var showRunningTab = true
+    @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
     @AppStorage(HealthKitService.writeStrengthToHealthKitKey) private var writeStrengthToHealthKit = false
-    @AppStorage(ExerciseSubmissionService.adminEmailKey) private var adminEmail = "octavian.mihai321@gmail.com"
     @State private var showDeleteConfirm = false
     @State private var showImporter = false
     @State private var dataError: String?
@@ -108,6 +109,14 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
+                Section("Running") {
+                    Toggle("Show Running tab", isOn: $showRunningTab)
+                    Toggle("Show running activity", isOn: $showRunningActivity)
+                    Text("Turn off the Running tab to hide it. Turn off running activity to hide runs on Home, widgets, and Info stress. Walking, hiking, and cycling stay.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 Section("Equipment") {
                     if unit == .kg {
                         Stepper(
@@ -169,14 +178,6 @@ struct SettingsView: View {
                 }
 
                 Section("Data") {
-                    TextField("Catalog admin email", text: $adminEmail)
-                        .textContentType(.emailAddress)
-                        .keyboardType(.emailAddress)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
-                    Text("Used when you submit a custom exercise for inclusion in the global catalog. Opens your Mail app via mailto — nothing is uploaded automatically.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                     ShareLink(
                         item: WorkoutBackupService.make(
                             programs: programs,

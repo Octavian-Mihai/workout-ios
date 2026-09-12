@@ -9,6 +9,11 @@ enum InfoPageVisibility {
     static let showIntensityMapKey = "infoShowIntensityMap"
 }
 
+enum RunningVisibility {
+    static let showTabKey = "showRunningTab"
+    static let showActivityKey = "showRunningActivity"
+}
+
 struct InfoView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @EnvironmentObject private var health: HealthKitService
@@ -18,6 +23,7 @@ struct InfoView: View {
     @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
     @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
+    @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
     @State private var stressExpanded = true
     @State private var analyticsExpanded = false
 
@@ -33,10 +39,16 @@ struct InfoView: View {
         showTonnage || showVolumeCharts || showEstimated1RM || showIntensityMap
     }
 
+    private var stressCardio: [CardioWorkout] {
+        showRunningActivity
+            ? health.cardioWorkouts
+            : health.cardioWorkouts.filter { $0.activityType != .running }
+    }
+
     private var estimate: StressEstimate {
         StressCalculator.todayEstimate(
             sets: allSets,
-            cardioWorkouts: health.cardioWorkouts,
+            cardioWorkouts: stressCardio,
             restingHeartRate: health.restingHeartRate,
             maxHeartRate: health.maxHeartRate
         )
@@ -45,7 +57,7 @@ struct InfoView: View {
     private var trend: [DailyStress] {
         StressCalculator.dailyTrend(
             sets: allSets,
-            cardioWorkouts: health.cardioWorkouts,
+            cardioWorkouts: stressCardio,
             restingHeartRate: health.restingHeartRate,
             maxHeartRate: health.maxHeartRate
         )
@@ -68,6 +80,7 @@ struct InfoView: View {
                                 TodayStressCard(
                                     estimate: estimate,
                                     showSplit: true,
+                                    showRunSplit: showRunningActivity,
                                     trend: trend,
                                     accent: accent
                                 )
