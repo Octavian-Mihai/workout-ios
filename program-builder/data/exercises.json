@@ -178,7 +178,7 @@
       "Core & Abs"
     ],
     "equipment": "barbell",
-    "image": null,
+    "image": "zercher-split-squat.jpg",
     "cues": "Bar in the elbow crook, most of the load on the front leg. Stay tall; keep the front knee tracking over the toes."
   },
   {
@@ -210,7 +210,7 @@
       "Core & Abs"
     ],
     "equipment": "barbell",
-    "image": null,
+    "image": "zercher-step-up.jpg",
     "cues": "Bar in the elbow crook, drive through the whole foot on the box. Stand tall; don’t push off the trailing leg."
   },
   {
@@ -242,7 +242,7 @@
       "Core & Abs"
     ],
     "equipment": "barbell",
-    "image": null,
+    "image": "zercher-lunge.jpg",
     "cues": "Hold the bar in the elbow crook and stay tall. Long enough stride to load the glute; front knee tracks the toes."
   },
   {
@@ -274,7 +274,7 @@
       "Core & Abs"
     ],
     "equipment": "barbell",
-    "image": null,
+    "image": "zercher-reverse-lunge.jpg",
     "cues": "Hold the bar in the elbow crook. Step back far enough to load the front glute; stay tall through the torso."
   },
   {
@@ -535,7 +535,7 @@
       "Lats"
     ],
     "equipment": "barbell",
-    "image": null,
+    "image": "snatch.png",
     "cues": "Keep the bar close, then explode and punch under to lockout. Catch in a full squat with arms locked; don’t press it out."
   },
   {
@@ -553,7 +553,7 @@
       "Anterior Delts"
     ],
     "equipment": "barbell",
-    "image": null,
+    "image": "power-snatch.jpg",
     "cues": "Same pull as the snatch, catch higher. Bar close, explode, and punch under without riding into a deep squat."
   },
   {
@@ -588,7 +588,7 @@
       "Biceps"
     ],
     "equipment": "barbell",
-    "image": null,
+    "image": "clean.jpg",
     "cues": "Bar close off the floor, then explode and pull under to the front rack. Catch with elbows high; don’t crash the bar onto the shoulders."
   },
   {
@@ -607,7 +607,7 @@
       "Triceps"
     ],
     "equipment": "barbell",
-    "image": null,
+    "image": "clean-and-jerk.jpg",
     "cues": "Clean to a solid front rack, then dip and drive the bar overhead. Punch under the jerk and lock out; don’t press it out from the shoulders."
   },
   {
@@ -626,7 +626,7 @@
     ],
     "equipment": "kettlebell",
     "pattern": "Hinge",
-    "image": null,
+    "image": "kettlebell-swing.jpg",
     "cues": "Hinge hard, then snap the hips to float the bell to chest height. Keep the arms loose; don’t squat the swing or lift with the shoulders."
   },
   {
@@ -645,7 +645,7 @@
       "Forearms & Grip"
     ],
     "equipment": "kettlebell",
-    "image": null,
+    "image": "kettlebell-snatch.png",
     "cues": "Hike the bell, explode the hips, and punch through to lockout overhead. The bell should roll around the wrist, not slam onto it."
   },
   {
@@ -664,7 +664,7 @@
       "Forearms & Grip"
     ],
     "equipment": "kettlebell",
-    "image": null,
+    "image": "kettlebell-clean.jpg",
     "cues": "Hinge and snap the hips, then guide the bell into a tight rack. Elbow close, wrist stacked; don’t let the bell crash onto the forearm."
   },
   {
@@ -684,7 +684,7 @@
       "Erectors"
     ],
     "equipment": "kettlebell",
-    "image": null,
+    "image": "kettlebell-clean-and-jerk.jpg",
     "cues": "Clean to a solid rack, then dip and drive the bell overhead. Punch under to lockout; don’t press it out from a stalled rack."
   },
   {
