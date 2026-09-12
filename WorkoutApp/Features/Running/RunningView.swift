@@ -143,6 +143,7 @@ struct RunningView: View {
                     }
 
                     analyticsCard
+                        .tourTarget(.running)
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {

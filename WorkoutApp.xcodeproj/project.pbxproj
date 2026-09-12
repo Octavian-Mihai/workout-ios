@@ -56,6 +56,7 @@
 		BA32FB8F306D86088103BE44 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63E3739AA33506CD6ACC198 /* CoreLocation.framework */; };
 		BA6176842BD3AF3499330966 /* OneRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFE7227737392FE8C66197A /* OneRM.swift */; };
 		C7829BB892EB366849ADBFFD /* WorkoutSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4798E19A6EED7C1A79E2FA7D /* WorkoutSummaryView.swift */; };
+		C8F1A2B3D4E50617283A4B5D /* AppTour.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F1A2B3D4E50617283A4B5C /* AppTour.swift */; };
 		D1F8FA0371166F1BD51CEF27 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38CDA0471BEA3C57336CD4A9 /* AudioToolbox.framework */; };
 		D344CB9BB61D6CC6212B4A94 /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C729BCFE81109650DA6485 /* ScreenshotTests.swift */; };
 		D586AB00861CD97055DD9EE0 /* WorkoutSummarySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BB6A1FD408261E14B096D9 /* WorkoutSummarySheet.swift */; };
@@ -110,10 +111,6 @@
 		345E7F362E9745AB51F78A99 /* ExercisePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePickerView.swift; sourceTree = "<group>"; };
 		35C729BCFE81109650DA6485 /* ScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
 		37446E4DDD7163176DFFAFC8 /* RunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningView.swift; sourceTree = "<group>"; };
-		B7E8F901234567890ABCDEF02 /* ExercisePhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePhotoView.swift; sourceTree = "<group>"; };
-		B7E8F901234567890ABCDEF04 /* ExercisePreviewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePreviewSheet.swift; sourceTree = "<group>"; };
-		B7E8F901234567890ABCDEF06 /* ExerciseSubmissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSubmissionService.swift; sourceTree = "<group>"; };
-		B7E8F901234567890ABCDEF08 /* ProgramTemplateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramTemplateService.swift; sourceTree = "<group>"; };
 		38CDA0471BEA3C57336CD4A9 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		3BA0C8063047EBC800788FEC /* YourGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourGuideView.swift; sourceTree = "<group>"; };
 		422D09EB801CE5BA0EDFBA28 /* Workout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Workout.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,11 +145,16 @@
 		A99D54D106959C1FC29CAF35 /* NextWorkoutResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextWorkoutResolver.swift; sourceTree = "<group>"; };
 		B20721E9FB4B4B4F36A718A9 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
 		B2C3D4E5F60718293A4B5C6D /* BackgroundPickerDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPickerDashboard.swift; sourceTree = "<group>"; };
+		B7E8F901234567890ABCDEF02 /* ExercisePhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePhotoView.swift; sourceTree = "<group>"; };
+		B7E8F901234567890ABCDEF04 /* ExercisePreviewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisePreviewSheet.swift; sourceTree = "<group>"; };
+		B7E8F901234567890ABCDEF06 /* ExerciseSubmissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSubmissionService.swift; sourceTree = "<group>"; };
+		B7E8F901234567890ABCDEF08 /* ProgramTemplateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramTemplateService.swift; sourceTree = "<group>"; };
 		B92E529C838DBC34454DC60A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		BBF17773585342C27C170F89 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		C3D4E5F60718293A4B5C6D7E /* WorkoutHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistoryView.swift; sourceTree = "<group>"; };
+		C8F1A2B3D4E50617283A4B5C /* AppTour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTour.swift; sourceTree = "<group>"; };
 		D2A70CEAD22F0780B6C8A6B0 /* WorkoutTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTabView.swift; sourceTree = "<group>"; };
-		D8D186FCB83C27ABE5B36777 /* WorkoutAppUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WorkoutAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8D186FCB83C27ABE5B36777 /* WorkoutAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WorkoutAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC9F0772CA154A2089BC2FC8 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		E28E37477937D37BFD762CD8 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		E63E3739AA33506CD6ACC198 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -268,6 +270,7 @@
 		4DC384484A7E326EDBA9B47C /* App */ = {
 			isa = PBXGroup;
 			children = (
+				C8F1A2B3D4E50617283A4B5C /* AppTour.swift */,
 				E28E37477937D37BFD762CD8 /* RootTabView.swift */,
 				06E683E77D158F57A447DF81 /* WorkoutApp.swift */,
 			);
@@ -479,7 +482,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					A1000000000000000000000F = {
 						ProvisioningStyle = Automatic;
@@ -546,6 +549,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2363FE82BB839706124D2492 /* AccentPickerDashboard.swift in Sources */,
+				C8F1A2B3D4E50617283A4B5D /* AppTour.swift in Sources */,
 				A1B2C3D4E5F60718293A4B5C /* BackgroundPickerDashboard.swift in Sources */,
 				DD5B39393F4A3FE0FF1E24A7 /* ActiveSessionStore.swift in Sources */,
 				D957929D068F86E6C3C63835 /* ExerciseCatalog.swift in Sources */,
@@ -656,6 +660,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -669,6 +674,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = minimal;
@@ -872,6 +878,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -892,6 +899,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = minimal;

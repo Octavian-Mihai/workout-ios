@@ -6,6 +6,7 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(AppTheme.self) private var appTheme
+    @Environment(AppTourController.self) private var tour
     @EnvironmentObject private var health: HealthKitService
     @Query private var programs: [Program]
     @Query private var sessions: [WorkoutSession]
@@ -45,6 +46,7 @@ struct SettingsView: View {
         @Bindable var theme = appTheme
 
         NavigationStack {
+            ScrollViewReader { proxy in
             List {
                 Section("Accent") {
                     AccentPickerDashboard(accentName: $theme.accentName, customHex: $theme.customAccentHex)
@@ -92,6 +94,8 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                .tourTarget(.settings)
+                .id(AppTourTargetID.settings)
 
                 Section("Session") {
                     Stepper("Default rest \(defaultRestSeconds)s", value: $defaultRestSeconds, in: 15...300, step: 15)
@@ -197,6 +201,18 @@ struct SettingsView: View {
                 }
 
                 Section("About") {
+                    Button {
+                        tour.start()
+                    } label: {
+                        HStack {
+                            Text("How to use this app")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+                    .foregroundStyle(.primary)
                     HStack {
                         Text("Version")
                         Spacer()
@@ -238,6 +254,16 @@ struct SettingsView: View {
                     dataError = error.localizedDescription
                     showDataError = true
                 }
+            }
+            .onChange(of: tour.step) { _, step in
+                if step == .settings {
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            proxy.scrollTo(AppTourTargetID.settings, anchor: .center)
+                        }
+                    }
+                }
+            }
             }
         }
     }

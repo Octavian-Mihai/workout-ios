@@ -167,7 +167,7 @@
         "key": "Custom exercise",
         "location": {
           "startingColumn": 26,
-          "startingLine": 347
+          "startingLine": 354
         }
       },
       {
@@ -180,18 +180,10 @@
       },
       {
         "comment": "",
-        "key": "Equipment",
-        "location": {
-          "startingColumn": 21,
-          "startingLine": 326
-        }
-      },
-      {
-        "comment": "",
         "key": "Primary muscles",
         "location": {
           "startingColumn": 21,
-          "startingLine": 334
+          "startingLine": 341
         }
       },
       {
@@ -199,14 +191,14 @@
         "key": "Secondary muscles",
         "location": {
           "startingColumn": 21,
-          "startingLine": 340
+          "startingLine": 347
         }
       },
       {
         "comment": "",
-        "key": "Equipment type",
+        "key": "Equipment",
         "location": {
-          "startingColumn": 24,
+          "startingColumn": 22,
           "startingLine": 327
         }
       },
@@ -215,7 +207,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 24,
-          "startingLine": 350
+          "startingLine": 357
         }
       },
       {
@@ -223,7 +215,7 @@
         "key": "Add",
         "location": {
           "startingColumn": 24,
-          "startingLine": 353
+          "startingLine": 360
         }
       }
     ]

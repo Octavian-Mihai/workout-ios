@@ -24,6 +24,7 @@ struct InfoView: View {
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
     @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
     @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
+    @Environment(AppTourController.self) private var tour
     @State private var stressExpanded = true
     @State private var analyticsExpanded = false
 
@@ -120,7 +121,13 @@ struct InfoView: View {
                         .tint(.secondary)
                     }
                 }
+                .tourTarget(.infoAnalytics)
                 .padding(16)
+                .onChange(of: tour.step) { _, step in
+                    if step == .infoAnalytics {
+                        stressExpanded = true
+                    }
+                }
             }
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Info")

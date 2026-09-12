@@ -9,6 +9,7 @@ struct HomeView: View {
     @Environment(AppTheme.self) private var theme
     @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
 
+    @Environment(AppTourController.self) private var tour
     @State private var showTrends = false
 
     private var accent: Color {
@@ -40,46 +41,69 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    YearActivityGrid(
-                        sessions: sessions,
-                        runDates: showRunningActivity ? health.activityRunDays : [],
-                        showsRunningActivity: showRunningActivity
-                    ) { _ in
-                        showTrends = true
-                    }
-
-                    TodayStressCard(estimate: todayStress, accent: accent, compact: true)
-
-                    if let program = programs.first(where: \.isActive), let day = nextDay {
-                        NextWorkoutCard(program: program, day: day) {
-                            sessionStore.start(program: program, programDay: day)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        YearActivityGrid(
+                            sessions: sessions,
+                            runDates: showRunningActivity ? health.activityRunDays : [],
+                            showsRunningActivity: showRunningActivity
+                        ) { _ in
+                            showTrends = true
                         }
-                    } else {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("No active program")
-                                .font(.headline)
-                            Text("Create a program on the Workout tab and mark it active. You can still start an empty workout.")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(16)
-                        .opaqueCard()
-                    }
+                        .tourTarget(.homeYearGrid)
+                        .id(AppTourTargetID.homeYearGrid)
 
-                    Button {
-                        sessionStore.start(program: nil, programDay: nil)
-                    } label: {
-                        Label("Start empty workout", systemImage: "plus.circle.fill")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
+                        TodayStressCard(estimate: todayStress, accent: accent, compact: true)
+                            .tourTarget(.homeTodayStress)
+                            .id(AppTourTargetID.homeTodayStress)
+
+                        VStack(alignment: .leading, spacing: 16) {
+                            if let program = programs.first(where: \.isActive), let day = nextDay {
+                                NextWorkoutCard(program: program, day: day) {
+                                    sessionStore.start(program: program, programDay: day)
+                                }
+                            } else {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("No active program")
+                                        .font(.headline)
+                                    Text("Create a program on the Workout tab and mark it active. You can still start an empty workout.")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(16)
+                                .opaqueCard()
+                            }
+
+                            Button {
+                                sessionStore.start(program: nil, programDay: nil)
+                            } label: {
+                                Label("Start empty workout", systemImage: "plus.circle.fill")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 14)
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                        .tourTarget(.homeStartWorkout)
+                        .id(AppTourTargetID.homeStartWorkout)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .padding(16)
                 }
-                .padding(16)
+                .onAppear {
+                    if tour.isActive {
+                        scrollHomeTour(tour.step, proxy: proxy)
+                    }
+                }
+                .onChange(of: tour.isActive) { _, active in
+                    if active {
+                        scrollHomeTour(tour.step, proxy: proxy)
+                    }
+                }
+                .onChange(of: tour.step) { _, step in
+                    scrollHomeTour(step, proxy: proxy)
+                }
             }
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Home")
@@ -87,6 +111,23 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showTrends) {
                 TrendsDetailView()
             }
+        }
+    }
+
+    private func scrollHomeTour(_ step: AppTourStep, proxy: ScrollViewProxy) {
+        let id: AppTourTargetID?
+        switch step {
+        case .homeYearGrid: id = .homeYearGrid
+        case .homeTodayStress: id = .homeTodayStress
+        case .homeStartWorkout: id = .homeStartWorkout
+        default: id = nil
+        }
+        guard let id else { return }
+        DispatchQueue.main.async {
+            withAnimation {
+                proxy.scrollTo(id, anchor: .center)
+            }
+            tour.requestFrameRefresh()
         }
     }
 }

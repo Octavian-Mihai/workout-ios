@@ -7,6 +7,7 @@ struct WorkoutTabView: View {
     @Query(sort: \Program.createdAt) private var programs: [Program]
     @EnvironmentObject private var sessionStore: ActiveSessionStore
     @Environment(AppTheme.self) private var theme
+    @Environment(AppTourController.self) private var tour
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
 
     private var accent: Color { theme.accent }
@@ -22,40 +23,64 @@ struct WorkoutTabView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    ProgramListView()
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        ProgramListView()
+                            .tourTarget(.workoutPrograms)
+                            .id(AppTourTargetID.workoutPrograms)
 
-                    if let program = activeProgram, let day = nextDay {
-                        Button {
-                            sessionStore.start(program: program, programDay: day)
-                        } label: {
-                            Label("Start \(day.name)", systemImage: "play.fill")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 12)
+                        if let program = activeProgram, let day = nextDay {
+                            Button {
+                                sessionStore.start(program: program, programDay: day)
+                            } label: {
+                                Label("Start \(day.name)", systemImage: "play.fill")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .accessibilityHint("Starts \(program.name)")
                         }
-                        .buttonStyle(.borderedProminent)
-                        .accessibilityHint("Starts \(program.name)")
+
+                        Button {
+                            sessionStore.start(program: nil, programDay: nil)
+                        } label: {
+                            Label("Start empty workout", systemImage: "plus")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                        }
+                        .buttonStyle(.bordered)
+
+                        LearnLinksView()
+                            .tourTarget(.workoutLearn)
+                            .id(AppTourTargetID.workoutLearn)
+
+                        WorkoutHistoryView(sessions: sessions, accent: accent, unit: unit)
                     }
-
-                    Button {
-                        sessionStore.start(program: nil, programDay: nil)
-                    } label: {
-                        Label("Start empty workout", systemImage: "plus")
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                    }
-                    .buttonStyle(.bordered)
-
-                    LearnLinksView()
-
-                    WorkoutHistoryView(sessions: sessions, accent: accent, unit: unit)
+                    .padding(16)
                 }
-                .padding(16)
+                .onChange(of: tour.step) { _, step in
+                    scrollWorkoutTour(step, proxy: proxy)
+                }
             }
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Workout")
+        }
+    }
+
+    private func scrollWorkoutTour(_ step: AppTourStep, proxy: ScrollViewProxy) {
+        let id: AppTourTargetID?
+        switch step {
+        case .workoutPrograms: id = .workoutPrograms
+        case .workoutLearn: id = .workoutLearn
+        default: id = nil
+        }
+        guard let id else { return }
+        DispatchQueue.main.async {
+            withAnimation {
+                proxy.scrollTo(id, anchor: .center)
+            }
         }
     }
 }

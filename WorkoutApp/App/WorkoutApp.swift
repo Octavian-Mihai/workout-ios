@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-private enum ScreenshotDefaults {
+enum ScreenshotDefaults {
     static var isActive: Bool {
         ProcessInfo.processInfo.arguments.contains("-UITEST_SCREENSHOTS")
             || ProcessInfo.processInfo.environment["UITEST_SCREENSHOTS"] == "1"
@@ -22,6 +22,7 @@ private enum ScreenshotDefaults {
         defaults.set(accentHex, forKey: AccentTheme.customHexKey)
         defaults.set(BackgroundTheme.customName, forKey: BackgroundTheme.backgroundNameKey)
         defaults.set(backgroundHex, forKey: BackgroundTheme.customHexKey)
+        defaults.set(true, forKey: "hasSeenAppGuide")
         defaults.synchronize()
     }
 }

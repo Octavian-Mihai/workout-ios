@@ -12,32 +12,72 @@ struct RootTabView: View {
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
     @AppStorage(RunningVisibility.showTabKey) private var showRunningTab = true
     @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
+    @AppStorage("hasSeenAppGuide") private var hasSeenAppGuide = false
+    @State private var tour = AppTourController()
 
     private var accent: Color {
         appTheme.accent
     }
 
     var body: some View {
-        TabView {
+        TabView(selection: $tour.selectedTab) {
             HomeView()
                 .tabItem { Label("Home", systemImage: "house.fill") }
+                .tag(AppTab.home)
 
             WorkoutTabView()
                 .tabItem { Label("Workout", systemImage: "figure.strengthtraining.traditional") }
+                .tag(AppTab.workout)
 
             if showRunningTab {
                 RunningView()
                     .tabItem { Label("Running", systemImage: "figure.run") }
+                    .tag(AppTab.running)
             }
 
             InfoView()
                 .tabItem { Label("Info", systemImage: "chart.bar.fill") }
+                .tag(AppTab.info)
 
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
+                .tag(AppTab.settings)
         }
         .environmentObject(sessionStore)
         .environmentObject(health)
+        .environment(tour)
+        .overlay {
+            if tour.isActive {
+                AppTourOverlay(
+                    tour: tour,
+                    showRunningTab: showRunningTab,
+                    accent: accent,
+                    cardFill: appTheme.cardFill,
+                    cardBorder: appTheme.cardBorder
+                ) {
+                    hasSeenAppGuide = true
+                }
+            }
+        }
+        .coordinateSpace(name: TourCoordinateSpace.name)
+        .onAppear {
+            if !hasSeenAppGuide && !ScreenshotDefaults.isActive && !tour.isActive {
+                tour.start()
+            }
+        }
+        .onChange(of: tour.selectedTab) { _, _ in
+            if tour.isActive {
+                tour.requestFrameRefresh()
+            }
+        }
+        .onChange(of: showRunningTab) { _, visible in
+            if !visible, tour.selectedTab == .running {
+                tour.selectedTab = .workout
+                if tour.isActive, tour.step == .running {
+                    tour.advance(showRunningTab: false)
+                }
+            }
+        }
         .fullScreenCover(isPresented: Binding(
             get: { sessionStore.isPresented && sessionStore.controller != nil },
             set: { presented in
