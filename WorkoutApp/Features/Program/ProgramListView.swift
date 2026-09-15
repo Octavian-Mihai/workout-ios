@@ -7,6 +7,9 @@ struct ProgramListView: View {
     @Query(sort: \Program.createdAt) private var programs: [Program]
     @State private var createdUUID: UUID?
     @State private var showImporter = false
+    @State private var showStarterPicker = false
+    @State private var pendingStarter: StarterProgramTemplate?
+    @State private var pendingBlank = false
     @State private var importError: String?
     @State private var showImportError = false
 
@@ -23,7 +26,7 @@ struct ProgramListView: View {
                         .font(.subheadline.weight(.semibold))
                 }
                 Button {
-                    createProgram()
+                    showStarterPicker = true
                 } label: {
                     Label("Create", systemImage: "plus")
                         .font(.subheadline.weight(.semibold))
@@ -31,7 +34,7 @@ struct ProgramListView: View {
             }
 
             if programs.isEmpty {
-                Text("No programs yet. Create one and add rotating days. Only user-built programs are used — nothing is shipped as a starter split.")
+                Text("No programs yet. Start from a template or create a blank program and add rotating days.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {
@@ -82,6 +85,12 @@ struct ProgramListView: View {
                 ProgramEditorView(program: program)
             }
         }
+        .sheet(isPresented: $showStarterPicker, onDismiss: applyPendingStarter) {
+            StarterProgramPickerView(
+                onBlank: { pendingBlank = true },
+                onSelect: { pendingStarter = $0 }
+            )
+        }
         .fileImporter(
             isPresented: $showImporter,
             allowedContentTypes: [.json],
@@ -118,6 +127,16 @@ struct ProgramListView: View {
         }
     }
 
+    private func applyPendingStarter() {
+        if pendingBlank {
+            pendingBlank = false
+            createProgram()
+        } else if let template = pendingStarter {
+            pendingStarter = nil
+            applyStarter(template)
+        }
+    }
+
     private func createProgram() {
         if let current = programs.first(where: \.isActive) {
             current.isActive = false
@@ -126,6 +145,20 @@ struct ProgramListView: View {
         modelContext.insert(program)
         try? modelContext.save()
         createdUUID = program.uuid
+    }
+
+    private func applyStarter(_ template: StarterProgramTemplate) {
+        do {
+            let program = try ProgramTemplateService.applyStarter(
+                template,
+                context: modelContext,
+                existingPrograms: programs
+            )
+            createdUUID = program.uuid
+        } catch {
+            importError = error.localizedDescription
+            showImportError = true
+        }
     }
 
     private func setActive(_ program: Program, _ isActive: Bool) {
@@ -137,5 +170,71 @@ struct ProgramListView: View {
             program.isActive = false
         }
         try? modelContext.save()
+    }
+}
+
+struct StarterProgramPickerView: View {
+    var onBlank: () -> Void
+    var onSelect: (StarterProgramTemplate) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    Button {
+                        onBlank()
+                        dismiss()
+                    } label: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Blank program")
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                            Text("Start empty and add your own days.")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+
+                Section {
+                    ForEach(StarterProgramTemplates.all) { template in
+                        Button {
+                            onSelect(template)
+                            dismiss()
+                        } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(template.name)
+                                    .font(.headline)
+                                    .foregroundStyle(.primary)
+                                Text(template.dayLabel)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text(template.dayNamesLabel)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text(template.summary)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                } header: {
+                    Text("Starter templates")
+                } footer: {
+                    Text("Copies into a new program using exercises from the catalog. Edit days and sets after you start.")
+                }
+            }
+            .navigationTitle("New program")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
+        }
     }
 }

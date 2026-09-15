@@ -67,7 +67,7 @@ struct HomeView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text("No active program")
                                         .font(.headline)
-                                    Text("Create a program on the Workout tab and mark it active. You can still start an empty workout.")
+                                    Text("Create a program from a starter template on the Workout tab and mark it active. You can still start an empty workout.")
                                         .font(.subheadline)
                                         .foregroundStyle(.secondary)
                                 }

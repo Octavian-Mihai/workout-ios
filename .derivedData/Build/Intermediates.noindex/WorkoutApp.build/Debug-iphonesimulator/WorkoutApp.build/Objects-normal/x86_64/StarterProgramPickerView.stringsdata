@@ -1,0 +1,56 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Program/StarterProgramPickerView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "New program",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
+        "key": "Blank program",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 18
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start empty and add your own days.",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 21
+        }
+      },
+      {
+        "comment": "",
+        "key": "Starter templates",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "Copies into a new program using exercises from the catalog. Edit days and sets after you start.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 62
+        }
+      }
+    ]
+  },
+  "version": 1
+}

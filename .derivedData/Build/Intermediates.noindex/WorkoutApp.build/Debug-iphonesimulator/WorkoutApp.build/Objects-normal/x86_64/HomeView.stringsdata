@@ -20,7 +20,7 @@
       },
       {
         "comment": "",
-        "key": "Create a program on the Workout tab and mark it active. You can still start an empty workout.",
+        "key": "Create a program from a starter template on the Workout tab and mark it active. You can still start an empty workout.",
         "location": {
           "startingColumn": 42,
           "startingLine": 70

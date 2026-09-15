@@ -81,7 +81,7 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         case .homeStartWorkout:
             return "If a program is active, start the next day here. Otherwise use Start empty workout. In a session you’ll log weight, reps, and RIR on the keypad."
         case .workoutPrograms:
-            return "Create or import a program, add rotating days, and mark one active so Home knows what comes next."
+            return "Create from a starter template, import a plan, or build your own. Mark one active so Home knows what comes next."
         case .workoutLearn:
             return "Optional movement and muscle notes — an encyclopedia, not this tour."
         case .infoAnalytics:

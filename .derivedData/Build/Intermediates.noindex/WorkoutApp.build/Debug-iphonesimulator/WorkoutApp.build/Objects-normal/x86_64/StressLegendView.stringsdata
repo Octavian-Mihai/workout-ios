@@ -20,6 +20,14 @@
       },
       {
         "comment": "",
+        "key": "Leftover fatigue eases over the next couple of mornings.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 141
+        }
+      },
+      {
+        "comment": "",
         "key": "Day",
         "location": {
           "startingColumn": 35,
@@ -55,7 +63,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 159
+          "startingLine": 162
         }
       }
     ]
