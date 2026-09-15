@@ -43,6 +43,10 @@ enum StressBand: String {
 
 enum StressCalculator {
     static let windowDays: Double = 7
+    /// Overnight leftover-fatigue decay (~36h half-life). A 100% day is ~65 the next morning.
+    static let residualDecayPerDay = 0.65
+    /// Days of isolated load used to seed the residual series before the 7-day display window.
+    static let residualSeedDays = 14
 
     static func band(for score: Double) -> StressBand {
         StressBand.band(for: score)
@@ -265,7 +269,7 @@ enum StressCalculator {
         return keys.contains { n.contains($0) }
     }
 
-    /// Recency-weighted stress for today using the last 3 days (today 1.0, yesterday 0.6, 2 days ago 0.3).
+    /// Leftover fatigue for today: today’s residual from the decaying lift/run series.
     static func todayEstimate(
         sets: [SetLog],
         cardioWorkouts: [CardioWorkout],
@@ -273,31 +277,19 @@ enum StressCalculator {
         maxHeartRate: Double? = nil,
         now: Date = Date()
     ) -> StressEstimate {
-        let cal = Calendar.current
-        let today = cal.startOfDay(for: now)
-        let weights = [1.0, 0.6, 0.3]
-        var liftAcc = 0.0
-        var runAcc = 0.0
-        var weightSum = 0.0
-        for (offset, weight) in weights.enumerated() {
-            guard let day = cal.date(byAdding: .day, value: -offset, to: today) else { continue }
-            let slice = daySlice(
-                sets: sets,
-                cardioWorkouts: cardioWorkouts,
-                dayStart: day,
-                calendar: cal,
-                restingHeartRate: restingHeartRate,
-                maxHeartRate: maxHeartRate
-            )
-            liftAcc += slice.lift * weight
-            runAcc += slice.run * weight
-            weightSum += weight
+        guard let today = residualSeries(
+            sets: sets,
+            cardioWorkouts: cardioWorkouts,
+            restingHeartRate: restingHeartRate,
+            maxHeartRate: maxHeartRate,
+            now: now
+        ).last else {
+            return StressEstimate(total: 0, lift: 0, run: 0)
         }
-        let lift = weightSum > 0 ? liftAcc / weightSum : 0
-        let run = weightSum > 0 ? runAcc / weightSum : 0
-        return StressEstimate(total: blend(lift: lift, run: run), lift: lift, run: run)
+        return StressEstimate(total: today.total, lift: today.lift, run: today.run)
     }
 
+    /// Last `days` of leftover-fatigue residuals (seeded over `residualSeedDays`).
     static func dailyTrend(
         sets: [SetLog],
         cardioWorkouts: [CardioWorkout],
@@ -306,20 +298,14 @@ enum StressCalculator {
         days: Int = 7,
         now: Date = Date()
     ) -> [DailyStress] {
-        let cal = Calendar.current
-        let today = cal.startOfDay(for: now)
-        return (0..<days).compactMap { offset in
-            guard let day = cal.date(byAdding: .day, value: -(days - 1 - offset), to: today) else { return nil }
-            let slice = daySlice(
-                sets: sets,
-                cardioWorkouts: cardioWorkouts,
-                dayStart: day,
-                calendar: cal,
-                restingHeartRate: restingHeartRate,
-                maxHeartRate: maxHeartRate
-            )
-            return DailyStress(date: day, total: slice.total, lift: slice.lift, run: slice.run)
-        }
+        let series = residualSeries(
+            sets: sets,
+            cardioWorkouts: cardioWorkouts,
+            restingHeartRate: restingHeartRate,
+            maxHeartRate: maxHeartRate,
+            now: now
+        )
+        return Array(series.suffix(days))
     }
 
     static func blend(lift: Double, run: Double) -> Double {
@@ -327,6 +313,11 @@ enum StressCalculator {
             return min(100, lift * 0.65 + run * 0.35)
         }
         return min(100, max(lift, run))
+    }
+
+    /// Harder leftover channel counts in full; the smaller one adds at half, capped at 100.
+    static func combineResiduals(lift: Double, run: Double) -> Double {
+        min(100, max(lift, run) + 0.5 * min(lift, run))
     }
 
     static func dayLiftScore(_ sets: [SetLog]) -> Double {
@@ -347,6 +338,46 @@ enum StressCalculator {
             .map { $0.stress(restingHeartRate: restingHeartRate, maxHeartRate: maxHeartRate) }
             .reduce(0, +)
         return min(100, total)
+    }
+
+    /// Walks `residualSeedDays` of isolated daily load into decaying lift/run residuals.
+    private static func residualSeries(
+        sets: [SetLog],
+        cardioWorkouts: [CardioWorkout],
+        restingHeartRate: Double?,
+        maxHeartRate: Double?,
+        now: Date
+    ) -> [DailyStress] {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: now)
+        var liftResidual = 0.0
+        var runResidual = 0.0
+        var series: [DailyStress] = []
+        series.reserveCapacity(residualSeedDays)
+        for offset in 0..<residualSeedDays {
+            guard let day = cal.date(byAdding: .day, value: -(residualSeedDays - 1 - offset), to: today) else {
+                continue
+            }
+            let slice = daySlice(
+                sets: sets,
+                cardioWorkouts: cardioWorkouts,
+                dayStart: day,
+                calendar: cal,
+                restingHeartRate: restingHeartRate,
+                maxHeartRate: maxHeartRate
+            )
+            liftResidual = min(100, slice.lift + liftResidual * residualDecayPerDay)
+            runResidual = min(100, slice.run + runResidual * residualDecayPerDay)
+            series.append(
+                DailyStress(
+                    date: day,
+                    total: combineResiduals(lift: liftResidual, run: runResidual),
+                    lift: liftResidual,
+                    run: runResidual
+                )
+            )
+        }
+        return series
     }
 
     private static func daySlice(

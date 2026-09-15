@@ -138,6 +138,9 @@ struct TodayStressCard: View {
                         AxisValueLabel(format: .dateTime.weekday(.narrow))
                     }
                 }
+                Text("Leftover fatigue eases over the next couple of mornings.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
             StressLegendView(
                 compact: true,
