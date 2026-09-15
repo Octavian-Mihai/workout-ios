@@ -7,7 +7,7 @@
         "key": "Program overview",
         "location": {
           "startingColumn": 30,
-          "startingLine": 28
+          "startingLine": 29
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Primary muscles get full exercise and set credit. Secondary muscles get half, matching Anatomy 101 volume. Totals count each lift once; per-muscle numbers can add up to more because compounds credit more than one muscle.",
         "location": {
           "startingColumn": 14,
-          "startingLine": 85
+          "startingLine": 116
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "Done",
         "location": {
           "startingColumn": 28,
-          "startingLine": 32
+          "startingLine": 33
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Insight",
         "location": {
           "startingColumn": 22,
-          "startingLine": 95
+          "startingLine": 126
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "By muscle",
         "location": {
           "startingColumn": 18,
-          "startingLine": 120
+          "startingLine": 151
         }
       },
       {
@@ -47,7 +47,7 @@
         "key": "Add exercises to see how the split loads each muscle.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 123
+          "startingLine": 154
         }
       }
     ]

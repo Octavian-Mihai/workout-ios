@@ -39,7 +39,7 @@
         "key": "No exercises yet — add some in the program editor.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 157
+          "startingLine": 168
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "+%lld more",
         "location": {
           "startingColumn": 30,
-          "startingLine": 167
+          "startingLine": 178
         }
       },
       {
@@ -63,7 +63,7 @@
         "key": "Start",
         "location": {
           "startingColumn": 22,
-          "startingLine": 175
+          "startingLine": 186
         }
       }
     ]

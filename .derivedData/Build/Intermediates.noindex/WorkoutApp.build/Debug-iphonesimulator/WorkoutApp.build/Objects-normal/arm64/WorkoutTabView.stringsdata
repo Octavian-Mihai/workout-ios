@@ -7,23 +7,7 @@
         "key": "Workout",
         "location": {
           "startingColumn": 30,
-          "startingLine": 68
-        }
-      },
-      {
-        "comment": "",
-        "key": "Starts %@",
-        "location": {
-          "startingColumn": 48,
-          "startingLine": 43
-        }
-      },
-      {
-        "comment": "",
-        "key": "Start %@",
-        "location": {
-          "startingColumn": 39,
-          "startingLine": 37
+          "startingLine": 75
         }
       },
       {
@@ -31,7 +15,47 @@
         "key": "Start empty workout",
         "location": {
           "startingColumn": 35,
-          "startingLine": 49
+          "startingLine": 45
+        }
+      },
+      {
+        "comment": "",
+        "key": "Learn",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "Previous day",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 121
+        }
+      },
+      {
+        "comment": "",
+        "key": "Next day",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 145
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld of %lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 129
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start %@",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 154
         }
       },
       {
@@ -39,7 +63,7 @@
         "key": "Tonnage (7d)",
         "location": {
           "startingColumn": 22,
-          "startingLine": 136
+          "startingLine": 253
         }
       },
       {
@@ -47,7 +71,7 @@
         "key": "%@ %@·reps",
         "location": {
           "startingColumn": 22,
-          "startingLine": 138
+          "startingLine": 255
         }
       },
       {
@@ -55,7 +79,7 @@
         "key": "Reps (7d)",
         "location": {
           "startingColumn": 22,
-          "startingLine": 143
+          "startingLine": 260
         }
       },
       {
@@ -63,7 +87,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 145
+          "startingLine": 262
         }
       },
       {
@@ -71,7 +95,7 @@
         "key": "%@ %@·reps",
         "location": {
           "startingColumn": 30,
-          "startingLine": 154
+          "startingLine": 271
         }
       },
       {
@@ -79,7 +103,7 @@
         "key": "%@ reps",
         "location": {
           "startingColumn": 30,
-          "startingLine": 156
+          "startingLine": 273
         }
       },
       {
@@ -87,7 +111,7 @@
         "key": "Volume per muscle (7d)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 171
+          "startingLine": 288
         }
       },
       {
@@ -95,7 +119,7 @@
         "key": "Primary gets full set volume; secondary gets half.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 173
+          "startingLine": 290
         }
       },
       {
@@ -103,7 +127,7 @@
         "key": "Volume",
         "location": {
           "startingColumn": 31,
-          "startingLine": 178
+          "startingLine": 295
         }
       },
       {
@@ -111,7 +135,7 @@
         "key": "Muscle",
         "location": {
           "startingColumn": 31,
-          "startingLine": 179
+          "startingLine": 296
         }
       },
       {
@@ -119,7 +143,7 @@
         "key": "Estimated 1RM",
         "location": {
           "startingColumn": 18,
-          "startingLine": 194
+          "startingLine": 311
         }
       },
       {
@@ -127,7 +151,7 @@
         "key": "weight × (1 + (reps + RIR) / 30)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 196
+          "startingLine": 313
         }
       },
       {
@@ -135,7 +159,7 @@
         "key": "Muscle engagement (7d)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 208
+          "startingLine": 325
         }
       },
       {
@@ -143,7 +167,7 @@
         "key": "Muscle",
         "location": {
           "startingColumn": 31,
-          "startingLine": 212
+          "startingLine": 329
         }
       },
       {
@@ -151,7 +175,7 @@
         "key": "Volume",
         "location": {
           "startingColumn": 31,
-          "startingLine": 213
+          "startingLine": 330
         }
       },
       {
@@ -159,7 +183,7 @@
         "key": "Intensity map",
         "location": {
           "startingColumn": 18,
-          "startingLine": 232
+          "startingLine": 349
         }
       },
       {
@@ -167,7 +191,7 @@
         "key": "Average RIR per exercise over the last 7 days.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 234
+          "startingLine": 351
         }
       },
       {
@@ -175,7 +199,7 @@
         "key": "Date",
         "location": {
           "startingColumn": 27,
-          "startingLine": 278
+          "startingLine": 395
         }
       },
       {
@@ -183,7 +207,7 @@
         "key": "1RM",
         "location": {
           "startingColumn": 27,
-          "startingLine": 279
+          "startingLine": 396
         }
       },
       {
@@ -191,7 +215,7 @@
         "key": "Lift",
         "location": {
           "startingColumn": 41,
-          "startingLine": 281
+          "startingLine": 398
         }
       },
       {
@@ -199,7 +223,7 @@
         "key": "Date",
         "location": {
           "startingColumn": 27,
-          "startingLine": 283
+          "startingLine": 400
         }
       },
       {
@@ -207,7 +231,7 @@
         "key": "1RM",
         "location": {
           "startingColumn": 27,
-          "startingLine": 284
+          "startingLine": 401
         }
       },
       {
@@ -215,7 +239,7 @@
         "key": "Lift",
         "location": {
           "startingColumn": 41,
-          "startingLine": 286
+          "startingLine": 403
         }
       }
     ]

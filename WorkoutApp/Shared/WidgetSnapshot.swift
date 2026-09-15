@@ -176,6 +176,21 @@ struct WidgetYearCell: Identifiable {
     var kind: WidgetYearActivityKind
 }
 
+/// Week layout shared by Home `YearActivityGrid` and the year widget grid.
+enum YearGridWeekdays {
+    /// Sunday. Both year grids pin `Calendar.firstWeekday` to this value.
+    static let firstWeekday = 1
+
+    /// Single-letter weekday names in grid-row order (Sunday → Saturday).
+    static func letters(calendar: Calendar = .current) -> [String] {
+        let symbols = calendar.veryShortWeekdaySymbols
+        let fallback = ["S", "M", "T", "W", "T", "F", "S"]
+        guard symbols.count == 7 else { return fallback }
+        let start = (firstWeekday - 1 + 7) % 7
+        return (0..<7).map { symbols[(start + $0) % 7] }
+    }
+}
+
 enum WidgetYearGridBuilder {
     static func cells(
         year: Int,
@@ -184,7 +199,7 @@ enum WidgetYearGridBuilder {
         calendar: Calendar = .current
     ) -> [WidgetYearCell] {
         var cal = calendar
-        cal.firstWeekday = 1
+        cal.firstWeekday = YearGridWeekdays.firstWeekday
 
         let liftDays = Set(liftDayStarts.map { cal.startOfDay(for: Date(timeIntervalSince1970: $0)).timeIntervalSince1970 })
         let runDays = Set(runDayStarts.map { cal.startOfDay(for: Date(timeIntervalSince1970: $0)).timeIntervalSince1970 })

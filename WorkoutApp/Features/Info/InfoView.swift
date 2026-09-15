@@ -162,10 +162,6 @@ struct InfoView: View {
 struct LearnLinksView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Learn")
-                .font(.title3.weight(.bold))
-                .foregroundStyle(.primary)
-
             learnLink("Core movement categories", destination: CoreMovementCategoriesView())
             learnLink("Key muscle groups", destination: KeyMuscleGroupsView())
             learnLink("Strength patterns", destination: MoreStrengthPatternsView())

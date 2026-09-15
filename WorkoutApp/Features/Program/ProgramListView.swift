@@ -10,73 +10,53 @@ struct ProgramListView: View {
     @State private var showStarterPicker = false
     @State private var pendingStarter: StarterProgramTemplate?
     @State private var pendingBlank = false
+    @State private var pendingImport = false
     @State private var importError: String?
     @State private var showImportError = false
+    @State private var programsExpanded = true
+
+    private var activeProgram: Program? {
+        programs.first(where: \.isActive)
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Programs")
-                    .font(.headline)
-                Spacer()
-                Button {
-                    showImporter = true
-                } label: {
-                    Label("Import", systemImage: "square.and.arrow.down")
-                        .font(.subheadline.weight(.semibold))
+        DisclosureGroup(isExpanded: $programsExpanded) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Spacer()
+                    Button {
+                        showStarterPicker = true
+                    } label: {
+                        Label("Create", systemImage: "plus")
+                            .font(.subheadline.weight(.semibold))
+                    }
                 }
-                Button {
-                    showStarterPicker = true
-                } label: {
-                    Label("Create", systemImage: "plus")
-                        .font(.subheadline.weight(.semibold))
+
+                if programs.isEmpty {
+                    Text("No programs yet. Start from a template or create a blank program and add rotating days.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(programs) { program in
+                        programRow(program)
+                    }
                 }
             }
-
-            if programs.isEmpty {
-                Text("No programs yet. Start from a template or create a blank program and add rotating days.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            } else {
-                ForEach(programs) { program in
-                    HStack(alignment: .center, spacing: 12) {
-                        NavigationLink {
-                            ProgramEditorView(program: program)
-                        } label: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(program.name)
-                                    .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(.primary)
-                                Text("\(program.orderedDays.count) day rotation")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .buttonStyle(.plain)
-                        Toggle("Active", isOn: Binding(
-                            get: { program.isActive },
-                            set: { newValue in setActive(program, newValue) }
-                        ))
-                        .labelsHidden()
-                    }
-                    .padding(12)
-                    .opaqueCard()
-                    .contextMenu {
-                        ShareLink(
-                            item: ProgramTemplateService.make(from: program),
-                            preview: SharePreview("Export plan")
-                        ) {
-                            Label("Export plan", systemImage: "square.and.arrow.up")
-                        }
-                        Button("Set active") { setActive(program, true) }
-                        Button("Delete", role: .destructive) {
-                            modelContext.delete(program)
-                        }
-                    }
+            .padding(.top, 8)
+        } label: {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Programs")
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(.primary)
+                if let name = activeProgram?.name {
+                    Text(name)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
             }
         }
+        .tint(.secondary)
         .navigationDestination(isPresented: Binding(
             get: { createdUUID != nil },
             set: { if !$0 { createdUUID = nil } }
@@ -85,10 +65,11 @@ struct ProgramListView: View {
                 ProgramEditorView(program: program)
             }
         }
-        .sheet(isPresented: $showStarterPicker, onDismiss: applyPendingStarter) {
+        .sheet(isPresented: $showStarterPicker, onDismiss: handleStarterPickerDismiss) {
             StarterProgramPickerView(
                 onBlank: { pendingBlank = true },
-                onSelect: { pendingStarter = $0 }
+                onSelect: { pendingStarter = $0 },
+                onImport: { pendingImport = true }
             )
         }
         .fileImporter(
@@ -112,6 +93,52 @@ struct ProgramListView: View {
         }
     }
 
+    private func programRow(_ program: Program) -> some View {
+        HStack(alignment: .center, spacing: 12) {
+            NavigationLink {
+                ProgramEditorView(program: program)
+            } label: {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(program.name)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("\(program.orderedDays.count) day rotation")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .buttonStyle(.plain)
+            Toggle("Active", isOn: Binding(
+                get: { program.isActive },
+                set: { newValue in setActive(program, newValue) }
+            ))
+            .labelsHidden()
+            Menu {
+                ShareLink(
+                    item: ProgramTemplateService.make(from: program),
+                    preview: SharePreview("Export plan")
+                ) {
+                    Label("Export plan", systemImage: "square.and.arrow.up")
+                }
+                Button("Set active") { setActive(program, true) }
+                Button("Delete", role: .destructive) {
+                    modelContext.delete(program)
+                }
+            } label: {
+                Image(systemName: "info.circle")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .frame(minWidth: 32, minHeight: 32)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Program info")
+        }
+        .padding(12)
+        .opaqueCard()
+    }
+
     private func importPlan(from url: URL) {
         let access = url.startAccessingSecurityScopedResource()
         defer {
@@ -125,6 +152,17 @@ struct ProgramListView: View {
             importError = error.localizedDescription
             showImportError = true
         }
+    }
+
+    private func handleStarterPickerDismiss() {
+        if pendingImport {
+            pendingImport = false
+            DispatchQueue.main.async {
+                showImporter = true
+            }
+            return
+        }
+        applyPendingStarter()
     }
 
     private func applyPendingStarter() {
@@ -176,6 +214,7 @@ struct ProgramListView: View {
 struct StarterProgramPickerView: View {
     var onBlank: () -> Void
     var onSelect: (StarterProgramTemplate) -> Void
+    var onImport: () -> Void
 
     @Environment(\.dismiss) private var dismiss
 
@@ -192,6 +231,21 @@ struct StarterProgramPickerView: View {
                                 .font(.headline)
                                 .foregroundStyle(.primary)
                             Text("Start empty and add your own days.")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                    }
+
+                    Button {
+                        onImport()
+                        dismiss()
+                    } label: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Import JSON")
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                            Text("Load a program from a JSON file.")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }

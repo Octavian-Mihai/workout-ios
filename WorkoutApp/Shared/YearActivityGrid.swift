@@ -45,7 +45,7 @@ enum YearGridBuilder {
         calendar: Calendar = .current
     ) -> [YearDayCell] {
         var cal = calendar
-        cal.firstWeekday = 1
+        cal.firstWeekday = YearGridWeekdays.firstWeekday
 
         var liftDays: Set<Date> = []
         for session in sessions where session.endDate != nil {
@@ -145,18 +145,25 @@ struct YearActivityGrid: View {
             GeometryReader { geo in
                 let spacing: CGFloat = 1.5
                 let columns = 53
-                let raw = (geo.size.width - CGFloat(columns - 1) * spacing) / CGFloat(columns)
+                let weekdayWidth: CGFloat = 8
+                let weekdayGap: CGFloat = 2
+                let gridWidth = max(geo.size.width - weekdayWidth - weekdayGap, 1)
+                let raw = (gridWidth - CGFloat(columns - 1) * spacing) / CGFloat(columns)
                 let cell = min(5.5, max(3, raw))
 
                 VStack(alignment: .leading, spacing: 3) {
-                    monthLabels(cell: cell, spacing: spacing)
-                    HStack(alignment: .top, spacing: spacing) {
-                        ForEach(0..<columns, id: \.self) { col in
-                            VStack(spacing: spacing) {
-                                ForEach(0..<7, id: \.self) { row in
-                                    let index = col * 7 + row
-                                    if index < cells.count {
-                                        dayDot(cells[index], size: cell)
+                    monthLabels(cell: cell, spacing: spacing, leadingInset: weekdayWidth + weekdayGap)
+                    HStack(alignment: .top, spacing: weekdayGap) {
+                        weekdayLabels(cell: cell, spacing: spacing)
+                            .frame(width: weekdayWidth)
+                        HStack(alignment: .top, spacing: spacing) {
+                            ForEach(0..<columns, id: \.self) { col in
+                                VStack(spacing: spacing) {
+                                    ForEach(0..<7, id: \.self) { row in
+                                        let index = col * 7 + row
+                                        if index < cells.count {
+                                            dayDot(cells[index], size: cell)
+                                        }
                                     }
                                 }
                             }
@@ -187,9 +194,23 @@ struct YearActivityGrid: View {
         }
     }
 
-    private func monthLabels(cell: CGFloat, spacing: CGFloat) -> some View {
+    private func weekdayLabels(cell: CGFloat, spacing: CGFloat) -> some View {
+        let letters = YearGridWeekdays.letters(calendar: calendar)
+        return VStack(spacing: spacing) {
+            ForEach(0..<7, id: \.self) { row in
+                Text(letters[row])
+                    .font(.system(size: 6, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 8, height: cell)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func monthLabels(cell: CGFloat, spacing: CGFloat, leadingInset: CGFloat) -> some View {
         let labels = monthStarts()
         return HStack(spacing: 0) {
+            Color.clear.frame(width: leadingInset)
             ForEach(labels, id: \.offset) { item in
                 Text(item.label)
                     .font(.system(size: 8, weight: .semibold))

@@ -318,11 +318,14 @@ struct WidgetYearGridView: View {
         )
         GeometryReader { geo in
             let columns = 53
+            let weekdayWidth: CGFloat = 8
+            let weekdayGap: CGFloat = 2
             let monthH: CGFloat = showMonths ? 9 : 0
             let monthGap: CGFloat = showMonths ? (dense ? 2 : 3) : 0
             let availableH = max(geo.size.height - monthH - monthGap, 1)
             let colSpacing: CGFloat = dense ? 0.55 : 1.4
-            let rawW = (geo.size.width - CGFloat(columns - 1) * colSpacing) / CGFloat(columns)
+            let gridWidth = max(geo.size.width - weekdayWidth - weekdayGap, 1)
+            let rawW = (gridWidth - CGFloat(columns - 1) * colSpacing) / CGFloat(columns)
             let layout = Self.cellLayout(
                 dense: dense,
                 rawW: rawW,
@@ -332,27 +335,37 @@ struct WidgetYearGridView: View {
 
             VStack(alignment: .leading, spacing: monthGap == 0 ? 0 : monthGap) {
                 if showMonths {
-                    monthLabels(cells: cells, cell: layout.cell, spacing: colSpacing)
+                    monthLabels(
+                        cells: cells,
+                        cell: layout.cell,
+                        spacing: colSpacing,
+                        leadingInset: weekdayWidth + weekdayGap
+                    )
                 }
-                HStack(alignment: .top, spacing: colSpacing) {
-                    ForEach(0..<columns, id: \.self) { col in
-                        VStack(spacing: layout.rowSpacing) {
-                            ForEach(0..<7, id: \.self) { row in
-                                let index = col * 7 + row
-                                if index < cells.count {
-                                    let item = cells[index]
-                                    Circle()
-                                        .fill(WidgetChrome.color(for: item.kind, inYear: item.inYear))
-                                        .frame(width: layout.cell, height: layout.cell)
-                                        .overlay {
-                                            if item.inYear && Calendar.current.isDateInToday(item.date) {
-                                                Circle().strokeBorder(Color.primary.opacity(0.45), lineWidth: 0.8)
+                HStack(alignment: .top, spacing: weekdayGap) {
+                    weekdayLabels(cell: layout.cell, spacing: layout.rowSpacing)
+                        .frame(width: weekdayWidth)
+                    HStack(alignment: .top, spacing: colSpacing) {
+                        ForEach(0..<columns, id: \.self) { col in
+                            VStack(spacing: layout.rowSpacing) {
+                                ForEach(0..<7, id: \.self) { row in
+                                    let index = col * 7 + row
+                                    if index < cells.count {
+                                        let item = cells[index]
+                                        Circle()
+                                            .fill(WidgetChrome.color(for: item.kind, inYear: item.inYear))
+                                            .frame(width: layout.cell, height: layout.cell)
+                                            .overlay {
+                                                if item.inYear && Calendar.current.isDateInToday(item.date) {
+                                                    Circle().strokeBorder(Color.primary.opacity(0.45), lineWidth: 0.8)
+                                                }
                                             }
-                                        }
+                                    }
                                 }
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
@@ -388,9 +401,28 @@ struct WidgetYearGridView: View {
         return (max(min(widthCell, squeezed), minCell), minRowSpacing)
     }
 
-    private func monthLabels(cells: [WidgetYearCell], cell: CGFloat, spacing: CGFloat) -> some View {
+    private func weekdayLabels(cell: CGFloat, spacing: CGFloat) -> some View {
+        let letters = YearGridWeekdays.letters()
+        return VStack(spacing: spacing) {
+            ForEach(0..<7, id: \.self) { row in
+                Text(letters[row])
+                    .font(.system(size: 6, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 8, height: cell)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func monthLabels(
+        cells: [WidgetYearCell],
+        cell: CGFloat,
+        spacing: CGFloat,
+        leadingInset: CGFloat
+    ) -> some View {
         let labels = monthStarts(cells)
         return HStack(spacing: 0) {
+            Color.clear.frame(width: leadingInset)
             ForEach(labels, id: \.offset) { item in
                 Text(item.label)
                     .font(.system(size: 8, weight: .semibold))

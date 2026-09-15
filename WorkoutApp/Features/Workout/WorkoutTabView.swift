@@ -10,6 +10,7 @@ struct WorkoutTabView: View {
     @Environment(AppTourController.self) private var tour
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @State private var selectedDayID: UUID?
+    @State private var learnExpanded = false
 
     private var accent: Color { theme.accent }
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
@@ -47,15 +48,26 @@ struct WorkoutTabView: View {
                         }
                         .buttonStyle(.bordered)
 
-                        LearnLinksView()
-                            .tourTarget(.workoutLearn)
-                            .id(AppTourTargetID.workoutLearn)
+                        DisclosureGroup(isExpanded: $learnExpanded) {
+                            LearnLinksView()
+                                .padding(.top, 8)
+                        } label: {
+                            Text("Learn")
+                                .font(.title3.weight(.bold))
+                                .foregroundStyle(.primary)
+                        }
+                        .tint(.secondary)
+                        .tourTarget(.workoutLearn)
+                        .id(AppTourTargetID.workoutLearn)
 
                         WorkoutHistoryView(sessions: sessions, accent: accent, unit: unit)
                     }
                     .padding(16)
                 }
                 .onChange(of: tour.step) { _, step in
+                    if step == .workoutLearn {
+                        learnExpanded = true
+                    }
                     scrollWorkoutTour(step, proxy: proxy)
                 }
             }
@@ -109,13 +121,15 @@ struct WorkoutTabView: View {
             .accessibilityLabel("Previous day")
 
             VStack(spacing: 2) {
-                Text(day.name)
+                Text(dayChooserTitle(day))
                     .font(.subheadline.weight(.semibold))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
+                    .frame(maxWidth: .infinity)
                 Text("\(index + 1) of \(days.count)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity)
 
@@ -137,20 +151,24 @@ struct WorkoutTabView: View {
         Button {
             sessionStore.start(program: program, programDay: day)
         } label: {
-            VStack(spacing: 4) {
-                Label("Start \(day.name)", systemImage: "play.fill")
-                    .font(.headline)
-                if let estimate = dayDurationLabel(day) {
-                    Text(estimate)
-                        .font(.caption)
-                        .opacity(0.82)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
+            Label("Start \(day.name)", systemImage: "play.fill")
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
         }
         .buttonStyle(.borderedProminent)
         .accessibilityHint(startHint(program: program, day: day))
+    }
+
+    private func dayChooserTitle(_ day: ProgramDay) -> String {
+        let exercises = day.orderedExercises
+        if let minutes = WorkoutDurationEstimate.minutes(
+            exerciseCount: exercises.count,
+            totalSets: exercises.reduce(0) { $0 + max($1.targetSets, 0) }
+        ) {
+            return "\(day.name), \(minutes) min"
+        }
+        return day.name
     }
 
     private func dayDurationLabel(_ day: ProgramDay) -> String? {
