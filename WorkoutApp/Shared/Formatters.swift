@@ -73,3 +73,37 @@ enum Formatters {
         return fraction.isEmpty ? integer : "\(integer).\(fraction)"
     }
 }
+
+/// Planned session length from exercise and set counts — an estimate, not a timer.
+/// Matches the app's default rest (90s) plus ~45s of work per set, and ~1 min per lift to set up.
+enum WorkoutDurationEstimate {
+    static let restSecondsPerSet = 90
+    static let workSecondsPerSet = 45
+    static let setupMinutesPerExercise = 1.0
+
+    static var minutesPerSet: Double {
+        Double(restSecondsPerSet + workSecondsPerSet) / 60.0
+    }
+
+    static func minutes(exerciseCount: Int, totalSets: Int) -> Int? {
+        let exercises = max(exerciseCount, 0)
+        let sets = max(totalSets, 0)
+        guard exercises > 0 || sets > 0 else { return nil }
+        let raw = (Double(sets) * minutesPerSet) + (Double(exercises) * setupMinutesPerExercise)
+        return Int(raw.rounded())
+    }
+
+    static func label(exerciseCount: Int, totalSets: Int) -> String? {
+        guard let minutes = minutes(exerciseCount: exerciseCount, totalSets: totalSets) else { return nil }
+        return "~\(minutes) min"
+    }
+
+    static func caption(exerciseCount: Int, totalSets: Int) -> String {
+        let word = exerciseCount == 1 ? "exercise" : "exercises"
+        let base = "\(max(exerciseCount, 0)) \(word)"
+        if let estimate = label(exerciseCount: exerciseCount, totalSets: totalSets) {
+            return "\(base) · \(estimate)"
+        }
+        return base
+    }
+}

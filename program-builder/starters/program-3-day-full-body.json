@@ -1,0 +1,255 @@
+{
+  "exportedAt": "2026-09-15T00:00:00Z",
+  "program": {
+    "createdAt": "2026-09-15T00:00:00Z",
+    "days": [
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Back Squat",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Adductors",
+              "Core & Abs",
+              "Erectors"
+            ],
+            "sortIndex": 0,
+            "targetReps": 5,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Barbell Bench Press",
+            "primaryMuscles": [
+              "Chest"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Anterior Delts"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Barbell Row",
+            "primaryMuscles": [
+              "Lats",
+              "Rhomboids"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Posterior Delts",
+              "Erectors"
+            ],
+            "sortIndex": 2,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Overhead Press",
+            "primaryMuscles": [
+              "Anterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Traps",
+              "Core & Abs"
+            ],
+            "sortIndex": 3,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Hanging Leg Raise",
+            "primaryMuscles": [
+              "Hip Flexors"
+            ],
+            "secondaryMuscles": [
+              "Core & Abs",
+              "Forearms & Grip"
+            ],
+            "sortIndex": 4,
+            "targetReps": 10,
+            "targetSets": 3
+          }
+        ],
+        "name": "Full Body A",
+        "sortIndex": 0,
+        "uuid": "7b847925-d1e2-4d43-82c7-954bc3ad4cf7"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Deadlift",
+            "primaryMuscles": [
+              "Hamstrings",
+              "Glutes",
+              "Erectors"
+            ],
+            "secondaryMuscles": [
+              "Quadriceps",
+              "Traps",
+              "Core & Abs"
+            ],
+            "sortIndex": 0,
+            "targetReps": 5,
+            "targetSets": 3
+          },
+          {
+            "equipment": "bodyweight",
+            "name": "Pull-Up",
+            "primaryMuscles": [
+              "Lats"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Rhomboids"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Incline Dumbbell Press",
+            "primaryMuscles": [
+              "Chest",
+              "Anterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps"
+            ],
+            "sortIndex": 2,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Bulgarian Split Squat",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Hamstrings",
+              "Adductors",
+              "Core & Abs"
+            ],
+            "sortIndex": 3,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Face Pull",
+            "primaryMuscles": [
+              "Posterior Delts",
+              "Traps"
+            ],
+            "secondaryMuscles": [
+              "Rhomboids"
+            ],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          }
+        ],
+        "name": "Full Body B",
+        "sortIndex": 1,
+        "uuid": "4707cc0b-59fb-4237-8e61-6a5c796d3796"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Front Squat",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Core & Abs"
+            ],
+            "secondaryMuscles": [
+              "Glutes",
+              "Rhomboids"
+            ],
+            "sortIndex": 0,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Dumbbell Shoulder Press",
+            "primaryMuscles": [
+              "Anterior Delts",
+              "Lateral Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "One-Arm Dumbbell Row",
+            "primaryMuscles": [
+              "Lats",
+              "Rhomboids"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Posterior Delts"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Romanian Deadlift",
+            "primaryMuscles": [
+              "Hamstrings",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Erectors"
+            ],
+            "sortIndex": 3,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "bodyweight",
+            "name": "Dips",
+            "primaryMuscles": [
+              "Chest",
+              "Triceps"
+            ],
+            "secondaryMuscles": [
+              "Anterior Delts"
+            ],
+            "sortIndex": 4,
+            "targetReps": 8,
+            "targetSets": 3
+          }
+        ],
+        "name": "Full Body C",
+        "sortIndex": 2,
+        "uuid": "2df4b218-1ff1-4df5-bd3d-636cf0d65b68"
+      }
+    ],
+    "isActive": false,
+    "name": "3-Day Full Body",
+    "uuid": "4a2054f2-9572-450c-9904-1c31496ae8c3"
+  },
+  "version": 1
+}

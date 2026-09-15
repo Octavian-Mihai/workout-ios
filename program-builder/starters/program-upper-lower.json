@@ -1,0 +1,401 @@
+{
+  "exportedAt": "2026-09-15T00:00:00Z",
+  "program": {
+    "createdAt": "2026-09-15T00:00:00Z",
+    "days": [
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Barbell Bench Press",
+            "primaryMuscles": [
+              "Chest"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Anterior Delts"
+            ],
+            "sortIndex": 0,
+            "targetReps": 6,
+            "targetSets": 4
+          },
+          {
+            "equipment": "barbell",
+            "name": "Barbell Row",
+            "primaryMuscles": [
+              "Lats",
+              "Rhomboids"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Posterior Delts",
+              "Erectors"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 4
+          },
+          {
+            "equipment": "barbell",
+            "name": "Overhead Press",
+            "primaryMuscles": [
+              "Anterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Traps",
+              "Core & Abs"
+            ],
+            "sortIndex": 2,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "bodyweight",
+            "name": "Pull-Up",
+            "primaryMuscles": [
+              "Lats"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Rhomboids"
+            ],
+            "sortIndex": 3,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Lateral Raise",
+            "primaryMuscles": [
+              "Lateral Delts"
+            ],
+            "secondaryMuscles": [
+              "Traps"
+            ],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Barbell Curl",
+            "primaryMuscles": [
+              "Biceps"
+            ],
+            "secondaryMuscles": [
+              "Forearms & Grip"
+            ],
+            "sortIndex": 5,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Tricep Pushdown",
+            "primaryMuscles": [
+              "Triceps"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 6,
+            "targetReps": 12,
+            "targetSets": 3
+          }
+        ],
+        "name": "Upper A",
+        "sortIndex": 0,
+        "uuid": "ab2c27ed-3470-46c6-9402-386c3237a088"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Back Squat",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Adductors",
+              "Core & Abs",
+              "Erectors"
+            ],
+            "sortIndex": 0,
+            "targetReps": 6,
+            "targetSets": 4
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Romanian Deadlift",
+            "primaryMuscles": [
+              "Hamstrings",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Erectors"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Bulgarian Split Squat",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Hamstrings",
+              "Adductors",
+              "Core & Abs"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Seated Leg Curl",
+            "primaryMuscles": [
+              "Hamstrings"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 3,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Calf Raise",
+            "primaryMuscles": [
+              "Calves"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Hanging Leg Raise",
+            "primaryMuscles": [
+              "Hip Flexors"
+            ],
+            "secondaryMuscles": [
+              "Core & Abs",
+              "Forearms & Grip"
+            ],
+            "sortIndex": 5,
+            "targetReps": 10,
+            "targetSets": 3
+          }
+        ],
+        "name": "Lower A",
+        "sortIndex": 1,
+        "uuid": "5549dc9a-31e0-4c92-88cd-bfabc0c15ce6"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Overhead Press",
+            "primaryMuscles": [
+              "Anterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Traps",
+              "Core & Abs"
+            ],
+            "sortIndex": 0,
+            "targetReps": 6,
+            "targetSets": 4
+          },
+          {
+            "equipment": "bodyweight",
+            "name": "Chin-Up",
+            "primaryMuscles": [
+              "Lats",
+              "Biceps"
+            ],
+            "secondaryMuscles": [
+              "Rhomboids"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Incline Dumbbell Press",
+            "primaryMuscles": [
+              "Chest",
+              "Anterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Seated Cable Row",
+            "primaryMuscles": [
+              "Lats",
+              "Rhomboids"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Posterior Delts"
+            ],
+            "sortIndex": 3,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Face Pull",
+            "primaryMuscles": [
+              "Posterior Delts",
+              "Traps"
+            ],
+            "secondaryMuscles": [
+              "Rhomboids"
+            ],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "bodyweight",
+            "name": "Dips",
+            "primaryMuscles": [
+              "Chest",
+              "Triceps"
+            ],
+            "secondaryMuscles": [
+              "Anterior Delts"
+            ],
+            "sortIndex": 5,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Hammer Curl",
+            "primaryMuscles": [
+              "Biceps",
+              "Forearms & Grip"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 6,
+            "targetReps": 10,
+            "targetSets": 3
+          }
+        ],
+        "name": "Upper B",
+        "sortIndex": 2,
+        "uuid": "edfd32ce-cbfc-48b7-97b6-6af645703bce"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Deadlift",
+            "primaryMuscles": [
+              "Hamstrings",
+              "Glutes",
+              "Erectors"
+            ],
+            "secondaryMuscles": [
+              "Quadriceps",
+              "Traps",
+              "Core & Abs"
+            ],
+            "sortIndex": 0,
+            "targetReps": 5,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Front Squat",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Core & Abs"
+            ],
+            "secondaryMuscles": [
+              "Glutes",
+              "Rhomboids"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Leg Press",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Hamstrings"
+            ],
+            "secondaryMuscles": [
+              "Glutes",
+              "Adductors"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Barbell Hip Thrust",
+            "primaryMuscles": [
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Hamstrings",
+              "Core & Abs"
+            ],
+            "sortIndex": 3,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Lying Leg Curl",
+            "primaryMuscles": [
+              "Hamstrings"
+            ],
+            "secondaryMuscles": [
+              "Erectors"
+            ],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Calf Raise",
+            "primaryMuscles": [
+              "Calves"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 5,
+            "targetReps": 12,
+            "targetSets": 3
+          }
+        ],
+        "name": "Lower B",
+        "sortIndex": 3,
+        "uuid": "10ea0239-8a75-4337-8896-316a32a7dd15"
+      }
+    ],
+    "isActive": false,
+    "name": "Upper / Lower",
+    "uuid": "9e7b46a9-6251-4c42-8a7a-f7fa17f93bee"
+  },
+  "version": 1
+}

@@ -2,6 +2,10 @@ const STORAGE_KEY = "program-builder:draft";
 const MUSCLE_VIEW_KEY = "program-builder:muscle-view";
 const DEFAULT_SETS = 3;
 const DEFAULT_REPS = 8;
+const DEFAULT_REST_SECONDS = 90;
+const WORK_SECONDS_PER_SET = 45;
+const MINUTES_PER_SET = (DEFAULT_REST_SECONDS + WORK_SECONDS_PER_SET) / 60;
+const SETUP_MINUTES_PER_EXERCISE = 1;
 const CATEGORIES = ["Push", "Pull", "Legs", "Explosive", "Core"];
 const EQUIPMENT = [
   { id: "barbell", title: "Barbell" },
@@ -211,6 +215,7 @@ const els = {
   dayEmpty: document.getElementById("day-empty"),
   dayEditor: document.getElementById("day-editor"),
   dayName: document.getElementById("day-name"),
+  dayDuration: document.getElementById("day-duration"),
   addExerciseBtn: document.getElementById("add-exercise-btn"),
   exerciseList: document.getElementById("exercise-list"),
   exerciseEmpty: document.getElementById("exercise-empty"),
@@ -421,6 +426,30 @@ function selectedDay() {
   return state.days.find((day) => day.uuid === selectedDayId) ?? null;
 }
 
+function plannedSetCount(exercises) {
+  return (exercises || []).reduce((sum, item) => sum + Math.max(Number(item.targetSets) || 0, 0), 0);
+}
+
+function estimatedWorkoutMinutes(exercises) {
+  const list = Array.isArray(exercises) ? exercises : [];
+  const exerciseCount = list.length;
+  const totalSets = plannedSetCount(list);
+  if (exerciseCount <= 0 && totalSets <= 0) return null;
+  return Math.round(totalSets * MINUTES_PER_SET + exerciseCount * SETUP_MINUTES_PER_EXERCISE);
+}
+
+function estimatedWorkoutLabel(exercises) {
+  const minutes = estimatedWorkoutMinutes(exercises);
+  return minutes == null ? "" : `~${minutes} min`;
+}
+
+function dayMetaLabel(day) {
+  const count = day.exercises.length;
+  const word = count === 1 ? "exercise" : "exercises";
+  const estimate = estimatedWorkoutLabel(day.exercises);
+  return estimate ? `${count} ${word} · ${estimate}` : `${count} ${word}`;
+}
+
 function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
@@ -537,7 +566,7 @@ function render() {
         <span class="drag-handle" title="Drag to reorder" aria-hidden="true">⋮⋮</span>
         <button type="button" class="select-day">
           <strong>${escapeHTML(day.name || "Untitled day")}</strong>
-          <div class="day-meta">${day.exercises.length} exercise${day.exercises.length === 1 ? "" : "s"}</div>
+          <div class="day-meta">${dayMetaLabel(day)}</div>
         </button>
         <span class="muted">${day.uuid === selectedDayId ? "Editing" : ""}</span>
         <button type="button" class="btn btn-danger delete-day" aria-label="Delete day">Delete</button>
@@ -549,6 +578,8 @@ function render() {
   if (!day) {
     els.dayEmpty.classList.remove("hidden");
     els.dayEditor.classList.add("hidden");
+    els.dayDuration.textContent = "";
+    els.dayDuration.classList.add("hidden");
     renderOverview();
     return;
   }
@@ -556,6 +587,9 @@ function render() {
   els.dayEmpty.classList.add("hidden");
   els.dayEditor.classList.remove("hidden");
   els.dayName.value = day.name;
+  const durationLabel = estimatedWorkoutLabel(day.exercises);
+  els.dayDuration.textContent = durationLabel;
+  els.dayDuration.classList.toggle("hidden", !durationLabel);
   els.exerciseEmpty.classList.toggle("hidden", day.exercises.length > 0);
 
   els.exerciseList.innerHTML = day.exercises
@@ -980,6 +1014,17 @@ function renderOverview() {
         </div>
       </div>`
     : "";
+  const days = state.days.length
+    ? `<div class="overview-days">${state.days
+        .map((day) => {
+          const selected = day.uuid === selectedDayId ? " selected" : "";
+          return `<div class="overview-day${selected}">
+            <strong>${escapeHTML(day.name || "Untitled day")}</strong>
+            <span class="muted">${escapeHTML(dayMetaLabel(day))}</span>
+          </div>`;
+        })
+        .join("")}</div>`
+    : "";
 
   els.overview.innerHTML = `
     <h2 class="overview-kicker">Program overview</h2>
@@ -990,6 +1035,7 @@ function renderOverview() {
       <div class="overview-stat"><strong>${snapshot.exerciseCount}</strong><span>Exercises</span></div>
       <div class="overview-stat"><strong>${snapshot.plannedSets}</strong><span>Sets</span></div>
     </div>
+    ${days}
     <p class="overview-caption">Primary muscles get full exercise and set credit. Secondary muscles get half, matching Anatomy 101 volume. Totals count each lift once; per-muscle numbers can add up to more because compounds credit more than one muscle.</p>
     ${insights}
     <div class="overview-block">
@@ -1306,6 +1352,7 @@ async function init() {
     persist();
     const row = els.dayList.querySelector(`[data-day-id="${day.uuid}"] strong`);
     if (row) row.textContent = day.name || "Untitled day";
+    renderOverview();
   });
 
   els.dayList.addEventListener("click", (event) => {

@@ -18,6 +18,7 @@ struct ProgramOverviewView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     header
                     totals
+                    dayList
                     caption
                     insights
                     muscleBreakdown
@@ -79,6 +80,36 @@ struct ProgramOverviewView: View {
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
+    }
+
+    @ViewBuilder
+    private var dayList: some View {
+        let days = program.orderedDays
+        if !days.isEmpty {
+            VStack(alignment: .leading, spacing: 10) {
+                ForEach(days) { day in
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(day.name)
+                            .font(.subheadline.weight(.semibold))
+                        Spacer(minLength: 8)
+                        Text(dayCaption(day))
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(16)
+            .opaqueCard()
+        }
+    }
+
+    private func dayCaption(_ day: ProgramDay) -> String {
+        let exercises = day.orderedExercises
+        return WorkoutDurationEstimate.caption(
+            exerciseCount: exercises.count,
+            totalSets: exercises.reduce(0) { $0 + max($1.targetSets, 0) }
+        )
     }
 
     private var caption: some View {

@@ -1,0 +1,544 @@
+{
+  "exportedAt": "2026-09-15T00:00:00Z",
+  "program": {
+    "createdAt": "2026-09-15T00:00:00Z",
+    "days": [
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Barbell Bench Press",
+            "primaryMuscles": [
+              "Chest"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Anterior Delts"
+            ],
+            "sortIndex": 0,
+            "targetReps": 6,
+            "targetSets": 4
+          },
+          {
+            "equipment": "barbell",
+            "name": "Overhead Press",
+            "primaryMuscles": [
+              "Anterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Traps",
+              "Core & Abs"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Incline Dumbbell Press",
+            "primaryMuscles": [
+              "Chest",
+              "Anterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Lateral Raise",
+            "primaryMuscles": [
+              "Lateral Delts"
+            ],
+            "secondaryMuscles": [
+              "Traps"
+            ],
+            "sortIndex": 3,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Tricep Pushdown",
+            "primaryMuscles": [
+              "Triceps"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "bodyweight",
+            "name": "Dips",
+            "primaryMuscles": [
+              "Chest",
+              "Triceps"
+            ],
+            "secondaryMuscles": [
+              "Anterior Delts"
+            ],
+            "sortIndex": 5,
+            "targetReps": 10,
+            "targetSets": 3
+          }
+        ],
+        "name": "Push A",
+        "sortIndex": 0,
+        "uuid": "210e33f2-e348-445c-bc01-ee5e24b8132f"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Deadlift",
+            "primaryMuscles": [
+              "Hamstrings",
+              "Glutes",
+              "Erectors"
+            ],
+            "secondaryMuscles": [
+              "Quadriceps",
+              "Traps",
+              "Core & Abs"
+            ],
+            "sortIndex": 0,
+            "targetReps": 5,
+            "targetSets": 3
+          },
+          {
+            "equipment": "bodyweight",
+            "name": "Pull-Up",
+            "primaryMuscles": [
+              "Lats"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Rhomboids"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Barbell Row",
+            "primaryMuscles": [
+              "Lats",
+              "Rhomboids"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Posterior Delts",
+              "Erectors"
+            ],
+            "sortIndex": 2,
+            "targetReps": 8,
+            "targetSets": 4
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Face Pull",
+            "primaryMuscles": [
+              "Posterior Delts",
+              "Traps"
+            ],
+            "secondaryMuscles": [
+              "Rhomboids"
+            ],
+            "sortIndex": 3,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Barbell Curl",
+            "primaryMuscles": [
+              "Biceps"
+            ],
+            "secondaryMuscles": [
+              "Forearms & Grip"
+            ],
+            "sortIndex": 4,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Dumbbell Shrug",
+            "primaryMuscles": [
+              "Traps"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 5,
+            "targetReps": 12,
+            "targetSets": 3
+          }
+        ],
+        "name": "Pull A",
+        "sortIndex": 1,
+        "uuid": "cc07a4b4-292b-49c9-8000-ad419791b145"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Back Squat",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Adductors",
+              "Core & Abs",
+              "Erectors"
+            ],
+            "sortIndex": 0,
+            "targetReps": 6,
+            "targetSets": 4
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Romanian Deadlift",
+            "primaryMuscles": [
+              "Hamstrings",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Erectors"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Leg Press",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Hamstrings"
+            ],
+            "secondaryMuscles": [
+              "Glutes",
+              "Adductors"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Seated Leg Curl",
+            "primaryMuscles": [
+              "Hamstrings"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 3,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Calf Raise",
+            "primaryMuscles": [
+              "Calves"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Hanging Leg Raise",
+            "primaryMuscles": [
+              "Hip Flexors"
+            ],
+            "secondaryMuscles": [
+              "Core & Abs",
+              "Forearms & Grip"
+            ],
+            "sortIndex": 5,
+            "targetReps": 10,
+            "targetSets": 3
+          }
+        ],
+        "name": "Legs A",
+        "sortIndex": 2,
+        "uuid": "02aa0355-c733-4d9b-9483-f086c063e5b2"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Overhead Press",
+            "primaryMuscles": [
+              "Anterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Traps",
+              "Core & Abs"
+            ],
+            "sortIndex": 0,
+            "targetReps": 6,
+            "targetSets": 4
+          },
+          {
+            "equipment": "machine",
+            "name": "Incline Barbell Bench Press",
+            "primaryMuscles": [
+              "Chest"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Anterior Delts"
+            ],
+            "sortIndex": 1,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Dumbbell Bench Press",
+            "primaryMuscles": [
+              "Chest"
+            ],
+            "secondaryMuscles": [
+              "Triceps",
+              "Anterior Delts"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Cable Lateral Raise",
+            "primaryMuscles": [
+              "Lateral Delts"
+            ],
+            "secondaryMuscles": [
+              "Traps"
+            ],
+            "sortIndex": 3,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "barbell",
+            "name": "Skull Crusher",
+            "primaryMuscles": [
+              "Triceps"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 4,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Pec Deck",
+            "primaryMuscles": [
+              "Chest"
+            ],
+            "secondaryMuscles": [
+              "Anterior Delts"
+            ],
+            "sortIndex": 5,
+            "targetReps": 12,
+            "targetSets": 3
+          }
+        ],
+        "name": "Push B",
+        "sortIndex": 3,
+        "uuid": "eff53714-47e5-46ab-bbd5-83525dc20905"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Barbell Row",
+            "primaryMuscles": [
+              "Lats",
+              "Rhomboids"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Posterior Delts",
+              "Erectors"
+            ],
+            "sortIndex": 0,
+            "targetReps": 8,
+            "targetSets": 4
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Lat Pulldown",
+            "primaryMuscles": [
+              "Lats"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Rhomboids"
+            ],
+            "sortIndex": 1,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Chest-Supported Dumbbell Row",
+            "primaryMuscles": [
+              "Lats",
+              "Rhomboids"
+            ],
+            "secondaryMuscles": [
+              "Biceps",
+              "Posterior Delts"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "bodyweight",
+            "name": "Chin-Up",
+            "primaryMuscles": [
+              "Lats",
+              "Biceps"
+            ],
+            "secondaryMuscles": [
+              "Rhomboids"
+            ],
+            "sortIndex": 3,
+            "targetReps": 8,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Reverse Pec Deck",
+            "primaryMuscles": [
+              "Posterior Delts"
+            ],
+            "secondaryMuscles": [
+              "Rhomboids"
+            ],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Hammer Curl",
+            "primaryMuscles": [
+              "Biceps",
+              "Forearms & Grip"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 5,
+            "targetReps": 10,
+            "targetSets": 3
+          }
+        ],
+        "name": "Pull B",
+        "sortIndex": 4,
+        "uuid": "de3591f3-8824-4601-95f5-9018872d7bf6"
+      },
+      {
+        "exercises": [
+          {
+            "equipment": "barbell",
+            "name": "Front Squat",
+            "primaryMuscles": [
+              "Quadriceps",
+              "Core & Abs"
+            ],
+            "secondaryMuscles": [
+              "Glutes",
+              "Rhomboids"
+            ],
+            "sortIndex": 0,
+            "targetReps": 8,
+            "targetSets": 4
+          },
+          {
+            "equipment": "barbell",
+            "name": "Barbell Hip Thrust",
+            "primaryMuscles": [
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Hamstrings",
+              "Core & Abs"
+            ],
+            "sortIndex": 1,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "dumbbell",
+            "name": "Walking Lunge",
+            "primaryMuscles": [
+              "Hamstrings",
+              "Glutes"
+            ],
+            "secondaryMuscles": [
+              "Quadriceps",
+              "Core & Abs"
+            ],
+            "sortIndex": 2,
+            "targetReps": 10,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Lying Leg Curl",
+            "primaryMuscles": [
+              "Hamstrings"
+            ],
+            "secondaryMuscles": [
+              "Erectors"
+            ],
+            "sortIndex": 3,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "machine",
+            "name": "Leg Extension",
+            "primaryMuscles": [
+              "Quadriceps"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 4,
+            "targetReps": 12,
+            "targetSets": 3
+          },
+          {
+            "equipment": "functionalTrainer",
+            "name": "Cable Crunch",
+            "primaryMuscles": [
+              "Core & Abs"
+            ],
+            "secondaryMuscles": [],
+            "sortIndex": 5,
+            "targetReps": 12,
+            "targetSets": 3
+          }
+        ],
+        "name": "Legs B",
+        "sortIndex": 5,
+        "uuid": "7fb58bc6-3752-4964-95d8-5b8638916e76"
+      }
+    ],
+    "isActive": false,
+    "name": "Push / Pull / Legs",
+    "uuid": "6c7f3cfb-491c-43e6-9f6a-591bd79aa7ee"
+  },
+  "version": 1
+}

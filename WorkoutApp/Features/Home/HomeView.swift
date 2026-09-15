@@ -149,6 +149,11 @@ struct NextWorkoutCard: View {
                     Text(program.name)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    if let estimate = durationLabel {
+                        Text(estimate)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
                 Spacer()
             }
@@ -182,5 +187,13 @@ struct NextWorkoutCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .opaqueCard()
+    }
+
+    private var durationLabel: String? {
+        let exercises = day.orderedExercises
+        return WorkoutDurationEstimate.label(
+            exerciseCount: exercises.count,
+            totalSets: exercises.reduce(0) { $0 + max($1.targetSets, 0) }
+        )
     }
 }

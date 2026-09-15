@@ -35,7 +35,7 @@ struct ProgramEditorView: View {
                     } label: {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(day.name)
-                            Text("\(day.orderedExercises.count) exercises")
+                            Text(dayDurationCaption(day))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -95,6 +95,14 @@ struct ProgramEditorView: View {
         .onDisappear { try? modelContext.save() }
     }
 
+    private func dayDurationCaption(_ day: ProgramDay) -> String {
+        let exercises = day.orderedExercises
+        return WorkoutDurationEstimate.caption(
+            exerciseCount: exercises.count,
+            totalSets: exercises.reduce(0) { $0 + max($1.targetSets, 0) }
+        )
+    }
+
     private func addDay() {
         let index = program.days.count
         let day = ProgramDay(name: "Day \(index + 1)", sortIndex: index)
@@ -130,15 +138,18 @@ struct DayEditorView: View {
     @Bindable var day: ProgramDay
     @Environment(\.modelContext) private var modelContext
     @State private var showPicker = false
+    @State private var durationTick = 0
 
     var body: some View {
         List {
             Section("Day name") {
                 TextField("Name", text: $day.name)
             }
-            Section("Exercises") {
+            Section {
                 ForEach(day.orderedExercises) { exercise in
-                    DayExerciseEditorRow(exercise: exercise)
+                    DayExerciseEditorRow(exercise: exercise) {
+                        durationTick += 1
+                    }
                 }
                 .onMove(perform: move)
                 .onDelete(perform: delete)
@@ -147,6 +158,17 @@ struct DayEditorView: View {
                     showPicker = true
                 } label: {
                     Label("Add exercise", systemImage: "plus")
+                }
+            } header: {
+                HStack {
+                    Text("Exercises")
+                    Spacer()
+                    if let estimate = durationLabel {
+                        Text(estimate)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .textCase(.none)
+                    }
                 }
             }
         }
@@ -176,6 +198,15 @@ struct DayEditorView: View {
         }
     }
 
+    private var durationLabel: String? {
+        let _ = durationTick
+        let exercises = day.orderedExercises
+        return WorkoutDurationEstimate.label(
+            exerciseCount: exercises.count,
+            totalSets: exercises.reduce(0) { $0 + max($1.targetSets, 0) }
+        )
+    }
+
     private var existingCatalogIDs: Set<String> {
         Set(day.orderedExercises.compactMap { ExerciseCatalog.match(name: $0.name)?.id })
     }
@@ -197,6 +228,7 @@ struct DayEditorView: View {
         )
         item.day = day
         modelContext.insert(item)
+        durationTick += 1
         try? modelContext.save()
     }
 
@@ -204,6 +236,7 @@ struct DayEditorView: View {
         guard let item = day.orderedExercises.last(where: { $0.name == catalog.name }) else { return }
         modelContext.delete(item)
         reindex()
+        durationTick += 1
         try? modelContext.save()
     }
 
@@ -213,6 +246,7 @@ struct DayEditorView: View {
             modelContext.delete(ordered[offset])
         }
         reindex()
+        durationTick += 1
     }
 
     private func move(from source: IndexSet, to destination: Int) {
@@ -232,6 +266,7 @@ struct DayEditorView: View {
 
 struct DayExerciseEditorRow: View {
     @Bindable var exercise: DayExercise
+    var onSetsChanged: () -> Void = {}
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -239,7 +274,13 @@ struct DayExerciseEditorRow: View {
                 Text(exercise.name)
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Stepper(value: $exercise.targetSets, in: 0...30) {
+                Stepper(value: Binding(
+                    get: { exercise.targetSets },
+                    set: { newValue in
+                        exercise.targetSets = newValue
+                        onSetsChanged()
+                    }
+                ), in: 0...30) {
                     Text("\(exercise.targetSets) sets")
                         .font(.subheadline.monospacedDigit())
                         .foregroundStyle(.secondary)

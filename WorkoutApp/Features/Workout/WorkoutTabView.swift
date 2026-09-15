@@ -31,16 +31,23 @@ struct WorkoutTabView: View {
                             .id(AppTourTargetID.workoutPrograms)
 
                         if let program = activeProgram, let day = nextDay {
-                            Button {
-                                sessionStore.start(program: program, programDay: day)
-                            } label: {
-                                Label("Start \(day.name)", systemImage: "play.fill")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
+                            VStack(spacing: 8) {
+                                Button {
+                                    sessionStore.start(program: program, programDay: day)
+                                } label: {
+                                    Label("Start \(day.name)", systemImage: "play.fill")
+                                        .font(.headline)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 12)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .accessibilityHint(startHint(program: program, day: day))
+                                if let estimate = dayDurationLabel(day) {
+                                    Text(estimate)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
-                            .buttonStyle(.borderedProminent)
-                            .accessibilityHint("Starts \(program.name)")
                         }
 
                         Button {
@@ -67,6 +74,21 @@ struct WorkoutTabView: View {
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Workout")
         }
+    }
+
+    private func dayDurationLabel(_ day: ProgramDay) -> String? {
+        let exercises = day.orderedExercises
+        return WorkoutDurationEstimate.label(
+            exerciseCount: exercises.count,
+            totalSets: exercises.reduce(0) { $0 + max($1.targetSets, 0) }
+        )
+    }
+
+    private func startHint(program: Program, day: ProgramDay) -> String {
+        if let estimate = dayDurationLabel(day) {
+            return "Starts \(program.name), \(estimate)"
+        }
+        return "Starts \(program.name)"
     }
 
     private func scrollWorkoutTour(_ step: AppTourStep, proxy: ScrollViewProxy) {

@@ -240,6 +240,12 @@ select {
   font-size: 12px;
 }
 
+.day-duration {
+  margin: -4px 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .drag-handle {
   color: var(--hint);
   cursor: grab;
@@ -558,6 +564,28 @@ select {
   margin: 0 0 14px;
   color: var(--muted);
   font-size: 13px;
+}
+
+.overview-days {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--pane-raised);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.overview-day {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 13px;
+}
+
+.overview-day.selected strong {
+  color: var(--accent);
 }
 
 .overview-stats {
