@@ -139,24 +139,30 @@ struct NextWorkoutCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
+            VStack(spacing: 4) {
+                HStack {
                     Text("Next workout")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    Text(day.name)
-                        .font(.title2.weight(.bold))
+                    Spacer(minLength: 8)
                     Text(program.name)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.trailing)
+                        .lineLimit(1)
+                }
+                HStack(alignment: .firstTextBaseline) {
+                    Text(day.name)
+                        .font(.title2.weight(.bold))
+                    Spacer(minLength: 8)
                     if let estimate = durationLabel {
                         Text(estimate)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
-                Spacer()
             }
+            .frame(maxWidth: .infinity)
 
             if day.orderedExercises.isEmpty {
                 Text("No exercises yet — add some in the program editor.")

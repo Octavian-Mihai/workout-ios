@@ -9,6 +9,7 @@ struct WorkoutTabView: View {
     @Environment(AppTheme.self) private var theme
     @Environment(AppTourController.self) private var tour
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
+    @State private var selectedDayID: UUID?
 
     private var accent: Color { theme.accent }
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
@@ -30,23 +31,10 @@ struct WorkoutTabView: View {
                             .tourTarget(.workoutPrograms)
                             .id(AppTourTargetID.workoutPrograms)
 
-                        if let program = activeProgram, let day = nextDay {
+                        if let program = activeProgram, let day = selectedProgramDay(in: program) {
                             VStack(spacing: 8) {
-                                Button {
-                                    sessionStore.start(program: program, programDay: day)
-                                } label: {
-                                    Label("Start \(day.name)", systemImage: "play.fill")
-                                        .font(.headline)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 12)
-                                }
-                                .buttonStyle(.borderedProminent)
-                                .accessibilityHint(startHint(program: program, day: day))
-                                if let estimate = dayDurationLabel(day) {
-                                    Text(estimate)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
+                                programDayChooser(program: program, day: day)
+                                startProgramButton(program: program, day: day)
                             }
                         }
 
@@ -73,7 +61,96 @@ struct WorkoutTabView: View {
             }
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Workout")
+            .onAppear(perform: syncSelectedDayToResolvedNext)
+            .onChange(of: activeProgram?.uuid) { _, _ in
+                syncSelectedDayToResolvedNext()
+            }
+            .onChange(of: nextDay?.uuid) { _, _ in
+                syncSelectedDayToResolvedNext()
+            }
         }
+    }
+
+    private func selectedProgramDay(in program: Program) -> ProgramDay? {
+        let days = program.orderedDays
+        guard !days.isEmpty else { return nil }
+        if let selectedDayID, let match = days.first(where: { $0.uuid == selectedDayID }) {
+            return match
+        }
+        return nextDay ?? days[0]
+    }
+
+    private func syncSelectedDayToResolvedNext() {
+        selectedDayID = nextDay?.uuid
+    }
+
+    private func stepSelectedDay(in program: Program, by delta: Int) {
+        let days = program.orderedDays
+        guard !days.isEmpty else { return }
+        let currentID = selectedDayID ?? nextDay?.uuid
+        let currentIndex = days.firstIndex(where: { $0.uuid == currentID }) ?? 0
+        let newIndex = (currentIndex + delta + days.count) % days.count
+        selectedDayID = days[newIndex].uuid
+    }
+
+    private func programDayChooser(program: Program, day: ProgramDay) -> some View {
+        let days = program.orderedDays
+        let index = days.firstIndex(where: { $0.uuid == day.uuid }) ?? 0
+        return HStack(spacing: 12) {
+            Button {
+                stepSelectedDay(in: program, by: -1)
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.body.weight(.semibold))
+                    .frame(minWidth: 36, minHeight: 32)
+            }
+            .buttonStyle(.bordered)
+            .disabled(days.count < 2)
+            .accessibilityLabel("Previous day")
+
+            VStack(spacing: 2) {
+                Text(day.name)
+                    .font(.subheadline.weight(.semibold))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                Text("\(index + 1) of \(days.count)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+
+            Button {
+                stepSelectedDay(in: program, by: 1)
+            } label: {
+                Image(systemName: "chevron.right")
+                    .font(.body.weight(.semibold))
+                    .frame(minWidth: 36, minHeight: 32)
+            }
+            .buttonStyle(.bordered)
+            .disabled(days.count < 2)
+            .accessibilityLabel("Next day")
+        }
+        .accessibilityElement(children: .contain)
+    }
+
+    private func startProgramButton(program: Program, day: ProgramDay) -> some View {
+        Button {
+            sessionStore.start(program: program, programDay: day)
+        } label: {
+            VStack(spacing: 4) {
+                Label("Start \(day.name)", systemImage: "play.fill")
+                    .font(.headline)
+                if let estimate = dayDurationLabel(day) {
+                    Text(estimate)
+                        .font(.caption)
+                        .opacity(0.82)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+        }
+        .buttonStyle(.borderedProminent)
+        .accessibilityHint(startHint(program: program, day: day))
     }
 
     private func dayDurationLabel(_ day: ProgramDay) -> String? {
