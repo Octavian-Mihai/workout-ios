@@ -4,7 +4,7 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Running",
+        "key": "Cardio",
         "location": {
           "startingColumn": 30,
           "startingLine": 226
@@ -76,42 +76,10 @@
       },
       {
         "comment": "",
-        "key": "Date",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 275
-        }
-      },
-      {
-        "comment": "",
-        "key": "Stress",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 276
-        }
-      },
-      {
-        "comment": "",
-        "key": "Date",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 280
-        }
-      },
-      {
-        "comment": "",
-        "key": "Stress",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 281
-        }
-      },
-      {
-        "comment": "",
         "key": "Filters",
         "location": {
           "startingColumn": 30,
-          "startingLine": 366
+          "startingLine": 349
         }
       },
       {
@@ -119,7 +87,7 @@
         "key": "Clear filters",
         "location": {
           "startingColumn": 28,
-          "startingLine": 354
+          "startingLine": 337
         }
       },
       {
@@ -127,7 +95,7 @@
         "key": "Done",
         "location": {
           "startingColumn": 28,
-          "startingLine": 370
+          "startingLine": 353
         }
       },
       {
@@ -135,7 +103,7 @@
         "key": "%@  ·  %@",
         "location": {
           "startingColumn": 22,
-          "startingLine": 616
+          "startingLine": 599
         }
       },
       {
@@ -143,7 +111,7 @@
         "key": "Stress %lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 627
+          "startingLine": 610
         }
       },
       {
@@ -151,7 +119,7 @@
         "key": "Run",
         "location": {
           "startingColumn": 26,
-          "startingLine": 697
+          "startingLine": 680
         }
       },
       {
@@ -159,7 +127,7 @@
         "key": "Recovery context: %@",
         "location": {
           "startingColumn": 30,
-          "startingLine": 685
+          "startingLine": 668
         }
       },
       {
@@ -167,7 +135,7 @@
         "key": "Route",
         "location": {
           "startingColumn": 18,
-          "startingLine": 726
+          "startingLine": 709
         }
       },
       {
@@ -175,7 +143,7 @@
         "key": "No route recorded.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 737
+          "startingLine": 720
         }
       },
       {
@@ -183,7 +151,7 @@
         "key": "Heart rate",
         "location": {
           "startingColumn": 18,
-          "startingLine": 750
+          "startingLine": 733
         }
       },
       {
@@ -191,7 +159,7 @@
         "key": "No heart-rate samples for this run.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 762
+          "startingLine": 745
         }
       },
       {
@@ -199,7 +167,7 @@
         "key": "Time",
         "location": {
           "startingColumn": 35,
-          "startingLine": 755
+          "startingLine": 738
         }
       },
       {
@@ -207,7 +175,7 @@
         "key": "bpm",
         "location": {
           "startingColumn": 35,
-          "startingLine": 756
+          "startingLine": 739
         }
       },
       {
@@ -215,7 +183,7 @@
         "key": "Pace",
         "location": {
           "startingColumn": 18,
-          "startingLine": 775
+          "startingLine": 758
         }
       },
       {
@@ -223,7 +191,7 @@
         "key": "No pace series for this run.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 792
+          "startingLine": 775
         }
       },
       {
@@ -231,7 +199,7 @@
         "key": "Time",
         "location": {
           "startingColumn": 35,
-          "startingLine": 784
+          "startingLine": 767
         }
       },
       {
@@ -239,7 +207,7 @@
         "key": "Pace",
         "location": {
           "startingColumn": 35,
-          "startingLine": 785
+          "startingLine": 768
         }
       },
       {
@@ -247,7 +215,7 @@
         "key": "Start",
         "location": {
           "startingColumn": 24,
-          "startingLine": 838
+          "startingLine": 821
         }
       },
       {
@@ -255,7 +223,7 @@
         "key": "End",
         "location": {
           "startingColumn": 24,
-          "startingLine": 841
+          "startingLine": 824
         }
       }
     ]

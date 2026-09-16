@@ -225,6 +225,7 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(theme.groupedBackground)
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
             .alert("Delete all local data?", isPresented: $showDeleteConfirm) {
                 Button("Delete", role: .destructive) { deleteAllLocalData() }
                 Button("Cancel", role: .cancel) {}

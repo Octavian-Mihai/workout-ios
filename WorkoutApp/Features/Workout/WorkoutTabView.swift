@@ -73,6 +73,7 @@ struct WorkoutTabView: View {
             }
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Workout")
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: syncSelectedDayToResolvedNext)
             .onChange(of: activeProgram?.uuid) { _, _ in
                 syncSelectedDayToResolvedNext()

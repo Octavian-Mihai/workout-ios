@@ -7,15 +7,7 @@
         "key": "Search exercises or muscles",
         "location": {
           "startingColumn": 43,
-          "startingLine": 80
-        }
-      },
-      {
-        "comment": "",
-        "key": "Add exercise",
-        "location": {
-          "startingColumn": 26,
-          "startingLine": 81
+          "startingLine": 161
         }
       },
       {
@@ -23,7 +15,7 @@
         "key": "Add custom exercise",
         "location": {
           "startingColumn": 16,
-          "startingLine": 114
+          "startingLine": 209
         }
       },
       {
@@ -31,7 +23,7 @@
         "key": "Remove exercise?",
         "location": {
           "startingColumn": 16,
-          "startingLine": 127
+          "startingLine": 222
         }
       },
       {
@@ -39,7 +31,15 @@
         "key": "No exercises match your search or filters.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 57
+          "startingLine": 102
+        }
+      },
+      {
+        "comment": "",
+        "key": "Recommended",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 108
         }
       },
       {
@@ -47,7 +47,7 @@
         "key": "Close",
         "location": {
           "startingColumn": 24,
-          "startingLine": 85
+          "startingLine": 166
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "Custom",
         "location": {
           "startingColumn": 24,
-          "startingLine": 88
+          "startingLine": 169
         }
       },
       {
@@ -63,7 +63,7 @@
         "key": "Add only",
         "location": {
           "startingColumn": 20,
-          "startingLine": 115
+          "startingLine": 210
         }
       },
       {
@@ -71,7 +71,7 @@
         "key": "Add & notify admin",
         "location": {
           "startingColumn": 20,
-          "startingLine": 118
+          "startingLine": 213
         }
       },
       {
@@ -79,7 +79,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 20,
-          "startingLine": 121
+          "startingLine": 216
         }
       },
       {
@@ -87,7 +87,7 @@
         "key": "Request inclusion in the global catalog by notifying the admin, or add this exercise to your program only.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 125
+          "startingLine": 220
         }
       },
       {
@@ -95,7 +95,7 @@
         "key": "Remove",
         "location": {
           "startingColumn": 20,
-          "startingLine": 131
+          "startingLine": 226
         }
       },
       {
@@ -103,7 +103,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 20,
-          "startingLine": 137
+          "startingLine": 232
         }
       },
       {
@@ -111,7 +111,7 @@
         "key": "%@ has logged sets. Removing it will delete those sets.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 142
+          "startingLine": 237
         }
       },
       {
@@ -119,7 +119,7 @@
         "key": "All categories",
         "location": {
           "startingColumn": 28,
-          "startingLine": 191
+          "startingLine": 289
         }
       },
       {
@@ -127,7 +127,7 @@
         "key": "All equipment",
         "location": {
           "startingColumn": 28,
-          "startingLine": 204
+          "startingLine": 302
         }
       },
       {
@@ -135,7 +135,15 @@
         "key": "All muscles",
         "location": {
           "startingColumn": 28,
-          "startingLine": 217
+          "startingLine": 315
+        }
+      },
+      {
+        "comment": "",
+        "key": "Select %@",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 367
         }
       },
       {
@@ -143,7 +151,15 @@
         "key": "Preview %@",
         "location": {
           "startingColumn": 33,
-          "startingLine": 270
+          "startingLine": 375
+        }
+      },
+      {
+        "comment": "",
+        "key": "Preview %@",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 413
         }
       },
       {
@@ -151,7 +167,7 @@
         "key": "Remove %@",
         "location": {
           "startingColumn": 43,
-          "startingLine": 280
+          "startingLine": 423
         }
       },
       {
@@ -159,7 +175,7 @@
         "key": "Add %@",
         "location": {
           "startingColumn": 71,
-          "startingLine": 280
+          "startingLine": 423
         }
       },
       {
@@ -167,7 +183,7 @@
         "key": "Custom exercise",
         "location": {
           "startingColumn": 26,
-          "startingLine": 354
+          "startingLine": 497
         }
       },
       {
@@ -175,7 +191,7 @@
         "key": "Exercise name",
         "location": {
           "startingColumn": 23,
-          "startingLine": 325
+          "startingLine": 468
         }
       },
       {
@@ -183,7 +199,7 @@
         "key": "Primary muscles",
         "location": {
           "startingColumn": 21,
-          "startingLine": 341
+          "startingLine": 484
         }
       },
       {
@@ -191,7 +207,7 @@
         "key": "Secondary muscles",
         "location": {
           "startingColumn": 21,
-          "startingLine": 347
+          "startingLine": 490
         }
       },
       {
@@ -199,7 +215,7 @@
         "key": "Equipment",
         "location": {
           "startingColumn": 22,
-          "startingLine": 327
+          "startingLine": 470
         }
       },
       {
@@ -207,7 +223,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 24,
-          "startingLine": 357
+          "startingLine": 500
         }
       },
       {
@@ -215,7 +231,7 @@
         "key": "Add",
         "location": {
           "startingColumn": 24,
-          "startingLine": 360
+          "startingLine": 503
         }
       }
     ]

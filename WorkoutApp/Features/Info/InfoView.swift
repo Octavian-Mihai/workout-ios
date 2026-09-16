@@ -131,6 +131,7 @@ struct InfoView: View {
             }
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Info")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 

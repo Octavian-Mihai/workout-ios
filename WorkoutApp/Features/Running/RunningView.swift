@@ -223,7 +223,8 @@ struct RunningView: View {
                 .padding(16)
             }
             .background(theme.groupedBackground.ignoresSafeArea())
-            .navigationTitle("Running")
+            .navigationTitle("Cardio")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -254,6 +255,21 @@ struct RunningView: View {
                     Task { await health.loadOlderCardioWorkouts() }
                 }
             }
+            .refreshable {
+                await health.requestAndLoad()
+            }
+            .task {
+                guard health.isAvailable else { return }
+                if health.isAuthorized {
+                    await health.loadDailyStepsIfPossible()
+                } else if !health.isLoading {
+                    await health.requestAndLoad()
+                }
+            }
+            .onChange(of: health.isAuthorized) { _, authorized in
+                guard authorized else { return }
+                Task { await health.loadDailyStepsIfPossible() }
+            }
         }
     }
 
@@ -267,27 +283,63 @@ struct RunningView: View {
                 metric("Runs", "\(last7.count)")
             }
             StressMeter(title: "Run stress", score: weeklyRunStress, accent: accent)
-            StressLegendView(compact: true)
-
-            if last7.count >= 2 {
-                Chart(last7.sorted { $0.start < $1.start }) { run in
-                    LineMark(
-                        x: .value("Date", run.start),
-                        y: .value("Stress", runStress(for: run))
-                    )
-                    .foregroundStyle(accent)
-                    PointMark(
-                        x: .value("Date", run.start),
-                        y: .value("Stress", runStress(for: run))
-                    )
-                    .foregroundStyle(accent)
-                }
-                .frame(height: 140)
-                .chartYScale(domain: 0...100)
-            }
+            stepsChart
         }
         .padding(16)
         .opaqueCard()
+    }
+
+    private var stepsChart: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Steps")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                if let today = health.dailySteps.last, today.count > 0 {
+                    Text("Today: \(today.count.formatted())")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            if health.isLoadingSteps, health.dailySteps.isEmpty {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 120)
+            } else if let error = health.stepsError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(height: 120)
+            } else if health.dailySteps.isEmpty {
+                Text("No step data found in Apple Health for the last 7 days.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(height: 120)
+            } else {
+                Chart(health.dailySteps) { point in
+                    BarMark(
+                        x: .value("Day", point.date, unit: .day),
+                        y: .value("Steps", point.count),
+                        width: .ratio(0.75)
+                    )
+                    .foregroundStyle(accent)
+                }
+                .frame(height: 120)
+                .chartXScale(range: .plotDimension(padding: 8))
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
+                .chartXAxis {
+                    AxisMarks(values: .stride(by: .day)) { _ in
+                        AxisGridLine()
+                        AxisValueLabel(format: .dateTime.weekday(.narrow))
+                    }
+                }
+            }
+        }
     }
 
     private func metric(_ title: String, _ value: String) -> some View {

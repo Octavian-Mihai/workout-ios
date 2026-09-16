@@ -7,7 +7,15 @@
         "key": "Save this day as a template?",
         "location": {
           "startingColumn": 16,
-          "startingLine": 421
+          "startingLine": 498
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save this day as a template?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 509
         }
       },
       {
@@ -15,7 +23,7 @@
         "key": "Discard this workout?",
         "location": {
           "startingColumn": 16,
-          "startingLine": 432
+          "startingLine": 520
         }
       },
       {
@@ -23,7 +31,7 @@
         "key": "Add an exercise to start logging sets.",
         "location": {
           "startingColumn": 30,
-          "startingLine": 337
+          "startingLine": 397
         }
       },
       {
@@ -31,7 +39,7 @@
         "key": "Discard workout",
         "location": {
           "startingColumn": 28,
-          "startingLine": 369
+          "startingLine": 431
         }
       },
       {
@@ -39,7 +47,7 @@
         "key": "Finish workout",
         "location": {
           "startingColumn": 30,
-          "startingLine": 360
+          "startingLine": 422
         }
       },
       {
@@ -47,7 +55,7 @@
         "key": "Close",
         "location": {
           "startingColumn": 24,
-          "startingLine": 390
+          "startingLine": 452
         }
       },
       {
@@ -55,15 +63,15 @@
         "key": "Save template",
         "location": {
           "startingColumn": 20,
-          "startingLine": 422
+          "startingLine": 499
         }
       },
       {
         "comment": "",
-        "key": "Don’t save",
+        "key": "Don't save",
         "location": {
           "startingColumn": 20,
-          "startingLine": 426
+          "startingLine": 503
         }
       },
       {
@@ -71,7 +79,31 @@
         "key": "Exercises were added, removed, or reordered. Save them to this program day, or keep the original template.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 430
+          "startingLine": 507
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save template",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 510
+        }
+      },
+      {
+        "comment": "",
+        "key": "Don't save",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 514
+        }
+      },
+      {
+        "comment": "",
+        "key": "Exercises were added, removed, or reordered. Save them to this program day, or keep the original template.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 518
         }
       },
       {
@@ -79,7 +111,7 @@
         "key": "Discard",
         "location": {
           "startingColumn": 20,
-          "startingLine": 433
+          "startingLine": 521
         }
       },
       {
@@ -87,7 +119,7 @@
         "key": "Keep",
         "location": {
           "startingColumn": 20,
-          "startingLine": 434
+          "startingLine": 522
         }
       },
       {
@@ -95,7 +127,7 @@
         "key": "Logged sets will be lost.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 436
+          "startingLine": 524
         }
       },
       {
@@ -103,7 +135,7 @@
         "key": "Rest",
         "location": {
           "startingColumn": 18,
-          "startingLine": 535
+          "startingLine": 623
         }
       },
       {
@@ -111,7 +143,7 @@
         "key": "Reset",
         "location": {
           "startingColumn": 46,
-          "startingLine": 559
+          "startingLine": 647
         }
       },
       {
@@ -119,7 +151,7 @@
         "key": "Start",
         "location": {
           "startingColumn": 56,
-          "startingLine": 559
+          "startingLine": 647
         }
       },
       {
@@ -127,7 +159,23 @@
         "key": "%llds",
         "location": {
           "startingColumn": 22,
-          "startingLine": 553
+          "startingLine": 641
+        }
+      },
+      {
+        "comment": "",
+        "key": "Remove exercise?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 966
+        }
+      },
+      {
+        "comment": "",
+        "key": "Swap exercise?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 975
         }
       },
       {
@@ -135,7 +183,7 @@
         "key": "%lld out of %lld sets done",
         "location": {
           "startingColumn": 26,
-          "startingLine": 699
+          "startingLine": 803
         }
       },
       {
@@ -143,7 +191,39 @@
         "key": "Exercise history and 1RM",
         "location": {
           "startingColumn": 37,
-          "startingLine": 717
+          "startingLine": 821
+        }
+      },
+      {
+        "comment": "",
+        "key": "Exercise actions",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 851
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reorder exercises",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 826
+        }
+      },
+      {
+        "comment": "",
+        "key": "Swap exercise",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 831
+        }
+      },
+      {
+        "comment": "",
+        "key": "Remove exercise",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 841
         }
       },
       {
@@ -151,7 +231,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 39,
-          "startingLine": 762
+          "startingLine": 896
         }
       },
       {
@@ -159,7 +239,55 @@
         "key": "Close",
         "location": {
           "startingColumn": 36,
-          "startingLine": 811
+          "startingLine": 945
+        }
+      },
+      {
+        "comment": "",
+        "key": "Remove",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 967
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 971
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ has logged sets. Removing it will delete those sets.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 973
+        }
+      },
+      {
+        "comment": "",
+        "key": "Swap",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 976
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 979
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ has logged sets. Swapping it will clear those sets.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 984
         }
       },
       {
@@ -167,7 +295,7 @@
         "key": "Set",
         "location": {
           "startingColumn": 18,
-          "startingLine": 820
+          "startingLine": 1029
         }
       },
       {
@@ -175,7 +303,7 @@
         "key": "Last",
         "location": {
           "startingColumn": 18,
-          "startingLine": 822
+          "startingLine": 1031
         }
       },
       {
@@ -183,7 +311,7 @@
         "key": "Reps",
         "location": {
           "startingColumn": 18,
-          "startingLine": 826
+          "startingLine": 1035
         }
       },
       {
@@ -191,7 +319,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 18,
-          "startingLine": 853
+          "startingLine": 1062
         }
       },
       {
@@ -199,7 +327,7 @@
         "key": "—",
         "location": {
           "startingColumn": 18,
-          "startingLine": 889
+          "startingLine": 1098
         }
       },
       {
@@ -207,7 +335,7 @@
         "key": "%@ × %lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 881
+          "startingLine": 1090
         }
       }
     ]

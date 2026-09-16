@@ -57,6 +57,13 @@ struct RunDetailData {
     var route: [CLLocation]
 }
 
+struct DailySteps: Identifiable {
+    let date: Date
+    let count: Int
+
+    var id: Date { date }
+}
+
 @MainActor
 final class HealthKitService: ObservableObject {
     /// Opt-in: when true, finishing a strength session writes an `HKWorkout` to Health.
@@ -75,6 +82,9 @@ final class HealthKitService: ObservableObject {
     @Published var restingHeartRate: Double?
     @Published var hrvSDNN: Double?
     @Published var lastNightSleepHours: Double?
+    @Published var dailySteps: [DailySteps] = []
+    @Published var isLoadingSteps = false
+    @Published var stepsError: String?
     @Published var dateOfBirth: Date?
 
     private let store = HKHealthStore()
@@ -134,9 +144,19 @@ final class HealthKitService: ObservableObject {
             try await loadOlderRunCount()
             try await loadRestingHeartRate()
             try await loadHRV()
-            try await loadSleep()
+            try? await loadSleep()
+            await loadDailyStepsIfPossible()
         } catch {
             lastError = error.localizedDescription
+            await loadDailyStepsIfPossible()
+        }
+    }
+
+    func loadDailyStepsIfPossible() async {
+        do {
+            try await loadDailySteps()
+        } catch {
+            stepsError = error.localizedDescription
         }
     }
 
@@ -146,6 +166,7 @@ final class HealthKitService: ObservableObject {
               let bodyMass = HKQuantityType.quantityType(forIdentifier: .bodyMass),
               let restingHR = HKQuantityType.quantityType(forIdentifier: .restingHeartRate),
               let hrv = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN),
+              let stepCount = HKQuantityType.quantityType(forIdentifier: .stepCount),
               let sleep = HKCategoryType.categoryType(forIdentifier: .sleepAnalysis) else {
             throw HealthKitServiceError.missingTypes
         }
@@ -157,6 +178,7 @@ final class HealthKitService: ObservableObject {
             heartRate,
             restingHR,
             hrv,
+            stepCount,
             sleep,
             HKSeriesType.workoutRoute(),
             bodyMass
@@ -383,6 +405,73 @@ final class HealthKitService: ObservableObject {
             hrvSDNN = values.reduce(0, +) / Double(values.count)
         } else {
             hrvSDNN = nil
+        }
+    }
+
+    func loadDailySteps(days: Int = 7) async throws {
+        guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
+            dailySteps = []
+            stepsError = "Step count is not available on this device."
+            return
+        }
+
+        isLoadingSteps = true
+        stepsError = nil
+        defer { isLoadingSteps = false }
+
+        let calendar = Calendar.current
+        let todayStart = calendar.startOfDay(for: Date())
+        guard let startDate = calendar.date(byAdding: .day, value: -(days - 1), to: todayStart),
+              let endDate = calendar.date(byAdding: .day, value: 1, to: todayStart) else {
+            dailySteps = []
+            return
+        }
+
+        dailySteps = try await fetchDailyStepCounts(
+            type: stepType,
+            from: startDate,
+            to: endDate,
+            anchorDate: startDate
+        )
+    }
+
+    private func fetchDailyStepCounts(
+        type: HKQuantityType,
+        from startDate: Date,
+        to endDate: Date,
+        anchorDate: Date
+    ) async throws -> [DailySteps] {
+        try await withCheckedThrowingContinuation { continuation in
+            var interval = DateComponents()
+            interval.day = 1
+
+            let query = HKStatisticsCollectionQuery(
+                quantityType: type,
+                quantitySamplePredicate: nil,
+                options: .cumulativeSum,
+                anchorDate: anchorDate,
+                intervalComponents: interval
+            )
+
+            query.initialResultsHandler = { _, collection, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                guard let collection else {
+                    continuation.resume(returning: [])
+                    return
+                }
+
+                var results: [DailySteps] = []
+                collection.enumerateStatistics(from: startDate, to: endDate) { statistics, _ in
+                    let steps = statistics.sumQuantity()?.doubleValue(for: .count()) ?? 0
+                    results.append(DailySteps(date: statistics.startDate, count: Int(steps.rounded())))
+                }
+                continuation.resume(returning: results)
+            }
+
+            store.execute(query)
         }
     }
 

@@ -31,7 +31,7 @@ struct RootTabView: View {
 
             if showRunningTab {
                 RunningView()
-                    .tabItem { Label("Running", systemImage: "figure.run") }
+                    .tabItem { Label("Cardio", systemImage: "figure.run") }
                     .tag(AppTab.running)
             }
 

@@ -67,7 +67,7 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         case .workoutPrograms: return "Programs"
         case .workoutLearn: return "Learn"
         case .infoAnalytics: return "Stress and analytics"
-        case .running: return "Running"
+        case .running: return "Cardio"
         case .settings: return "Settings"
         }
     }

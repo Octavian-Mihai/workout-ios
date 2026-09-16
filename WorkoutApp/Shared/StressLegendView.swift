@@ -122,7 +122,7 @@ struct TodayStressCard: View {
         trend.flatMap { point in
             var points = [StressTrendPoint(date: point.date, source: "Lift", value: point.lift)]
             if showRunSplit {
-                points.append(StressTrendPoint(date: point.date, source: "Run", value: point.run))
+                points.append(StressTrendPoint(date: point.date, source: "Cardio", value: point.run))
             }
             return points
         }
@@ -135,7 +135,7 @@ struct TodayStressCard: View {
                 HStack(spacing: 16) {
                     splitMeter(title: "Lift", score: estimate.lift, color: accent)
                     if showRunSplit {
-                        splitMeter(title: "Run", score: estimate.run, color: runColor)
+                        splitMeter(title: "Cardio", score: estimate.run, color: runColor)
                     }
                 }
             }
@@ -154,7 +154,7 @@ struct TodayStressCard: View {
                 }
                 .chartForegroundStyleScale([
                     "Lift": accent,
-                    "Run": runColor
+                    "Cardio": runColor
                 ])
                 .frame(height: 120)
                 .chartYScale(domain: 0...100)
@@ -162,12 +162,6 @@ struct TodayStressCard: View {
                     AxisMarks(values: .stride(by: .day)) { _ in
                         AxisGridLine()
                         AxisValueLabel(format: .dateTime.weekday(.narrow))
-                    }
-                }
-                HStack(spacing: 16) {
-                    trendLegendItem(title: "Lift", color: accent)
-                    if showRunSplit {
-                        trendLegendItem(title: "Run", color: runColor)
                     }
                 }
                 Text("Leftover fatigue eases over the next couple of mornings.")
@@ -182,17 +176,6 @@ struct TodayStressCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(compact ? 12 : 16)
         .opaqueCard()
-    }
-
-    private func trendLegendItem(title: String, color: Color) -> some View {
-        HStack(spacing: 6) {
-            Circle()
-                .fill(color)
-                .frame(width: 8, height: 8)
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
     }
 
     private func splitMeter(title: String, score: Double, color: Color) -> some View {
