@@ -806,7 +806,7 @@ struct SessionExerciseCard: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Exercise details")
 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 0) {
                     HStack(alignment: .center, spacing: 8) {
                         Text(live.name)
                             .font(.headline)
@@ -862,11 +862,12 @@ struct SessionExerciseCard: View {
                         .layoutPriority(1)
                         .accessibilityLabel("Exercise actions")
                     }
+                    Spacer(minLength: 0)
                     if !live.primaryMuscles.isEmpty || live.targetSets > 0 {
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
                             if !live.primaryMuscles.isEmpty {
                                 Text(live.primaryMuscles.joined(separator: ", "))
-                                    .font(.caption)
+                                    .font(.footnote)
                                     .foregroundStyle(.secondary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             } else {
@@ -883,6 +884,7 @@ struct SessionExerciseCard: View {
                         }
                     }
                 }
+                .frame(minHeight: thumbnailSize, alignment: .top)
             }
 
             setColumnHeader
