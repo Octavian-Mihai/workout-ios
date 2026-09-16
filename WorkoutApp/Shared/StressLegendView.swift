@@ -96,6 +96,14 @@ struct StressMeter: View {
     }
 }
 
+private struct StressTrendPoint: Identifiable {
+    let date: Date
+    let source: String
+    let value: Double
+
+    var id: String { "\(date.timeIntervalSince1970)-\(source)" }
+}
+
 struct TodayStressCard: View {
     let estimate: StressEstimate
     var showSplit: Bool = false
@@ -106,36 +114,60 @@ struct TodayStressCard: View {
 
     @Environment(AppTheme.self) private var theme
 
+    private var runColor: Color {
+        Color(red: 0.25, green: 0.55, blue: 0.90)
+    }
+
+    private var trendSeries: [StressTrendPoint] {
+        trend.flatMap { point in
+            var points = [StressTrendPoint(date: point.date, source: "Lift", value: point.lift)]
+            if showRunSplit {
+                points.append(StressTrendPoint(date: point.date, source: "Run", value: point.run))
+            }
+            return points
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? 6 : 12) {
             StressMeter(title: "Today’s stress", score: estimate.total, accent: accent, compact: compact)
             if showSplit {
                 HStack(spacing: 16) {
-                    splitMeter(title: "Lift", score: estimate.lift)
+                    splitMeter(title: "Lift", score: estimate.lift, color: accent)
                     if showRunSplit {
-                        splitMeter(title: "Run", score: estimate.run)
+                        splitMeter(title: "Run", score: estimate.run, color: runColor)
                     }
                 }
             }
             if !compact, trend.count >= 2 {
-                Chart(trend) { point in
+                Chart(trendSeries) { point in
                     LineMark(
                         x: .value("Day", point.date),
-                        y: .value("Stress", point.total)
+                        y: .value("Stress", point.value)
                     )
-                    .foregroundStyle(accent)
+                    .foregroundStyle(by: .value("Source", point.source))
                     PointMark(
                         x: .value("Day", point.date),
-                        y: .value("Stress", point.total)
+                        y: .value("Stress", point.value)
                     )
-                    .foregroundStyle(accent)
+                    .foregroundStyle(by: .value("Source", point.source))
                 }
+                .chartForegroundStyleScale([
+                    "Lift": accent,
+                    "Run": runColor
+                ])
                 .frame(height: 120)
                 .chartYScale(domain: 0...100)
                 .chartXAxis {
                     AxisMarks(values: .stride(by: .day)) { _ in
                         AxisGridLine()
                         AxisValueLabel(format: .dateTime.weekday(.narrow))
+                    }
+                }
+                HStack(spacing: 16) {
+                    trendLegendItem(title: "Lift", color: accent)
+                    if showRunSplit {
+                        trendLegendItem(title: "Run", color: runColor)
                     }
                 }
                 Text("Leftover fatigue eases over the next couple of mornings.")
@@ -152,7 +184,18 @@ struct TodayStressCard: View {
         .opaqueCard()
     }
 
-    private func splitMeter(title: String, score: Double) -> some View {
+    private func trendLegendItem(title: String, color: Color) -> some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(color)
+                .frame(width: 8, height: 8)
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func splitMeter(title: String, score: Double, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(title)
@@ -166,7 +209,7 @@ struct TodayStressCard: View {
                 ZStack(alignment: .leading) {
                     Capsule().fill(theme.mutedFill)
                     Capsule()
-                        .fill(accent)
+                        .fill(color)
                         .frame(width: max(4, geo.size.width * min(max(score / 100, 0), 1)))
                 }
             }

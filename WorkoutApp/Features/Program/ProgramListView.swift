@@ -2,6 +2,10 @@ import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
 
+enum WorkoutPageVisibility {
+    static let programsExpandedKey = "workoutProgramsExpanded"
+}
+
 struct ProgramListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Program.createdAt) private var programs: [Program]
@@ -13,7 +17,7 @@ struct ProgramListView: View {
     @State private var pendingImport = false
     @State private var importError: String?
     @State private var showImportError = false
-    @State private var programsExpanded = true
+    @AppStorage(WorkoutPageVisibility.programsExpandedKey) private var programsExpanded = true
 
     private var activeProgram: Program? {
         programs.first(where: \.isActive)
