@@ -7,7 +7,7 @@
         "key": "Info",
         "location": {
           "startingColumn": 30,
-          "startingLine": 133
+          "startingLine": 137
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Cardio stress includes walking, hiking, and cycling from Apple Health.",
         "location": {
           "startingColumn": 42,
-          "startingLine": 90
+          "startingLine": 92
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "My stress",
         "location": {
           "startingColumn": 34,
-          "startingLine": 103
+          "startingLine": 105
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Analytics",
         "location": {
           "startingColumn": 34,
-          "startingLine": 117
+          "startingLine": 121
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "Exercise history",
         "location": {
           "startingColumn": 26,
-          "startingLine": 143
+          "startingLine": 148
         }
       },
       {
@@ -47,7 +47,23 @@
         "key": "1RM and weight evolution for logged lifts",
         "location": {
           "startingColumn": 26,
-          "startingLine": 146
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "Measurements",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 172
+        }
+      },
+      {
+        "comment": "",
+        "key": "Progress photos, body weight, calories, and circumferences",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 175
         }
       }
     ]

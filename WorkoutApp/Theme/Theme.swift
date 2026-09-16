@@ -184,6 +184,31 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
     }
 }
 
+enum LengthUnit: String, CaseIterable, Identifiable {
+    case cm
+    case inches = "in"
+
+    var id: String { rawValue }
+
+    var title: String { rawValue }
+
+    func fromCm(_ cm: Double) -> Double {
+        self == .cm ? cm : cm / 2.54
+    }
+
+    func toCm(_ value: Double) -> Double {
+        self == .cm ? value : value * 2.54
+    }
+
+    func format(_ cm: Double, decimals: Int = 1) -> String {
+        "\(Formatters.trimmedNumber(fromCm(cm), decimals: decimals)) \(title)"
+    }
+
+    func formatNumber(_ cm: Double, decimals: Int = 1) -> String {
+        Formatters.trimmedNumber(fromCm(cm), decimals: decimals)
+    }
+}
+
 enum WeightUnit: String, CaseIterable, Identifiable {
     case kg, lb
 

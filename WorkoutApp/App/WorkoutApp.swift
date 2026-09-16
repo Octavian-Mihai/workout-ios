@@ -51,7 +51,8 @@ struct WorkoutApp: App {
             DayExercise.self,
             WorkoutSession.self,
             SetLog.self,
-            BodyWeightEntry.self
+            BodyWeightEntry.self,
+            BodyMeasurementEntry.self
         ])
     }
 }

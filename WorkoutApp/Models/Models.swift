@@ -202,3 +202,49 @@ final class BodyWeightEntry {
         self.kilograms = kilograms
     }
 }
+
+@Model
+final class BodyMeasurementEntry {
+    var date: Date
+    var photoFilename: String?
+    var kilograms: Double?
+    var caloriesKcal: Int?
+    var heightCm: Double?
+    var neckCm: Double?
+    var shouldersCm: Double?
+    var chestCm: Double?
+    var leftBicepsCm: Double?
+    var rightBicepsCm: Double?
+    var leftForearmCm: Double?
+    var rightForearmCm: Double?
+    var waistCm: Double?
+    var hipsCm: Double?
+    var leftThighCm: Double?
+    var rightThighCm: Double?
+    var leftCalfCm: Double?
+    var rightCalfCm: Double?
+
+    init(date: Date = Date()) {
+        self.date = date
+    }
+
+    var hasAnyMeasurement: Bool {
+        photoFilename != nil
+            || kilograms != nil
+            || caloriesKcal != nil
+            || heightCm != nil
+            || neckCm != nil
+            || shouldersCm != nil
+            || chestCm != nil
+            || leftBicepsCm != nil
+            || rightBicepsCm != nil
+            || leftForearmCm != nil
+            || rightForearmCm != nil
+            || waistCm != nil
+            || hipsCm != nil
+            || leftThighCm != nil
+            || rightThighCm != nil
+            || leftCalfCm != nil
+            || rightCalfCm != nil
+    }
+}

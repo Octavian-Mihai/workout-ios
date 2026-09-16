@@ -1,0 +1,160 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Measurements/AddMeasurementView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Add measurement",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 141
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit measurement",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 141
+        }
+      },
+      {
+        "comment": "",
+        "key": "Photo",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "Weight & intake",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 95
+        }
+      },
+      {
+        "comment": "",
+        "key": "Height",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 108
+        }
+      },
+      {
+        "comment": "",
+        "key": "Upper body",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 116
+        }
+      },
+      {
+        "comment": "",
+        "key": "Arms",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 122
+        }
+      },
+      {
+        "comment": "",
+        "key": "Core",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 129
+        }
+      },
+      {
+        "comment": "",
+        "key": "Legs",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 134
+        }
+      },
+      {
+        "comment": "",
+        "key": "Date",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 61
+        }
+      },
+      {
+        "comment": "",
+        "key": "Remove photo",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "Change photo",
+        "location": {
+          "startingColumn": 108,
+          "startingLine": 82
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add progress photo",
+        "location": {
+          "startingColumn": 125,
+          "startingLine": 82
+        }
+      },
+      {
+        "comment": "",
+        "key": "Weight",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 97
+        }
+      },
+      {
+        "comment": "",
+        "key": "Calories",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 102
+        }
+      },
+      {
+        "comment": "",
+        "key": "Height",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 110
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 145
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "Value (%@)",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 186
+        }
+      }
+    ]
+  },
+  "version": 1
+}

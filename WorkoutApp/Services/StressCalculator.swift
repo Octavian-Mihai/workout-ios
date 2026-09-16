@@ -16,6 +16,15 @@ struct DailyStress: Identifiable {
     var id: Date { date }
 }
 
+struct WeeklyTrainingLoad: Identifiable {
+    let weekStart: Date
+    let tonnageKg: Double
+    let setCount: Int
+    let repCount: Int
+
+    var id: Date { weekStart }
+}
+
 enum StressBand: String {
     case recovery = "Recovery / easy"
     case productive = "Productive"
@@ -394,6 +403,48 @@ enum StressCalculator {
         let lift = dayLiftScore(daySets)
         let run = dayRunScore(dayWorkouts, restingHeartRate: restingHeartRate, maxHeartRate: maxHeartRate)
         return StressEstimate(total: blend(lift: lift, run: run), lift: lift, run: run)
+    }
+
+    static func weekStartContaining(_ date: Date, calendar: Calendar = Calendar.current) -> Date {
+        var cal = calendar
+        cal.firstWeekday = 2
+        return cal.dateInterval(of: .weekOfYear, for: date)?.start ?? cal.startOfDay(for: date)
+    }
+
+    static func weeklyTrainingLoad(from sets: [SetLog], weeks: Int = 12, now: Date = Date()) -> [WeeklyTrainingLoad] {
+        var cal = Calendar.current
+        cal.firstWeekday = 2
+        guard let currentWeekStart = cal.dateInterval(of: .weekOfYear, for: now)?.start,
+              let earliestWeekStart = cal.date(byAdding: .weekOfYear, value: -(weeks - 1), to: currentWeekStart) else {
+            return []
+        }
+
+        var buckets: [Date: (tonnage: Double, sets: Int, reps: Int)] = [:]
+        for set in sets {
+            let week = weekStartContaining(set.timestamp, calendar: cal)
+            guard week >= earliestWeekStart else { continue }
+            var bucket = buckets[week, default: (0, 0, 0)]
+            bucket.tonnage += setVolume(set)
+            bucket.sets += 1
+            bucket.reps += set.reps
+            buckets[week] = bucket
+        }
+
+        var result: [WeeklyTrainingLoad] = []
+        result.reserveCapacity(weeks)
+        for offset in 0..<weeks {
+            guard let week = cal.date(byAdding: .weekOfYear, value: offset, to: earliestWeekStart) else { continue }
+            let bucket = buckets[week] ?? (0, 0, 0)
+            result.append(
+                WeeklyTrainingLoad(
+                    weekStart: week,
+                    tonnageKg: bucket.tonnage,
+                    setCount: bucket.sets,
+                    repCount: bucket.reps
+                )
+            )
+        }
+        return result
     }
 
     static func bestEstimated1RM(for exerciseName: String, in sets: [SetLog], now: Date = Date()) -> Double {

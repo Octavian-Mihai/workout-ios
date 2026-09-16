@@ -11,7 +11,9 @@ struct SettingsView: View {
     @Query private var programs: [Program]
     @Query private var sessions: [WorkoutSession]
     @Query private var weightEntries: [BodyWeightEntry]
+    @Query private var measurementEntries: [BodyMeasurementEntry]
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
+    @AppStorage("lengthUnit") private var lengthUnitRaw = LengthUnit.cm.rawValue
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
@@ -24,6 +26,7 @@ struct SettingsView: View {
     @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
     @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
+    @AppStorage(InfoPageVisibility.showTrainingLoadEvolutionKey) private var showTrainingLoadEvolution = true
     @AppStorage(RunningVisibility.showTabKey) private var showRunningTab = true
     @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
     @AppStorage(HealthKitService.writeStrengthToHealthKitKey) private var writeStrengthToHealthKit = false
@@ -84,6 +87,15 @@ struct SettingsView: View {
                     Text("Lifting loads and body weight are stored in kilograms and converted for display.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    Picker("Length", selection: $lengthUnitRaw) {
+                        ForEach(LengthUnit.allCases) { unit in
+                            Text(unit.title).tag(unit.rawValue)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    Text("Body circumferences and height are stored in centimeters and converted for display.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                     Picker("Distance", selection: $distanceUnitRaw) {
                         ForEach(DistanceUnit.allCases) { unit in
                             Text(unit.title).tag(unit.rawValue)
@@ -108,6 +120,7 @@ struct SettingsView: View {
                     Toggle("Show volume charts", isOn: $showVolumeCharts)
                     Toggle("Show estimated 1RM", isOn: $showEstimated1RM)
                     Toggle("Show intensity map", isOn: $showIntensityMap)
+                    Toggle("Show training load evolution", isOn: $showTrainingLoadEvolution)
                     Text("Hidden sections do not appear on the Info tab.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -154,9 +167,9 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Section("Body weight") {
-                    NavigationLink("Weight log") {
-                        BodyWeightLogView()
+                Section("Measurements") {
+                    NavigationLink("Measurements") {
+                        MeasurementsView()
                     }
                 }
 
@@ -186,7 +199,8 @@ struct SettingsView: View {
                         item: WorkoutBackupService.make(
                             programs: programs,
                             sessions: sessions,
-                            weights: weightEntries
+                            weights: weightEntries,
+                            measurements: measurementEntries
                         ),
                         preview: SharePreview("Workout data")
                     ) {
@@ -230,7 +244,7 @@ struct SettingsView: View {
                 Button("Delete", role: .destructive) { deleteAllLocalData() }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This removes programs, workout history, and body-weight entries from this device. Apple Health data is not deleted.")
+                Text("This removes programs, workout history, measurements, and body-weight entries from this device. Apple Health data is not deleted.")
             }
             .onChange(of: writeStrengthToHealthKit) { _, isOn in
                 if isOn {
@@ -282,7 +296,8 @@ struct SettingsView: View {
                 context: modelContext,
                 existingPrograms: programs,
                 existingSessions: sessions,
-                existingWeights: weightEntries
+                existingWeights: weightEntries,
+                existingMeasurements: measurementEntries
             )
         } catch {
             dataError = error.localizedDescription
@@ -294,6 +309,10 @@ struct SettingsView: View {
         for item in programs { modelContext.delete(item) }
         for item in sessions { modelContext.delete(item) }
         for item in weightEntries { modelContext.delete(item) }
+        for item in measurementEntries {
+            ProgressPhotoStorage.delete(filename: item.photoFilename)
+            modelContext.delete(item)
+        }
         try? modelContext.save()
     }
 }

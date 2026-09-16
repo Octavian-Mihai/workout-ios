@@ -7,6 +7,7 @@ enum InfoPageVisibility {
     static let showVolumeChartsKey = "infoShowVolumeCharts"
     static let showEstimated1RMKey = "infoShowEstimated1RM"
     static let showIntensityMapKey = "infoShowIntensityMap"
+    static let showTrainingLoadEvolutionKey = "infoShowTrainingLoadEvolution"
 }
 
 enum RunningVisibility {
@@ -23,6 +24,7 @@ struct InfoView: View {
     @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
     @AppStorage(InfoPageVisibility.showIntensityMapKey) private var showIntensityMap = true
+    @AppStorage(InfoPageVisibility.showTrainingLoadEvolutionKey) private var showTrainingLoadEvolution = true
     @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
     @Environment(AppTourController.self) private var tour
     @State private var stressExpanded = true
@@ -37,7 +39,7 @@ struct InfoView: View {
     }
 
     private var showsAnalytics: Bool {
-        showTonnage || showVolumeCharts || showEstimated1RM || showIntensityMap
+        showTonnage || showVolumeCharts || showEstimated1RM || showIntensityMap || showTrainingLoadEvolution
     }
 
     private var stressCardio: [CardioWorkout] {
@@ -109,6 +111,8 @@ struct InfoView: View {
 
                     exerciseHistoryLink
 
+                    measurementsLink
+
                     if showsAnalytics {
                         DisclosureGroup(isExpanded: $analyticsExpanded) {
                             StrengthAnalyticsView(sets: allSets, accent: accent)
@@ -145,6 +149,30 @@ struct InfoView: View {
                         .font(.headline)
                         .foregroundStyle(.primary)
                     Text("1RM and weight evolution for logged lifts")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(16)
+            .opaqueCard()
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var measurementsLink: some View {
+        NavigationLink {
+            MeasurementsView()
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Measurements")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text("Progress photos, body weight, calories, and circumferences")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

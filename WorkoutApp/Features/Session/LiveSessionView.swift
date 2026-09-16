@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import Combine
+import UIKit
 
 struct DraftExercise: Identifiable {
     let id: UUID
@@ -767,6 +768,7 @@ struct SessionExerciseCard: View {
     var onDeleteSet: (UUID) -> Void
 
     @State private var showHistory = false
+    @State private var showDetails = false
     @State private var showSwapPicker = false
     @State private var showRemoveConfirm = false
     @State private var showSwapConfirm = false
@@ -795,65 +797,92 @@ struct SessionExerciseCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .center, spacing: 8) {
-                Text(live.name)
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                if live.targetSets > 0 {
-                    Text("\(live.logged.count) out of \(live.targetSets) sets done")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                        .multilineTextAlignment(.trailing)
-                }
+            HStack(alignment: .top, spacing: 12) {
                 Button {
-                    showHistory = true
+                    showDetails = true
                 } label: {
-                    Image(systemName: "chart.line.uptrend.xyaxis")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(accent)
-                        .frame(width: 32, height: 32)
-                        .background(accent.opacity(0.12))
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    exerciseThumbnail
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Exercise history and 1RM")
-                Menu {
-                    Button {
-                        onReorder()
-                    } label: {
-                        Label("Reorder exercises", systemImage: "line.3.horizontal")
-                    }
-                    Button {
-                        showSwapPicker = true
-                    } label: {
-                        Label("Swap exercise", systemImage: "arrow.triangle.2.circlepath")
-                    }
-                    Button(role: .destructive) {
-                        if live.logged.isEmpty {
-                            controller.removeExercise(id: exercise.id)
-                            onStructureChanged()
-                        } else {
-                            showRemoveConfirm = true
+                .accessibilityLabel("Exercise details")
+
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(alignment: .center, spacing: 8) {
+                        Text(live.name)
+                            .font(.headline)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Button {
+                            showHistory = true
+                        } label: {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(accent)
+                                .frame(width: 32, height: 32)
+                                .background(accent.opacity(0.12))
+                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         }
-                    } label: {
-                        Label("Remove exercise", systemImage: "trash")
+                        .buttonStyle(.plain)
+                        .layoutPriority(1)
+                        .accessibilityLabel("Exercise history and 1RM")
+                        Menu {
+                            Button {
+                                showDetails = true
+                            } label: {
+                                Label("Exercise details", systemImage: "info.circle")
+                            }
+                            Button {
+                                onReorder()
+                            } label: {
+                                Label("Reorder exercises", systemImage: "line.3.horizontal")
+                            }
+                            Button {
+                                showSwapPicker = true
+                            } label: {
+                                Label("Swap exercise", systemImage: "arrow.triangle.2.circlepath")
+                            }
+                            Button(role: .destructive) {
+                                if live.logged.isEmpty {
+                                    controller.removeExercise(id: exercise.id)
+                                    onStructureChanged()
+                                } else {
+                                    showRemoveConfirm = true
+                                }
+                            } label: {
+                                Label("Remove exercise", systemImage: "trash")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(accent)
+                                .frame(width: 32, height: 32)
+                                .background(accent.opacity(0.12))
+                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        }
+                        .layoutPriority(1)
+                        .accessibilityLabel("Exercise actions")
                     }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(accent)
-                        .frame(width: 32, height: 32)
-                        .background(accent.opacity(0.12))
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    if !live.primaryMuscles.isEmpty || live.targetSets > 0 {
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            if !live.primaryMuscles.isEmpty {
+                                Text(live.primaryMuscles.joined(separator: ", "))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            } else {
+                                Spacer(minLength: 0)
+                            }
+                            if live.targetSets > 0 {
+                                Text("\(live.logged.count) out of \(live.targetSets) sets done")
+                                    .font(.caption.weight(.medium))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.75)
+                                    .multilineTextAlignment(.trailing)
+                            }
+                        }
+                    }
                 }
-                .accessibilityLabel("Exercise actions")
-            }
-            if !live.primaryMuscles.isEmpty {
-                Text(live.primaryMuscles.joined(separator: ", "))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
 
             setColumnHeader
@@ -947,6 +976,18 @@ struct SessionExerciseCard: View {
                     }
             }
         }
+        .sheet(isPresented: $showDetails) {
+            if let catalog = ExerciseCatalog.match(name: live.name) {
+                ExercisePreviewSheet(exercise: catalog)
+            } else {
+                CustomExerciseDetailsSheet(
+                    name: live.name,
+                    equipment: live.equipment,
+                    primaryMuscles: live.primaryMuscles,
+                    secondaryMuscles: live.secondaryMuscles
+                )
+            }
+        }
         .sheet(isPresented: $showSwapPicker) {
             NavigationStack {
                 ExercisePickerView(
@@ -1022,6 +1063,41 @@ struct SessionExerciseCard: View {
         pendingSwapCatalog = nil
         pendingSwapCustom = nil
         onStructureChanged()
+    }
+
+    private var thumbnailSize: CGFloat { 64 }
+    private var thumbnailCornerRadius: CGFloat { 10 }
+
+    @ViewBuilder
+    private var exerciseThumbnail: some View {
+        Group {
+            if let image = UIImage(named: thumbnailAssetName) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: thumbnailSize, height: thumbnailSize)
+                    .background(Color.white)
+            } else {
+                ZStack {
+                    Color.white
+                    Image(systemName: "figure.strengthtraining.traditional")
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(accent.opacity(0.9))
+                }
+                .frame(width: thumbnailSize, height: thumbnailSize)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: thumbnailCornerRadius, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: thumbnailCornerRadius, style: .continuous))
+        .layoutPriority(1)
+        .accessibilityHidden(true)
+    }
+
+    private var thumbnailAssetName: String {
+        if let catalog = ExerciseCatalog.match(name: live.name) {
+            return ExerciseCatalog.imageAssetName(for: catalog)
+        }
+        return "exercise-custom"
     }
 
     private var setColumnHeader: some View {
