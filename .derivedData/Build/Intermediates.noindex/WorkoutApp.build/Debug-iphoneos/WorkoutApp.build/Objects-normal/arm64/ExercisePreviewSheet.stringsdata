@@ -7,23 +7,7 @@
         "key": "Preview",
         "location": {
           "startingColumn": 30,
-          "startingLine": 62
-        }
-      },
-      {
-        "comment": "",
-        "key": "Added",
-        "location": {
-          "startingColumn": 40,
-          "startingLine": 50
-        }
-      },
-      {
-        "comment": "",
-        "key": "Add to program",
-        "location": {
-          "startingColumn": 50,
-          "startingLine": 50
+          "startingLine": 63
         }
       },
       {
@@ -31,7 +15,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 28,
-          "startingLine": 66
+          "startingLine": 67
         }
       }
     ]

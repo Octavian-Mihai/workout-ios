@@ -1,8 +1,16 @@
 import SwiftUI
 
+enum ExercisePickerMode {
+    case toggleAddRemove
+    case select(onSelect: (CatalogExercise) -> Void)
+}
+
 struct ExercisePickerView: View {
+    var mode: ExercisePickerMode = .toggleAddRemove
     var initialAddedCatalogIDs: Set<String> = []
     var shouldConfirmRemove: ((CatalogExercise) -> Bool)? = nil
+    var swappingExercise: DraftExercise? = nil
+    var sessionExerciseNames: Set<String> = []
     var onAdd: (CatalogExercise) -> Void
     var onRemove: (CatalogExercise) -> Void
     var onCustom: (String, ExerciseEquipment, [String], [String]) -> Void
@@ -42,10 +50,47 @@ struct ExercisePickerView: View {
         )
     }
 
+    private var swapRecommendationContext: (category: ExerciseCategory, primaryMuscles: Set<MuscleGroup>)? {
+        guard swappingExercise != nil else { return nil }
+        guard case .select = mode else { return nil }
+        guard let source = swappingExercise else { return nil }
+        let primaryMuscles = Set(source.primaryMuscles.compactMap { MuscleGroup.parse($0) })
+        guard !primaryMuscles.isEmpty,
+              let category = ExerciseCatalog.match(name: source.name)?.category
+        else { return nil }
+        return (category, primaryMuscles)
+    }
+
+    private var recommendedExercises: [CatalogExercise] {
+        guard let context = swapRecommendationContext else { return [] }
+        return ExerciseCatalog.displaySorted(
+            filtered.filter { item in
+                item.category == context.category
+                    && item.primary.contains(where: { context.primaryMuscles.contains($0) })
+                    && !sessionExerciseNames.contains(item.name.lowercased())
+            }
+        )
+    }
+
+    private var recommendedExerciseIDs: Set<String> {
+        Set(recommendedExercises.map(\.id))
+    }
+
     private var groupedFiltered: [(ExerciseCategory, [CatalogExercise])] {
         ExerciseCategory.allCases.compactMap { category in
-            let items = filtered.filter { $0.category == category }
+            let items = filtered.filter {
+                $0.category == category && !recommendedExerciseIDs.contains($0.id)
+            }
             return items.isEmpty ? nil : (category, items)
+        }
+    }
+
+    private var navigationTitle: String {
+        switch mode {
+        case .toggleAddRemove:
+            return "Add exercise"
+        case .select:
+            return "Swap exercise"
         }
     }
 
@@ -59,15 +104,51 @@ struct ExercisePickerView: View {
                         .foregroundStyle(.secondary)
                         .listRowBackground(Color.clear)
                 } else {
+                    if !recommendedExercises.isEmpty {
+                        Section("Recommended") {
+                            ForEach(recommendedExercises) { item in
+                                switch mode {
+                                case .toggleAddRemove:
+                                    ExercisePickerRow(
+                                        exercise: item,
+                                        isAdded: addedCatalogIDs.contains(item.id),
+                                        onPreview: { previewExercise = item },
+                                        onToggle: { toggleExercise(item) }
+                                    )
+                                case .select(let onSelect):
+                                    ExercisePickerSelectRow(
+                                        exercise: item,
+                                        onPreview: { previewExercise = item },
+                                        onSelect: {
+                                            onSelect(item)
+                                            dismiss()
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
                     ForEach(groupedFiltered, id: \.0) { category, items in
                         Section(category.rawValue) {
                             ForEach(items) { item in
-                                ExercisePickerRow(
-                                    exercise: item,
-                                    isAdded: addedCatalogIDs.contains(item.id),
-                                    onPreview: { previewExercise = item },
-                                    onToggle: { toggleExercise(item) }
-                                )
+                                switch mode {
+                                case .toggleAddRemove:
+                                    ExercisePickerRow(
+                                        exercise: item,
+                                        isAdded: addedCatalogIDs.contains(item.id),
+                                        onPreview: { previewExercise = item },
+                                        onToggle: { toggleExercise(item) }
+                                    )
+                                case .select(let onSelect):
+                                    ExercisePickerSelectRow(
+                                        exercise: item,
+                                        onPreview: { previewExercise = item },
+                                        onSelect: {
+                                            onSelect(item)
+                                            dismiss()
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -78,7 +159,7 @@ struct ExercisePickerView: View {
         }
         .background(theme.groupedBackground)
         .searchable(text: $query, prompt: "Search exercises or muscles")
-        .navigationTitle("Add exercise")
+        .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -97,17 +178,31 @@ struct ExercisePickerView: View {
             }
         }
         .sheet(item: $previewExercise) { exercise in
-            ExercisePreviewSheet(
-                exercise: exercise,
-                isAdded: addedCatalogIDs.contains(exercise.id)
-            ) {
-                if !addedCatalogIDs.contains(exercise.id) {
-                    toggleExercise(exercise)
+            switch mode {
+            case .toggleAddRemove:
+                ExercisePreviewSheet(
+                    exercise: exercise,
+                    isAdded: addedCatalogIDs.contains(exercise.id)
+                ) {
+                    if !addedCatalogIDs.contains(exercise.id) {
+                        toggleExercise(exercise)
+                    }
+                }
+            case .select(let onSelect):
+                ExercisePreviewSheet(
+                    exercise: exercise,
+                    isAdded: false,
+                    confirmTitle: "Select"
+                ) {
+                    onSelect(exercise)
+                    dismiss()
                 }
             }
         }
         .onAppear {
-            addedCatalogIDs = initialAddedCatalogIDs
+            if case .toggleAddRemove = mode {
+                addedCatalogIDs = initialAddedCatalogIDs
+            }
         }
         .sensoryFeedback(.selection, trigger: addFeedbackTrigger)
         .sensoryFeedback(.impact, trigger: removeFeedbackTrigger)
@@ -148,6 +243,9 @@ struct ExercisePickerView: View {
         guard let pending = pendingCustom else { return }
         onCustom(pending.name, pending.equipment, pending.primary, pending.secondary)
         pendingCustom = nil
+        if case .select = mode {
+            dismiss()
+        }
         if notifyAdmin {
             _ = ExerciseSubmissionService.openMail(
                 exerciseName: pending.name,
@@ -231,6 +329,51 @@ struct ExercisePickerView: View {
         }
         .background(theme.cardFill)
         .overlay(alignment: .bottom) { Divider() }
+    }
+}
+
+private struct ExercisePickerSelectRow: View {
+    let exercise: CatalogExercise
+    var onPreview: () -> Void
+    var onSelect: () -> Void
+    @Environment(AppTheme.self) private var theme
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button(action: onSelect) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(exercise.name)
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    HStack(spacing: 8) {
+                        Text(exercise.primaryNames.joined(separator: ", "))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                        Spacer(minLength: 0)
+                        Text(exercise.equipment.shortBadge)
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(theme.mutedFill)
+                            .clipShape(Capsule())
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 4)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Select \(exercise.name)")
+
+            Button(action: onPreview) {
+                Image(systemName: "info.circle")
+                    .font(.title3)
+                    .foregroundStyle(theme.accent)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Preview \(exercise.name)")
+        }
     }
 }
 

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0439670D598EB087C65C1C5B /* ProgramListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E870781319990B4023EBB2EA /* ProgramListView.swift */; };
 		083063D580CE8FA180F346AC /* LiveSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45807FC427FAE0EEE6D1465B /* LiveSessionView.swift */; };
+		C1D2E3F4A5B60718293A4C1E /* SessionExerciseReorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F4A5B60718293A4C1D /* SessionExerciseReorderView.swift */; };
 		142677DFEC3133725373AFCE /* StressCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BBBB891955C99D0710309 /* StressCalculator.swift */; };
 		196F1450A890A2CB67846459 /* ProgramEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C334BF3622A98A9F7979AF5 /* ProgramEditorView.swift */; };
 		1EEF59C9A150CF0E7D9C5A75 /* SessionInputKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A65C59D2BEDAAC917E4111B /* SessionInputKeyboard.swift */; };
@@ -115,6 +116,7 @@
 		3BA0C8063047EBC800788FEC /* YourGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourGuideView.swift; sourceTree = "<group>"; };
 		422D09EB801CE5BA0EDFBA28 /* Workout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Workout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45807FC427FAE0EEE6D1465B /* LiveSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionView.swift; sourceTree = "<group>"; };
+		C1D2E3F4A5B60718293A4C1D /* SessionExerciseReorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionExerciseReorderView.swift; sourceTree = "<group>"; };
 		4798E19A6EED7C1A79E2FA7D /* WorkoutSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSummaryView.swift; sourceTree = "<group>"; };
 		4DFE7227737392FE8C66197A /* OneRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneRM.swift; sourceTree = "<group>"; };
 		4E364DEA9C3D4D704BA27156 /* WorkoutSummaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSummaryModel.swift; sourceTree = "<group>"; };
@@ -389,6 +391,7 @@
 				B7E8F901234567890ABCDEF02 /* ExercisePhotoView.swift */,
 				B7E8F901234567890ABCDEF04 /* ExercisePreviewSheet.swift */,
 				45807FC427FAE0EEE6D1465B /* LiveSessionView.swift */,
+				C1D2E3F4A5B60718293A4C1D /* SessionExerciseReorderView.swift */,
 				A1B2C3D4E5F60718293A4B5E /* FilterInputKeyboard.swift */,
 				7A65C59D2BEDAAC917E4111B /* SessionInputKeyboard.swift */,
 				4E364DEA9C3D4D704BA27156 /* WorkoutSummaryModel.swift */,
@@ -564,6 +567,7 @@
 				7792F81F651D35625B072F07 /* HomeView.swift in Sources */,
 				34DAC4F345EE96977840E819 /* InfoView.swift in Sources */,
 				083063D580CE8FA180F346AC /* LiveSessionView.swift in Sources */,
+				C1D2E3F4A5B60718293A4C1E /* SessionExerciseReorderView.swift in Sources */,
 				312109604BB6767FA00B4EAD /* Models.swift in Sources */,
 				E1A0F2E2490F92146B1EE1D7 /* NextWorkoutResolver.swift in Sources */,
 				BA6176842BD3AF3499330966 /* OneRM.swift in Sources */,

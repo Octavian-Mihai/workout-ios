@@ -44,6 +44,12 @@ struct DraftSet: Identifiable {
     }
 }
 
+private enum TemplateSaveDecision {
+    case undecided
+    case saved
+    case declined
+}
+
 enum SessionField: Hashable {
     case weight(UUID, setID: UUID?)
     case reps(UUID, setID: UUID?)
@@ -276,8 +282,8 @@ final class SessionController: ObservableObject {
         drafts[exercise.id] = ExerciseDraft()
     }
 
-    func removeExercise(matching catalog: CatalogExercise) {
-        guard let index = exercises.lastIndex(where: { $0.name == catalog.name }) else { return }
+    func removeExercise(id: UUID) {
+        guard let index = exercises.firstIndex(where: { $0.id == id }) else { return }
         let removed = exercises.remove(at: index)
         drafts.removeValue(forKey: removed.id)
         if focusedField?.exerciseID == removed.id {
@@ -285,6 +291,57 @@ final class SessionController: ObservableObject {
         }
         for set in removed.logged {
             loggedEdits.removeValue(forKey: set.id)
+        }
+    }
+
+    func removeExercise(matching catalog: CatalogExercise) {
+        guard let exercise = exercises.last(where: { $0.name == catalog.name }) else { return }
+        removeExercise(id: exercise.id)
+    }
+
+    func moveExercises(from source: IndexSet, to destination: Int) {
+        exercises.move(fromOffsets: source, toOffset: destination)
+    }
+
+    func swapExercise(id: UUID, with catalog: CatalogExercise) {
+        guard let index = exercises.firstIndex(where: { $0.id == id }) else { return }
+        let existing = exercises[index]
+        for set in existing.logged {
+            loggedEdits.removeValue(forKey: set.id)
+        }
+        exercises[index] = DraftExercise(
+            id: existing.id,
+            name: catalog.name,
+            primaryMuscles: catalog.primaryNames,
+            secondaryMuscles: catalog.secondaryNames,
+            equipment: catalog.equipment,
+            targetSets: existing.targetSets,
+            logged: []
+        )
+        drafts[existing.id] = ExerciseDraft()
+        if focusedField?.exerciseID == id {
+            focusedField = nil
+        }
+    }
+
+    func swapCustom(id: UUID, name: String, equipment: ExerciseEquipment, primary: [String], secondary: [String]) {
+        guard let index = exercises.firstIndex(where: { $0.id == id }) else { return }
+        let existing = exercises[index]
+        for set in existing.logged {
+            loggedEdits.removeValue(forKey: set.id)
+        }
+        exercises[index] = DraftExercise(
+            id: existing.id,
+            name: name,
+            primaryMuscles: primary,
+            secondaryMuscles: secondary,
+            equipment: equipment,
+            targetSets: existing.targetSets,
+            logged: []
+        )
+        drafts[existing.id] = ExerciseDraft()
+        if focusedField?.exerciseID == id {
+            focusedField = nil
         }
     }
 
@@ -315,7 +372,10 @@ struct LiveSessionView: View {
     @AppStorage(HealthKitService.writeStrengthToHealthKitKey) private var writeStrengthToHealthKit = false
 
     @State private var showAddExercise = false
+    @State private var showReorderSheet = false
     @State private var showSaveTemplate = false
+    @State private var showMidWorkoutSaveTemplate = false
+    @State private var templateSaveDecision: TemplateSaveDecision = .undecided
     @State private var showDiscardConfirm = false
     @State private var finishedSession: WorkoutSession?
     @State private var showSummary = false
@@ -348,6 +408,8 @@ struct LiveSessionView: View {
                             unit: unit,
                             accent: accent,
                             previousSets: previousSets(for: exercise.name),
+                            onReorder: { showReorderSheet = true },
+                            onStructureChanged: noteExerciseStructureChanged,
                             onDeleteSet: { setID in
                                 controller.removeSet(exerciseID: exercise.id, setID: setID)
                             }
@@ -410,20 +472,46 @@ struct LiveSessionView: View {
                         }
                         return !exercise.logged.isEmpty
                     },
-                    onAdd: { controller.addExercise($0) },
-                    onRemove: { controller.removeExercise(matching: $0) },
+                    onAdd: {
+                        controller.addExercise($0)
+                        noteExerciseStructureChanged()
+                    },
+                    onRemove: {
+                        controller.removeExercise(matching: $0)
+                        noteExerciseStructureChanged()
+                    },
                     onCustom: { name, equipment, primary, secondary in
                         controller.addCustom(name: name, equipment: equipment, primary: primary, secondary: secondary)
+                        noteExerciseStructureChanged()
                     }
                 )
             }
+        }
+        .sheet(isPresented: $showReorderSheet) {
+            SessionExerciseReorderView(controller: controller)
+        }
+        .onChange(of: showReorderSheet) { _, isShowing in
+            if !isShowing {
+                noteExerciseStructureChanged()
+            }
+        }
+        .alert("Save this day as a template?", isPresented: $showMidWorkoutSaveTemplate) {
+            Button("Save template") {
+                rewriteDayTemplate()
+                templateSaveDecision = .saved
+            }
+            Button("Don't save", role: .cancel) {
+                templateSaveDecision = .declined
+            }
+        } message: {
+            Text("Exercises were added, removed, or reordered. Save them to this program day, or keep the original template.")
         }
         .alert("Save this day as a template?", isPresented: $showSaveTemplate) {
             Button("Save template") {
                 rewriteDayTemplate()
                 onFinished()
             }
-            Button("Don’t save", role: .cancel) {
+            Button("Don't save", role: .cancel) {
                 onFinished()
             }
         } message: {
@@ -630,11 +718,20 @@ struct LiveSessionView: View {
 
     private func handleSummaryDismissed() {
         finishedSession = nil
-        if controller.exerciseListChanged {
+        if controller.exerciseListChanged, templateSaveDecision == .undecided {
             showSaveTemplate = true
         } else {
             onFinished()
         }
+    }
+
+    private func noteExerciseStructureChanged() {
+        guard controller.program != nil,
+              controller.programDay != nil,
+              controller.exerciseListChanged,
+              templateSaveDecision == .undecided
+        else { return }
+        showMidWorkoutSaveTemplate = true
     }
 
     private func rewriteDayTemplate() {
@@ -665,9 +762,16 @@ struct SessionExerciseCard: View {
     let unit: WeightUnit
     let accent: Color
     let previousSets: [SetLog]
+    var onReorder: () -> Void
+    var onStructureChanged: () -> Void
     var onDeleteSet: (UUID) -> Void
 
     @State private var showHistory = false
+    @State private var showSwapPicker = false
+    @State private var showRemoveConfirm = false
+    @State private var showSwapConfirm = false
+    @State private var pendingSwapCatalog: CatalogExercise?
+    @State private var pendingSwapCustom: (name: String, equipment: ExerciseEquipment, primary: [String], secondary: [String])?
 
     private var live: DraftExercise {
         controller.exercises.first(where: { $0.id == exercise.id }) ?? exercise
@@ -715,6 +819,36 @@ struct SessionExerciseCard: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Exercise history and 1RM")
+                Menu {
+                    Button {
+                        onReorder()
+                    } label: {
+                        Label("Reorder exercises", systemImage: "line.3.horizontal")
+                    }
+                    Button {
+                        showSwapPicker = true
+                    } label: {
+                        Label("Swap exercise", systemImage: "arrow.triangle.2.circlepath")
+                    }
+                    Button(role: .destructive) {
+                        if live.logged.isEmpty {
+                            controller.removeExercise(id: exercise.id)
+                            onStructureChanged()
+                        } else {
+                            showRemoveConfirm = true
+                        }
+                    } label: {
+                        Label("Remove exercise", systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(accent)
+                        .frame(width: 32, height: 32)
+                        .background(accent.opacity(0.12))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                }
+                .accessibilityLabel("Exercise actions")
             }
             if !live.primaryMuscles.isEmpty {
                 Text(live.primaryMuscles.joined(separator: ", "))
@@ -813,6 +947,81 @@ struct SessionExerciseCard: View {
                     }
             }
         }
+        .sheet(isPresented: $showSwapPicker) {
+            NavigationStack {
+                ExercisePickerView(
+                    mode: .select(onSelect: { catalog in
+                        handleSwapSelection(catalog: catalog)
+                    }),
+                    swappingExercise: live,
+                    sessionExerciseNames: Set(controller.exercises.map { $0.name.lowercased() }),
+                    onAdd: { _ in },
+                    onRemove: { _ in },
+                    onCustom: { name, equipment, primary, secondary in
+                        handleSwapCustom(name: name, equipment: equipment, primary: primary, secondary: secondary)
+                    }
+                )
+            }
+        }
+        .alert("Remove exercise?", isPresented: $showRemoveConfirm) {
+            Button("Remove", role: .destructive) {
+                controller.removeExercise(id: exercise.id)
+                onStructureChanged()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("\(live.name) has logged sets. Removing it will delete those sets.")
+        }
+        .alert("Swap exercise?", isPresented: $showSwapConfirm) {
+            Button("Swap", role: .destructive) {
+                performPendingSwap()
+            }
+            Button("Cancel", role: .cancel) {
+                pendingSwapCatalog = nil
+                pendingSwapCustom = nil
+            }
+        } message: {
+            Text("\(live.name) has logged sets. Swapping it will clear those sets.")
+        }
+    }
+
+    private func handleSwapSelection(catalog: CatalogExercise) {
+        if live.logged.isEmpty {
+            controller.swapExercise(id: exercise.id, with: catalog)
+            onStructureChanged()
+        } else {
+            pendingSwapCatalog = catalog
+            pendingSwapCustom = nil
+            showSwapConfirm = true
+        }
+    }
+
+    private func handleSwapCustom(name: String, equipment: ExerciseEquipment, primary: [String], secondary: [String]) {
+        if live.logged.isEmpty {
+            controller.swapCustom(id: exercise.id, name: name, equipment: equipment, primary: primary, secondary: secondary)
+            onStructureChanged()
+        } else {
+            pendingSwapCustom = (name, equipment, primary, secondary)
+            pendingSwapCatalog = nil
+            showSwapConfirm = true
+        }
+    }
+
+    private func performPendingSwap() {
+        if let catalog = pendingSwapCatalog {
+            controller.swapExercise(id: exercise.id, with: catalog)
+        } else if let custom = pendingSwapCustom {
+            controller.swapCustom(
+                id: exercise.id,
+                name: custom.name,
+                equipment: custom.equipment,
+                primary: custom.primary,
+                secondary: custom.secondary
+            )
+        }
+        pendingSwapCatalog = nil
+        pendingSwapCustom = nil
+        onStructureChanged()
     }
 
     private var setColumnHeader: some View {

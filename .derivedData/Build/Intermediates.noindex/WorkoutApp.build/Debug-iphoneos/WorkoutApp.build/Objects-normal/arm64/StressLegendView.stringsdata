@@ -20,18 +20,10 @@
       },
       {
         "comment": "",
-        "key": "Day",
+        "key": "Leftover fatigue eases over the next couple of mornings.",
         "location": {
-          "startingColumn": 35,
-          "startingLine": 120
-        }
-      },
-      {
-        "comment": "",
-        "key": "Stress",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 121
+          "startingColumn": 22,
+          "startingLine": 141
         }
       },
       {
@@ -39,7 +31,7 @@
         "key": "Day",
         "location": {
           "startingColumn": 35,
-          "startingLine": 125
+          "startingLine": 123
         }
       },
       {
@@ -47,7 +39,23 @@
         "key": "Stress",
         "location": {
           "startingColumn": 35,
-          "startingLine": 126
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "Day",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 128
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 129
         }
       },
       {
@@ -55,7 +63,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 156
+          "startingLine": 162
         }
       }
     ]

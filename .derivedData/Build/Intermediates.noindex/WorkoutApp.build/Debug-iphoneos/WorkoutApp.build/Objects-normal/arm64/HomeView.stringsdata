@@ -7,31 +7,31 @@
         "key": "Home",
         "location": {
           "startingColumn": 30,
-          "startingLine": 74
+          "startingLine": 109
         }
       },
       {
         "comment": "",
         "key": "No active program",
         "location": {
-          "startingColumn": 34,
-          "startingLine": 50
+          "startingColumn": 42,
+          "startingLine": 68
         }
       },
       {
         "comment": "",
-        "key": "Create a program on the Workout tab and mark it active. You can still start an empty workout.",
+        "key": "Create a program from a starter template on the Workout tab and mark it active. You can still start an empty workout.",
         "location": {
-          "startingColumn": 34,
-          "startingLine": 52
+          "startingColumn": 42,
+          "startingLine": 70
         }
       },
       {
         "comment": "",
         "key": "Start empty workout",
         "location": {
-          "startingColumn": 31,
-          "startingLine": 64
+          "startingColumn": 39,
+          "startingLine": 82
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "No exercises yet — add some in the program editor.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 105
+          "startingLine": 168
         }
       },
       {
@@ -47,7 +47,7 @@
         "key": "Next workout",
         "location": {
           "startingColumn": 26,
-          "startingLine": 92
+          "startingLine": 144
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "+%lld more",
         "location": {
           "startingColumn": 30,
-          "startingLine": 115
+          "startingLine": 178
         }
       },
       {
@@ -63,7 +63,7 @@
         "key": "Start",
         "location": {
           "startingColumn": 22,
-          "startingLine": 123
+          "startingLine": 186
         }
       }
     ]

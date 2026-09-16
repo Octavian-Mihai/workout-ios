@@ -7,15 +7,23 @@
         "key": "Couldn’t import plan",
         "location": {
           "startingColumn": 16,
-          "startingLine": 99
+          "startingLine": 89
         }
       },
       {
         "comment": "",
-        "key": "No programs yet. Create one and add rotating days. Only user-built programs are used — nothing is shipped as a starter split.",
+        "key": "No programs yet. Start from a template or create a blank program and add rotating days.",
         "location": {
-          "startingColumn": 22,
-          "startingLine": 34
+          "startingColumn": 26,
+          "startingLine": 36
+        }
+      },
+      {
+        "comment": "",
+        "key": "Create",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 30
         }
       },
       {
@@ -23,71 +31,7 @@
         "key": "Programs",
         "location": {
           "startingColumn": 22,
-          "startingLine": 16
-        }
-      },
-      {
-        "comment": "",
-        "key": "Import",
-        "location": {
-          "startingColumn": 27,
-          "startingLine": 22
-        }
-      },
-      {
-        "comment": "",
-        "key": "Create",
-        "location": {
-          "startingColumn": 27,
-          "startingLine": 28
-        }
-      },
-      {
-        "comment": "",
-        "key": "Active",
-        "location": {
-          "startingColumn": 32,
-          "startingLine": 54
-        }
-      },
-      {
-        "comment": "",
-        "key": "%lld day rotation",
-        "location": {
-          "startingColumn": 38,
-          "startingLine": 47
-        }
-      },
-      {
-        "comment": "",
-        "key": "Export plan",
-        "location": {
-          "startingColumn": 51,
-          "startingLine": 65
-        }
-      },
-      {
-        "comment": "",
-        "key": "Set active",
-        "location": {
-          "startingColumn": 32,
-          "startingLine": 69
-        }
-      },
-      {
-        "comment": "",
-        "key": "Delete",
-        "location": {
-          "startingColumn": 32,
-          "startingLine": 70
-        }
-      },
-      {
-        "comment": "",
-        "key": "Export plan",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 67
+          "startingLine": 48
         }
       },
       {
@@ -95,7 +39,127 @@
         "key": "OK",
         "location": {
           "startingColumn": 20,
-          "startingLine": 100
+          "startingLine": 90
+        }
+      },
+      {
+        "comment": "",
+        "key": "Active",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 112
+        }
+      },
+      {
+        "comment": "",
+        "key": "Program info",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 136
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld day rotation",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "Export plan",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 120
+        }
+      },
+      {
+        "comment": "",
+        "key": "Set active",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 125
+        }
+      },
+      {
+        "comment": "",
+        "key": "Export plan",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 122
+        }
+      },
+      {
+        "comment": "",
+        "key": "New program",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 285
+        }
+      },
+      {
+        "comment": "",
+        "key": "Blank program",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 230
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start empty and add your own days.",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 233
+        }
+      },
+      {
+        "comment": "",
+        "key": "Import JSON",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 245
+        }
+      },
+      {
+        "comment": "",
+        "key": "Load a program from a JSON file.",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 248
+        }
+      },
+      {
+        "comment": "",
+        "key": "Starter templates",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 280
+        }
+      },
+      {
+        "comment": "",
+        "key": "Copies into a new program using exercises from the catalog. Edit days and sets after you start.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 282
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 289
         }
       }
     ]

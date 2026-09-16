@@ -6,16 +6,16 @@
         "comment": "",
         "key": "%@, photo coming soon",
         "location": {
-          "startingColumn": 41,
-          "startingLine": 37
+          "startingColumn": 33,
+          "startingLine": 55
         }
       },
       {
         "comment": "",
         "key": "Photo coming soon",
         "location": {
-          "startingColumn": 34,
-          "startingLine": 31
+          "startingColumn": 26,
+          "startingLine": 46
         }
       }
     ]

@@ -3,6 +3,7 @@ import SwiftUI
 struct ExercisePreviewSheet: View {
     let exercise: CatalogExercise
     var isAdded: Bool = false
+    var confirmTitle: String = "Add to program"
     var onConfirm: () -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -47,7 +48,7 @@ struct ExercisePreviewSheet: View {
                         onConfirm()
                         dismiss()
                     } label: {
-                        Text(isAdded ? "Added" : "Add to program")
+                        Text(isAdded ? "Added" : confirmTitle)
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
