@@ -71,7 +71,7 @@
       "Glutes"
     ],
     "secondary": [],
-    "equipment": "machine",
+    "equipment": "barbell",
     "image": "smith-machine-squat.jpg",
     "cues": "Brace and sit between the hips. Keep mid-foot pressure; don’t collapse the chest or ride the bar forward."
   },
@@ -132,15 +132,68 @@
     "cues": "Hold the bar at chest height and sit between the hips. Brace, stay tall, and stand without folding forward."
   },
   {
+    "id": "box-squat",
+    "name": "Box Squat",
+    "category": "Legs",
+    "primary": [
+      "Quadriceps",
+      "Glutes"
+    ],
+    "secondary": [
+      "Adductors",
+      "Core & Abs",
+      "Erectors"
+    ],
+    "equipment": "barbell",
+    "pattern": "Squat",
+    "image": null,
+    "cues": "Sit back to the box under control, pause briefly, then drive up without rocking forward."
+  },
+  {
+    "id": "goblet-squat",
+    "name": "Goblet Squat",
+    "category": "Legs",
+    "primary": [
+      "Quadriceps"
+    ],
+    "secondary": [
+      "Core & Abs",
+      "Glutes",
+      "Adductors"
+    ],
+    "equipment": "dumbbell",
+    "pattern": "Squat",
+    "image": null,
+    "cues": "Hold the weight at chest height. Sit between the hips and keep the elbows inside the knees."
+  },
+  {
+    "id": "safety-bar-squat",
+    "name": "Safety Bar Squat",
+    "category": "Legs",
+    "primary": [
+      "Quadriceps"
+    ],
+    "secondary": [
+      "Core & Abs",
+      "Adductors",
+      "Erectors",
+      "Glutes"
+    ],
+    "equipment": "barbell",
+    "pattern": "Squat",
+    "image": null,
+    "cues": "Set the yoke on your back and brace. Sit between the hips and drive up without folding forward."
+  },
+  {
     "id": "leg-press",
     "name": "Leg Press",
     "category": "Legs",
     "primary": [
       "Quadriceps",
-      "Hamstrings"
+      "Glutes"
     ],
     "secondary": [
-      "Glutes",
+      "Hamstrings",
       "Adductors"
     ],
     "equipment": "machine",
@@ -195,7 +248,7 @@
     ],
     "equipment": "dumbbell",
     "image": "step-up.jpg",
-    "cues": "Drive through the whole foot on the box. Stand tall; don’t push off the trailing leg."
+    "cues": "Drive through the whole foot on the box. Stand tall; don’t push off the trailing leg. Use a big box."
   },
   {
     "id": "zercher-step-up",
@@ -292,6 +345,41 @@
     "equipment": "dumbbell",
     "image": "forward-lunge.jpg",
     "cues": "Step forward and drop the trail knee under the hip. Front knee tracks; don’t slam into the bottom."
+  },
+  {
+    "id": "cossack-squat",
+    "name": "Cossack Squat",
+    "category": "Legs",
+    "primary": [
+      "Quadriceps",
+      "Adductors",
+      "Glutes"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core & Abs"
+    ],
+    "equipment": "dumbbell",
+    "pattern": "Squat",
+    "image": null,
+    "cues": "Shift side to side with one leg extended. Keep the working heel down and chest as tall as you can."
+  },
+  {
+    "id": "pistol-squat",
+    "name": "Pistol Squat",
+    "category": "Legs",
+    "primary": [
+      "Quadriceps"
+    ],
+    "secondary": [
+      "Core & Abs",
+      "Hip Flexors",
+      "Glutes"
+    ],
+    "equipment": "bodyweight",
+    "pattern": "Lunge / Split",
+    "image": null,
+    "cues": "Balance on one leg, extend the other forward. Sit as deep as you can control and stand without collapsing."
   },
   {
     "id": "box-jump",
@@ -425,6 +513,82 @@
     "equipment": "barbell",
     "image": "zercher-deadlift.jpg",
     "cues": "Bar in the elbow crook from the floor. Brace, then stand tall without losing the torso."
+  },
+  {
+    "id": "sumo-deadlift",
+    "name": "Sumo Deadlift",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Erectors"
+    ],
+    "secondary": [
+      "Quadriceps",
+      "Traps",
+      "Adductors",
+      "Core & Abs"
+    ],
+    "equipment": "barbell",
+    "pattern": "Hinge",
+    "image": null,
+    "cues": "Wide stance, toes turned out. Push the knees out, wedge in, and keep the bar over mid-foot."
+  },
+  {
+    "id": "trap-bar-deadlift",
+    "name": "Trap Bar Deadlift",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Quadriceps"
+    ],
+    "secondary": [
+      "Erectors",
+      "Traps",
+      "Core & Abs"
+    ],
+    "equipment": "barbell",
+    "pattern": "Hinge",
+    "image": null,
+    "cues": "Stand inside the handles, hinge and grip. Push the floor away and stand tall without rounding the back."
+  },
+  {
+    "id": "rack-pull",
+    "name": "Rack Pull",
+    "category": "Legs",
+    "primary": [
+      "Erectors",
+      "Glutes",
+      "Traps"
+    ],
+    "secondary": [
+      "Hamstrings",
+      "Core & Abs"
+    ],
+    "equipment": "barbell",
+    "pattern": "Hinge",
+    "image": null,
+    "cues": "Set the bar at knee height or above. Brace, then drive the hips forward to lockout without hyperextending."
+  },
+  {
+    "id": "deficit-deadlift",
+    "name": "Deficit Deadlift",
+    "category": "Legs",
+    "primary": [
+      "Hamstrings",
+      "Glutes",
+      "Erectors"
+    ],
+    "secondary": [
+      "Quadriceps",
+      "Traps",
+      "Core & Abs"
+    ],
+    "equipment": "barbell",
+    "pattern": "Hinge",
+    "image": null,
+    "cues": "Stand on a plate or platform. Wedge in from the deeper start, brace, and pull with the bar over mid-foot."
   },
   {
     "id": "good-morning",
@@ -840,7 +1004,7 @@
       "Triceps",
       "Anterior Delts"
     ],
-    "equipment": "machine",
+    "equipment": "barbell",
     "image": "incline-barbell-bench-press.jpeg",
     "cues": "Set the scaps and keep a slight arch. Lower to the upper chest with control; don’t bounce or flare the elbows out wide."
   },
@@ -855,9 +1019,26 @@
       "Chest",
       "Anterior Delts"
     ],
-    "equipment": "machine",
+    "equipment": "barbell",
+    "pattern": "Triceps",
     "image": "close-grip-bench-press.jpg",
     "cues": "Grip just inside shoulder width. Elbows stay tucked; lower to the chest and press without bouncing."
+  },
+  {
+    "id": "jm-press",
+    "name": "JM Press",
+    "category": "Push",
+    "primary": [
+      "Triceps"
+    ],
+    "secondary": [
+      "Chest",
+      "Anterior Delts"
+    ],
+    "equipment": "barbell",
+    "pattern": "Triceps",
+    "image": null,
+    "cues": "Elbows forward, bar travels down toward the upper chest. Press back without flaring the elbows wide."
   },
   {
     "id": "incline-dumbbell-press",
@@ -915,7 +1096,7 @@
     "secondary": [
       "Anterior Delts"
     ],
-    "equipment": "bodyweight",
+    "equipment": "machine",
     "image": "dips.jpg",
     "cues": "Shoulders down. Lean forward for more chest; stay more upright for triceps. Don’t dump into the joints."
   },
@@ -931,7 +1112,7 @@
       "Anterior Delts",
       "Core & Abs"
     ],
-    "equipment": "bodyweight",
+    "equipment": "machine",
     "image": "push-up.png",
     "cues": "Body in one line. Elbows ~45° from the torso. Chest to near the floor, then press the floor away."
   },
@@ -1111,7 +1292,7 @@
       "Triceps"
     ],
     "secondary": [],
-    "equipment": "barbell",
+    "equipment": "dumbbell",
     "image": "skull-crusher.jpg",
     "cues": "Only the elbows move. Lower toward the forehead or hairline, then extend without flaring."
   },
@@ -1285,7 +1466,7 @@
       "Biceps",
       "Rhomboids"
     ],
-    "equipment": "bodyweight",
+    "equipment": "machine",
     "image": "pull-up.jpg",
     "cues": "Dead hang to chin over the bar. Drive elbows down; avoid kipping unless that’s the point."
   },
@@ -1300,9 +1481,41 @@
     "secondary": [
       "Rhomboids"
     ],
-    "equipment": "bodyweight",
+    "equipment": "machine",
     "image": "chin-up.jpg",
     "cues": "Supinated grip. Same full range as a pull-up, with a little more biceps."
+  },
+  {
+    "id": "cable-pullover",
+    "name": "Cable Pullover",
+    "category": "Pull",
+    "primary": [
+      "Lats"
+    ],
+    "secondary": [
+      "Triceps",
+      "Core & Abs"
+    ],
+    "equipment": "functionalTrainer",
+    "pattern": "Accessory",
+    "image": null,
+    "cues": "Arms stay slightly bent. Sweep the handle down and in an arc over the hips; don’t turn it into a triceps pushdown."
+  },
+  {
+    "id": "dumbbell-pullover",
+    "name": "Dumbbell Pullover",
+    "category": "Pull",
+    "primary": [
+      "Lats"
+    ],
+    "secondary": [
+      "Triceps",
+      "Core & Abs"
+    ],
+    "equipment": "dumbbell",
+    "pattern": "Accessory",
+    "image": null,
+    "cues": "Upper back supported, weight held with soft elbows. Lower behind the head for a stretch, then pull back over the chest."
   },
   {
     "id": "face-pull",
@@ -1334,6 +1547,22 @@
     "cues": "Hinge, soft elbows, and sweep the arms out. Stop at torso height; don’t yank with the traps."
   },
   {
+    "id": "cable-rear-delt-fly",
+    "name": "Cable Rear Delt Fly",
+    "category": "Pull",
+    "primary": [
+      "Posterior Delts"
+    ],
+    "secondary": [
+      "Rhomboids",
+      "Traps"
+    ],
+    "equipment": "functionalTrainer",
+    "pattern": "Accessory",
+    "image": null,
+    "cues": "Hinge or stand tall with soft elbows. Sweep the handles out to the sides and squeeze the rear delts."
+  },
+  {
     "id": "reverse-pec-deck",
     "name": "Reverse Pec Deck",
     "category": "Pull",
@@ -1359,6 +1588,7 @@
       "Biceps"
     ],
     "equipment": "barbell",
+    "pattern": "Accessory",
     "image": "upright-row.jpg",
     "cues": "Lead with the elbows, bar close to the body. Stop around chest height; don’t yank the bar into the neck."
   },
@@ -1509,6 +1739,7 @@
     ],
     "secondary": [],
     "equipment": "functionalTrainer",
+    "pattern": "Accessory",
     "image": "wrist-curl.jpg",
     "cues": "Forearms supported, wrists hanging. Curl through a full range and don’t let the elbows take over."
   },
@@ -1521,8 +1752,22 @@
     ],
     "secondary": [],
     "equipment": "functionalTrainer",
+    "pattern": "Accessory",
     "image": "reverse-wrist-curl.jpg",
     "cues": "Forearms supported, palms down. Extend the wrists through a full range; keep it slow."
+  },
+  {
+    "id": "hand-gripper",
+    "name": "Hand Gripper",
+    "category": "Pull",
+    "primary": [
+      "Forearms & Grip"
+    ],
+    "secondary": [],
+    "equipment": "bodyweight",
+    "pattern": "Accessory",
+    "image": "hand-gripper.jpg",
+    "cues": "Squeeze until the handles touch, then release under control. Keep the wrist neutral and elbow still."
   },
   {
     "id": "plank",
@@ -1582,7 +1827,7 @@
       "Core & Abs",
       "Forearms & Grip"
     ],
-    "equipment": "dumbbell",
+    "equipment": "bodyweight",
     "image": "hanging-leg-raise.jpg",
     "cues": "Posteriorly tilt the pelvis and lift with the abs, not momentum."
   },
