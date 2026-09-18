@@ -14,6 +14,7 @@ enum AppTourTargetID: String, Hashable {
     case homeStartWorkout
     case workoutPrograms
     case workoutLearn
+    case workoutLibrary
     case infoAnalytics
     case running
     case settings
@@ -25,6 +26,7 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
     case homeStartWorkout
     case workoutPrograms
     case workoutLearn
+    case workoutLibrary
     case infoAnalytics
     case running
     case settings
@@ -35,7 +37,7 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         switch self {
         case .homeYearGrid, .homeTodayStress, .homeStartWorkout:
             return .home
-        case .workoutPrograms, .workoutLearn:
+        case .workoutPrograms, .workoutLearn, .workoutLibrary:
             return .workout
         case .infoAnalytics:
             return .info
@@ -53,6 +55,7 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         case .homeStartWorkout: return .homeStartWorkout
         case .workoutPrograms: return .workoutPrograms
         case .workoutLearn: return .workoutLearn
+        case .workoutLibrary: return .workoutLibrary
         case .infoAnalytics: return .infoAnalytics
         case .running: return .running
         case .settings: return .settings
@@ -66,6 +69,7 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         case .homeStartWorkout: return "Start a session"
         case .workoutPrograms: return "Programs"
         case .workoutLearn: return "Learn"
+        case .workoutLibrary: return "History & custom exercises"
         case .infoAnalytics: return "Stress and analytics"
         case .running: return "Cardio"
         case .settings: return "Settings"
@@ -77,19 +81,21 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         case .homeYearGrid:
             return "Lifting days light up here — and runs, if running activity is on. Tap the grid for longer trends."
         case .homeTodayStress:
-            return "A quick read on how hard today looks from lifting and cardio. Info has the full breakdown."
+            return "A quick read on how hard today looks from lifting and cardio. Info has the full breakdown. Turn stress off globally in Settings → Stress if you prefer."
         case .homeStartWorkout:
-            return "If a program is active, start the next day here. Otherwise use Start empty workout. In a session you’ll log weight, reps, and RIR on the keypad."
+            return "If a program is active, start the next day here. Otherwise use Start empty workout. In a session, log weight, reps, and RIR — barbell lifts show a plate calculator. When you finish, share a summary card as a PNG."
         case .workoutPrograms:
-            return "Create from a starter template, import a plan, or build your own. Mark one active so Home knows what comes next."
+            return "Create from a starter template, import a plan, or build your own. Mark one active so Home knows what comes next. Programs remember whether they’re expanded or collapsed."
         case .workoutLearn:
-            return "Optional movement and muscle notes — an encyclopedia, not this tour."
+            return "Using the app and movement notes — reference material you can open anytime, separate from this tour."
+        case .workoutLibrary:
+            return "Custom exercises you added live here — share them to the developer or delete them. History lists finished workouts with unit labels; swipe or tap Delete to remove a session."
         case .infoAnalytics:
-            return "Today’s stress, exercise history, plus tonnage, volume, estimated 1RM, and the intensity map."
+            return "Today’s stress, exercise history, plus tonnage, volume, estimated 1RM, and the intensity map. Hide individual analytics sections or turn off all stress in Settings."
         case .running:
             return "Runs come from Apple Health. Filter, open a route, and see pace and run stress. Hide this tab in Settings if you don’t want it."
         case .settings:
-            return "Units, rest timer, Health writes, and Running visibility live here. How to use this app in About replays this tour."
+            return "Units, rest timer, bar weight for the plate calculator, stress visibility, and Running. About → How to use this app replays this tour."
         }
     }
 

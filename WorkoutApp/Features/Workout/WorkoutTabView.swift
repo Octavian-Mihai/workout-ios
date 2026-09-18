@@ -11,6 +11,8 @@ struct WorkoutTabView: View {
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @State private var selectedDayID: UUID?
     @AppStorage(WorkoutPageVisibility.learnExpandedKey) private var learnExpanded = false
+    @AppStorage(WorkoutPageVisibility.customExercisesExpandedKey) private var customExercisesExpanded = false
+    @AppStorage(WorkoutPageVisibility.historyExpandedKey) private var historyExpanded = false
 
     private var accent: Color { theme.accent }
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
@@ -60,15 +62,22 @@ struct WorkoutTabView: View {
                         .tourTarget(.workoutLearn)
                         .id(AppTourTargetID.workoutLearn)
 
-                        CustomExercisesSection()
-
-                        WorkoutHistoryView(sessions: sessions, accent: accent, unit: unit)
+                        VStack(alignment: .leading, spacing: 16) {
+                            CustomExercisesSection()
+                            WorkoutHistoryView(sessions: sessions, accent: accent, unit: unit)
+                        }
+                        .tourTarget(.workoutLibrary)
+                        .id(AppTourTargetID.workoutLibrary)
                     }
                     .padding(16)
                 }
                 .onChange(of: tour.step) { _, step in
                     if step == .workoutLearn {
                         learnExpanded = true
+                    }
+                    if step == .workoutLibrary {
+                        customExercisesExpanded = true
+                        historyExpanded = true
                     }
                     scrollWorkoutTour(step, proxy: proxy)
                 }
@@ -194,6 +203,7 @@ struct WorkoutTabView: View {
         switch step {
         case .workoutPrograms: id = .workoutPrograms
         case .workoutLearn: id = .workoutLearn
+        case .workoutLibrary: id = .workoutLibrary
         default: id = nil
         }
         guard let id else { return }

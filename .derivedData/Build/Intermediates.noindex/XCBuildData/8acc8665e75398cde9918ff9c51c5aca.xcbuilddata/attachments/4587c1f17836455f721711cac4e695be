@@ -336,6 +336,16 @@
     "swift-dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/SettingsView.swiftdeps",
     "swiftmodule" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/SettingsView~partial.swiftmodule"
   },
+  "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Workout/CustomExercisesView.swift" : {
+    "const-values" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/CustomExercisesView.swiftconstvalues",
+    "dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/CustomExercisesView.d",
+    "diagnostics" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/CustomExercisesView.dia",
+    "index-unit-output-path" : "/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/CustomExercisesView.o",
+    "llvm-bc" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/CustomExercisesView.bc",
+    "object" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/CustomExercisesView.o",
+    "swift-dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/CustomExercisesView.swiftdeps",
+    "swiftmodule" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/CustomExercisesView~partial.swiftmodule"
+  },
   "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Workout/WorkoutHistoryView.swift" : {
     "const-values" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/WorkoutHistoryView.swiftconstvalues",
     "dependencies" : "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/.derivedData/Build/Intermediates.noindex/WorkoutApp.build/Debug-iphoneos/WorkoutApp.build/Objects-normal/arm64/WorkoutHistoryView.d",
