@@ -93,8 +93,12 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         }
     }
 
-    static func visibleSteps(showRunningTab: Bool) -> [AppTourStep] {
-        allCases.filter { $0 != .running || showRunningTab }
+    static func visibleSteps(showRunningTab: Bool, showStressAnalysis: Bool = true) -> [AppTourStep] {
+        allCases.filter { step in
+            if step == .running && !showRunningTab { return false }
+            if step == .homeTodayStress && !showStressAnalysis { return false }
+            return true
+        }
     }
 }
 
@@ -118,8 +122,8 @@ final class AppTourController {
         requestFrameRefresh()
     }
 
-    func advance(showRunningTab: Bool) {
-        let steps = AppTourStep.visibleSteps(showRunningTab: showRunningTab)
+    func advance(showRunningTab: Bool, showStressAnalysis: Bool = true) {
+        let steps = AppTourStep.visibleSteps(showRunningTab: showRunningTab, showStressAnalysis: showStressAnalysis)
         guard let index = steps.firstIndex(of: step), index + 1 < steps.count else {
             finish()
             return
@@ -200,6 +204,7 @@ extension View {
 struct AppTourOverlay: View {
     @Bindable var tour: AppTourController
     var showRunningTab: Bool
+    var showStressAnalysis: Bool = true
     var accent: Color
     var cardFill: Color
     var cardBorder: Color
@@ -208,7 +213,7 @@ struct AppTourOverlay: View {
     var body: some View {
         GeometryReader { geo in
             let hole = resolvedHole(in: geo)
-            let steps = AppTourStep.visibleSteps(showRunningTab: showRunningTab)
+            let steps = AppTourStep.visibleSteps(showRunningTab: showRunningTab, showStressAnalysis: showStressAnalysis)
             let stepNumber = (steps.firstIndex(of: tour.step) ?? 0) + 1
             let isLast = tour.step == steps.last
 
@@ -298,7 +303,7 @@ struct AppTourOverlay: View {
                         tour.finish()
                         onFinished()
                     } else {
-                        tour.advance(showRunningTab: showRunningTab)
+                        tour.advance(showRunningTab: showRunningTab, showStressAnalysis: showStressAnalysis)
                     }
                 }
                 .buttonStyle(.borderedProminent)

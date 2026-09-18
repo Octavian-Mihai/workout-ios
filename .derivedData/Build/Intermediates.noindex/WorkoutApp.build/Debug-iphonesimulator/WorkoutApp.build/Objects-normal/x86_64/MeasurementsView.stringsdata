@@ -1,0 +1,40 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Measurements/MeasurementsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Measurements",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 85
+        }
+      },
+      {
+        "comment": "",
+        "key": "Latest",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "History",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 69
+        }
+      },
+      {
+        "comment": "",
+        "key": "No entries yet. Log progress photos, body weight, calories, or circumferences.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 71
+        }
+      }
+    ]
+  },
+  "version": 1
+}

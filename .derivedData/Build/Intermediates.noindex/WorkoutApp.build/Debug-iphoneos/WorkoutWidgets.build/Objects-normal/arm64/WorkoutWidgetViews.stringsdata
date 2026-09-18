@@ -46,40 +46,64 @@
         "comment": "",
         "key": "Today’s stress",
         "location": {
-          "startingColumn": 26,
-          "startingLine": 136
+          "startingColumn": 30,
+          "startingLine": 137
         }
       },
       {
         "comment": "",
         "key": "%lld",
         "location": {
-          "startingColumn": 30,
-          "startingLine": 140
+          "startingColumn": 34,
+          "startingLine": 141
         }
       },
       {
         "comment": "",
         "key": "last 7 days",
         "location": {
-          "startingColumn": 26,
-          "startingLine": 154
+          "startingColumn": 30,
+          "startingLine": 155
         }
       },
       {
         "comment": "",
         "key": "1 workout",
         "location": {
-          "startingColumn": 56,
-          "startingLine": 150
+          "startingColumn": 60,
+          "startingLine": 151
         }
       },
       {
         "comment": "",
         "key": "%lld workouts",
         "location": {
-          "startingColumn": 70,
-          "startingLine": 150
+          "startingColumn": 74,
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "last 7 days",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 170
+        }
+      },
+      {
+        "comment": "",
+        "key": "1 workout",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 166
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld workouts",
+        "location": {
+          "startingColumn": 74,
+          "startingLine": 166
         }
       },
       {
@@ -87,7 +111,7 @@
         "key": "Stress",
         "location": {
           "startingColumn": 26,
-          "startingLine": 188
+          "startingLine": 205
         }
       },
       {
@@ -95,7 +119,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 26,
-          "startingLine": 191
+          "startingLine": 208
         }
       },
       {
@@ -103,7 +127,7 @@
         "key": "Today’s stress",
         "location": {
           "startingColumn": 30,
-          "startingLine": 204
+          "startingLine": 222
         }
       },
       {
@@ -111,7 +135,23 @@
         "key": "%lld",
         "location": {
           "startingColumn": 30,
-          "startingLine": 207
+          "startingLine": 225
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 262
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress hidden — enable in app Settings",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 265
         }
       },
       {
@@ -119,7 +159,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 18,
-          "startingLine": 245
+          "startingLine": 277
         }
       },
       {
@@ -127,7 +167,7 @@
         "key": "Year activity grid",
         "location": {
           "startingColumn": 29,
-          "startingLine": 377
+          "startingLine": 409
         }
       },
       {
@@ -135,7 +175,7 @@
         "key": "100",
         "location": {
           "startingColumn": 22,
-          "startingLine": 505
+          "startingLine": 537
         }
       },
       {
@@ -143,7 +183,7 @@
         "key": "50",
         "location": {
           "startingColumn": 22,
-          "startingLine": 507
+          "startingLine": 539
         }
       },
       {
@@ -151,7 +191,7 @@
         "key": "0",
         "location": {
           "startingColumn": 22,
-          "startingLine": 509
+          "startingLine": 541
         }
       }
     ]

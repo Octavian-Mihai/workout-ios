@@ -12,6 +12,7 @@ struct RootTabView: View {
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
     @AppStorage(RunningVisibility.showTabKey) private var showRunningTab = true
     @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
+    @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
     @AppStorage("hasSeenAppGuide") private var hasSeenAppGuide = false
     @State private var tour = AppTourController()
 
@@ -51,6 +52,7 @@ struct RootTabView: View {
                 AppTourOverlay(
                     tour: tour,
                     showRunningTab: showRunningTab,
+                    showStressAnalysis: showStressAnalysis,
                     accent: accent,
                     cardFill: appTheme.cardFill,
                     cardBorder: appTheme.cardBorder
@@ -144,6 +146,9 @@ struct RootTabView: View {
         .onChange(of: showRunningActivity) { _, _ in
             refreshWidgetSnapshot()
         }
+        .onChange(of: showStressAnalysis) { _, _ in
+            refreshWidgetSnapshot()
+        }
     }
 
     private func refreshWidgetSnapshot() {
@@ -155,7 +160,8 @@ struct RootTabView: View {
             restingHeartRate: health.restingHeartRate,
             maxHeartRate: health.maxHeartRate,
             accentHex: appTheme.accent.toHex(),
-            showsRunningActivity: showRunningActivity
+            showsRunningActivity: showRunningActivity,
+            showsStressAnalysis: showStressAnalysis
         )
     }
 }

@@ -11,7 +11,8 @@ enum WidgetSnapshotSync {
         restingHeartRate: Double?,
         maxHeartRate: Double?,
         accentHex: String,
-        showsRunningActivity: Bool = true
+        showsRunningActivity: Bool = true,
+        showsStressAnalysis: Bool = true
     ) {
         let snapshot = makeSnapshot(
             sessions: sessions,
@@ -21,7 +22,8 @@ enum WidgetSnapshotSync {
             restingHeartRate: restingHeartRate,
             maxHeartRate: maxHeartRate,
             accentHex: accentHex,
-            showsRunningActivity: showsRunningActivity
+            showsRunningActivity: showsRunningActivity,
+            showsStressAnalysis: showsStressAnalysis
         )
         WidgetSnapshotStore.save(snapshot)
         WidgetCenter.shared.reloadAllTimelines()
@@ -37,6 +39,7 @@ enum WidgetSnapshotSync {
         maxHeartRate: Double?,
         accentHex: String,
         showsRunningActivity: Bool = true,
+        showsStressAnalysis: Bool = true,
         now: Date = Date()
     ) -> WidgetSnapshot {
         let cal = Calendar.current
@@ -124,7 +127,8 @@ enum WidgetSnapshotSync {
             nextProgramName: active?.name,
             accentHex: accentHex,
             workoutsLast7Days: workoutsLast7Days,
-            showsRunningActivity: showsRunningActivity
+            showsRunningActivity: showsRunningActivity,
+            showsStressAnalysis: showsStressAnalysis
         )
     }
 }

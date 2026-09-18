@@ -55,6 +55,7 @@ struct RunningView: View {
     @EnvironmentObject private var health: HealthKitService
     @Environment(AppTheme.self) private var theme
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
+    @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
     @State private var filters = RunningFilters()
     @State private var showFilters = false
     @State private var olderExpanded = false
@@ -180,7 +181,13 @@ struct RunningView: View {
                                     )
                                     .environmentObject(health)
                                 } label: {
-                                    RunRow(run: run, accent: accent, unit: unit, stressScore: runStress(for: run))
+                                    RunRow(
+                                        run: run,
+                                        accent: accent,
+                                        unit: unit,
+                                        stressScore: runStress(for: run),
+                                        showsStressAnalysis: showStressAnalysis
+                                    )
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -203,7 +210,13 @@ struct RunningView: View {
                                                     )
                                                     .environmentObject(health)
                                                 } label: {
-                                                    RunRow(run: run, accent: accent, unit: unit, stressScore: runStress(for: run))
+                                                    RunRow(
+                                                        run: run,
+                                                        accent: accent,
+                                                        unit: unit,
+                                                        stressScore: runStress(for: run),
+                                                        showsStressAnalysis: showStressAnalysis
+                                                    )
                                                 }
                                                 .buttonStyle(.plain)
                                             }
@@ -282,7 +295,9 @@ struct RunningView: View {
                 metric("Best pace", bestPace.map { Formatters.pace($0, unit: unit) } ?? "—")
                 metric("Runs", "\(last7.count)")
             }
-            StressMeter(title: "Run stress", score: weeklyRunStress, accent: accent)
+            if showStressAnalysis {
+                StressMeter(title: "Run stress", score: weeklyRunStress, accent: accent)
+            }
             stepsChart
         }
         .padding(16)
@@ -658,6 +673,7 @@ struct RunRow: View {
     let accent: Color
     let unit: DistanceUnit
     let stressScore: Double
+    var showsStressAnalysis: Bool = true
 
     var body: some View {
         HStack {
@@ -676,9 +692,11 @@ struct RunRow: View {
                         .font(.subheadline.monospacedDigit())
                         .foregroundStyle(.primary)
                 }
-                Text("Stress \(Int(stressScore.rounded()))")
-                    .font(.caption)
-                    .foregroundStyle(RIRPalette.color(for: stressScore > 75 ? 0 : (stressScore > 55 ? 2 : 4), accent: accent))
+                if showsStressAnalysis {
+                    Text("Stress \(Int(stressScore.rounded()))")
+                        .font(.caption)
+                        .foregroundStyle(RIRPalette.color(for: stressScore > 75 ? 0 : (stressScore > 55 ? 2 : 4), accent: accent))
+                }
             }
         }
         .padding(14)
@@ -695,6 +713,7 @@ struct RunDetailView: View {
 
     @EnvironmentObject private var health: HealthKitService
     @Environment(AppTheme.self) private var theme
+    @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
     @State private var details: RunDetailData?
     @State private var loading = true
 
@@ -722,26 +741,28 @@ struct RunDetailView: View {
                 heartRateCard
                 paceCard
 
-                StressMeter(title: "Run stress", score: stressScore, accent: accent)
+                if showStressAnalysis {
+                    StressMeter(title: "Run stress", score: stressScore, accent: accent)
+                        .padding(16)
+                        .opaqueCard()
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(stressExplanation)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        if let context = StressCalculator.recoveryContextLabel(
+                            hrvSDNN: health.hrvSDNN,
+                            sleepHours: health.lastNightSleepHours
+                        ) {
+                            Text("Recovery context: \(context)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        StressLegendView(compact: true)
+                    }
                     .padding(16)
                     .opaqueCard()
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(stressExplanation)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    if let context = StressCalculator.recoveryContextLabel(
-                        hrvSDNN: health.hrvSDNN,
-                        sleepHours: health.lastNightSleepHours
-                    ) {
-                        Text("Recovery context: \(context)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    StressLegendView(compact: true)
                 }
-                .padding(16)
-                .opaqueCard()
             }
             .padding(16)
         }

@@ -99,6 +99,7 @@ final class SessionController: ObservableObject {
     }
     @Published var drafts: [UUID: ExerciseDraft] = [:]
     @Published var loggedEdits: [UUID: ExerciseDraft] = [:]
+    @Published var barWeightOverrides: [UUID: Double] = [:]
 
     let program: Program?
     let programDay: ProgramDay?
@@ -287,6 +288,7 @@ final class SessionController: ObservableObject {
         guard let index = exercises.firstIndex(where: { $0.id == id }) else { return }
         let removed = exercises.remove(at: index)
         drafts.removeValue(forKey: removed.id)
+        barWeightOverrides.removeValue(forKey: removed.id)
         if focusedField?.exerciseID == removed.id {
             focusedField = nil
         }
@@ -355,6 +357,36 @@ final class SessionController: ObservableObject {
         body(&value)
         drafts[id] = value
     }
+
+    func effectiveBarWeight(for exerciseID: UUID, unit: WeightUnit, barKg: Double, barLb: Double) -> Double {
+        if let override = barWeightOverrides[exerciseID] {
+            return override
+        }
+        return EquipmentSettings.plateBaseWeight(
+            for: .barbell,
+            unit: unit,
+            barKg: barKg,
+            barLb: barLb
+        )
+    }
+
+    func adjustBarWeight(for exerciseID: UUID, unit: WeightUnit, delta: Double, barKg: Double, barLb: Double) {
+        let current = effectiveBarWeight(for: exerciseID, unit: unit, barKg: barKg, barLb: barLb)
+        let minimum: Double = unit == .kg ? 5 : 15
+        let maximum: Double = unit == .kg ? 40 : 70
+        let next = min(max(current + delta, minimum), maximum)
+        let defaultWeight = EquipmentSettings.plateBaseWeight(
+            for: .barbell,
+            unit: unit,
+            barKg: barKg,
+            barLb: barLb
+        )
+        if abs(next - defaultWeight) < 0.001 {
+            barWeightOverrides.removeValue(forKey: exerciseID)
+        } else {
+            barWeightOverrides[exerciseID] = next
+        }
+    }
 }
 
 struct LiveSessionView: View {
@@ -371,6 +403,8 @@ struct LiveSessionView: View {
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
     @AppStorage(HealthKitService.writeStrengthToHealthKitKey) private var writeStrengthToHealthKit = false
+    @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
+    @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
 
     @State private var showAddExercise = false
     @State private var showReorderSheet = false
@@ -568,6 +602,23 @@ struct LiveSessionView: View {
                     set: { newValue in controller.updateActiveDraft(for: field) { $0.rir = newValue } }
                 ),
                 completeTitle: field.setID == nil ? "Complete Set" : "Save",
+                barWeight: controller.effectiveBarWeight(
+                    for: id,
+                    unit: unit,
+                    barKg: barbellBarKg,
+                    barLb: barbellBarLb
+                ),
+                onAdjustBarWeight: equipment == .barbell
+                    ? { delta in
+                        controller.adjustBarWeight(
+                            for: id,
+                            unit: unit,
+                            delta: delta,
+                            barKg: barbellBarKg,
+                            barLb: barbellBarLb
+                        )
+                    }
+                    : nil,
                 onDismiss: { controller.focusedField = nil },
                 onNext: { controller.focusedField = .reps(id, setID: field.setID) },
                 onCompleteSet: {

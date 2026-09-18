@@ -7,7 +7,7 @@
         "key": "Exercises",
         "location": {
           "startingColumn": 18,
-          "startingLine": 85
+          "startingLine": 86
         }
       },
       {
@@ -15,55 +15,55 @@
         "key": "+ %lld more exercise%@",
         "location": {
           "startingColumn": 26,
-          "startingLine": 98
+          "startingLine": 99
         }
       },
       {
         "comment": "",
         "key": "%lld set%@",
         "location": {
-          "startingColumn": 26,
-          "startingLine": 118
+          "startingColumn": 30,
+          "startingLine": 125
         }
       },
       {
         "comment": "",
         "key": "Top",
         "location": {
-          "startingColumn": 26,
-          "startingLine": 124
+          "startingColumn": 30,
+          "startingLine": 131
         }
       },
       {
         "comment": "",
         "key": "%@ × %lld",
         "location": {
-          "startingColumn": 26,
-          "startingLine": 127
+          "startingColumn": 30,
+          "startingLine": 134
         }
       },
       {
         "comment": "",
         "key": "%lld",
         "location": {
-          "startingColumn": 34,
-          "startingLine": 137
+          "startingColumn": 38,
+          "startingLine": 144
         }
       },
       {
         "comment": "",
         "key": "%@ × %lld",
         "location": {
-          "startingColumn": 34,
-          "startingLine": 141
+          "startingColumn": 38,
+          "startingLine": 148
         }
       },
       {
         "comment": "",
         "key": "RIR %@",
         "location": {
-          "startingColumn": 34,
-          "startingLine": 144
+          "startingColumn": 38,
+          "startingLine": 151
         }
       },
       {
@@ -71,7 +71,7 @@
         "key": "Workout",
         "location": {
           "startingColumn": 22,
-          "startingLine": 165
+          "startingLine": 198
         }
       }
     ]

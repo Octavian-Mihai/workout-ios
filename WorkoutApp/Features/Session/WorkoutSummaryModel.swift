@@ -10,6 +10,7 @@ struct WorkoutSummarySet: Identifiable {
 struct WorkoutSummaryExercise: Identifiable {
     let id: String
     let name: String
+    let imageAssetName: String
     let setCount: Int
     let topSetWeightKg: Double
     let topSetReps: Int
@@ -63,9 +64,13 @@ struct WorkoutSummaryModel {
                     rir: log.rir
                 )
             }
+            let imageAssetName = ExerciseCatalog.match(name: name)
+                .map { ExerciseCatalog.imageAssetName(for: $0) }
+                ?? "exercise-custom"
             return WorkoutSummaryExercise(
                 id: name,
                 name: name,
+                imageAssetName: imageAssetName,
                 setCount: logs.count,
                 topSetWeightKg: top.weight,
                 topSetReps: top.reps,

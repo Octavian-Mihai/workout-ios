@@ -37,6 +37,27 @@ enum PlateCalculator {
 
     static func calculate(
         total: Double,
+        unit: WeightUnit,
+        equipment: ExerciseEquipment,
+        barKg: Double,
+        barLb: Double
+    ) -> PlateBreakdown {
+        let base = EquipmentSettings.plateBaseWeight(
+            for: equipment,
+            unit: unit,
+            barKg: barKg,
+            barLb: barLb
+        )
+        return calculate(
+            total: total,
+            base: base,
+            unit: unit,
+            equipment: equipment
+        )
+    }
+
+    static func calculate(
+        total: Double,
         base: Double,
         unit: WeightUnit,
         equipment: ExerciseEquipment
@@ -70,27 +91,34 @@ enum PlateCalculator {
 enum EquipmentSettings {
     static let barbellBarKgKey = "barbellBarKg"
     static let barbellBarLbKey = "barbellBarLb"
-    static let ftIncrementKgKey = "ftIncrementKg"
-    static let ftIncrementLbKey = "ftIncrementLb"
 
     static let defaultBarKg: Double = 20
     static let defaultBarLb: Double = 45
-    static let defaultFTKg: Double = 2.5
-    static let defaultFTLb: Double = 5
 
     static func defaultBar(for unit: WeightUnit) -> Double {
         unit == .kg ? defaultBarKg : defaultBarLb
-    }
-
-    static func defaultFT(for unit: WeightUnit) -> Double {
-        unit == .kg ? defaultFTKg : defaultFTLb
     }
 
     static func barStep(for unit: WeightUnit) -> Double {
         unit == .kg ? 2.5 : 5
     }
 
-    static func ftStep(for unit: WeightUnit) -> Double {
-        unit == .kg ? 0.5 : 2.5
+    static func plateBaseWeight(
+        for equipment: ExerciseEquipment,
+        unit: WeightUnit,
+        barKg: Double,
+        barLb: Double
+    ) -> Double {
+        switch equipment {
+        case .barbell:
+            if unit == .kg {
+                return barKg > 0 ? barKg : defaultBarKg
+            }
+            return barLb > 0 ? barLb : defaultBarLb
+        case .machine, .functionalTrainer:
+            return 0
+        default:
+            return 0
+        }
     }
 }

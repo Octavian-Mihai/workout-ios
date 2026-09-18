@@ -15,11 +15,15 @@ enum RunningVisibility {
     static let showActivityKey = "showRunningActivity"
 }
 
+enum StressVisibility {
+    static let showAnalysisKey = InfoPageVisibility.showTodayStressKey
+}
+
 struct InfoView: View {
     @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
     @EnvironmentObject private var health: HealthKitService
     @Environment(AppTheme.self) private var theme
-    @AppStorage(InfoPageVisibility.showTodayStressKey) private var showTodayStress = true
+    @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
     @AppStorage(InfoPageVisibility.showTonnageKey) private var showTonnage = true
     @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
@@ -77,7 +81,7 @@ struct InfoView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if showTodayStress {
+                    if showStressAnalysis {
                         DisclosureGroup(isExpanded: $stressExpanded) {
                             VStack(alignment: .leading, spacing: 16) {
                                 TodayStressCard(

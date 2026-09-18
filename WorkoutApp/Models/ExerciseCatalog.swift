@@ -235,7 +235,12 @@ enum ExerciseEquipment: String, CaseIterable, Identifiable, Hashable, Codable {
     }
 
     var showsPlateCalculator: Bool {
-        self == .barbell || self == .machine
+        switch self {
+        case .barbell, .machine, .functionalTrainer:
+            return true
+        default:
+            return false
+        }
     }
 
     static func from(raw: String) -> ExerciseEquipment? {
@@ -378,7 +383,7 @@ enum ExerciseCatalog {
             primary: [.quadriceps, .glutes],
             secondary: [],
             cues: "Brace and sit between the hips. Keep mid-foot pressure; don’t collapse the chest or ride the bar forward.",
-            equipment: .machine
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "belt-squat",
@@ -820,7 +825,7 @@ enum ExerciseCatalog {
             primary: [.chest],
             secondary: [.triceps, .anteriorDelts],
             cues: "Set the scaps and keep a slight arch. Lower to the upper chest with control; don’t bounce or flare the elbows out wide.",
-            equipment: .machine
+            equipment: .barbell
         ),
         CatalogExercise(
             id: "close-grip-bench-press",
@@ -829,7 +834,7 @@ enum ExerciseCatalog {
             primary: [.triceps],
             secondary: [.chest, .anteriorDelts],
             cues: "Grip just inside shoulder width. Elbows stay tucked; lower to the chest and press without bouncing.",
-            equipment: .machine,
+            equipment: .barbell,
             pattern: .triceps
         ),
         CatalogExercise(

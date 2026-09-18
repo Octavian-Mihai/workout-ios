@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct WorkoutSummaryView: View {
     let model: WorkoutSummaryModel
@@ -90,7 +91,7 @@ struct WorkoutSummaryView: View {
                     exerciseRow(exercise)
                     if index < model.displayedExercises.count - 1 {
                         Divider()
-                            .padding(.leading, 4)
+                            .padding(.leading, thumbnailSize + 12)
                     }
                 }
                 if model.hiddenExerciseCount > 0 {
@@ -107,50 +108,82 @@ struct WorkoutSummaryView: View {
         }
     }
 
-    private func exerciseRow(_ exercise: WorkoutSummaryExercise) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(alignment: .firstTextBaseline) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(exercise.name)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(textPrimary)
-                        .lineLimit(2)
-                    Text("\(exercise.setCount) set\(exercise.setCount == 1 ? "" : "s")")
-                        .font(.caption)
-                        .foregroundStyle(textSecondary)
-                }
-                Spacer(minLength: 8)
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text("Top")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(textSecondary)
-                    Text("\(unit.formatNumber(exercise.topSetWeightKg)) × \(exercise.topSetReps)")
-                        .font(.subheadline.monospacedDigit().weight(.medium))
-                        .foregroundStyle(accent)
-                }
-            }
+    private var thumbnailSize: CGFloat { 64 }
+    private var thumbnailCornerRadius: CGFloat { 10 }
 
-            if !exercise.sets.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(exercise.sets) { set in
-                        HStack(spacing: 8) {
-                            Text("\(set.id + 1)")
-                                .font(.caption2.monospacedDigit().weight(.semibold))
-                                .foregroundStyle(textSecondary)
-                                .frame(width: 16, alignment: .trailing)
-                            Text("\(unit.formatNumber(set.weightKg)) × \(set.reps)")
-                                .font(.caption.monospacedDigit())
-                                .foregroundStyle(textPrimary)
-                            Text("RIR \(RIRPalette.display(set.rir))")
-                                .font(.caption2)
-                                .foregroundStyle(textSecondary)
-                        }
+    private func exerciseRow(_ exercise: WorkoutSummaryExercise) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            exerciseThumbnail(assetName: exercise.imageAssetName)
+
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(alignment: .firstTextBaseline) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(exercise.name)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(textPrimary)
+                            .lineLimit(2)
+                        Text("\(exercise.setCount) set\(exercise.setCount == 1 ? "" : "s")")
+                            .font(.caption)
+                            .foregroundStyle(textSecondary)
+                    }
+                    Spacer(minLength: 8)
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text("Top")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(textSecondary)
+                        Text("\(unit.format(exercise.topSetWeightKg)) × \(exercise.topSetReps)")
+                            .font(.subheadline.monospacedDigit().weight(.medium))
+                            .foregroundStyle(accent)
                     }
                 }
-                .padding(.top, 2)
+
+                if !exercise.sets.isEmpty {
+                    VStack(alignment: .leading, spacing: 4) {
+                        ForEach(exercise.sets) { set in
+                            HStack(spacing: 8) {
+                                Text("\(set.id + 1)")
+                                    .font(.caption2.monospacedDigit().weight(.semibold))
+                                    .foregroundStyle(textSecondary)
+                                    .frame(width: 16, alignment: .trailing)
+                                Text("\(unit.formatNumber(set.weightKg)) × \(set.reps)")
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(textPrimary)
+                                Text("RIR \(RIRPalette.display(set.rir))")
+                                    .font(.caption2)
+                                    .foregroundStyle(textSecondary)
+                            }
+                        }
+                    }
+                    .padding(.top, 2)
+                }
             }
         }
         .padding(.vertical, 6)
+    }
+
+    @ViewBuilder
+    private func exerciseThumbnail(assetName: String) -> some View {
+        Group {
+            if let image = UIImage(named: assetName) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: thumbnailSize, height: thumbnailSize)
+                    .background(Color.white)
+            } else {
+                ZStack {
+                    Color.white
+                    Image(systemName: "figure.strengthtraining.traditional")
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(accent.opacity(0.9))
+                }
+                .frame(width: thumbnailSize, height: thumbnailSize)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: thumbnailCornerRadius, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: thumbnailCornerRadius, style: .continuous))
+        .layoutPriority(1)
+        .accessibilityHidden(true)
     }
 
     private var brandingFooter: some View {

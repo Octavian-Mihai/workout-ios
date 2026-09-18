@@ -15,6 +15,8 @@ struct SessionInputKeyboard: View {
     @Binding var repsText: String
     @Binding var rir: Int
     var completeTitle: String = "Complete Set"
+    var barWeight: Double = 0
+    var onAdjustBarWeight: ((Double) -> Void)?
     var onDismiss: () -> Void
     var onNext: () -> Void
     var onCompleteSet: () -> Void
@@ -25,8 +27,6 @@ struct SessionInputKeyboard: View {
 
     @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
     @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
-    @AppStorage(EquipmentSettings.ftIncrementKgKey) private var ftIncrementKg = EquipmentSettings.defaultFTKg
-    @AppStorage(EquipmentSettings.ftIncrementLbKey) private var ftIncrementLb = EquipmentSettings.defaultFTLb
 
     private let rowHeight: CGFloat = 50
     private let gap: CGFloat = 6
@@ -42,20 +42,19 @@ struct SessionInputKeyboard: View {
     }
 
     private var baseWeight: Double {
-        if equipment == .machine {
-            return unit == .kg ? ftIncrementKg : ftIncrementLb
+        if equipment == .barbell, onAdjustBarWeight != nil {
+            return barWeight
         }
-        return unit == .kg ? barbellBarKg : barbellBarLb
+        return EquipmentSettings.plateBaseWeight(
+            for: equipment,
+            unit: unit,
+            barKg: barbellBarKg,
+            barLb: barbellBarLb
+        )
     }
 
-    private var baseStep: Double {
-        equipment == .machine
-            ? EquipmentSettings.ftStep(for: unit)
-            : EquipmentSettings.barStep(for: unit)
-    }
-
-    private var baseLabel: String {
-        equipment == .machine ? "Base" : "Bar"
+    private var barStep: Double {
+        EquipmentSettings.barStep(for: unit)
     }
 
     private var breakdown: PlateBreakdown? {
@@ -235,30 +234,32 @@ struct SessionInputKeyboard: View {
                 }
             }
             Spacer(minLength: 8)
-            HStack(spacing: 6) {
-                Button {
-                    adjustBase(-baseStep)
-                } label: {
-                    Image(systemName: "minus")
-                        .font(.caption.weight(.bold))
-                        .frame(width: 24, height: 24)
-                        .background(theme.mutedFill)
-                        .clipShape(Circle())
+            if equipment == .barbell, let onAdjustBarWeight {
+                HStack(spacing: 6) {
+                    Button {
+                        onAdjustBarWeight(-barStep)
+                    } label: {
+                        Image(systemName: "minus")
+                            .font(.caption.weight(.bold))
+                            .frame(width: 24, height: 24)
+                            .background(theme.mutedFill)
+                            .clipShape(Circle())
+                    }
+                    .buttonStyle(.plain)
+                    Text("Bar \(Formatters.trimmedNumber(baseWeight))")
+                        .font(.caption2.monospacedDigit().weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    Button {
+                        onAdjustBarWeight(barStep)
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.caption.weight(.bold))
+                            .frame(width: 24, height: 24)
+                            .background(theme.mutedFill)
+                            .clipShape(Circle())
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
-                Text("\(baseLabel) \(Formatters.trimmedNumber(baseWeight))")
-                    .font(.caption2.monospacedDigit().weight(.semibold))
-                    .foregroundStyle(.secondary)
-                Button {
-                    adjustBase(baseStep)
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.caption.weight(.bold))
-                        .frame(width: 24, height: 24)
-                        .background(theme.mutedFill)
-                        .clipShape(Circle())
-                }
-                .buttonStyle(.plain)
             }
         }
         .padding(.horizontal, 4)
@@ -267,33 +268,19 @@ struct SessionInputKeyboard: View {
 
     private func plateHeadline(_ breakdown: PlateBreakdown) -> String {
         if breakdown.isBelowBase {
-            return "Below \(baseLabel.lowercased())"
+            return "Below bar"
         }
         if breakdown.perSide < 0.001 {
-            return "\(baseLabel) only"
+            if breakdown.base > 0.001 {
+                return "Bar only"
+            }
+            return breakdown.total < 0.001 ? "Enter weight" : "—"
         }
         let plates = breakdown.compactPlates
         if plates.isEmpty || plates == "—" {
             return "Per side rem \(Formatters.trimmedNumber(breakdown.remainder))"
         }
         return "Per side \(plates)"
-    }
-
-    private func adjustBase(_ delta: Double) {
-        let minimum: Double = equipment == .machine ? (unit == .kg ? 0.5 : 1) : (unit == .kg ? 5 : 15)
-        let maximum: Double = equipment == .machine ? (unit == .kg ? 20 : 45) : (unit == .kg ? 40 : 70)
-        let next = Swift.min(Swift.max(baseWeight + delta, minimum), maximum)
-        if equipment == .machine {
-            if unit == .kg {
-                ftIncrementKg = next
-            } else {
-                ftIncrementLb = next
-            }
-        } else if unit == .kg {
-            barbellBarKg = next
-        } else {
-            barbellBarLb = next
-        }
     }
 
     private func appendDigit(_ digit: String) {

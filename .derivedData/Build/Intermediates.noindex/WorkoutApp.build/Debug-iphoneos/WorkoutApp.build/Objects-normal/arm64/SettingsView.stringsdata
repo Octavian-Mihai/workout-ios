@@ -7,7 +7,7 @@
         "key": "Settings",
         "location": {
           "startingColumn": 30,
-          "startingLine": 241
+          "startingLine": 233
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Delete all local data?",
         "location": {
           "startingColumn": 20,
-          "startingLine": 243
+          "startingLine": 235
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "Couldn’t import workout data",
         "location": {
           "startingColumn": 20,
-          "startingLine": 254
+          "startingLine": 246
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Accent",
         "location": {
           "startingColumn": 25,
-          "startingLine": 54
+          "startingLine": 52
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "Appearance",
         "location": {
           "startingColumn": 25,
-          "startingLine": 60
+          "startingLine": 58
         }
       },
       {
@@ -47,7 +47,7 @@
         "key": "Units",
         "location": {
           "startingColumn": 25,
-          "startingLine": 80
+          "startingLine": 78
         }
       },
       {
@@ -55,7 +55,15 @@
         "key": "Session",
         "location": {
           "startingColumn": 25,
-          "startingLine": 112
+          "startingLine": 110
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 115
         }
       },
       {
@@ -63,7 +71,7 @@
         "key": "Info page",
         "location": {
           "startingColumn": 25,
-          "startingLine": 117
+          "startingLine": 122
         }
       },
       {
@@ -71,7 +79,7 @@
         "key": "Running",
         "location": {
           "startingColumn": 25,
-          "startingLine": 129
+          "startingLine": 133
         }
       },
       {
@@ -79,7 +87,7 @@
         "key": "Equipment",
         "location": {
           "startingColumn": 25,
-          "startingLine": 137
+          "startingLine": 141
         }
       },
       {
@@ -87,7 +95,7 @@
         "key": "Measurements",
         "location": {
           "startingColumn": 25,
-          "startingLine": 170
+          "startingLine": 162
         }
       },
       {
@@ -95,7 +103,7 @@
         "key": "Health",
         "location": {
           "startingColumn": 25,
-          "startingLine": 176
+          "startingLine": 168
         }
       },
       {
@@ -103,7 +111,7 @@
         "key": "Privacy",
         "location": {
           "startingColumn": 25,
-          "startingLine": 191
+          "startingLine": 183
         }
       },
       {
@@ -111,7 +119,7 @@
         "key": "Data",
         "location": {
           "startingColumn": 25,
-          "startingLine": 197
+          "startingLine": 189
         }
       },
       {
@@ -119,7 +127,7 @@
         "key": "About",
         "location": {
           "startingColumn": 25,
-          "startingLine": 217
+          "startingLine": 209
         }
       },
       {
@@ -127,7 +135,7 @@
         "key": "Cards use opaque fills and borders — no glass or ultra-thin materials.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 75
+          "startingLine": 73
         }
       },
       {
@@ -135,7 +143,7 @@
         "key": "Mode",
         "location": {
           "startingColumn": 28,
-          "startingLine": 61
+          "startingLine": 59
         }
       },
       {
@@ -143,7 +151,7 @@
         "key": "Lifting loads and body weight are stored in kilograms and converted for display.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 87
+          "startingLine": 85
         }
       },
       {
@@ -151,7 +159,7 @@
         "key": "Body circumferences and height are stored in centimeters and converted for display.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 96
+          "startingLine": 94
         }
       },
       {
@@ -159,7 +167,7 @@
         "key": "Running distance and pace use this unit. Values from Health stay in meters internally.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 105
+          "startingLine": 103
         }
       },
       {
@@ -167,7 +175,7 @@
         "key": "Weight",
         "location": {
           "startingColumn": 28,
-          "startingLine": 81
+          "startingLine": 79
         }
       },
       {
@@ -175,7 +183,7 @@
         "key": "Length",
         "location": {
           "startingColumn": 28,
-          "startingLine": 90
+          "startingLine": 88
         }
       },
       {
@@ -183,7 +191,7 @@
         "key": "Distance",
         "location": {
           "startingColumn": 28,
-          "startingLine": 99
+          "startingLine": 97
         }
       },
       {
@@ -191,7 +199,7 @@
         "key": "Default rest %llds",
         "location": {
           "startingColumn": 29,
-          "startingLine": 113
+          "startingLine": 111
         }
       },
       {
@@ -199,7 +207,23 @@
         "key": "Rest-timer haptics",
         "location": {
           "startingColumn": 28,
-          "startingLine": 114
+          "startingLine": 112
+        }
+      },
+      {
+        "comment": "",
+        "key": "Turn off to hide stress scores on Home, Info, Running, and widgets.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 117
+        }
+      },
+      {
+        "comment": "",
+        "key": "Show stress analysis",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 116
         }
       },
       {
@@ -207,15 +231,7 @@
         "key": "Hidden sections do not appear on the Info tab.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 124
-        }
-      },
-      {
-        "comment": "",
-        "key": "Show today’s stress",
-        "location": {
-          "startingColumn": 28,
-          "startingLine": 118
+          "startingLine": 128
         }
       },
       {
@@ -223,7 +239,7 @@
         "key": "Show tonnage / muscle breakdown",
         "location": {
           "startingColumn": 28,
-          "startingLine": 119
+          "startingLine": 123
         }
       },
       {
@@ -231,7 +247,7 @@
         "key": "Show volume charts",
         "location": {
           "startingColumn": 28,
-          "startingLine": 120
+          "startingLine": 124
         }
       },
       {
@@ -239,7 +255,7 @@
         "key": "Show estimated 1RM",
         "location": {
           "startingColumn": 28,
-          "startingLine": 121
+          "startingLine": 125
         }
       },
       {
@@ -247,7 +263,7 @@
         "key": "Show intensity map",
         "location": {
           "startingColumn": 28,
-          "startingLine": 122
+          "startingLine": 126
         }
       },
       {
@@ -255,7 +271,7 @@
         "key": "Show training load evolution",
         "location": {
           "startingColumn": 28,
-          "startingLine": 123
+          "startingLine": 127
         }
       },
       {
@@ -263,7 +279,7 @@
         "key": "Turn off the Running tab to hide it. Turn off running activity to hide runs on Home, widgets, and Info stress. Walking, hiking, and cycling stay.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 132
+          "startingLine": 136
         }
       },
       {
@@ -271,7 +287,7 @@
         "key": "Show Running tab",
         "location": {
           "startingColumn": 28,
-          "startingLine": 130
+          "startingLine": 134
         }
       },
       {
@@ -279,15 +295,15 @@
         "key": "Show running activity",
         "location": {
           "startingColumn": 28,
-          "startingLine": 131
+          "startingLine": 135
         }
       },
       {
         "comment": "",
-        "key": "The plate calculator subtracts bar or functional-trainer base weight, then shows plates per side.",
+        "key": "The plate calculator subtracts bar weight for barbell exercises, then shows plates per side. Machine and functional-trainer exercises use the logged weight directly.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 165
+          "startingLine": 157
         }
       },
       {
@@ -295,15 +311,7 @@
         "key": "Barbell bar %@ kg",
         "location": {
           "startingColumn": 29,
-          "startingLine": 140
-        }
-      },
-      {
-        "comment": "",
-        "key": "FT increment %@ kg",
-        "location": {
-          "startingColumn": 29,
-          "startingLine": 146
+          "startingLine": 144
         }
       },
       {
@@ -311,15 +319,7 @@
         "key": "Barbell bar %@ lb",
         "location": {
           "startingColumn": 29,
-          "startingLine": 153
-        }
-      },
-      {
-        "comment": "",
-        "key": "FT increment %@ lb",
-        "location": {
-          "startingColumn": 29,
-          "startingLine": 159
+          "startingLine": 151
         }
       },
       {
@@ -327,7 +327,7 @@
         "key": "Measurements",
         "location": {
           "startingColumn": 36,
-          "startingLine": 171
+          "startingLine": 163
         }
       },
       {
@@ -335,7 +335,7 @@
         "key": "When this is on, finishing a strength session adds a Traditional Strength Training workout to Apple Health. When it’s off, sessions stay in this app only. Running is read from Health. Body weight is read from and saved to Health.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 178
+          "startingLine": 170
         }
       },
       {
@@ -343,7 +343,7 @@
         "key": "Write finished workouts to Apple Health",
         "location": {
           "startingColumn": 28,
-          "startingLine": 177
+          "startingLine": 169
         }
       },
       {
@@ -351,7 +351,7 @@
         "key": "Re-request HealthKit access",
         "location": {
           "startingColumn": 28,
-          "startingLine": 181
+          "startingLine": 173
         }
       },
       {
@@ -359,7 +359,7 @@
         "key": "Open Apple Health",
         "location": {
           "startingColumn": 28,
-          "startingLine": 184
+          "startingLine": 176
         }
       },
       {
@@ -367,7 +367,7 @@
         "key": "What we store",
         "location": {
           "startingColumn": 36,
-          "startingLine": 192
+          "startingLine": 184
         }
       },
       {
@@ -375,7 +375,7 @@
         "key": "Workout data",
         "location": {
           "startingColumn": 47,
-          "startingLine": 205
+          "startingLine": 197
         }
       },
       {
@@ -383,7 +383,7 @@
         "key": "Import workout data",
         "location": {
           "startingColumn": 28,
-          "startingLine": 209
+          "startingLine": 201
         }
       },
       {
@@ -391,7 +391,7 @@
         "key": "Delete all local data",
         "location": {
           "startingColumn": 28,
-          "startingLine": 212
+          "startingLine": 204
         }
       },
       {
@@ -399,7 +399,7 @@
         "key": "Export workout data",
         "location": {
           "startingColumn": 31,
-          "startingLine": 207
+          "startingLine": 199
         }
       },
       {
@@ -407,7 +407,7 @@
         "key": "How to use this app",
         "location": {
           "startingColumn": 34,
-          "startingLine": 222
+          "startingLine": 214
         }
       },
       {
@@ -415,7 +415,7 @@
         "key": "Version",
         "location": {
           "startingColumn": 30,
-          "startingLine": 231
+          "startingLine": 223
         }
       },
       {
@@ -423,7 +423,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 24,
-          "startingLine": 244
+          "startingLine": 236
         }
       },
       {
@@ -431,7 +431,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 24,
-          "startingLine": 245
+          "startingLine": 237
         }
       },
       {
@@ -439,7 +439,7 @@
         "key": "This removes programs, workout history, measurements, and body-weight entries from this device. Apple Health data is not deleted.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 247
+          "startingLine": 239
         }
       },
       {
@@ -447,7 +447,7 @@
         "key": "OK",
         "location": {
           "startingColumn": 24,
-          "startingLine": 255
+          "startingLine": 247
         }
       },
       {
@@ -455,7 +455,7 @@
         "key": "Privacy",
         "location": {
           "startingColumn": 26,
-          "startingLine": 339
+          "startingLine": 331
         }
       },
       {
@@ -463,7 +463,7 @@
         "key": "On this device",
         "location": {
           "startingColumn": 21,
-          "startingLine": 323
+          "startingLine": 315
         }
       },
       {
@@ -471,7 +471,7 @@
         "key": "Apple Health",
         "location": {
           "startingColumn": 21,
-          "startingLine": 328
+          "startingLine": 320
         }
       },
       {
@@ -479,7 +479,7 @@
         "key": "Encryption",
         "location": {
           "startingColumn": 21,
-          "startingLine": 333
+          "startingLine": 325
         }
       },
       {
@@ -487,7 +487,7 @@
         "key": "Programs, workout sessions, sets (weight, reps, RIR), and body-weight entries are stored locally with SwiftData. Nothing is uploaded to a server.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 324
+          "startingLine": 316
         }
       },
       {
@@ -495,7 +495,7 @@
         "key": "Running workouts, GPS routes, distance, and heart rate are read only. Body weight is read from and written to Apple Health when you use the weight log. Finished strength sessions are written to Health as Traditional Strength Training workouts only if you turn on writing workouts in Settings.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 329
+          "startingLine": 321
         }
       },
       {
@@ -503,7 +503,7 @@
         "key": "The app does not use non-exempt encryption. Workout data stays in the device’s standard app container.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 334
+          "startingLine": 326
         }
       },
       {
@@ -511,7 +511,7 @@
         "key": "Weight log",
         "location": {
           "startingColumn": 26,
-          "startingLine": 373
+          "startingLine": 365
         }
       },
       {
@@ -519,7 +519,7 @@
         "key": "No entries yet. Log body weight to keep a simple history. Relative volume can use this later.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 356
+          "startingLine": 348
         }
       },
       {
@@ -527,7 +527,7 @@
         "key": "Add entry",
         "location": {
           "startingColumn": 26,
-          "startingLine": 444
+          "startingLine": 436
         }
       },
       {
@@ -535,7 +535,7 @@
         "key": "Date",
         "location": {
           "startingColumn": 24,
-          "startingLine": 434
+          "startingLine": 426
         }
       },
       {
@@ -543,7 +543,7 @@
         "key": "Weight (%@)",
         "location": {
           "startingColumn": 22,
-          "startingLine": 436
+          "startingLine": 428
         }
       },
       {
@@ -551,7 +551,7 @@
         "key": "Weight",
         "location": {
           "startingColumn": 27,
-          "startingLine": 438
+          "startingLine": 430
         }
       },
       {
@@ -559,7 +559,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 24,
-          "startingLine": 448
+          "startingLine": 440
         }
       },
       {
@@ -567,7 +567,7 @@
         "key": "Save",
         "location": {
           "startingColumn": 24,
-          "startingLine": 451
+          "startingLine": 443
         }
       }
     ]

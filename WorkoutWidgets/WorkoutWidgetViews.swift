@@ -128,36 +128,51 @@ struct WorkoutYearWidgetView: View {
     }
 
     private func yearLarge(_ snap: WidgetSnapshot) -> some View {
-        let color = WidgetChrome.stressColor(for: snap.todayStress)
-        return VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 10) {
             yearMediumDashboard(snap)
-            HStack(alignment: .firstTextBaseline, spacing: 16) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Today’s stress")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text("\(Int(snap.todayStress.rounded()))")
-                            .font(.title2.monospacedDigit().weight(.bold))
-                            .foregroundStyle(color)
-                        Text(WidgetChrome.stressLabel(for: snap.todayStress))
+            if snap.showsStressAnalysis {
+                let color = WidgetChrome.stressColor(for: snap.todayStress)
+                HStack(alignment: .firstTextBaseline, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Today’s stress")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            Text("\(Int(snap.todayStress.rounded()))")
+                                .font(.title2.monospacedDigit().weight(.bold))
+                                .foregroundStyle(color)
+                            Text(WidgetChrome.stressLabel(for: snap.todayStress))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer(minLength: 8)
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text(snap.workoutsLast7Days == 1 ? "1 workout" : "\(snap.workoutsLast7Days) workouts")
+                            .font(.title3.monospacedDigit().weight(.bold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        Text("last 7 days")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
-                Spacer(minLength: 8)
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text(snap.workoutsLast7Days == 1 ? "1 workout" : "\(snap.workoutsLast7Days) workouts")
-                        .font(.title3.monospacedDigit().weight(.bold))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                    Text("last 7 days")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                StressAxisChart(values: snap.trendTotals, color: color)
+                    .frame(height: 78)
+            } else {
+                HStack {
+                    Spacer(minLength: 8)
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text(snap.workoutsLast7Days == 1 ? "1 workout" : "\(snap.workoutsLast7Days) workouts")
+                            .font(.title3.monospacedDigit().weight(.bold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        Text("last 7 days")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
-            StressAxisChart(values: snap.trendTotals, color: color)
-                .frame(height: 78)
         }
     }
 
@@ -181,9 +196,11 @@ struct WorkoutStressWidgetView: View {
 
     var body: some View {
         let snap = entry.snapshot
-        let color = WidgetChrome.stressColor(for: snap.todayStress)
         Group {
-            if family == .systemSmall {
+            if !snap.showsStressAnalysis {
+                stressHiddenPlaceholder
+            } else if family == .systemSmall {
+                let color = WidgetChrome.stressColor(for: snap.todayStress)
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Stress")
                         .font(.caption.weight(.semibold))
@@ -199,6 +216,7 @@ struct WorkoutStressWidgetView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             } else {
+                let color = WidgetChrome.stressColor(for: snap.todayStress)
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .firstTextBaseline) {
                         Text("Today’s stress")
@@ -237,6 +255,20 @@ struct WorkoutStressWidgetView: View {
             }
         }
         .widgetChrome()
+    }
+
+    private var stressHiddenPlaceholder: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Stress")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text("Stress hidden — enable in app Settings")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     }
 
     private func split(_ title: String, _ score: Double) -> some View {

@@ -8,6 +8,7 @@ struct HomeView: View {
     @EnvironmentObject private var health: HealthKitService
     @Environment(AppTheme.self) private var theme
     @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
+    @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
 
     @Environment(AppTourController.self) private var tour
     @State private var showTrends = false
@@ -54,9 +55,11 @@ struct HomeView: View {
                         .tourTarget(.homeYearGrid)
                         .id(AppTourTargetID.homeYearGrid)
 
-                        TodayStressCard(estimate: todayStress, accent: accent, compact: true)
-                            .tourTarget(.homeTodayStress)
-                            .id(AppTourTargetID.homeTodayStress)
+                        if showStressAnalysis {
+                            TodayStressCard(estimate: todayStress, accent: accent, compact: true)
+                                .tourTarget(.homeTodayStress)
+                                .id(AppTourTargetID.homeTodayStress)
+                        }
 
                         VStack(alignment: .leading, spacing: 16) {
                             if let program = programs.first(where: \.isActive), let day = nextDay {

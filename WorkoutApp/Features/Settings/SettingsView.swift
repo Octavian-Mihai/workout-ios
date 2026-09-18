@@ -19,9 +19,7 @@ struct SettingsView: View {
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
     @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
     @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
-    @AppStorage(EquipmentSettings.ftIncrementKgKey) private var ftIncrementKg = EquipmentSettings.defaultFTKg
-    @AppStorage(EquipmentSettings.ftIncrementLbKey) private var ftIncrementLb = EquipmentSettings.defaultFTLb
-    @AppStorage(InfoPageVisibility.showTodayStressKey) private var showTodayStress = true
+    @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
     @AppStorage(InfoPageVisibility.showTonnageKey) private var showTonnage = true
     @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
@@ -114,8 +112,14 @@ struct SettingsView: View {
                     Toggle("Rest-timer haptics", isOn: $restTimerHaptics)
                 }
 
+                Section("Stress") {
+                    Toggle("Show stress analysis", isOn: $showStressAnalysis)
+                    Text("Turn off to hide stress scores on Home, Info, Running, and widgets.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 Section("Info page") {
-                    Toggle("Show today’s stress", isOn: $showTodayStress)
                     Toggle("Show tonnage / muscle breakdown", isOn: $showTonnage)
                     Toggle("Show volume charts", isOn: $showVolumeCharts)
                     Toggle("Show estimated 1RM", isOn: $showEstimated1RM)
@@ -142,12 +146,6 @@ struct SettingsView: View {
                             in: 5...40,
                             step: 2.5
                         )
-                        Stepper(
-                            "FT increment \(Formatters.trimmedNumber(ftIncrementKg)) kg",
-                            value: $ftIncrementKg,
-                            in: 0.5...20,
-                            step: 0.5
-                        )
                     } else {
                         Stepper(
                             "Barbell bar \(Formatters.trimmedNumber(barbellBarLb)) lb",
@@ -155,14 +153,8 @@ struct SettingsView: View {
                             in: 15...70,
                             step: 5
                         )
-                        Stepper(
-                            "FT increment \(Formatters.trimmedNumber(ftIncrementLb)) lb",
-                            value: $ftIncrementLb,
-                            in: 1...45,
-                            step: 2.5
-                        )
                     }
-                    Text("The plate calculator subtracts bar or functional-trainer base weight, then shows plates per side.")
+                    Text("The plate calculator subtracts bar weight for barbell exercises, then shows plates per side. Machine and functional-trainer exercises use the logged weight directly.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

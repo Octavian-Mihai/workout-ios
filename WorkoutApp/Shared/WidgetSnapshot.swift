@@ -29,6 +29,8 @@ struct WidgetSnapshot: Equatable {
     var workoutsLast7Days: Int = 0
     /// When false, widgets hide running dots and R / B year-grid legends.
     var showsRunningActivity: Bool = true
+    /// When false, stress widgets show a placeholder and year large hides the stress block.
+    var showsStressAnalysis: Bool = true
 
     static let empty = WidgetSnapshot(
         version: 1,
@@ -50,7 +52,8 @@ struct WidgetSnapshot: Equatable {
         nextProgramName: nil,
         accentHex: "FA6B2E",
         workoutsLast7Days: 0,
-        showsRunningActivity: true
+        showsRunningActivity: true,
+        showsStressAnalysis: true
     )
 
     static let preview: WidgetSnapshot = {
@@ -94,7 +97,8 @@ struct WidgetSnapshot: Equatable {
             nextProgramName: "Hypertrophy",
             accentHex: "FA6B2E",
             workoutsLast7Days: 6,
-            showsRunningActivity: true
+            showsRunningActivity: true,
+            showsStressAnalysis: true
         )
     }()
 }
@@ -109,6 +113,7 @@ extension WidgetSnapshot: Codable {
         case nextDayName, nextProgramName, accentHex
         case workoutsLast7Days
         case showsRunningActivity
+        case showsStressAnalysis
     }
 
     init(from decoder: Decoder) throws {
@@ -133,7 +138,8 @@ extension WidgetSnapshot: Codable {
             nextProgramName: try c.decodeIfPresent(String.self, forKey: .nextProgramName),
             accentHex: try c.decode(String.self, forKey: .accentHex),
             workoutsLast7Days: try c.decodeIfPresent(Int.self, forKey: .workoutsLast7Days) ?? 0,
-            showsRunningActivity: try c.decodeIfPresent(Bool.self, forKey: .showsRunningActivity) ?? true
+            showsRunningActivity: try c.decodeIfPresent(Bool.self, forKey: .showsRunningActivity) ?? true,
+            showsStressAnalysis: try c.decodeIfPresent(Bool.self, forKey: .showsStressAnalysis) ?? true
         )
     }
 
@@ -159,6 +165,7 @@ extension WidgetSnapshot: Codable {
         try c.encode(accentHex, forKey: .accentHex)
         try c.encode(workoutsLast7Days, forKey: .workoutsLast7Days)
         try c.encode(showsRunningActivity, forKey: .showsRunningActivity)
+        try c.encode(showsStressAnalysis, forKey: .showsStressAnalysis)
     }
 }
 
