@@ -425,8 +425,8 @@ enum ExerciseCatalog {
             id: "leg-press",
             name: "Leg Press",
             category: .legs,
-            primary: [.quadriceps, .hamstrings],
-            secondary: [.glutes, .adductors],
+            primary: [.quadriceps, .glutes],
+            secondary: [.hamstrings, .adductors],
             cues: "Full foot on the platform. Lower with control and stop before the low back rounds.",
             equipment: .machine
         ),
@@ -454,7 +454,7 @@ enum ExerciseCatalog {
             category: .legs,
             primary: [.hamstrings, .glutes],
             secondary: [.quadriceps, .coreAndAbs],
-            cues: "Drive through the whole foot on the box. Stand tall; don’t push off the trailing leg.",
+            cues: "Drive through the whole foot on the box. Stand tall; don’t push off the trailing leg. Use a big box.",
             equipment: .dumbbell
         ),
         CatalogExercise(
@@ -870,7 +870,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.chest, .triceps],
             secondary: [.anteriorDelts],
-            cues: "Shoulders down. Lean forward for more chest; stay more upright for triceps. Don’t dump into the joints."
+            cues: "Shoulders down. Lean forward for more chest; stay more upright for triceps. Don’t dump into the joints.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "push-up",
@@ -878,7 +879,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.chest],
             secondary: [.triceps, .anteriorDelts, .coreAndAbs],
-            cues: "Body in one line. Elbows ~45° from the torso. Chest to near the floor, then press the floor away."
+            cues: "Body in one line. Elbows ~45° from the torso. Chest to near the floor, then press the floor away.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "overhead-press",
@@ -913,7 +915,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.anteriorDelts, .lateralDelts],
             secondary: [.triceps],
-            cues: "Ribs down, glutes on. Press overhead without over-arching the low back."
+            cues: "Ribs down, glutes on. Press overhead without over-arching the low back.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "lateral-raise",
@@ -993,7 +996,8 @@ enum ExerciseCatalog {
             category: .push,
             primary: [.triceps],
             secondary: [],
-            cues: "Only the elbows move. Lower toward the forehead or hairline, then extend without flaring."
+            cues: "Only the elbows move. Lower toward the forehead or hairline, then extend without flaring.",
+            equipment: .dumbbell
         ),
         CatalogExercise(
             id: "barbell-row",
@@ -1091,7 +1095,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats],
             secondary: [.biceps, .rhomboids],
-            cues: "Dead hang to chin over the bar. Drive elbows down; avoid kipping unless that’s the point."
+            cues: "Dead hang to chin over the bar. Drive elbows down; avoid kipping unless that’s the point.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "chin-up",
@@ -1099,7 +1104,8 @@ enum ExerciseCatalog {
             category: .pull,
             primary: [.lats, .biceps],
             secondary: [.rhomboids],
-            cues: "Supinated grip. Same full range as a pull-up, with a little more biceps."
+            cues: "Supinated grip. Same full range as a pull-up, with a little more biceps.",
+            equipment: .machine
         ),
         CatalogExercise(
             id: "face-pull",
@@ -1263,7 +1269,8 @@ enum ExerciseCatalog {
             category: .core,
             primary: [.coreAndAbs],
             secondary: [.anteriorDelts, .glutes],
-            cues: "Ribs down, glutes on, neck long. Don’t sag or pike."
+            cues: "Ribs down, glutes on, neck long. Don’t sag or pike.",
+            equipment: .bodyweight
         ),
         CatalogExercise(
             id: "zercher-carry",
@@ -1289,7 +1296,8 @@ enum ExerciseCatalog {
             category: .core,
             primary: [.hipFlexors],
             secondary: [.coreAndAbs, .forearmsAndGrip],
-            cues: "Posteriorly tilt the pelvis and lift with the abs, not momentum."
+            cues: "Posteriorly tilt the pelvis and lift with the abs, not momentum.",
+            equipment: .bodyweight
         ),
         CatalogExercise(
             id: "sit-up",
@@ -1297,7 +1305,8 @@ enum ExerciseCatalog {
             category: .core,
             primary: [.hipFlexors],
             secondary: [.coreAndAbs],
-            cues: "Ribs toward the hips. Sit up without yanking on the neck or using momentum."
+            cues: "Ribs toward the hips. Sit up without yanking on the neck or using momentum.",
+            equipment: .bodyweight
         ),
         CatalogExercise(
             id: "cable-crunch",

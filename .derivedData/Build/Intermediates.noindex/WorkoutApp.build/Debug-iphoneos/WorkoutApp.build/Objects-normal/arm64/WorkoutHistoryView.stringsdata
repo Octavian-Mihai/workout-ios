@@ -4,17 +4,25 @@
     "Localizable": [
       {
         "comment": "",
+        "key": "Delete workout?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 69
+        }
+      },
+      {
+        "comment": "",
         "key": "No completed workouts yet. Finish a session to see it here.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 32
+          "startingLine": 35
         }
       },
       {
         "comment": "",
         "key": "Older than 2 weeks (%lld)",
         "location": {
-          "startingColumn": 41,
+          "startingColumn": 34,
           "startingLine": 48
         }
       },
@@ -23,7 +31,39 @@
         "key": "History",
         "location": {
           "startingColumn": 18,
-          "startingLine": 69
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 73
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 79
+        }
+      },
+      {
+        "comment": "",
+        "key": "This workout and all logged sets will be permanently removed.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 83
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 104
         }
       },
       {
@@ -31,7 +71,7 @@
         "key": "%lld sets · %@ %@",
         "location": {
           "startingColumn": 22,
-          "startingLine": 112
+          "startingLine": 151
         }
       },
       {
@@ -39,7 +79,15 @@
         "key": "Session",
         "location": {
           "startingColumn": 26,
-          "startingLine": 199
+          "startingLine": 241
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete workout?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 250
         }
       },
       {
@@ -47,7 +95,7 @@
         "key": "Exercises",
         "location": {
           "startingColumn": 30,
-          "startingLine": 152
+          "startingLine": 194
         }
       },
       {
@@ -55,7 +103,7 @@
         "key": "+ %lld more exercise%@",
         "location": {
           "startingColumn": 34,
-          "startingLine": 187
+          "startingLine": 229
         }
       },
       {
@@ -63,7 +111,7 @@
         "key": "Top %@ × %lld",
         "location": {
           "startingColumn": 38,
-          "startingLine": 164
+          "startingLine": 206
         }
       },
       {
@@ -71,7 +119,7 @@
         "key": "%lld sets",
         "location": {
           "startingColumn": 42,
-          "startingLine": 160
+          "startingLine": 202
         }
       },
       {
@@ -79,7 +127,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 46,
-          "startingLine": 169
+          "startingLine": 211
         }
       },
       {
@@ -87,7 +135,7 @@
         "key": "%@ × %lld",
         "location": {
           "startingColumn": 46,
-          "startingLine": 173
+          "startingLine": 215
         }
       },
       {
@@ -95,7 +143,39 @@
         "key": "RIR %@",
         "location": {
           "startingColumn": 46,
-          "startingLine": 175
+          "startingLine": 217
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 245
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 251
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 256
+        }
+      },
+      {
+        "comment": "",
+        "key": "This workout and all logged sets will be permanently removed.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 258
         }
       }
     ]

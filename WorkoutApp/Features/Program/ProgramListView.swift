@@ -4,6 +4,9 @@ import UniformTypeIdentifiers
 
 enum WorkoutPageVisibility {
     static let programsExpandedKey = "workoutProgramsExpanded"
+    static let historyExpandedKey = "workoutHistoryExpanded"
+    static let historyOlderExpandedKey = "workoutHistoryOlderExpanded"
+    static let learnExpandedKey = "workoutLearnExpanded"
 }
 
 struct ProgramListView: View {

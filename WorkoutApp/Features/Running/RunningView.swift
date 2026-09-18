@@ -58,7 +58,7 @@ struct RunningView: View {
     @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
     @State private var filters = RunningFilters()
     @State private var showFilters = false
-    @State private var olderExpanded = false
+    @AppStorage(RunningVisibility.olderExpandedKey) private var olderExpanded = false
 
     private var accent: Color {
         theme.accent

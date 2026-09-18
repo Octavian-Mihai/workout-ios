@@ -8,11 +8,14 @@ enum InfoPageVisibility {
     static let showEstimated1RMKey = "infoShowEstimated1RM"
     static let showIntensityMapKey = "infoShowIntensityMap"
     static let showTrainingLoadEvolutionKey = "infoShowTrainingLoadEvolution"
+    static let stressExpandedKey = "infoStressExpanded"
+    static let analyticsExpandedKey = "infoAnalyticsExpanded"
 }
 
 enum RunningVisibility {
     static let showTabKey = "showRunningTab"
     static let showActivityKey = "showRunningActivity"
+    static let olderExpandedKey = "runningOlderExpanded"
 }
 
 enum StressVisibility {
@@ -31,8 +34,8 @@ struct InfoView: View {
     @AppStorage(InfoPageVisibility.showTrainingLoadEvolutionKey) private var showTrainingLoadEvolution = true
     @AppStorage(RunningVisibility.showActivityKey) private var showRunningActivity = true
     @Environment(AppTourController.self) private var tour
-    @State private var stressExpanded = true
-    @State private var analyticsExpanded = false
+    @AppStorage(InfoPageVisibility.stressExpandedKey) private var stressExpanded = true
+    @AppStorage(InfoPageVisibility.analyticsExpandedKey) private var analyticsExpanded = false
 
     private var accent: Color {
         theme.accent

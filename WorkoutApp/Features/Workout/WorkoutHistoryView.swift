@@ -7,7 +7,10 @@ struct WorkoutHistoryView: View {
     let unit: WeightUnit
 
     @Environment(AppTheme.self) private var theme
-    @State private var isExpanded = false
+    @Environment(\.modelContext) private var modelContext
+    @AppStorage(WorkoutPageVisibility.historyExpandedKey) private var isExpanded = false
+    @AppStorage(WorkoutPageVisibility.historyOlderExpandedKey) private var olderExpanded = false
+    @State private var pendingDeleteSession: WorkoutSession?
 
     private var finished: [WorkoutSession] {
         sessions.filter { $0.endDate != nil }
@@ -35,28 +38,14 @@ struct WorkoutHistoryView: View {
                         .padding(16)
                         .opaqueCard()
                 } else {
-                    ForEach(recentSessions) { session in
-                        NavigationLink {
-                            WorkoutSessionDetailView(session: session, accent: accent, unit: unit)
-                        } label: {
-                            WorkoutSessionRow(session: session, accent: accent, unit: unit)
-                        }
-                        .buttonStyle(.plain)
-                    }
+                    sessionList(recentSessions)
 
                     if !olderSessions.isEmpty {
-                        DisclosureGroup("Older than 2 weeks (\(olderSessions.count))") {
-                            VStack(spacing: 8) {
-                                ForEach(olderSessions) { session in
-                                    NavigationLink {
-                                        WorkoutSessionDetailView(session: session, accent: accent, unit: unit)
-                                    } label: {
-                                        WorkoutSessionRow(session: session, accent: accent, unit: unit)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                            .padding(.top, 8)
+                        DisclosureGroup(isExpanded: $olderExpanded) {
+                            sessionList(olderSessions)
+                                .padding(.top, 8)
+                        } label: {
+                            Text("Older than 2 weeks (\(olderSessions.count))")
                         }
                         .font(.subheadline.weight(.semibold))
                         .padding(14)
@@ -72,10 +61,60 @@ struct WorkoutHistoryView: View {
         }
         .tint(.secondary)
         .onAppear {
-            if finished.isEmpty {
+            if finished.isEmpty,
+               UserDefaults.standard.object(forKey: WorkoutPageVisibility.historyExpandedKey) == nil {
                 isExpanded = true
             }
         }
+        .alert("Delete workout?", isPresented: Binding(
+            get: { pendingDeleteSession != nil },
+            set: { if !$0 { pendingDeleteSession = nil } }
+        )) {
+            Button("Delete", role: .destructive) {
+                if let session = pendingDeleteSession {
+                    deleteSession(session)
+                    pendingDeleteSession = nil
+                }
+            }
+            Button("Cancel", role: .cancel) {
+                pendingDeleteSession = nil
+            }
+        } message: {
+            Text("This workout and all logged sets will be permanently removed.")
+        }
+    }
+
+    @ViewBuilder
+    private func sessionList(_ sessions: [WorkoutSession]) -> some View {
+        List {
+            ForEach(sessions) { session in
+                NavigationLink {
+                    WorkoutSessionDetailView(session: session, accent: accent, unit: unit)
+                } label: {
+                    WorkoutSessionRow(session: session, accent: accent, unit: unit)
+                }
+                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        pendingDeleteSession = session
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .scrollDisabled(true)
+        .frame(height: CGFloat(sessions.count) * 72)
+    }
+
+    private func deleteSession(_ session: WorkoutSession) {
+        modelContext.delete(session)
+        try? modelContext.save()
     }
 }
 
@@ -125,6 +164,9 @@ struct WorkoutSessionDetailView: View {
     let unit: WeightUnit
 
     @Environment(AppTheme.self) private var theme
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @State private var showDeleteConfirm = false
 
     private var model: WorkoutSummaryModel {
         WorkoutSummaryModel(session: session)
@@ -161,7 +203,7 @@ struct WorkoutSessionDetailView: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
-                                Text("Top \(unit.formatNumber(exercise.topSetWeightKg)) × \(exercise.topSetReps)")
+                                Text("Top \(unit.format(exercise.topSetWeightKg)) × \(exercise.topSetReps)")
                                     .font(.caption.monospacedDigit())
                                     .foregroundStyle(accent)
                                 ForEach(exercise.sets) { set in
@@ -170,7 +212,7 @@ struct WorkoutSessionDetailView: View {
                                             .font(.caption2.monospacedDigit())
                                             .foregroundStyle(.secondary)
                                             .frame(width: 16, alignment: .trailing)
-                                        Text("\(unit.formatNumber(set.weightKg)) × \(set.reps)")
+                                        Text("\(unit.format(set.weightKg)) × \(set.reps)")
                                             .font(.caption.monospacedDigit())
                                         Text("RIR \(RIRPalette.display(set.rir))")
                                             .font(.caption2)
@@ -198,6 +240,23 @@ struct WorkoutSessionDetailView: View {
         .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle("Session")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .destructiveAction) {
+                Button("Delete", role: .destructive) {
+                    showDeleteConfirm = true
+                }
+            }
+        }
+        .alert("Delete workout?", isPresented: $showDeleteConfirm) {
+            Button("Delete", role: .destructive) {
+                modelContext.delete(session)
+                try? modelContext.save()
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This workout and all logged sets will be permanently removed.")
+        }
     }
 
     private func row(_ title: String, _ value: String) -> some View {

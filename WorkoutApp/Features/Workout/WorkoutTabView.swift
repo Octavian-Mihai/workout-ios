@@ -10,7 +10,7 @@ struct WorkoutTabView: View {
     @Environment(AppTourController.self) private var tour
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @State private var selectedDayID: UUID?
-    @State private var learnExpanded = false
+    @AppStorage(WorkoutPageVisibility.learnExpandedKey) private var learnExpanded = false
 
     private var accent: Color { theme.accent }
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
