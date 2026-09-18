@@ -68,8 +68,8 @@ private struct SessionExerciseReorderRow: View {
         if let image = UIImage(named: assetName) {
             Image(uiImage: image)
                 .resizable()
-                .scaledToFill()
-                .frame(width: 64, height: 48)
+                .scaledToFit()
+                .frame(maxHeight: 64)
                 .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .accessibilityHidden(true)
@@ -80,7 +80,7 @@ private struct SessionExerciseReorderRow: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(theme.accent.opacity(0.9))
             }
-            .frame(width: 64, height: 48)
+            .frame(width: 64, height: 64)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .accessibilityHidden(true)
         }

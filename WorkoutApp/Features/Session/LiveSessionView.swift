@@ -1127,8 +1127,8 @@ struct SessionExerciseCard: View {
             if let image = UIImage(named: thumbnailAssetName) {
                 Image(uiImage: image)
                     .resizable()
-                    .scaledToFill()
-                    .frame(width: thumbnailSize, height: thumbnailSize)
+                    .scaledToFit()
+                    .frame(maxHeight: thumbnailSize)
                     .background(Color.white)
             } else {
                 ZStack {
@@ -1137,7 +1137,7 @@ struct SessionExerciseCard: View {
                         .font(.title2.weight(.semibold))
                         .foregroundStyle(accent.opacity(0.9))
                 }
-                .frame(width: thumbnailSize, height: thumbnailSize)
+                .frame(width: thumbnailSize, height: thumbnailSize) 
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: thumbnailCornerRadius, style: .continuous))
