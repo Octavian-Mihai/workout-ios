@@ -60,6 +60,8 @@ struct WorkoutTabView: View {
                         .tourTarget(.workoutLearn)
                         .id(AppTourTargetID.workoutLearn)
 
+                        CustomExercisesSection()
+
                         WorkoutHistoryView(sessions: sessions, accent: accent, unit: unit)
                     }
                     .padding(16)

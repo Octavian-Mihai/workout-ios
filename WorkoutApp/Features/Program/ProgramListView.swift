@@ -7,6 +7,7 @@ enum WorkoutPageVisibility {
     static let historyExpandedKey = "workoutHistoryExpanded"
     static let historyOlderExpandedKey = "workoutHistoryOlderExpanded"
     static let learnExpandedKey = "workoutLearnExpanded"
+    static let customExercisesExpandedKey = "workoutCustomExercisesExpanded"
 }
 
 struct ProgramListView: View {

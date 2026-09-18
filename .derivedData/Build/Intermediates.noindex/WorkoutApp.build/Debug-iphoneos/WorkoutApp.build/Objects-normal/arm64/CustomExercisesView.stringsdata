@@ -1,0 +1,184 @@
+{
+  "source": "/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Features/Workout/CustomExercisesView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Delete custom exercise?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "No custom exercises yet. Add one from the exercise picker during a workout or while editing a program.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "Custom exercises",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 35
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 40
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 65
+        }
+      },
+      {
+        "comment": "",
+        "key": "\"%@\" will be removed from all programs and all logged sets for this exercise will be permanently deleted.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 70
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 86
+        }
+      },
+      {
+        "comment": "",
+        "key": "Custom exercises",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
+        "key": "Email all custom exercises",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 133
+        }
+      },
+      {
+        "comment": "",
+        "key": "Share all with developer",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "Send every custom exercise for catalog review.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 111
+        }
+      },
+      {
+        "comment": "",
+        "key": "Share %@",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 193
+        }
+      },
+      {
+        "comment": "",
+        "key": "Primary: %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "Secondary: %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 153
+        }
+      },
+      {
+        "comment": "",
+        "key": "Email developer",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 171
+        }
+      },
+      {
+        "comment": "",
+        "key": "Share",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 177
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 183
+        }
+      },
+      {
+        "comment": "",
+        "key": "Share exercise",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 222
+        }
+      },
+      {
+        "comment": "",
+        "key": "Mail isn’t available on this device. Share the details another way.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 207
+        }
+      },
+      {
+        "comment": "",
+        "key": "Share exercise details",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 214
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 226
+        }
+      }
+    ]
+  },
+  "version": 1
+}
