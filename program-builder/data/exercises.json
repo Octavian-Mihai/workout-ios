@@ -73,7 +73,7 @@
     "secondary": [],
     "equipment": "barbell",
     "image": "smith-machine-squat.jpg",
-    "cues": "Brace and sit between the hips. Keep mid-foot pressure; don’t collapse the chest or ride the bar forward."
+    "cues": "Brace and sit between the hips. Keep mid-foot pressure; don\u2019t collapse the chest or ride the bar forward."
   },
   {
     "id": "belt-squat",
@@ -86,7 +86,7 @@
     "secondary": [],
     "equipment": "machine",
     "image": "belt-squat.jpg",
-    "cues": "Load the hips, not the spine. Sit down and stand tall; don’t let the torso fold."
+    "cues": "Load the hips, not the spine. Sit down and stand tall; don\u2019t let the torso fold."
   },
   {
     "id": "sissy-squat",
@@ -98,7 +98,7 @@
     "secondary": [],
     "equipment": "dumbbell",
     "image": "sissy-squat.png",
-    "cues": "Knees travel forward as the hips stay relatively high. Control the descent; don’t dump into the low back."
+    "cues": "Knees travel forward as the hips stay relatively high. Control the descent; don\u2019t dump into the low back."
   },
   {
     "id": "reverse-squat",
@@ -113,7 +113,7 @@
     ],
     "equipment": "machine",
     "image": "reverse-squat.png",
-    "cues": "Drive the knees up against the load without dumping the pelvis. Control the return; don’t swing."
+    "cues": "Drive the knees up against the load without dumping the pelvis. Control the return; don\u2019t swing."
   },
   {
     "id": "landmine-squat",
@@ -146,7 +146,7 @@
     ],
     "equipment": "barbell",
     "pattern": "Squat",
-    "image": null,
+    "image": "box-squat.jpg",
     "cues": "Sit back to the box under control, pause briefly, then drive up without rocking forward."
   },
   {
@@ -163,7 +163,7 @@
     ],
     "equipment": "dumbbell",
     "pattern": "Squat",
-    "image": null,
+    "image": "goblet-squat.jpg",
     "cues": "Hold the weight at chest height. Sit between the hips and keep the elbows inside the knees."
   },
   {
@@ -181,7 +181,7 @@
     ],
     "equipment": "barbell",
     "pattern": "Squat",
-    "image": null,
+    "image": "safety-bar-squat.jpg",
     "cues": "Set the yoke on your back and brace. Sit between the hips and drive up without folding forward."
   },
   {
@@ -248,7 +248,7 @@
     ],
     "equipment": "dumbbell",
     "image": "step-up.jpg",
-    "cues": "Drive through the whole foot on the box. Stand tall; don’t push off the trailing leg. Use a big box."
+    "cues": "Drive through the whole foot on the box. Stand tall; don\u2019t push off the trailing leg. Use a big box."
   },
   {
     "id": "zercher-step-up",
@@ -264,7 +264,7 @@
     ],
     "equipment": "barbell",
     "image": "zercher-step-up.jpg",
-    "cues": "Bar in the elbow crook, drive through the whole foot on the box. Stand tall; don’t push off the trailing leg."
+    "cues": "Bar in the elbow crook, drive through the whole foot on the box. Stand tall; don\u2019t push off the trailing leg."
   },
   {
     "id": "walking-lunge",
@@ -312,7 +312,7 @@
     ],
     "equipment": "dumbbell",
     "image": "reverse-lunge.jpg",
-    "cues": "Step back far enough to load the front glute. Front knee tracks the toes; don’t crash the trail knee."
+    "cues": "Step back far enough to load the front glute. Front knee tracks the toes; don\u2019t crash the trail knee."
   },
   {
     "id": "zercher-reverse-lunge",
@@ -344,7 +344,7 @@
     ],
     "equipment": "dumbbell",
     "image": "forward-lunge.jpg",
-    "cues": "Step forward and drop the trail knee under the hip. Front knee tracks; don’t slam into the bottom."
+    "cues": "Step forward and drop the trail knee under the hip. Front knee tracks; don\u2019t slam into the bottom."
   },
   {
     "id": "cossack-squat",
@@ -361,7 +361,7 @@
     ],
     "equipment": "dumbbell",
     "pattern": "Squat",
-    "image": null,
+    "image": "cossack-squat.png",
     "cues": "Shift side to side with one leg extended. Keep the working heel down and chest as tall as you can."
   },
   {
@@ -378,7 +378,7 @@
     ],
     "equipment": "bodyweight",
     "pattern": "Lunge / Split",
-    "image": null,
+    "image": "pistol-squat.jpeg",
     "cues": "Balance on one leg, extend the other forward. Sit as deep as you can control and stand without collapsing."
   },
   {
@@ -396,7 +396,7 @@
     ],
     "equipment": "bodyweight",
     "image": "box-jump.png",
-    "cues": "Load the hips, then jump onto the box and land softly with the whole foot. Stand tall to finish; don’t rebound off a bouncing landing."
+    "cues": "Load the hips, then jump onto the box and land softly with the whole foot. Stand tall to finish; don\u2019t rebound off a bouncing landing."
   },
   {
     "id": "leg-extension",
@@ -446,7 +446,7 @@
     "secondary": [],
     "equipment": "bodyweight",
     "image": "nordic-curl.jpg",
-    "cues": "Brace and lower as far as you can control. Catch with the hamstrings; don’t fold at the hips."
+    "cues": "Brace and lower as far as you can control. Catch with the hamstrings; don\u2019t fold at the hips."
   },
   {
     "id": "glute-ham-raise",
@@ -461,7 +461,7 @@
     ],
     "equipment": "machine",
     "image": "glute-ham-raise.jpg",
-    "cues": "Hips stay extended as you lower. Pull back with the hamstrings; don’t pike or fold at the waist."
+    "cues": "Hips stay extended as you lower. Pull back with the hamstrings; don\u2019t pike or fold at the waist."
   },
   {
     "id": "romanian-deadlift",
@@ -531,7 +531,7 @@
     ],
     "equipment": "barbell",
     "pattern": "Hinge",
-    "image": null,
+    "image": "sumo-deadlift.png",
     "cues": "Wide stance, toes turned out. Push the knees out, wedge in, and keep the bar over mid-foot."
   },
   {
@@ -550,7 +550,7 @@
     ],
     "equipment": "barbell",
     "pattern": "Hinge",
-    "image": null,
+    "image": "trap-bar-deadlift.jpg",
     "cues": "Stand inside the handles, hinge and grip. Push the floor away and stand tall without rounding the back."
   },
   {
@@ -568,7 +568,7 @@
     ],
     "equipment": "barbell",
     "pattern": "Hinge",
-    "image": null,
+    "image": "rack-pull.jpg",
     "cues": "Set the bar at knee height or above. Brace, then drive the hips forward to lockout without hyperextending."
   },
   {
@@ -587,7 +587,7 @@
     ],
     "equipment": "barbell",
     "pattern": "Hinge",
-    "image": null,
+    "image": "deficit-deadlift.jpg",
     "cues": "Stand on a plate or platform. Wedge in from the deeper start, brace, and pull with the bar over mid-foot."
   },
   {
@@ -603,7 +603,7 @@
     ],
     "equipment": "barbell",
     "image": "good-morning.jpg",
-    "cues": "Brace, then hinge until the hamstrings stop you. Bar stays over mid-foot; don’t round the back."
+    "cues": "Brace, then hinge until the hamstrings stop you. Bar stays over mid-foot; don\u2019t round the back."
   },
   {
     "id": "seated-good-morning",
@@ -619,7 +619,7 @@
     ],
     "equipment": "barbell",
     "image": "seated-good-morning.png",
-    "cues": "Sit tall, then hinge and pull with the posterior chain. Brace; don’t round through the low back to finish."
+    "cues": "Sit tall, then hinge and pull with the posterior chain. Brace; don\u2019t round through the low back to finish."
   },
   {
     "id": "jefferson-curl",
@@ -635,7 +635,7 @@
     ],
     "equipment": "barbell",
     "image": "jefferson-curl.jpg",
-    "cues": "Hold the bar in the hands and round the spine slowly from the neck down. Reverse with control; don’t bounce out of the bottom."
+    "cues": "Hold the bar in the hands and round the spine slowly from the neck down. Reverse with control; don\u2019t bounce out of the bottom."
   },
   {
     "id": "zercher-jefferson-curl",
@@ -651,7 +651,7 @@
     ],
     "equipment": "barbell",
     "image": "zercher-jefferson-curl.jpg",
-    "cues": "Bar in the elbow crook. Round the spine slowly vertebra by vertebra, then reverse with control; don’t rush the flexion."
+    "cues": "Bar in the elbow crook. Round the spine slowly vertebra by vertebra, then reverse with control; don\u2019t rush the flexion."
   },
   {
     "id": "back-extension",
@@ -666,7 +666,7 @@
     ],
     "equipment": "machine",
     "image": "back-extension.jpg",
-    "cues": "Hinge at the hips, not the spine. Rise until the body is in line; don’t hyperextend the low back."
+    "cues": "Hinge at the hips, not the spine. Rise until the body is in line; don\u2019t hyperextend the low back."
   },
   {
     "id": "reverse-hyper",
@@ -681,7 +681,7 @@
     ],
     "equipment": "machine",
     "image": "reverse-hyper.jpg",
-    "cues": "Hips on the pad, swing the legs with the glutes. Stop in line with the torso; don’t hyperextend the low back."
+    "cues": "Hips on the pad, swing the legs with the glutes. Stop in line with the torso; don\u2019t hyperextend the low back."
   },
   {
     "id": "snatch",
@@ -700,7 +700,7 @@
     ],
     "equipment": "barbell",
     "image": "snatch.png",
-    "cues": "Keep the bar close, then explode and punch under to lockout. Catch in a full squat with arms locked; don’t press it out."
+    "cues": "Keep the bar close, then explode and punch under to lockout. Catch in a full squat with arms locked; don\u2019t press it out."
   },
   {
     "id": "power-snatch",
@@ -734,8 +734,8 @@
       "Lats"
     ],
     "equipment": "barbell",
-    "image": null,
-    "cues": "Pull like a snatch without going overhead. Bar close, explode through the hips, and finish tall; don’t lean back and yank."
+    "image": "snatch-pull.jpg",
+    "cues": "Pull like a snatch without going overhead. Bar close, explode through the hips, and finish tall; don\u2019t lean back and yank."
   },
   {
     "id": "clean",
@@ -753,7 +753,7 @@
     ],
     "equipment": "barbell",
     "image": "clean.jpg",
-    "cues": "Bar close off the floor, then explode and pull under to the front rack. Catch with elbows high; don’t crash the bar onto the shoulders."
+    "cues": "Bar close off the floor, then explode and pull under to the front rack. Catch with elbows high; don\u2019t crash the bar onto the shoulders."
   },
   {
     "id": "clean-and-jerk",
@@ -772,7 +772,7 @@
     ],
     "equipment": "barbell",
     "image": "clean-and-jerk.jpg",
-    "cues": "Clean to a solid front rack, then dip and drive the bar overhead. Punch under the jerk and lock out; don’t press it out from the shoulders."
+    "cues": "Clean to a solid front rack, then dip and drive the bar overhead. Punch under the jerk and lock out; don\u2019t press it out from the shoulders."
   },
   {
     "id": "kettlebell-swing",
@@ -791,7 +791,7 @@
     "equipment": "kettlebell",
     "pattern": "Hinge",
     "image": "kettlebell-swing.jpg",
-    "cues": "Hinge hard, then snap the hips to float the bell to chest height. Keep the arms loose; don’t squat the swing or lift with the shoulders."
+    "cues": "Hinge hard, then snap the hips to float the bell to chest height. Keep the arms loose; don\u2019t squat the swing or lift with the shoulders."
   },
   {
     "id": "kettlebell-snatch",
@@ -829,7 +829,7 @@
     ],
     "equipment": "kettlebell",
     "image": "kettlebell-clean.jpg",
-    "cues": "Hinge and snap the hips, then guide the bell into a tight rack. Elbow close, wrist stacked; don’t let the bell crash onto the forearm."
+    "cues": "Hinge and snap the hips, then guide the bell into a tight rack. Elbow close, wrist stacked; don\u2019t let the bell crash onto the forearm."
   },
   {
     "id": "kettlebell-clean-and-jerk",
@@ -849,7 +849,7 @@
     ],
     "equipment": "kettlebell",
     "image": "kettlebell-clean-and-jerk.jpg",
-    "cues": "Clean to a solid rack, then dip and drive the bell overhead. Punch under to lockout; don’t press it out from a stalled rack."
+    "cues": "Clean to a solid rack, then dip and drive the bell overhead. Punch under to lockout; don\u2019t press it out from a stalled rack."
   },
   {
     "id": "kettlebell-high-pull",
@@ -866,8 +866,8 @@
       "Forearms & Grip"
     ],
     "equipment": "kettlebell",
-    "image": null,
-    "cues": "Hinge and explode the hips, then pull the bell to the chest with high elbows. Keep it close; don’t shrug it out in front of you."
+    "image": "kettlebell-high-pull.jpg",
+    "cues": "Hinge and explode the hips, then pull the bell to the chest with high elbows. Keep it close; don\u2019t shrug it out in front of you."
   },
   {
     "id": "kettlebell-push-press",
@@ -884,8 +884,8 @@
       "Lateral Delts"
     ],
     "equipment": "kettlebell",
-    "image": null,
-    "cues": "Dip the knees slightly, then drive the bell overhead and finish with the arm. Use the legs to start the press; don’t turn it into a strict press."
+    "image": "kettlebell-push-press.jpg",
+    "cues": "Dip the knees slightly, then drive the bell overhead and finish with the arm. Use the legs to start the press; don\u2019t turn it into a strict press."
   },
   {
     "id": "hip-thrust",
@@ -928,7 +928,7 @@
     ],
     "equipment": "machine",
     "image": "glute-kickback.jpg",
-    "cues": "Square the hips and kick without arching the low back. Squeeze at the top; don’t swing."
+    "cues": "Square the hips and kick without arching the low back. Squeeze at the top; don\u2019t swing."
   },
   {
     "id": "machine-hip-abduction",
@@ -940,7 +940,7 @@
     "secondary": [],
     "equipment": "machine",
     "image": "machine-hip-abduction.jpg",
-    "cues": "Sit tall, then drive the knees out. Pause at the end range; don’t lean to cheat."
+    "cues": "Sit tall, then drive the knees out. Pause at the end range; don\u2019t lean to cheat."
   },
   {
     "id": "machine-hip-adduction",
@@ -952,7 +952,7 @@
     "secondary": [],
     "equipment": "machine",
     "image": "machine-hip-adduction.png",
-    "cues": "Sit tall and squeeze the thighs together. Control the return; don’t slam the stack."
+    "cues": "Sit tall and squeeze the thighs together. Control the return; don\u2019t slam the stack."
   },
   {
     "id": "calf-raise",
@@ -976,7 +976,7 @@
     "secondary": [],
     "equipment": "machine",
     "image": "tibialis-raise.jpg",
-    "cues": "Heels planted, lift the toes as high as you can. Pause at the top; don’t rock the torso."
+    "cues": "Heels planted, lift the toes as high as you can. Pause at the top; don\u2019t rock the torso."
   },
   {
     "id": "barbell-bench-press",
@@ -1006,7 +1006,7 @@
     ],
     "equipment": "barbell",
     "image": "incline-barbell-bench-press.jpeg",
-    "cues": "Set the scaps and keep a slight arch. Lower to the upper chest with control; don’t bounce or flare the elbows out wide."
+    "cues": "Set the scaps and keep a slight arch. Lower to the upper chest with control; don\u2019t bounce or flare the elbows out wide."
   },
   {
     "id": "close-grip-bench-press",
@@ -1037,7 +1037,7 @@
     ],
     "equipment": "barbell",
     "pattern": "Triceps",
-    "image": null,
+    "image": "jm-press.jpg",
     "cues": "Elbows forward, bar travels down toward the upper chest. Press back without flaring the elbows wide."
   },
   {
@@ -1053,7 +1053,7 @@
     ],
     "equipment": "dumbbell",
     "image": "incline-dumbbell-press.jpg",
-    "cues": "30–45° bench. Lower until the elbows are in line with the torso, then press without flaring wildly."
+    "cues": "30\u201345\u00b0 bench. Lower until the elbows are in line with the torso, then press without flaring wildly."
   },
   {
     "id": "dumbbell-bench-press",
@@ -1098,7 +1098,7 @@
     ],
     "equipment": "machine",
     "image": "dips.jpg",
-    "cues": "Shoulders down. Lean forward for more chest; stay more upright for triceps. Don’t dump into the joints."
+    "cues": "Shoulders down. Lean forward for more chest; stay more upright for triceps. Don\u2019t dump into the joints."
   },
   {
     "id": "push-up",
@@ -1114,7 +1114,7 @@
     ],
     "equipment": "machine",
     "image": "push-up.png",
-    "cues": "Body in one line. Elbows ~45° from the torso. Chest to near the floor, then press the floor away."
+    "cues": "Body in one line. Elbows ~45\u00b0 from the torso. Chest to near the floor, then press the floor away."
   },
   {
     "id": "overhead-press",
@@ -1146,7 +1146,7 @@
     ],
     "equipment": "barbell",
     "image": "landmine-press.jpg",
-    "cues": "Brace and press the bar up and slightly forward on an arc. Don’t over-arch the low back or let the shoulder dump forward."
+    "cues": "Brace and press the bar up and slightly forward on an arc. Don\u2019t over-arch the low back or let the shoulder dump forward."
   },
   {
     "id": "dumbbell-shoulder-press",
@@ -1161,7 +1161,7 @@
     ],
     "equipment": "dumbbell",
     "image": "dumbbell-shoulder-press.jpg",
-    "cues": "Press slightly in front of the head. Don’t over-arch the low back."
+    "cues": "Press slightly in front of the head. Don\u2019t over-arch the low back."
   },
   {
     "id": "machine-shoulder-press",
@@ -1175,7 +1175,7 @@
       "Triceps"
     ],
     "equipment": "machine",
-    "image": null,
+    "image": "machine-shoulder-press.jpg",
     "cues": "Ribs down, glutes on. Press overhead without over-arching the low back."
   },
   {
@@ -1204,7 +1204,7 @@
     ],
     "equipment": "functionalTrainer",
     "image": "cable-lateral-raise.jpg",
-    "cues": "Lead with the elbows and keep tension through the whole arc. Stop around shoulder height; don’t swing."
+    "cues": "Lead with the elbows and keep tension through the whole arc. Stop around shoulder height; don\u2019t swing."
   },
   {
     "id": "front-raise",
@@ -1216,7 +1216,7 @@
     "secondary": [],
     "equipment": "dumbbell",
     "image": "front-raise.jpg",
-    "cues": "Raise to eye height with a slight elbow bend. Don’t use the low back to heave the weight up."
+    "cues": "Raise to eye height with a slight elbow bend. Don\u2019t use the low back to heave the weight up."
   },
   {
     "id": "cable-fly",
@@ -1244,7 +1244,7 @@
     ],
     "equipment": "dumbbell",
     "image": "dumbbell-fly.jpg",
-    "cues": "Slight bend in the elbows and a wide arc. Stop when the chest is stretched; don’t turn it into a press."
+    "cues": "Slight bend in the elbows and a wide arc. Stop when the chest is stretched; don\u2019t turn it into a press."
   },
   {
     "id": "pec-deck",
@@ -1282,7 +1282,7 @@
     "secondary": [],
     "equipment": "functionalTrainer",
     "image": "overhead-cable-triceps-extension.png",
-    "cues": "Elbows stay high and close. Extend fully, then control the stretch; don’t flare."
+    "cues": "Elbows stay high and close. Extend fully, then control the stretch; don\u2019t flare."
   },
   {
     "id": "skull-crusher",
@@ -1311,7 +1311,7 @@
     ],
     "equipment": "barbell",
     "image": "barbell-row.jpg",
-    "cues": "Hinge, brace, and row to the lower ribs. Don’t turn it into a shrug or a deadlift."
+    "cues": "Hinge, brace, and row to the lower ribs. Don\u2019t turn it into a shrug or a deadlift."
   },
   {
     "id": "landmine-row",
@@ -1328,7 +1328,7 @@
     ],
     "equipment": "barbell",
     "image": "landmine-row.jpg",
-    "cues": "Hinge, brace, and row the bar to the hip. Don’t yank with the torso or turn it into a shrug."
+    "cues": "Hinge, brace, and row the bar to the hip. Don\u2019t yank with the torso or turn it into a shrug."
   },
   {
     "id": "chest-supported-dumbbell-row",
@@ -1344,7 +1344,7 @@
     ],
     "equipment": "dumbbell",
     "image": "chest-supported-dumbbell-row.png",
-    "cues": "Chest stays on the pad. Row the elbows back and squeeze; don’t yank from the neck."
+    "cues": "Chest stays on the pad. Row the elbows back and squeeze; don\u2019t yank from the neck."
   },
   {
     "id": "chest-supported-t-bar-row",
@@ -1360,7 +1360,7 @@
     ],
     "equipment": "machine",
     "image": "chest-supported-t-bar-row.jpg",
-    "cues": "Drive the chest into the pad. Pull toward the lower ribs and lower under control; don’t bounce."
+    "cues": "Drive the chest into the pad. Pull toward the lower ribs and lower under control; don\u2019t bounce."
   },
   {
     "id": "one-arm-dumbbell-row",
@@ -1376,7 +1376,7 @@
     ],
     "equipment": "dumbbell",
     "image": "one-arm-dumbbell-row.jpg",
-    "cues": "Hinge, brace, and row the elbow to the hip. Don’t rotate the torso to cheat the last inches."
+    "cues": "Hinge, brace, and row the elbow to the hip. Don\u2019t rotate the torso to cheat the last inches."
   },
   {
     "id": "one-arm-cable-row",
@@ -1438,7 +1438,7 @@
     ],
     "equipment": "functionalTrainer",
     "image": "close-grip-lat-pulldown.jpeg",
-    "cues": "Set the scaps, then pull the handle to the upper chest. Elbows stay in; don’t lean way back."
+    "cues": "Set the scaps, then pull the handle to the upper chest. Elbows stay in; don\u2019t lean way back."
   },
   {
     "id": "wide-grip-lat-pulldown",
@@ -1468,7 +1468,7 @@
     ],
     "equipment": "machine",
     "image": "pull-up.jpg",
-    "cues": "Dead hang to chin over the bar. Drive elbows down; avoid kipping unless that’s the point."
+    "cues": "Dead hang to chin over the bar. Drive elbows down; avoid kipping unless that\u2019s the point."
   },
   {
     "id": "chin-up",
@@ -1498,8 +1498,8 @@
     ],
     "equipment": "functionalTrainer",
     "pattern": "Accessory",
-    "image": null,
-    "cues": "Arms stay slightly bent. Sweep the handle down and in an arc over the hips; don’t turn it into a triceps pushdown."
+    "image": "cable-pullover.jpg",
+    "cues": "Arms stay slightly bent. Sweep the handle down and in an arc over the hips; don\u2019t turn it into a triceps pushdown."
   },
   {
     "id": "dumbbell-pullover",
@@ -1514,7 +1514,7 @@
     ],
     "equipment": "dumbbell",
     "pattern": "Accessory",
-    "image": null,
+    "image": "dumbbell-pullover.jpg",
     "cues": "Upper back supported, weight held with soft elbows. Lower behind the head for a stretch, then pull back over the chest."
   },
   {
@@ -1544,7 +1544,7 @@
     ],
     "equipment": "dumbbell",
     "image": "rear-delt-fly.jpg",
-    "cues": "Hinge, soft elbows, and sweep the arms out. Stop at torso height; don’t yank with the traps."
+    "cues": "Hinge, soft elbows, and sweep the arms out. Stop at torso height; don\u2019t yank with the traps."
   },
   {
     "id": "cable-rear-delt-fly",
@@ -1559,7 +1559,7 @@
     ],
     "equipment": "functionalTrainer",
     "pattern": "Accessory",
-    "image": null,
+    "image": "cable-rear-delt-fly.jpg",
     "cues": "Hinge or stand tall with soft elbows. Sweep the handles out to the sides and squeeze the rear delts."
   },
   {
@@ -1590,7 +1590,7 @@
     "equipment": "barbell",
     "pattern": "Accessory",
     "image": "upright-row.jpg",
-    "cues": "Lead with the elbows, bar close to the body. Stop around chest height; don’t yank the bar into the neck."
+    "cues": "Lead with the elbows, bar close to the body. Stop around chest height; don\u2019t yank the bar into the neck."
   },
   {
     "id": "dumbbell-shrug",
@@ -1602,7 +1602,7 @@
     "secondary": [],
     "equipment": "dumbbell",
     "image": "dumbbell-shrug.jpg",
-    "cues": "Stand tall and shrug straight up. Pause at the top; don’t roll the shoulders."
+    "cues": "Stand tall and shrug straight up. Pause at the top; don\u2019t roll the shoulders."
   },
   {
     "id": "barbell-shrug",
@@ -1614,7 +1614,7 @@
     "secondary": [],
     "equipment": "barbell",
     "image": "barbell-shrug.png",
-    "cues": "Brace, then shrug the bar straight up. Pause and lower; don’t roll or heave."
+    "cues": "Brace, then shrug the bar straight up. Pause and lower; don\u2019t roll or heave."
   },
   {
     "id": "barbell-curl",
@@ -1628,7 +1628,7 @@
     ],
     "equipment": "barbell",
     "image": "barbell-curl.jpg",
-    "cues": "Elbows close. No swing. Squeeze at the top and lower for 2–3 seconds."
+    "cues": "Elbows close. No swing. Squeeze at the top and lower for 2\u20133 seconds."
   },
   {
     "id": "dumbbell-curl",
@@ -1667,7 +1667,7 @@
     "secondary": [],
     "equipment": "dumbbell",
     "image": "preacher-curl.jpg",
-    "cues": "Upper arms pinned to the pad. Curl through a full range and lower slowly; don’t hyperextend the elbows."
+    "cues": "Upper arms pinned to the pad. Curl through a full range and lower slowly; don\u2019t hyperextend the elbows."
   },
   {
     "id": "incline-dumbbell-curl",
@@ -1691,7 +1691,7 @@
     "secondary": [],
     "equipment": "functionalTrainer",
     "image": "cable-curl.jpg",
-    "cues": "Elbows close, constant tension. Squeeze at the top and don’t lean back to finish."
+    "cues": "Elbows close, constant tension. Squeeze at the top and don\u2019t lean back to finish."
   },
   {
     "id": "concentration-curl",
@@ -1741,7 +1741,7 @@
     "equipment": "functionalTrainer",
     "pattern": "Accessory",
     "image": "wrist-curl.jpg",
-    "cues": "Forearms supported, wrists hanging. Curl through a full range and don’t let the elbows take over."
+    "cues": "Forearms supported, wrists hanging. Curl through a full range and don\u2019t let the elbows take over."
   },
   {
     "id": "reverse-wrist-curl",
@@ -1764,7 +1764,7 @@
       "Forearms & Grip"
     ],
     "secondary": [],
-    "equipment": "bodyweight",
+    "equipment": "machine",
     "pattern": "Accessory",
     "image": "hand-gripper.jpg",
     "cues": "Squeeze until the handles touch, then release under control. Keep the wrist neutral and elbow still."
@@ -1782,7 +1782,7 @@
     ],
     "equipment": "bodyweight",
     "image": "plank.jpg",
-    "cues": "Ribs down, glutes on, neck long. Don’t sag or pike."
+    "cues": "Ribs down, glutes on, neck long. Don\u2019t sag or pike."
   },
   {
     "id": "zercher-carry",
@@ -1814,7 +1814,7 @@
     ],
     "equipment": "dumbbell",
     "image": "farmers-walk.jpg",
-    "cues": "Brace hard and walk tall with the weights close to your sides. Don’t shrug or let the torso lean; short, quick steps."
+    "cues": "Brace hard and walk tall with the weights close to your sides. Don\u2019t shrug or let the torso lean; short, quick steps."
   },
   {
     "id": "hanging-leg-raise",
@@ -1867,7 +1867,7 @@
     "secondary": [],
     "equipment": "functionalTrainer",
     "image": "cable-woodchop.jpg",
-    "cues": "Brace and rotate through the torso, not the arms. Control both directions; don’t twist from the knees."
+    "cues": "Brace and rotate through the torso, not the arms. Control both directions; don\u2019t twist from the knees."
   },
   {
     "id": "landmine-rotation",
@@ -1879,7 +1879,7 @@
     "secondary": [],
     "equipment": "barbell",
     "image": "landmine-rotation.jpg",
-    "cues": "Brace and rotate the bar through the torso, not the arms. Control both directions; don’t twist from the knees."
+    "cues": "Brace and rotate the bar through the torso, not the arms. Control both directions; don\u2019t twist from the knees."
   },
   {
     "id": "ab-wheel",
