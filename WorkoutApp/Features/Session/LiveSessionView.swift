@@ -125,12 +125,12 @@ final class SessionController: ObservableObject {
         program: Program?,
         programDay: ProgramDay?,
         defaultRest: Int = 90,
-        restTimer: RestTimerService = .shared
+        restTimer: RestTimerService? = nil
     ) {
         self.program = program
         self.programDay = programDay
         self.isEmpty = programDay == nil
-        self.restTimer = restTimer
+        self.restTimer = restTimer ?? RestTimerService.shared
         self.restDuration = defaultRest
         self.restRemaining = defaultRest
         self.startedAt = Date()
@@ -158,11 +158,11 @@ final class SessionController: ObservableObject {
         }
     }
 
-    init(from session: WorkoutSession, defaultRest: Int = 90, restTimer: RestTimerService = .shared) {
+    init(from session: WorkoutSession, defaultRest: Int = 90, restTimer: RestTimerService? = nil) {
         self.program = nil
         self.programDay = nil
         self.isEmpty = true
-        self.restTimer = restTimer
+        self.restTimer = restTimer ?? RestTimerService.shared
         self.restDuration = defaultRest
         self.restRemaining = defaultRest
         self.startedAt = Date()
