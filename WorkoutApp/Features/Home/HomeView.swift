@@ -13,31 +13,8 @@ struct HomeView: View {
     @Environment(AppTourController.self) private var tour
     @State private var showTrends = false
 
-    private var accent: Color {
-        theme.accent
-    }
-
     private var nextDay: ProgramDay? {
         NextWorkoutResolver.nextDay(activeProgram: programs.first(where: \.isActive), sessions: sessions)
-    }
-
-    private var allSets: [SetLog] {
-        sessions.flatMap(\.sets)
-    }
-
-    private var stressCardio: [CardioWorkout] {
-        showRunningActivity
-            ? health.cardioWorkouts
-            : health.cardioWorkouts.filter { $0.activityType != .running }
-    }
-
-    private var todayStress: StressEstimate {
-        StressCalculator.todayEstimate(
-            sets: allSets,
-            cardioWorkouts: stressCardio,
-            restingHeartRate: health.restingHeartRate,
-            maxHeartRate: health.maxHeartRate
-        )
     }
 
     var body: some View {
@@ -56,11 +33,9 @@ struct HomeView: View {
                         .id(AppTourTargetID.homeYearGrid)
 
                         if showStressAnalysis {
-                            TodayStressCard(estimate: todayStress, accent: accent, compact: true)
+                            MuscleFreshnessCompactCard(sessions: sessions)
                                 .tourTarget(.homeTodayStress)
                                 .id(AppTourTargetID.homeTodayStress)
-
-                            MuscleFreshnessCompactCard(sessions: sessions)
                         }
 
                         VStack(alignment: .leading, spacing: 16) {
@@ -81,28 +56,38 @@ struct HomeView: View {
                                 .opaqueCard()
                             }
 
-                            Button {
-                                if let last = sessions.first(where: { $0.endDate != nil }) {
-                                    sessionStore.start(from: last)
+                            HStack(spacing: 10) {
+                                Button {
+                                    if let last = sessions.first(where: { $0.endDate != nil }) {
+                                        sessionStore.start(from: last)
+                                    }
+                                } label: {
+                                    Label("Repeat last workout", systemImage: "arrow.counterclockwise")
+                                        .font(.subheadline.weight(.semibold))
+                                        .multilineTextAlignment(.center)
+                                        .lineLimit(2)
+                                        .minimumScaleFactor(0.8)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 12)
                                 }
-                            } label: {
-                                Label("Repeat last workout", systemImage: "arrow.counterclockwise")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 14)
-                            }
-                            .buttonStyle(.bordered)
-                            .disabled(sessions.first(where: { $0.endDate != nil }) == nil)
+                                .buttonStyle(.bordered)
+                                .disabled(sessions.first(where: { $0.endDate != nil }) == nil)
+                                .frame(maxWidth: .infinity)
 
-                            Button {
-                                sessionStore.start(program: nil, programDay: nil)
-                            } label: {
-                                Label("Start empty workout", systemImage: "plus.circle.fill")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 14)
+                                Button {
+                                    sessionStore.start(program: nil, programDay: nil)
+                                } label: {
+                                    Label("Start empty workout", systemImage: "plus.circle.fill")
+                                        .font(.subheadline.weight(.semibold))
+                                        .multilineTextAlignment(.center)
+                                        .lineLimit(2)
+                                        .minimumScaleFactor(0.8)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 12)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .frame(maxWidth: .infinity)
                             }
-                            .buttonStyle(.borderedProminent)
                         }
                         .tourTarget(.homeStartWorkout)
                         .id(AppTourTargetID.homeStartWorkout)

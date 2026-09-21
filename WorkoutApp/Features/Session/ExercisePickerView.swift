@@ -425,7 +425,7 @@ private struct ExercisePickerRow: View {
     }
 }
 
-private struct FilterChip: View {
+struct FilterChip: View {
     let title: String
     let selected: Bool
     var action: () -> Void
@@ -438,7 +438,7 @@ private struct FilterChip: View {
     }
 }
 
-private struct FilterChipLabel: View {
+struct FilterChipLabel: View {
     let title: String
     let selected: Bool
     @Environment(AppTheme.self) private var theme

@@ -24,6 +24,18 @@ enum MuscleGroup: String, CaseIterable, Identifiable, Codable {
 
     var id: String { rawValue }
 
+    var compactName: String {
+        switch self {
+        case .anteriorDelts: return "Ant. Delts"
+        case .lateralDelts: return "Lat. Delts"
+        case .posteriorDelts: return "Post. Delts"
+        case .coreAndAbs: return "Core"
+        case .forearmsAndGrip: return "Forearms"
+        case .hipFlexors: return "Hip Flex."
+        default: return rawValue
+        }
+    }
+
     var region: String {
         switch self {
         case .chest, .lats, .rhomboids, .traps, .anteriorDelts, .lateralDelts, .posteriorDelts:

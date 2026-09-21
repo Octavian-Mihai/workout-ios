@@ -65,7 +65,7 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
     var title: String {
         switch self {
         case .homeYearGrid: return "Year grid"
-        case .homeTodayStress: return "Today’s stress"
+        case .homeTodayStress: return "Muscle freshness"
         case .homeStartWorkout: return "Start a session"
         case .workoutPrograms: return "Programs"
         case .workoutLearn: return "Learn"
@@ -81,13 +81,13 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         case .homeYearGrid:
             return "Lifting days light up here — and runs, if running activity is on. Tap the grid for longer trends."
         case .homeTodayStress:
-            return "A quick read on how hard today looks from lifting and cardio. Info has the full breakdown. Turn stress off globally in Settings → Stress if you prefer."
+            return "Per-muscle recovery from recent training. Tap for the full list, or edit which muscles show here. Turn this off in Settings → Stress if you prefer."
         case .homeStartWorkout:
             return "If a program is active, start the next day here. Otherwise use Start empty workout. In a session, log weight, reps, and RIR — barbell lifts show a plate calculator. When you finish, share a summary card as a PNG."
         case .workoutPrograms:
             return "Create from a starter template, import a plan, or build your own. Mark one active so Home knows what comes next. Programs remember whether they’re expanded or collapsed."
         case .workoutLearn:
-            return "Using the app and movement notes — reference material you can open anytime, separate from this tour."
+            return "The exercise catalog and movement notes — reference material you can open anytime, separate from this tour."
         case .workoutLibrary:
             return "Custom exercises you added live here — share them to the developer or delete them. History lists finished workouts with unit labels; swipe or tap Delete to remove a session."
         case .infoAnalytics:

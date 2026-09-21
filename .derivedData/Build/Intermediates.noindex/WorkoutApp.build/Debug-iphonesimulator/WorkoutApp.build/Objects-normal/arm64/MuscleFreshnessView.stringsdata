@@ -28,18 +28,82 @@
       },
       {
         "comment": "",
+        "key": "Edit muscles",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 174
+        }
+      },
+      {
+        "comment": "",
+        "key": "Muscle freshness details",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 184
+        }
+      },
+      {
+        "comment": "",
         "key": "Muscle freshness",
         "location": {
           "startingColumn": 26,
-          "startingLine": 110
+          "startingLine": 157
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit to choose muscles",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 204
         }
       },
       {
         "comment": "",
         "key": "%lld%%",
         "location": {
+          "startingColumn": 18,
+          "startingLine": 232
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit muscles",
+        "location": {
           "startingColumn": 30,
-          "startingLine": 126
+          "startingLine": 313
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add row",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 304
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 317
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 320
+        }
+      },
+      {
+        "comment": "",
+        "key": "Empty",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 332
         }
       }
     ]

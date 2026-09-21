@@ -107,27 +107,7 @@ struct InfoView: View {
                                         .foregroundStyle(.secondary)
                                 }
 
-                                NavigationLink {
-                                    MuscleFreshnessView()
-                                } label: {
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text("Muscle freshness")
-                                                .font(.headline)
-                                                .foregroundStyle(.primary)
-                                            Text("Per-muscle recovery from recent training")
-                                                .font(.caption)
-                                                .foregroundStyle(.secondary)
-                                        }
-                                        Spacer()
-                                        Image(systemName: "chevron.right")
-                                            .font(.caption.weight(.semibold))
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    .padding(16)
-                                    .opaqueCard()
-                                }
-                                .buttonStyle(.plain)
+                                compactNavLink("Muscle freshness", destination: MuscleFreshnessView())
                             }
                             .padding(.top, 8)
                         } label: {
@@ -169,48 +149,27 @@ struct InfoView: View {
     }
 
     private var exerciseHistoryLink: some View {
-        NavigationLink {
-            ExerciseHistoryBrowserView(accent: accent)
-        } label: {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Exercise history")
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    Text("1RM and weight evolution for logged lifts")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
-            .padding(16)
-            .opaqueCard()
-        }
-        .buttonStyle(.plain)
+        compactNavLink("Exercise history", destination: ExerciseHistoryBrowserView(accent: accent))
     }
 
     private var measurementsLink: some View {
+        compactNavLink("Measurements", destination: MeasurementsView())
+    }
+
+    private func compactNavLink<D: View>(_ title: String, destination: D) -> some View {
         NavigationLink {
-            MeasurementsView()
+            destination
         } label: {
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Measurements")
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    Text("Progress photos, body weight, calories, and circumferences")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(16)
+            .padding(12)
             .opaqueCard()
         }
         .buttonStyle(.plain)
@@ -220,7 +179,7 @@ struct InfoView: View {
 struct LearnLinksView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            learnLink("Using the app", destination: AppUsageGuideView())
+            learnLink("Exercises list catalog", destination: ExerciseCatalogBrowserView())
             learnLink("Core movement categories", destination: CoreMovementCategoriesView())
             learnLink("Key muscle groups", destination: KeyMuscleGroupsView())
             learnLink("Strength patterns", destination: MoreStrengthPatternsView())
@@ -246,6 +205,161 @@ struct LearnLinksView: View {
             .opaqueCard()
         }
         .buttonStyle(.plain)
+    }
+}
+
+struct ExerciseCatalogBrowserView: View {
+    @Environment(AppTheme.self) private var theme
+    @State private var query = ""
+    @State private var categoryFilter: ExerciseCategory?
+    @State private var equipmentFilter: ExerciseEquipment?
+    @State private var muscleFilter: MuscleGroup?
+    @State private var previewExercise: CatalogExercise?
+
+    private var filtered: [CatalogExercise] {
+        ExerciseCatalog.displaySorted(
+            ExerciseCatalog.all.filter { item in
+                let matchesQuery = query.isEmpty
+                    || item.name.localizedCaseInsensitiveContains(query)
+                    || item.primaryNames.contains { $0.localizedCaseInsensitiveContains(query) }
+                let matchesCategory = categoryFilter == nil || item.category == categoryFilter
+                let matchesEquipment = equipmentFilter == nil || item.equipment == equipmentFilter
+                let matchesMuscle = muscleFilter == nil
+                    || item.primary.contains(muscleFilter!)
+                    || item.secondary.contains(muscleFilter!)
+                return matchesQuery && matchesCategory && matchesEquipment && matchesMuscle
+            }
+        )
+    }
+
+    private var grouped: [(ExerciseCategory, [CatalogExercise])] {
+        ExerciseCategory.allCases.compactMap { category in
+            let items = filtered.filter { $0.category == category }
+            return items.isEmpty ? nil : (category, items)
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            filterBar
+            List {
+                if filtered.isEmpty {
+                    Text("No exercises match your search or filters.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .listRowBackground(Color.clear)
+                } else {
+                    ForEach(grouped, id: \.0) { category, items in
+                        Section(category.rawValue) {
+                            ForEach(items) { item in
+                                Button {
+                                    previewExercise = item
+                                } label: {
+                                    catalogRow(item)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                }
+            }
+            .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
+        }
+        .background(theme.groupedBackground)
+        .searchable(text: $query, prompt: "Search exercises or muscles")
+        .navigationTitle("Exercise catalog")
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $previewExercise) { exercise in
+            ExercisePreviewSheet(exercise: exercise)
+        }
+    }
+
+    private func catalogRow(_ exercise: CatalogExercise) -> some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(exercise.name)
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(.primary)
+                HStack(spacing: 8) {
+                    Text(exercise.primaryNames.joined(separator: ", "))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                    Spacer(minLength: 0)
+                    Text(exercise.equipment.shortBadge)
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(theme.mutedFill)
+                        .clipShape(Capsule())
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 4)
+
+            Image(systemName: "info.circle")
+                .font(.title3)
+                .foregroundStyle(theme.accent)
+        }
+        .contentShape(Rectangle())
+        .accessibilityLabel("\(exercise.name) details")
+    }
+
+    private var filterBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                FilterChip(title: "All", selected: categoryFilter == nil && equipmentFilter == nil && muscleFilter == nil) {
+                    categoryFilter = nil
+                    equipmentFilter = nil
+                    muscleFilter = nil
+                }
+
+                Menu {
+                    Button("All categories") { categoryFilter = nil }
+                    Divider()
+                    ForEach(ExerciseCategory.allCases) { cat in
+                        Button(cat.rawValue) { categoryFilter = cat }
+                    }
+                } label: {
+                    FilterChipLabel(
+                        title: categoryFilter?.rawValue ?? "Category",
+                        selected: categoryFilter != nil
+                    )
+                }
+
+                Menu {
+                    Button("All equipment") { equipmentFilter = nil }
+                    Divider()
+                    ForEach(ExerciseEquipment.allCases) { eq in
+                        Button(eq.displayTitle) { equipmentFilter = eq }
+                    }
+                } label: {
+                    FilterChipLabel(
+                        title: equipmentFilter?.displayTitle ?? "Equipment",
+                        selected: equipmentFilter != nil
+                    )
+                }
+
+                Menu {
+                    Button("All muscles") { muscleFilter = nil }
+                    Divider()
+                    ForEach(MuscleGroup.allCases) { muscle in
+                        Button(muscle.rawValue) { muscleFilter = muscle }
+                    }
+                } label: {
+                    FilterChipLabel(
+                        title: muscleFilter?.rawValue ?? "Muscle",
+                        selected: muscleFilter != nil
+                    )
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+        }
+        .background(theme.cardFill)
+        .overlay(alignment: .bottom) { Divider() }
     }
 }
 
