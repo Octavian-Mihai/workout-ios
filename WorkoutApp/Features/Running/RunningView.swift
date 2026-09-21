@@ -280,13 +280,23 @@ struct RunningView: View {
                     showFilters = true
                 } label: {
                     Image(systemName: filters.isActive ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(accent)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .accessibilityLabel("Filters")
                 Button {
                     Task { await health.requestAndLoad() }
                 } label: {
                     Image(systemName: "arrow.clockwise")
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(accent)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .disabled(health.isLoading)
                 .accessibilityLabel("Refresh")
             }

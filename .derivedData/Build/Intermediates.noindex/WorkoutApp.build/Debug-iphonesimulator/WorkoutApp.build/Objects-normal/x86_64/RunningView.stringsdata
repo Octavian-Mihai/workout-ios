@@ -79,7 +79,7 @@
         "key": "Filters",
         "location": {
           "startingColumn": 37,
-          "startingLine": 284
+          "startingLine": 289
         }
       },
       {
@@ -87,7 +87,7 @@
         "key": "Refresh",
         "location": {
           "startingColumn": 37,
-          "startingLine": 291
+          "startingLine": 301
         }
       },
       {
@@ -95,7 +95,7 @@
         "key": "No step data found in Apple Health for the last 7 days.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 331
+          "startingLine": 341
         }
       },
       {
@@ -103,7 +103,7 @@
         "key": "Steps",
         "location": {
           "startingColumn": 22,
-          "startingLine": 310
+          "startingLine": 320
         }
       },
       {
@@ -111,7 +111,7 @@
         "key": "Today: %@",
         "location": {
           "startingColumn": 26,
-          "startingLine": 314
+          "startingLine": 324
         }
       },
       {
@@ -119,7 +119,7 @@
         "key": "Day",
         "location": {
           "startingColumn": 35,
-          "startingLine": 339
+          "startingLine": 349
         }
       },
       {
@@ -127,7 +127,7 @@
         "key": "Steps",
         "location": {
           "startingColumn": 35,
-          "startingLine": 340
+          "startingLine": 350
         }
       },
       {
@@ -135,7 +135,7 @@
         "key": "Filters",
         "location": {
           "startingColumn": 30,
-          "startingLine": 433
+          "startingLine": 443
         }
       },
       {
@@ -143,7 +143,7 @@
         "key": "Clear filters",
         "location": {
           "startingColumn": 28,
-          "startingLine": 421
+          "startingLine": 431
         }
       },
       {
@@ -151,7 +151,7 @@
         "key": "Done",
         "location": {
           "startingColumn": 28,
-          "startingLine": 437
+          "startingLine": 447
         }
       },
       {
@@ -159,7 +159,7 @@
         "key": "%@  ·  %@",
         "location": {
           "startingColumn": 22,
-          "startingLine": 684
+          "startingLine": 694
         }
       },
       {
@@ -167,7 +167,7 @@
         "key": "Stress %lld",
         "location": {
           "startingColumn": 26,
-          "startingLine": 696
+          "startingLine": 706
         }
       },
       {
@@ -175,7 +175,7 @@
         "key": "Recovery context: %@",
         "location": {
           "startingColumn": 34,
-          "startingLine": 757
+          "startingLine": 767
         }
       },
       {
@@ -183,7 +183,7 @@
         "key": "Route",
         "location": {
           "startingColumn": 18,
-          "startingLine": 798
+          "startingLine": 808
         }
       },
       {
@@ -191,7 +191,7 @@
         "key": "No route recorded.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 809
+          "startingLine": 819
         }
       },
       {
@@ -199,7 +199,7 @@
         "key": "Heart rate",
         "location": {
           "startingColumn": 18,
-          "startingLine": 822
+          "startingLine": 832
         }
       },
       {
@@ -207,7 +207,7 @@
         "key": "No heart-rate samples for this run.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 834
+          "startingLine": 844
         }
       },
       {
@@ -215,7 +215,7 @@
         "key": "Time",
         "location": {
           "startingColumn": 35,
-          "startingLine": 827
+          "startingLine": 837
         }
       },
       {
@@ -223,7 +223,7 @@
         "key": "bpm",
         "location": {
           "startingColumn": 35,
-          "startingLine": 828
+          "startingLine": 838
         }
       },
       {
@@ -231,7 +231,7 @@
         "key": "Pace",
         "location": {
           "startingColumn": 18,
-          "startingLine": 847
+          "startingLine": 857
         }
       },
       {
@@ -239,7 +239,7 @@
         "key": "No pace series for this run.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 864
+          "startingLine": 874
         }
       },
       {
@@ -247,7 +247,7 @@
         "key": "Time",
         "location": {
           "startingColumn": 35,
-          "startingLine": 856
+          "startingLine": 866
         }
       },
       {
@@ -255,7 +255,7 @@
         "key": "Pace",
         "location": {
           "startingColumn": 35,
-          "startingLine": 857
+          "startingLine": 867
         }
       },
       {
@@ -263,7 +263,7 @@
         "key": "Start",
         "location": {
           "startingColumn": 24,
-          "startingLine": 910
+          "startingLine": 920
         }
       },
       {
@@ -271,7 +271,7 @@
         "key": "End",
         "location": {
           "startingColumn": 24,
-          "startingLine": 913
+          "startingLine": 923
         }
       }
     ]

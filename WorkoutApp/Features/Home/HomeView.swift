@@ -44,15 +44,17 @@ struct HomeView: View {
                                     sessionStore.start(program: program, programDay: day)
                                 }
                             } else {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("No active program")
-                                        .font(.headline)
-                                    Text("Create a program from a starter template on the Workout tab and mark it active. You can still start an empty workout.")
-                                        .font(.subheadline)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("No training plan")
+                                        .font(.caption.weight(.semibold))
                                         .foregroundStyle(.secondary)
+                                    Text("Empty workout below, or activate a program in Workout.")
+                                        .font(.caption2)
+                                        .foregroundStyle(.tertiary)
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(16)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
                                 .opaqueCard()
                             }
 
@@ -151,7 +153,7 @@ struct NextWorkoutCard: View {
                     Spacer(minLength: 8)
                     if let estimate = durationLabel {
                         Text(estimate)
-                            .font(.caption)
+                            .font(.subheadline.weight(.semibold).monospacedDigit())
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -164,23 +166,25 @@ struct NextWorkoutCard: View {
                     .foregroundStyle(.secondary)
             } else {
                 LazyVGrid(
-                    columns: [
-                        GridItem(.flexible(), spacing: 8, alignment: .topLeading),
-                        GridItem(.flexible(), spacing: 8, alignment: .topLeading)
-                    ],
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 6, alignment: .topLeading), count: 4),
                     alignment: .leading,
                     spacing: 6
                 ) {
                     ForEach(previewExercises) { exercise in
-                        Text(exercise.name)
-                            .font(.subheadline)
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.85)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack(alignment: .firstTextBaseline, spacing: 3) {
+                            Text("\(max(exercise.targetSets, 0))x")
+                                .font(.caption2.weight(.semibold).monospacedDigit())
+                                .foregroundStyle(.secondary)
+                            Text(exercise.name)
+                                .font(.caption2)
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.7)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                if day.orderedExercises.count > 6 {
-                    Text("+\(day.orderedExercises.count - 6) more")
+                if day.orderedExercises.count > Self.previewLimit {
+                    Text("+\(day.orderedExercises.count - Self.previewLimit) more")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -199,8 +203,10 @@ struct NextWorkoutCard: View {
         .opaqueCard()
     }
 
+    private static let previewLimit = 16
+
     private var previewExercises: [DayExercise] {
-        Array(day.orderedExercises.prefix(6))
+        Array(day.orderedExercises.prefix(Self.previewLimit))
     }
 
     private var durationLabel: String? {
@@ -216,8 +222,8 @@ private struct HomeActionLabelStyle: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .center, spacing: 6) {
             configuration.icon
-                .font(.subheadline.weight(.semibold))
-                .imageScale(.medium)
+                .font(.title3.weight(.semibold))
+                .imageScale(.large)
                 .frame(width: 18, height: 18, alignment: .center)
             configuration.title
                 .font(.subheadline.weight(.semibold))

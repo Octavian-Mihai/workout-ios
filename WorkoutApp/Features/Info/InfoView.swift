@@ -118,6 +118,8 @@ struct InfoView: View {
                         .tint(.secondary)
                     }
 
+                    compactNavLink("Personal records", destination: PersonalRecordsView())
+
                     exerciseHistoryLink
 
                     measurementsLink

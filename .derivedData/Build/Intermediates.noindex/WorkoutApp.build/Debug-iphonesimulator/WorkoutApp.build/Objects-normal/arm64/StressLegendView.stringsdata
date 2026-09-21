@@ -15,7 +15,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 76
+          "startingLine": 87
         }
       },
       {
@@ -23,23 +23,47 @@
         "key": "Leftover fatigue eases over the next couple of mornings.",
         "location": {
           "startingColumn": 22,
+          "startingLine": 186
+        }
+      },
+      {
+        "comment": "",
+        "key": "Day",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 162
+        }
+      },
+      {
+        "comment": "",
+        "key": "Stress",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 163
+        }
+      },
+      {
+        "comment": "",
+        "key": "Source",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 165
+        }
+      },
+      {
+        "comment": "",
+        "key": "Day",
+        "location": {
+          "startingColumn": 35,
           "startingLine": 167
         }
       },
       {
         "comment": "",
-        "key": "Day",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 145
-        }
-      },
-      {
-        "comment": "",
         "key": "Stress",
         "location": {
           "startingColumn": 35,
-          "startingLine": 146
+          "startingLine": 168
         }
       },
       {
@@ -47,31 +71,7 @@
         "key": "Source",
         "location": {
           "startingColumn": 49,
-          "startingLine": 148
-        }
-      },
-      {
-        "comment": "",
-        "key": "Day",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 150
-        }
-      },
-      {
-        "comment": "",
-        "key": "Stress",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 151
-        }
-      },
-      {
-        "comment": "",
-        "key": "Source",
-        "location": {
-          "startingColumn": 49,
-          "startingLine": 153
+          "startingLine": 170
         }
       },
       {
@@ -79,7 +79,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 188
+          "startingLine": 228
         }
       }
     ]

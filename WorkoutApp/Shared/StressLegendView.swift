@@ -47,17 +47,28 @@ struct StressLegendView: View {
     }
 }
 
+enum StressSourcePalette {
+    /// Warm — lifting stress.
+    static let lift = Color(red: 0.96, green: 0.46, blue: 0.16)
+    /// Cool — cardio stress.
+    static let cardio = Color(red: 0.10, green: 0.72, blue: 0.70)
+    /// Contrasting third — combined / total.
+    static let total = Color(red: 0.58, green: 0.34, blue: 0.94)
+}
+
 struct StressMeter: View {
     let title: String
     let score: Double
     let accent: Color
     var compact: Bool = false
+    var barColor: Color? = nil
 
     @Environment(AppTheme.self) private var theme
 
     private var band: StressBand { StressCalculator.band(for: score) }
 
     private var color: Color {
+        if let barColor { return barColor }
         switch band {
         case .recovery: return Color(red: 0.30, green: 0.72, blue: 0.48)
         case .productive: return Color(red: 0.25, green: 0.55, blue: 0.90)
@@ -114,13 +125,12 @@ struct TodayStressCard: View {
 
     @Environment(AppTheme.self) private var theme
 
-    private var runColor: Color {
-        Color(red: 0.25, green: 0.55, blue: 0.90)
-    }
-
     private var trendSeries: [StressTrendPoint] {
         trend.flatMap { point in
-            var points = [StressTrendPoint(date: point.date, source: "Lift", value: point.lift)]
+            var points = [
+                StressTrendPoint(date: point.date, source: "Lift", value: point.lift),
+                StressTrendPoint(date: point.date, source: "Total", value: point.total)
+            ]
             if showRunSplit {
                 points.append(StressTrendPoint(date: point.date, source: "Cardio", value: point.run))
             }
@@ -130,14 +140,21 @@ struct TodayStressCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? 6 : 12) {
-            StressMeter(title: "Today’s stress", score: estimate.total, accent: accent, compact: compact)
+            StressMeter(
+                title: "Today’s stress",
+                score: estimate.total,
+                accent: accent,
+                compact: compact,
+                barColor: StressSourcePalette.total
+            )
             if showSplit {
                 HStack(spacing: 16) {
-                    splitMeter(title: "Lift", score: estimate.lift, color: accent)
+                    splitMeter(title: "Lift", score: estimate.lift, color: StressSourcePalette.lift)
                     if showRunSplit {
-                        splitMeter(title: "Cardio", score: estimate.run, color: runColor)
+                        splitMeter(title: "Cardio", score: estimate.run, color: StressSourcePalette.cardio)
                     }
                 }
+                sourceLegend
             }
             if !compact, trend.count >= 2 {
                 Chart(trendSeries) { point in
@@ -153,9 +170,11 @@ struct TodayStressCard: View {
                     .foregroundStyle(by: .value("Source", point.source))
                 }
                 .chartForegroundStyleScale([
-                    "Lift": accent,
-                    "Cardio": runColor
+                    "Lift": StressSourcePalette.lift,
+                    "Cardio": StressSourcePalette.cardio,
+                    "Total": StressSourcePalette.total
                 ])
+                .chartLegend(.hidden)
                 .frame(height: 120)
                 .chartYScale(domain: 0...100)
                 .chartXAxis {
@@ -178,6 +197,27 @@ struct TodayStressCard: View {
         .opaqueCard()
     }
 
+    private var sourceLegend: some View {
+        HStack(spacing: 12) {
+            sourceSwatch("Lift", color: StressSourcePalette.lift)
+            if showRunSplit {
+                sourceSwatch("Cardio", color: StressSourcePalette.cardio)
+            }
+            sourceSwatch("Total", color: StressSourcePalette.total)
+        }
+    }
+
+    private func sourceSwatch(_ title: String, color: Color) -> some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(color)
+                .frame(width: 8, height: 8)
+            Text(title)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+    }
+
     private func splitMeter(title: String, score: Double, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
@@ -187,6 +227,7 @@ struct TodayStressCard: View {
                 Spacer()
                 Text("\(Int(score.rounded()))")
                     .font(.caption.monospacedDigit().weight(.semibold))
+                    .foregroundStyle(color)
             }
             GeometryReader { geo in
                 ZStack(alignment: .leading) {

@@ -7,12 +7,12 @@
         "key": "Home",
         "location": {
           "startingColumn": 30,
-          "startingLine": 102
+          "startingLine": 104
         }
       },
       {
         "comment": "",
-        "key": "No active program",
+        "key": "No training plan",
         "location": {
           "startingColumn": 42,
           "startingLine": 48
@@ -20,10 +20,10 @@
       },
       {
         "comment": "",
-        "key": "Create a program from a starter template on the Workout tab and mark it active. You can still start an empty workout.",
+        "key": "Empty workout below, or activate a program in Workout.",
         "location": {
           "startingColumn": 42,
-          "startingLine": 50
+          "startingLine": 51
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Repeat last workout",
         "location": {
           "startingColumn": 43,
-          "startingLine": 65
+          "startingLine": 67
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "Start empty workout",
         "location": {
           "startingColumn": 43,
-          "startingLine": 75
+          "startingLine": 77
         }
       },
       {
@@ -47,7 +47,7 @@
         "key": "No exercises yet — add some in the program editor.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 162
+          "startingLine": 164
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "+%lld more",
         "location": {
           "startingColumn": 26,
-          "startingLine": 183
+          "startingLine": 187
         }
       },
       {
@@ -63,7 +63,15 @@
         "key": "Next workout",
         "location": {
           "startingColumn": 26,
-          "startingLine": 138
+          "startingLine": 140
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lldx",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 175
         }
       },
       {
@@ -71,7 +79,7 @@
         "key": "Start",
         "location": {
           "startingColumn": 22,
-          "startingLine": 190
+          "startingLine": 194
         }
       }
     ]

@@ -7,7 +7,7 @@
         "key": "Info",
         "location": {
           "startingColumn": 30,
-          "startingLine": 146
+          "startingLine": 148
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Analytics",
         "location": {
           "startingColumn": 34,
-          "startingLine": 130
+          "startingLine": 132
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "Search exercises or muscles",
         "location": {
           "startingColumn": 43,
-          "startingLine": 271
+          "startingLine": 273
         }
       },
       {
@@ -47,7 +47,7 @@
         "key": "No exercises match your search or filters.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 248
+          "startingLine": 250
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "%@ details",
         "location": {
           "startingColumn": 29,
-          "startingLine": 307
+          "startingLine": 309
         }
       },
       {
@@ -63,7 +63,7 @@
         "key": "All categories",
         "location": {
           "startingColumn": 28,
-          "startingLine": 320
+          "startingLine": 322
         }
       },
       {
@@ -71,7 +71,7 @@
         "key": "All equipment",
         "location": {
           "startingColumn": 28,
-          "startingLine": 333
+          "startingLine": 335
         }
       },
       {
@@ -79,7 +79,7 @@
         "key": "All muscles",
         "location": {
           "startingColumn": 28,
-          "startingLine": 346
+          "startingLine": 348
         }
       }
     ]

@@ -6,7 +6,7 @@
 	<integer>12</integer>
 	<key>logs</key>
 	<dict>
-		<key>E0A055A8-7641-49FE-A3DD-33982A906BA5</key>
+		<key>AF80A6DB-D19B-42B1-8476-0F782F8DDC8F</key>
 		<dict>
 			<key>className</key>
 			<string>IDECommandLineBuildLog</string>
@@ -15,21 +15,21 @@
 			<key>domainType</key>
 			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
 			<key>fileName</key>
-			<string>E0A055A8-7641-49FE-A3DD-33982A906BA5.xcactivitylog</string>
+			<string>AF80A6DB-D19B-42B1-8476-0F782F8DDC8F.xcactivitylog</string>
 			<key>hasPrimaryLog</key>
 			<true/>
 			<key>primaryObservable</key>
 			<dict>
 				<key>highLevelStatus</key>
-				<string>S</string>
+				<string>E</string>
 				<key>totalNumberOfAnalyzerIssues</key>
 				<integer>0</integer>
 				<key>totalNumberOfErrors</key>
-				<integer>0</integer>
+				<integer>3</integer>
 				<key>totalNumberOfTestFailures</key>
 				<integer>0</integer>
 				<key>totalNumberOfWarnings</key>
-				<integer>0</integer>
+				<integer>4</integer>
 			</dict>
 			<key>schemeIdentifier-containerName</key>
 			<string>WorkoutApp project</string>
@@ -40,13 +40,13 @@
 			<key>signature</key>
 			<string>Building project WorkoutApp with scheme WorkoutApp</string>
 			<key>timeStartedRecording</key>
-			<real>810939383.26138401</real>
+			<real>811660524.02264094</real>
 			<key>timeStoppedRecording</key>
-			<real>810939430.48684096</real>
+			<real>811660529.05656004</real>
 			<key>title</key>
 			<string>Building project WorkoutApp with scheme WorkoutApp</string>
 			<key>uniqueIdentifier</key>
-			<string>E0A055A8-7641-49FE-A3DD-33982A906BA5</string>
+			<string>AF80A6DB-D19B-42B1-8476-0F782F8DDC8F</string>
 		</dict>
 	</dict>
 </dict>
