@@ -74,8 +74,7 @@ struct MeasurementDetailView: View {
                 }
             }
         }
-        .navigationTitle(Formatters.shortDate.string(from: entry.date))
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle(Formatters.shortDate.string(from: entry.date))
     }
 
     private var upperRows: [(String, Double)] {
@@ -145,7 +144,6 @@ struct WeightOnlyDetailView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle(Formatters.shortDate.string(from: entry.date))
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle(Formatters.shortDate.string(from: entry.date))
     }
 }

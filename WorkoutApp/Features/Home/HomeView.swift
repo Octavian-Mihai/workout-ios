@@ -63,12 +63,7 @@ struct HomeView: View {
                                     }
                                 } label: {
                                     Label("Repeat last workout", systemImage: "arrow.counterclockwise")
-                                        .font(.subheadline.weight(.semibold))
-                                        .multilineTextAlignment(.center)
-                                        .lineLimit(2)
-                                        .minimumScaleFactor(0.8)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 12)
+                                        .homeActionButtonLabel()
                                 }
                                 .buttonStyle(.bordered)
                                 .disabled(sessions.first(where: { $0.endDate != nil }) == nil)
@@ -78,12 +73,7 @@ struct HomeView: View {
                                     sessionStore.start(program: nil, programDay: nil)
                                 } label: {
                                     Label("Start empty workout", systemImage: "plus.circle.fill")
-                                        .font(.subheadline.weight(.semibold))
-                                        .multilineTextAlignment(.center)
-                                        .lineLimit(2)
-                                        .minimumScaleFactor(0.8)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 12)
+                                        .homeActionButtonLabel()
                                 }
                                 .buttonStyle(.borderedProminent)
                                 .frame(maxWidth: .infinity)
@@ -111,6 +101,7 @@ struct HomeView: View {
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(isPresented: $showTrends) {
                 TrendsDetailView()
             }
@@ -167,21 +158,31 @@ struct NextWorkoutCard: View {
             }
             .frame(maxWidth: .infinity)
 
-            if day.orderedExercises.isEmpty {
+            if previewExercises.isEmpty {
                 Text("No exercises yet — add some in the program editor.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {
-                VStack(alignment: .leading, spacing: 6) {
-                    ForEach(day.orderedExercises.prefix(6)) { exercise in
+                LazyVGrid(
+                    columns: [
+                        GridItem(.flexible(), spacing: 8, alignment: .topLeading),
+                        GridItem(.flexible(), spacing: 8, alignment: .topLeading)
+                    ],
+                    alignment: .leading,
+                    spacing: 6
+                ) {
+                    ForEach(previewExercises) { exercise in
                         Text(exercise.name)
                             .font(.subheadline)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.85)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    if day.orderedExercises.count > 6 {
-                        Text("+\(day.orderedExercises.count - 6) more")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
+                }
+                if day.orderedExercises.count > 6 {
+                    Text("+\(day.orderedExercises.count - 6) more")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
 
@@ -198,11 +199,39 @@ struct NextWorkoutCard: View {
         .opaqueCard()
     }
 
+    private var previewExercises: [DayExercise] {
+        Array(day.orderedExercises.prefix(6))
+    }
+
     private var durationLabel: String? {
         let exercises = day.orderedExercises
         return WorkoutDurationEstimate.label(
             exerciseCount: exercises.count,
             totalSets: exercises.reduce(0) { $0 + max($1.targetSets, 0) }
         )
+    }
+}
+
+private struct HomeActionLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(alignment: .center, spacing: 6) {
+            configuration.icon
+                .font(.subheadline.weight(.semibold))
+                .imageScale(.medium)
+                .frame(width: 18, height: 18, alignment: .center)
+            configuration.title
+                .font(.subheadline.weight(.semibold))
+                .multilineTextAlignment(.leading)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .padding(.vertical, 12)
+    }
+}
+
+private extension View {
+    func homeActionButtonLabel() -> some View {
+        labelStyle(HomeActionLabelStyle())
     }
 }

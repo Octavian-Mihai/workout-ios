@@ -63,7 +63,7 @@
         "key": "Weight",
         "location": {
           "startingColumn": 21,
-          "startingLine": 133
+          "startingLine": 132
         }
       },
       {
@@ -71,7 +71,7 @@
         "key": "Body weight",
         "location": {
           "startingColumn": 26,
-          "startingLine": 135
+          "startingLine": 134
         }
       },
       {
@@ -79,7 +79,7 @@
         "key": "Logged from the weight log before measurements were unified.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 143
+          "startingLine": 142
         }
       }
     ]

@@ -159,8 +159,7 @@ struct ExercisePickerView: View {
         }
         .background(theme.groupedBackground)
         .searchable(text: $query, prompt: "Search exercises or muscles")
-        .navigationTitle(navigationTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle(navigationTitle)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close") { dismiss() }
@@ -519,6 +518,7 @@ struct CustomExerciseForm: View {
             }
         }
         .navigationTitle(mode.navigationTitle)
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             name = initialName
             equipment = initialEquipment

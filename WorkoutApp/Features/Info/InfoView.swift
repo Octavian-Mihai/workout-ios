@@ -145,6 +145,7 @@ struct InfoView: View {
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Info")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
 
@@ -268,8 +269,7 @@ struct ExerciseCatalogBrowserView: View {
         }
         .background(theme.groupedBackground)
         .searchable(text: $query, prompt: "Search exercises or muscles")
-        .navigationTitle("Exercise catalog")
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle("Exercise catalog")
         .sheet(item: $previewExercise) { exercise in
             ExercisePreviewSheet(exercise: exercise)
         }
@@ -376,8 +376,7 @@ struct ArticleScreen<Content: View>: View {
             .padding(16)
         }
         .background(theme.groupedBackground.ignoresSafeArea())
-        .navigationTitle(title)
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle(title)
     }
 }
 

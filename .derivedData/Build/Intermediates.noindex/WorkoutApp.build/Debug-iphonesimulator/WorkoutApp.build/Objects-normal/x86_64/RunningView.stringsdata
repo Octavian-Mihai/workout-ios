@@ -70,7 +70,23 @@
         "comment": "",
         "key": "Last 7 days",
         "location": {
-          "startingColumn": 18,
+          "startingColumn": 22,
+          "startingLine": 276
+        }
+      },
+      {
+        "comment": "",
+        "key": "Filters",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 284
+        }
+      },
+      {
+        "comment": "",
+        "key": "Refresh",
+        "location": {
+          "startingColumn": 37,
           "startingLine": 291
         }
       },
@@ -156,14 +172,6 @@
       },
       {
         "comment": "",
-        "key": "Run",
-        "location": {
-          "startingColumn": 26,
-          "startingLine": 770
-        }
-      },
-      {
-        "comment": "",
         "key": "Recovery context: %@",
         "location": {
           "startingColumn": 34,
@@ -175,7 +183,7 @@
         "key": "Route",
         "location": {
           "startingColumn": 18,
-          "startingLine": 799
+          "startingLine": 798
         }
       },
       {
@@ -183,7 +191,7 @@
         "key": "No route recorded.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 810
+          "startingLine": 809
         }
       },
       {
@@ -191,7 +199,7 @@
         "key": "Heart rate",
         "location": {
           "startingColumn": 18,
-          "startingLine": 823
+          "startingLine": 822
         }
       },
       {
@@ -199,7 +207,7 @@
         "key": "No heart-rate samples for this run.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 835
+          "startingLine": 834
         }
       },
       {
@@ -207,7 +215,7 @@
         "key": "Time",
         "location": {
           "startingColumn": 35,
-          "startingLine": 828
+          "startingLine": 827
         }
       },
       {
@@ -215,7 +223,7 @@
         "key": "bpm",
         "location": {
           "startingColumn": 35,
-          "startingLine": 829
+          "startingLine": 828
         }
       },
       {
@@ -223,7 +231,7 @@
         "key": "Pace",
         "location": {
           "startingColumn": 18,
-          "startingLine": 848
+          "startingLine": 847
         }
       },
       {
@@ -231,7 +239,7 @@
         "key": "No pace series for this run.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 865
+          "startingLine": 864
         }
       },
       {
@@ -239,7 +247,7 @@
         "key": "Time",
         "location": {
           "startingColumn": 35,
-          "startingLine": 857
+          "startingLine": 856
         }
       },
       {
@@ -247,7 +255,7 @@
         "key": "Pace",
         "location": {
           "startingColumn": 35,
-          "startingLine": 858
+          "startingLine": 857
         }
       },
       {
@@ -255,7 +263,7 @@
         "key": "Start",
         "location": {
           "startingColumn": 24,
-          "startingLine": 911
+          "startingLine": 910
         }
       },
       {
@@ -263,7 +271,7 @@
         "key": "End",
         "location": {
           "startingColumn": 24,
-          "startingLine": 914
+          "startingLine": 913
         }
       }
     ]

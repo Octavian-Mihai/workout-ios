@@ -241,6 +241,7 @@ struct WorkoutSessionDetailView: View {
         .background(theme.groupedBackground.ignoresSafeArea())
         .navigationTitle("Session")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button("Repeat workout") {

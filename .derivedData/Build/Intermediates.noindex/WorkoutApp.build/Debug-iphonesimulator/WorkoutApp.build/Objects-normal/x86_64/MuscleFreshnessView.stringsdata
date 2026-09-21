@@ -4,14 +4,6 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Muscle freshness",
-        "location": {
-          "startingColumn": 26,
-          "startingLine": 50
-        }
-      },
-      {
-        "comment": "",
         "key": "Per-muscle recovery based on recent training load. Higher scores mean the muscle is more ready to train.",
         "location": {
           "startingColumn": 22,
@@ -23,7 +15,7 @@
         "key": "%lld%%",
         "location": {
           "startingColumn": 22,
-          "startingLine": 70
+          "startingLine": 69
         }
       },
       {
@@ -31,7 +23,7 @@
         "key": "Edit muscles",
         "location": {
           "startingColumn": 37,
-          "startingLine": 174
+          "startingLine": 173
         }
       },
       {
@@ -39,7 +31,7 @@
         "key": "Muscle freshness details",
         "location": {
           "startingColumn": 37,
-          "startingLine": 184
+          "startingLine": 183
         }
       },
       {
@@ -47,7 +39,7 @@
         "key": "Muscle freshness",
         "location": {
           "startingColumn": 26,
-          "startingLine": 157
+          "startingLine": 156
         }
       },
       {
@@ -55,7 +47,7 @@
         "key": "Edit to choose muscles",
         "location": {
           "startingColumn": 18,
-          "startingLine": 204
+          "startingLine": 203
         }
       },
       {
@@ -63,7 +55,7 @@
         "key": "%lld%%",
         "location": {
           "startingColumn": 18,
-          "startingLine": 232
+          "startingLine": 231
         }
       },
       {
@@ -71,7 +63,7 @@
         "key": "Edit muscles",
         "location": {
           "startingColumn": 30,
-          "startingLine": 313
+          "startingLine": 312
         }
       },
       {
@@ -79,7 +71,7 @@
         "key": "Add row",
         "location": {
           "startingColumn": 27,
-          "startingLine": 304
+          "startingLine": 303
         }
       },
       {
@@ -87,7 +79,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 28,
-          "startingLine": 317
+          "startingLine": 316
         }
       },
       {
@@ -95,7 +87,7 @@
         "key": "Done",
         "location": {
           "startingColumn": 28,
-          "startingLine": 320
+          "startingLine": 319
         }
       },
       {
@@ -103,7 +95,7 @@
         "key": "Empty",
         "location": {
           "startingColumn": 20,
-          "startingLine": 332
+          "startingLine": 331
         }
       }
     ]

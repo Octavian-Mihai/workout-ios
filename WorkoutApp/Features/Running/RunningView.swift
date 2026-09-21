@@ -238,23 +238,7 @@ struct RunningView: View {
             .background(theme.groupedBackground.ignoresSafeArea())
             .navigationTitle("Cardio")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        showFilters = true
-                    } label: {
-                        Image(systemName: filters.isActive ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        Task { await health.requestAndLoad() }
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .disabled(health.isLoading)
-                }
-            }
+            .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showFilters) {
                 RunningFilterSheet(filters: $filters, unit: unit)
             }
@@ -288,8 +272,24 @@ struct RunningView: View {
 
     private var analyticsCard: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("Last 7 days")
-                .font(.headline)
+            HStack(spacing: 12) {
+                Text("Last 7 days")
+                    .font(.headline)
+                Spacer()
+                Button {
+                    showFilters = true
+                } label: {
+                    Image(systemName: filters.isActive ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                }
+                .accessibilityLabel("Filters")
+                Button {
+                    Task { await health.requestAndLoad() }
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .disabled(health.isLoading)
+                .accessibilityLabel("Refresh")
+            }
             HStack {
                 metric("Avg pace", avgPace.map { Formatters.pace($0, unit: unit) } ?? "—")
                 metric("Best pace", bestPace.map { Formatters.pace($0, unit: unit) } ?? "—")
@@ -767,8 +767,7 @@ struct RunDetailView: View {
             .padding(16)
         }
         .background(theme.groupedBackground.ignoresSafeArea())
-        .navigationTitle("Run")
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle("Run")
         .task {
             loading = true
             details = await health.loadDetails(for: run)

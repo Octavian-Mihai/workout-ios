@@ -83,6 +83,8 @@ struct MeasurementsView: View {
             }
         }
         .navigationTitle("Measurements")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {

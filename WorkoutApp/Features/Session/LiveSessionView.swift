@@ -588,8 +588,7 @@ struct LiveSessionView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             sessionKeyboard
         }
-        .navigationTitle(controller.programDay?.name ?? "Empty workout")
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle(controller.programDay?.name ?? "Empty workout")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("Close") { onMinimize() }

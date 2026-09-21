@@ -47,8 +47,7 @@ struct MuscleFreshnessView: View {
             .padding(16)
         }
         .background(theme.groupedBackground.ignoresSafeArea())
-        .navigationTitle("Muscle freshness")
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle("Muscle freshness")
     }
 }
 

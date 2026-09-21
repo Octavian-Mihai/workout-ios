@@ -7,7 +7,7 @@
         "key": "Home",
         "location": {
           "startingColumn": 30,
-          "startingLine": 112
+          "startingLine": 102
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "Start empty workout",
         "location": {
           "startingColumn": 43,
-          "startingLine": 80
+          "startingLine": 75
         }
       },
       {
@@ -47,7 +47,15 @@
         "key": "No exercises yet — add some in the program editor.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 171
+          "startingLine": 162
+        }
+      },
+      {
+        "comment": "",
+        "key": "+%lld more",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 183
         }
       },
       {
@@ -55,15 +63,7 @@
         "key": "Next workout",
         "location": {
           "startingColumn": 26,
-          "startingLine": 147
-        }
-      },
-      {
-        "comment": "",
-        "key": "+%lld more",
-        "location": {
-          "startingColumn": 30,
-          "startingLine": 181
+          "startingLine": 138
         }
       },
       {
@@ -71,7 +71,7 @@
         "key": "Start",
         "location": {
           "startingColumn": 22,
-          "startingLine": 189
+          "startingLine": 190
         }
       }
     ]

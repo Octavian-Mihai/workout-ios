@@ -61,6 +61,7 @@ struct ProgramEditorView: View {
         }
         .navigationTitle("Program")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done") {
@@ -174,6 +175,7 @@ struct DayEditorView: View {
         }
         .navigationTitle(day.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.visible, for: .navigationBar)
         .toolbar { EditButton() }
         .sheet(isPresented: $showPicker) {
             NavigationStack {

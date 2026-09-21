@@ -33,6 +33,54 @@
           "startingColumn": 34,
           "startingLine": 130
         }
+      },
+      {
+        "comment": "",
+        "key": "Search exercises or muscles",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 271
+        }
+      },
+      {
+        "comment": "",
+        "key": "No exercises match your search or filters.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 248
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ details",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 307
+        }
+      },
+      {
+        "comment": "",
+        "key": "All categories",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 320
+        }
+      },
+      {
+        "comment": "",
+        "key": "All equipment",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 333
+        }
+      },
+      {
+        "comment": "",
+        "key": "All muscles",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 346
+        }
       }
     ]
   },

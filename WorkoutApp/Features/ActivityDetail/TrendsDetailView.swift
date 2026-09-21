@@ -121,8 +121,7 @@ struct TrendsDetailView: View {
             .padding(16)
         }
         .background(theme.groupedBackground.ignoresSafeArea())
-        .navigationTitle("Trends")
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle("Trends")
     }
 
     private func stat(title: String, value: String) -> some View {

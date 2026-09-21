@@ -87,7 +87,7 @@
         "key": "Delete workout?",
         "location": {
           "startingColumn": 16,
-          "startingLine": 256
+          "startingLine": 257
         }
       },
       {
@@ -151,7 +151,7 @@
         "key": "Repeat workout",
         "location": {
           "startingColumn": 24,
-          "startingLine": 246
+          "startingLine": 247
         }
       },
       {
@@ -159,7 +159,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 24,
-          "startingLine": 251
+          "startingLine": 252
         }
       },
       {
@@ -167,7 +167,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 20,
-          "startingLine": 257
+          "startingLine": 258
         }
       },
       {
@@ -175,7 +175,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 20,
-          "startingLine": 262
+          "startingLine": 263
         }
       },
       {
@@ -183,7 +183,7 @@
         "key": "This workout and all logged sets will be permanently removed.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 264
+          "startingLine": 265
         }
       }
     ]

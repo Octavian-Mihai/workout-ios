@@ -7,7 +7,7 @@
         "key": "Estimated 1RM",
         "location": {
           "startingColumn": 18,
-          "startingLine": 71
+          "startingLine": 70
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Epley formula using reps + RIR from your logged sets.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 77
+          "startingLine": 76
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "—",
         "location": {
           "startingColumn": 22,
-          "startingLine": 81
+          "startingLine": 80
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Log sets with weight and reps to see an estimate.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 83
+          "startingLine": 82
         }
       },
       {
@@ -39,12 +39,20 @@
         "key": "1RM over time",
         "location": {
           "startingColumn": 18,
-          "startingLine": 95
+          "startingLine": 94
         }
       },
       {
         "comment": "",
         "key": "Date",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 98
+        }
+      },
+      {
+        "comment": "",
+        "key": "1RM",
         "location": {
           "startingColumn": 31,
           "startingLine": 99
@@ -52,15 +60,15 @@
       },
       {
         "comment": "",
-        "key": "1RM",
+        "key": "Date",
         "location": {
           "startingColumn": 31,
-          "startingLine": 100
+          "startingLine": 103
         }
       },
       {
         "comment": "",
-        "key": "Date",
+        "key": "1RM",
         "location": {
           "startingColumn": 31,
           "startingLine": 104
@@ -68,18 +76,10 @@
       },
       {
         "comment": "",
-        "key": "1RM",
-        "location": {
-          "startingColumn": 31,
-          "startingLine": 105
-        }
-      },
-      {
-        "comment": "",
         "key": "Session history",
         "location": {
           "startingColumn": 18,
-          "startingLine": 118
+          "startingLine": 117
         }
       },
       {
@@ -87,7 +87,7 @@
         "key": "No past sessions for this exercise.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 121
+          "startingLine": 120
         }
       },
       {
@@ -95,7 +95,7 @@
         "key": "Set %lld",
         "location": {
           "startingColumn": 38,
-          "startingLine": 131
+          "startingLine": 130
         }
       },
       {
@@ -103,7 +103,7 @@
         "key": "%@ × %lld",
         "location": {
           "startingColumn": 38,
-          "startingLine": 135
+          "startingLine": 134
         }
       },
       {
@@ -111,15 +111,7 @@
         "key": "Search exercises",
         "location": {
           "startingColumn": 43,
-          "startingLine": 234
-        }
-      },
-      {
-        "comment": "",
-        "key": "Exercise history",
-        "location": {
-          "startingColumn": 26,
-          "startingLine": 235
+          "startingLine": 233
         }
       },
       {
@@ -127,7 +119,7 @@
         "key": "No logged exercises yet. Finish a workout to see history here.",
         "location": {
           "startingColumn": 24,
-          "startingLine": 206
+          "startingLine": 205
         }
       },
       {
@@ -135,7 +127,7 @@
         "key": "No exercises match your search.",
         "location": {
           "startingColumn": 24,
-          "startingLine": 207
+          "startingLine": 206
         }
       }
     ]

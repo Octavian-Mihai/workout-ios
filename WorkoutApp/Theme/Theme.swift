@@ -397,6 +397,15 @@ extension View {
     func opaqueCard() -> some View {
         modifier(OpaqueCard())
     }
+
+    /// Compact title + visible bar for pushed screens, so a hidden root tab bar
+    /// does not swallow the back chevron.
+    func compactNavigationTitle(_ title: String) -> some View {
+        self
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.visible, for: .navigationBar)
+    }
 }
 
 enum RIRPalette {

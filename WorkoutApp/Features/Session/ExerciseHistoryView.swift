@@ -62,8 +62,7 @@ struct ExerciseHistoryView: View {
             .padding(16)
         }
         .background(theme.groupedBackground.ignoresSafeArea())
-        .navigationTitle(exerciseName)
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle(exerciseName)
     }
 
     private var estimateCard: some View {
@@ -232,8 +231,7 @@ struct ExerciseHistoryBrowserView: View {
         .scrollContentBackground(.hidden)
         .background(theme.groupedBackground)
         .searchable(text: $query, prompt: "Search exercises")
-        .navigationTitle("Exercise history")
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle("Exercise history")
     }
 
     private func subtitle(for item: LoggedExerciseSummary) -> String {

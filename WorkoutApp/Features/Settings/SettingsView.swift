@@ -234,6 +234,7 @@ struct SettingsView: View {
             .background(theme.groupedBackground)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
             .alert("Delete all local data?", isPresented: $showDeleteConfirm) {
                 Button("Delete", role: .destructive) { deleteAllLocalData() }
                 Button("Cancel", role: .cancel) {}
@@ -330,8 +331,7 @@ struct PrivacyInfoView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Privacy")
-        .navigationBarTitleDisplayMode(.inline)
+        .compactNavigationTitle("Privacy")
     }
 }
 
@@ -365,6 +365,7 @@ struct BodyWeightLogView: View {
             }
         }
         .navigationTitle("Weight log")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {

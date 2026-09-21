@@ -31,7 +31,7 @@
         "key": "Previous day",
         "location": {
           "startingColumn": 33,
-          "startingLine": 133
+          "startingLine": 134
         }
       },
       {
@@ -39,7 +39,7 @@
         "key": "Next day",
         "location": {
           "startingColumn": 33,
-          "startingLine": 157
+          "startingLine": 158
         }
       },
       {
@@ -47,7 +47,7 @@
         "key": "%lld of %lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 141
+          "startingLine": 142
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "Start %@",
         "location": {
           "startingColumn": 19,
-          "startingLine": 166
+          "startingLine": 167
         }
       },
       {
@@ -63,7 +63,7 @@
         "key": "Tonnage (7d)",
         "location": {
           "startingColumn": 22,
-          "startingLine": 270
+          "startingLine": 271
         }
       },
       {
@@ -71,7 +71,7 @@
         "key": "%@ %@·reps",
         "location": {
           "startingColumn": 22,
-          "startingLine": 272
+          "startingLine": 273
         }
       },
       {
@@ -79,7 +79,7 @@
         "key": "Reps (7d)",
         "location": {
           "startingColumn": 22,
-          "startingLine": 277
+          "startingLine": 278
         }
       },
       {
@@ -87,7 +87,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 279
+          "startingLine": 280
         }
       },
       {
@@ -95,7 +95,7 @@
         "key": "%@ %@·reps",
         "location": {
           "startingColumn": 30,
-          "startingLine": 288
+          "startingLine": 289
         }
       },
       {
@@ -103,7 +103,7 @@
         "key": "%@ reps",
         "location": {
           "startingColumn": 30,
-          "startingLine": 290
+          "startingLine": 291
         }
       },
       {
@@ -111,7 +111,7 @@
         "key": "Volume per muscle (7d)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 305
+          "startingLine": 306
         }
       },
       {
@@ -119,20 +119,12 @@
         "key": "Primary gets full set volume; secondary gets half.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 307
+          "startingLine": 308
         }
       },
       {
         "comment": "",
         "key": "Volume",
-        "location": {
-          "startingColumn": 31,
-          "startingLine": 312
-        }
-      },
-      {
-        "comment": "",
-        "key": "Muscle",
         "location": {
           "startingColumn": 31,
           "startingLine": 313
@@ -140,10 +132,18 @@
       },
       {
         "comment": "",
+        "key": "Muscle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 314
+        }
+      },
+      {
+        "comment": "",
         "key": "Estimated 1RM",
         "location": {
           "startingColumn": 18,
-          "startingLine": 328
+          "startingLine": 329
         }
       },
       {
@@ -151,7 +151,7 @@
         "key": "weight × (1 + (reps + RIR) / 30)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 330
+          "startingLine": 331
         }
       },
       {
@@ -159,7 +159,7 @@
         "key": "Muscle engagement (7d)",
         "location": {
           "startingColumn": 18,
-          "startingLine": 342
+          "startingLine": 343
         }
       },
       {
@@ -167,7 +167,7 @@
         "key": "Muscle",
         "location": {
           "startingColumn": 31,
-          "startingLine": 346
+          "startingLine": 347
         }
       },
       {
@@ -175,7 +175,7 @@
         "key": "Volume",
         "location": {
           "startingColumn": 31,
-          "startingLine": 347
+          "startingLine": 348
         }
       },
       {
@@ -183,7 +183,7 @@
         "key": "Intensity map",
         "location": {
           "startingColumn": 18,
-          "startingLine": 366
+          "startingLine": 367
         }
       },
       {
@@ -191,20 +191,12 @@
         "key": "Average RIR per exercise over the last 7 days.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 368
+          "startingLine": 369
         }
       },
       {
         "comment": "",
         "key": "Date",
-        "location": {
-          "startingColumn": 27,
-          "startingLine": 412
-        }
-      },
-      {
-        "comment": "",
-        "key": "1RM",
         "location": {
           "startingColumn": 27,
           "startingLine": 413
@@ -212,10 +204,18 @@
       },
       {
         "comment": "",
+        "key": "1RM",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 414
+        }
+      },
+      {
+        "comment": "",
         "key": "Lift",
         "location": {
           "startingColumn": 41,
-          "startingLine": 415
+          "startingLine": 416
         }
       },
       {
@@ -223,7 +223,7 @@
         "key": "Date",
         "location": {
           "startingColumn": 27,
-          "startingLine": 417
+          "startingLine": 418
         }
       },
       {
@@ -231,7 +231,7 @@
         "key": "1RM",
         "location": {
           "startingColumn": 27,
-          "startingLine": 418
+          "startingLine": 419
         }
       },
       {
@@ -239,7 +239,7 @@
         "key": "Lift",
         "location": {
           "startingColumn": 41,
-          "startingLine": 420
+          "startingLine": 421
         }
       }
     ]

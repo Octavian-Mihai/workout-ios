@@ -15,7 +15,7 @@
         "key": "Delete all local data?",
         "location": {
           "startingColumn": 20,
-          "startingLine": 237
+          "startingLine": 238
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "Couldn’t import workout data",
         "location": {
           "startingColumn": 20,
-          "startingLine": 248
+          "startingLine": 249
         }
       },
       {
@@ -431,7 +431,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 24,
-          "startingLine": 238
+          "startingLine": 239
         }
       },
       {
@@ -439,7 +439,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 24,
-          "startingLine": 239
+          "startingLine": 240
         }
       },
       {
@@ -447,7 +447,7 @@
         "key": "This removes programs, workout history, measurements, and body-weight entries from this device. Apple Health data is not deleted.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 241
+          "startingLine": 242
         }
       },
       {
@@ -455,15 +455,7 @@
         "key": "OK",
         "location": {
           "startingColumn": 24,
-          "startingLine": 249
-        }
-      },
-      {
-        "comment": "",
-        "key": "Privacy",
-        "location": {
-          "startingColumn": 26,
-          "startingLine": 333
+          "startingLine": 250
         }
       },
       {
@@ -471,7 +463,7 @@
         "key": "On this device",
         "location": {
           "startingColumn": 21,
-          "startingLine": 317
+          "startingLine": 318
         }
       },
       {
@@ -479,7 +471,7 @@
         "key": "Apple Health",
         "location": {
           "startingColumn": 21,
-          "startingLine": 322
+          "startingLine": 323
         }
       },
       {
@@ -487,7 +479,7 @@
         "key": "Encryption",
         "location": {
           "startingColumn": 21,
-          "startingLine": 327
+          "startingLine": 328
         }
       },
       {
@@ -495,7 +487,7 @@
         "key": "Programs, workout sessions, sets (weight, reps, RIR), and body-weight entries are stored locally with SwiftData. Nothing is uploaded to a server.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 318
+          "startingLine": 319
         }
       },
       {
@@ -503,7 +495,7 @@
         "key": "Running workouts, GPS routes, distance, and heart rate are read only. Body weight is read from and written to Apple Health when you use the weight log. Finished strength sessions are written to Health as Traditional Strength Training workouts only if you turn on writing workouts in Settings.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 323
+          "startingLine": 324
         }
       },
       {
@@ -511,7 +503,7 @@
         "key": "The app does not use non-exempt encryption. Workout data stays in the device’s standard app container.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 328
+          "startingLine": 329
         }
       },
       {
@@ -535,7 +527,7 @@
         "key": "Add entry",
         "location": {
           "startingColumn": 26,
-          "startingLine": 438
+          "startingLine": 439
         }
       },
       {
@@ -543,7 +535,7 @@
         "key": "Date",
         "location": {
           "startingColumn": 24,
-          "startingLine": 428
+          "startingLine": 429
         }
       },
       {
@@ -551,7 +543,7 @@
         "key": "Weight (%@)",
         "location": {
           "startingColumn": 22,
-          "startingLine": 430
+          "startingLine": 431
         }
       },
       {
@@ -559,7 +551,7 @@
         "key": "Weight",
         "location": {
           "startingColumn": 27,
-          "startingLine": 432
+          "startingLine": 433
         }
       },
       {
@@ -567,7 +559,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 24,
-          "startingLine": 442
+          "startingLine": 443
         }
       },
       {
@@ -575,7 +567,7 @@
         "key": "Save",
         "location": {
           "startingColumn": 24,
-          "startingLine": 445
+          "startingLine": 446
         }
       }
     ]

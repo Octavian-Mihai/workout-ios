@@ -4,14 +4,6 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Trends",
-        "location": {
-          "startingColumn": 26,
-          "startingLine": 124
-        }
-      },
-      {
-        "comment": "",
         "key": "Weekday histogram",
         "location": {
           "startingColumn": 26,
