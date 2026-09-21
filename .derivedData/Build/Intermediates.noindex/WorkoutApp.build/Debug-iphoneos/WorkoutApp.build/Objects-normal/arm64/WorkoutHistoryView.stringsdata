@@ -79,7 +79,7 @@
         "key": "Session",
         "location": {
           "startingColumn": 26,
-          "startingLine": 241
+          "startingLine": 242
         }
       },
       {
@@ -87,7 +87,7 @@
         "key": "Delete workout?",
         "location": {
           "startingColumn": 16,
-          "startingLine": 250
+          "startingLine": 256
         }
       },
       {
@@ -95,7 +95,7 @@
         "key": "Exercises",
         "location": {
           "startingColumn": 30,
-          "startingLine": 194
+          "startingLine": 195
         }
       },
       {
@@ -103,7 +103,7 @@
         "key": "+ %lld more exercise%@",
         "location": {
           "startingColumn": 34,
-          "startingLine": 229
+          "startingLine": 230
         }
       },
       {
@@ -111,7 +111,7 @@
         "key": "Top %@ × %lld",
         "location": {
           "startingColumn": 38,
-          "startingLine": 206
+          "startingLine": 207
         }
       },
       {
@@ -119,7 +119,7 @@
         "key": "%lld sets",
         "location": {
           "startingColumn": 42,
-          "startingLine": 202
+          "startingLine": 203
         }
       },
       {
@@ -127,7 +127,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 46,
-          "startingLine": 211
+          "startingLine": 212
         }
       },
       {
@@ -135,7 +135,7 @@
         "key": "%@ × %lld",
         "location": {
           "startingColumn": 46,
-          "startingLine": 215
+          "startingLine": 216
         }
       },
       {
@@ -143,7 +143,15 @@
         "key": "RIR %@",
         "location": {
           "startingColumn": 46,
-          "startingLine": 217
+          "startingLine": 218
+        }
+      },
+      {
+        "comment": "",
+        "key": "Repeat workout",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 246
         }
       },
       {
@@ -151,7 +159,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 24,
-          "startingLine": 245
+          "startingLine": 251
         }
       },
       {
@@ -159,7 +167,7 @@
         "key": "Delete",
         "location": {
           "startingColumn": 20,
-          "startingLine": 251
+          "startingLine": 257
         }
       },
       {
@@ -167,7 +175,7 @@
         "key": "Cancel",
         "location": {
           "startingColumn": 20,
-          "startingLine": 256
+          "startingLine": 262
         }
       },
       {
@@ -175,7 +183,7 @@
         "key": "This workout and all logged sets will be permanently removed.",
         "location": {
           "startingColumn": 18,
-          "startingLine": 258
+          "startingLine": 264
         }
       }
     ]

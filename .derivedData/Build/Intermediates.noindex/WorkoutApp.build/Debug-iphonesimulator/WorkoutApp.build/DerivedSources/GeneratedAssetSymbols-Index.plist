@@ -141,6 +141,16 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExerciseBoxSquat</string>
+			<key>relativePath</key>
+			<string>./exercise-box-squat.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseBoxSquat</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExerciseBulgarianSplitSquat</string>
 			<key>relativePath</key>
 			<string>./exercise-bulgarian-split-squat.imageset</string>
@@ -186,6 +196,26 @@
 			<string>./exercise-cable-lateral-raise.imageset</string>
 			<key>swiftSymbol</key>
 			<string>exerciseCableLateralRaise</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseCablePullover</string>
+			<key>relativePath</key>
+			<string>./exercise-cable-pullover.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseCablePullover</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseCableRearDeltFly</string>
+			<key>relativePath</key>
+			<string>./exercise-cable-rear-delt-fly.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseCableRearDeltFly</string>
 		</dict>
 		<dict>
 			<key>catalogPath</key>
@@ -271,11 +301,31 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExerciseCossackSquat</string>
+			<key>relativePath</key>
+			<string>./exercise-cossack-squat.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseCossackSquat</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExerciseDeadlift</string>
 			<key>relativePath</key>
 			<string>./exercise-deadlift.imageset</string>
 			<key>swiftSymbol</key>
 			<string>exerciseDeadlift</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseDeficitDeadlift</string>
+			<key>relativePath</key>
+			<string>./exercise-deficit-deadlift.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseDeficitDeadlift</string>
 		</dict>
 		<dict>
 			<key>catalogPath</key>
@@ -316,6 +366,16 @@
 			<string>./exercise-dumbbell-fly.imageset</string>
 			<key>swiftSymbol</key>
 			<string>exerciseDumbbellFly</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseDumbbellPullover</string>
+			<key>relativePath</key>
+			<string>./exercise-dumbbell-pullover.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseDumbbellPullover</string>
 		</dict>
 		<dict>
 			<key>catalogPath</key>
@@ -411,6 +471,16 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExerciseGobletSquat</string>
+			<key>relativePath</key>
+			<string>./exercise-goblet-squat.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseGobletSquat</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExerciseGoodMorning</string>
 			<key>relativePath</key>
 			<string>./exercise-good-morning.imageset</string>
@@ -436,6 +506,16 @@
 			<string>./exercise-hammer-curl.imageset</string>
 			<key>swiftSymbol</key>
 			<string>exerciseHammerCurl</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseHandGripper</string>
+			<key>relativePath</key>
+			<string>./exercise-hand-gripper.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseHandGripper</string>
 		</dict>
 		<dict>
 			<key>catalogPath</key>
@@ -501,6 +581,16 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExerciseJmPress</string>
+			<key>relativePath</key>
+			<string>./exercise-jm-press.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseJmPress</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExerciseKettlebellClean</string>
 			<key>relativePath</key>
 			<string>./exercise-kettlebell-clean.imageset</string>
@@ -516,6 +606,26 @@
 			<string>./exercise-kettlebell-clean-and-jerk.imageset</string>
 			<key>swiftSymbol</key>
 			<string>exerciseKettlebellCleanAndJerk</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseKettlebellHighPull</string>
+			<key>relativePath</key>
+			<string>./exercise-kettlebell-high-pull.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseKettlebellHighPull</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseKettlebellPushPress</string>
+			<key>relativePath</key>
+			<string>./exercise-kettlebell-push-press.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseKettlebellPushPress</string>
 		</dict>
 		<dict>
 			<key>catalogPath</key>
@@ -661,6 +771,16 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExerciseMachineShoulderPress</string>
+			<key>relativePath</key>
+			<string>./exercise-machine-shoulder-press.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseMachineShoulderPress</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExerciseNordicCurl</string>
 			<key>relativePath</key>
 			<string>./exercise-nordic-curl.imageset</string>
@@ -721,6 +841,16 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExercisePistolSquat</string>
+			<key>relativePath</key>
+			<string>./exercise-pistol-squat.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exercisePistolSquat</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExercisePlank</string>
 			<key>relativePath</key>
 			<string>./exercise-plank.imageset</string>
@@ -766,6 +896,16 @@
 			<string>./exercise-push-up.imageset</string>
 			<key>swiftSymbol</key>
 			<string>exercisePushUp</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseRackPull</string>
+			<key>relativePath</key>
+			<string>./exercise-rack-pull.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseRackPull</string>
 		</dict>
 		<dict>
 			<key>catalogPath</key>
@@ -851,6 +991,16 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExerciseSafetyBarSquat</string>
+			<key>relativePath</key>
+			<string>./exercise-safety-bar-squat.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseSafetyBarSquat</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExerciseSeatedCableRow</string>
 			<key>relativePath</key>
 			<string>./exercise-seated-cable-row.imageset</string>
@@ -931,6 +1081,16 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExerciseSnatchPull</string>
+			<key>relativePath</key>
+			<string>./exercise-snatch-pull.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseSnatchPull</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExerciseSpiderCurl</string>
 			<key>relativePath</key>
 			<string>./exercise-spider-curl.imageset</string>
@@ -951,11 +1111,31 @@
 			<key>catalogPath</key>
 			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
 			<key>objcSymbol</key>
+			<string>ACImageNameExerciseSumoDeadlift</string>
+			<key>relativePath</key>
+			<string>./exercise-sumo-deadlift.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseSumoDeadlift</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
 			<string>ACImageNameExerciseTibialisRaise</string>
 			<key>relativePath</key>
 			<string>./exercise-tibialis-raise.imageset</string>
 			<key>swiftSymbol</key>
 			<string>exerciseTibialisRaise</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/user_octa/Desktop/DESKTOP/PROJECTS/cursor/workout_ios/WorkoutApp/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACImageNameExerciseTrapBarDeadlift</string>
+			<key>relativePath</key>
+			<string>./exercise-trap-bar-deadlift.imageset</string>
+			<key>swiftSymbol</key>
+			<string>exerciseTrapBarDeadlift</string>
 		</dict>
 		<dict>
 			<key>catalogPath</key>

@@ -7,7 +7,7 @@
         "key": "%lld / %lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 281
+          "startingLine": 287
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Skip",
         "location": {
           "startingColumn": 24,
-          "startingLine": 293
+          "startingLine": 299
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "Done",
         "location": {
           "startingColumn": 33,
-          "startingLine": 301
+          "startingLine": 307
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "Next",
         "location": {
           "startingColumn": 42,
-          "startingLine": 301
+          "startingLine": 307
         }
       }
     ]

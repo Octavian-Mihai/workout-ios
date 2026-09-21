@@ -10,6 +10,8 @@ struct DraftExercise: Identifiable {
     var secondaryMuscles: [String]
     var equipment: ExerciseEquipment
     var targetSets: Int
+    var targetReps: Int?
+    var restSeconds: Int?
     var logged: [DraftSet]
 
     init(
@@ -19,6 +21,8 @@ struct DraftExercise: Identifiable {
         secondaryMuscles: [String],
         equipment: ExerciseEquipment? = nil,
         targetSets: Int = 0,
+        targetReps: Int? = nil,
+        restSeconds: Int? = nil,
         logged: [DraftSet] = []
     ) {
         self.id = id
@@ -27,6 +31,8 @@ struct DraftExercise: Identifiable {
         self.secondaryMuscles = secondaryMuscles
         self.equipment = equipment ?? ExerciseEquipment.infer(from: name)
         self.targetSets = targetSets
+        self.targetReps = targetReps
+        self.restSeconds = restSeconds
         self.logged = logged
     }
 }
@@ -100,18 +106,31 @@ final class SessionController: ObservableObject {
     @Published var drafts: [UUID: ExerciseDraft] = [:]
     @Published var loggedEdits: [UUID: ExerciseDraft] = [:]
     @Published var barWeightOverrides: [UUID: Double] = [:]
+    @Published var prSetIDs: Set<UUID> = []
+    @Published var prPulse = 0
+    @Published var showSuggestionByExercise: [UUID: Bool] = [:]
+    @Published var latestPRExerciseID: UUID?
+    @Published var latestPREstimateKg: Double?
 
     let program: Program?
     let programDay: ProgramDay?
     let isEmpty: Bool
     let originalNames: [String]
 
+    var pastSessions: [WorkoutSession] = []
+    private let restTimer: RestTimerService
     private var timerCancellable: AnyCancellable?
 
-    init(program: Program?, programDay: ProgramDay?, defaultRest: Int = 90) {
+    init(
+        program: Program?,
+        programDay: ProgramDay?,
+        defaultRest: Int = 90,
+        restTimer: RestTimerService = .shared
+    ) {
         self.program = program
         self.programDay = programDay
         self.isEmpty = programDay == nil
+        self.restTimer = restTimer
         self.restDuration = defaultRest
         self.restRemaining = defaultRest
         self.startedAt = Date()
@@ -125,7 +144,9 @@ final class SessionController: ObservableObject {
                     primaryMuscles: item.primaryMuscles,
                     secondaryMuscles: item.secondaryMuscles,
                     equipment: item.equipment,
-                    targetSets: item.targetSets
+                    targetSets: item.targetSets,
+                    targetReps: item.targetReps > 0 ? item.targetReps : nil,
+                    restSeconds: item.restSeconds
                 )
             }
             self.exercises = list
@@ -135,6 +156,42 @@ final class SessionController: ObservableObject {
             self.exercises = []
             self.drafts = [:]
         }
+    }
+
+    init(from session: WorkoutSession, defaultRest: Int = 90, restTimer: RestTimerService = .shared) {
+        self.program = nil
+        self.programDay = nil
+        self.isEmpty = true
+        self.restTimer = restTimer
+        self.restDuration = defaultRest
+        self.restRemaining = defaultRest
+        self.startedAt = Date()
+        self.focusedField = nil
+
+        var exerciseOrder: [String] = []
+        var grouped: [String: [SetLog]] = [:]
+        for set in session.orderedSets {
+            if grouped[set.exerciseName] == nil {
+                exerciseOrder.append(set.exerciseName)
+                grouped[set.exerciseName] = []
+            }
+            grouped[set.exerciseName, default: []].append(set)
+        }
+
+        self.originalNames = exerciseOrder
+        let list = exerciseOrder.compactMap { name -> DraftExercise? in
+            guard let sets = grouped[name], let first = sets.first else { return nil }
+            return DraftExercise(
+                name: name,
+                primaryMuscles: first.primaryMuscles,
+                secondaryMuscles: first.secondaryMuscles,
+                equipment: ExerciseCatalog.equipment(forName: name),
+                targetSets: sets.count,
+                targetReps: sets.last?.targetReps ?? sets.last?.reps
+            )
+        }
+        self.exercises = list
+        self.drafts = Dictionary(uniqueKeysWithValues: list.map { ($0.id, ExerciseDraft()) })
     }
 
     var loggedSetCount: Int {
@@ -147,30 +204,60 @@ final class SessionController: ObservableObject {
     }
 
     func tick() {
-        guard timerRunning, restRemaining > 0 else { return }
-        restRemaining -= 1
-        if restRemaining == 0 {
+        guard timerRunning else { return }
+        restRemaining = restTimer.remainingSeconds()
+        if restTimer.syncFromWallClock() {
+            timerRunning = false
+            restRemaining = 0
+            restCompletedPulse += 1
+            stopTimer()
+        } else if restRemaining == 0 {
             timerRunning = false
             restCompletedPulse += 1
             stopTimer()
+            restTimer.resetRest()
         }
     }
 
-    func startRest() {
+    func startRest(for exerciseID: UUID? = nil) {
+        if let exerciseID,
+           let exercise = exercises.first(where: { $0.id == exerciseID }) {
+            restDuration = ExerciseRestDefaults.seconds(for: exercise, fallback: restDuration)
+        }
         restRemaining = restDuration
         timerRunning = true
+        let name = exerciseID.flatMap { id in exercises.first(where: { $0.id == id })?.name }
+        restTimer.startRest(
+            duration: restDuration,
+            exerciseName: name,
+            sessionLabel: programDay?.name ?? "Workout"
+        )
         ensureTimer()
     }
 
     func resetRest() {
         restRemaining = restDuration
         timerRunning = false
+        restTimer.resetRest()
         stopTimer()
     }
 
     func stopTimer() {
         timerCancellable?.cancel()
         timerCancellable = nil
+    }
+
+    func showSuggestion(for exerciseID: UUID) -> Bool {
+        showSuggestionByExercise[exerciseID] ?? false
+    }
+
+    func toggleSuggestion(for exerciseID: UUID) {
+        showSuggestionByExercise[exerciseID] = !(showSuggestionByExercise[exerciseID] ?? false)
+    }
+
+    func updateRestSeconds(for exerciseID: UUID, seconds: Int) {
+        guard let index = exercises.firstIndex(where: { $0.id == exerciseID }) else { return }
+        exercises[index].restSeconds = seconds
     }
 
     private func ensureTimer() {
@@ -184,8 +271,22 @@ final class SessionController: ObservableObject {
 
     func logSet(exerciseID: UUID, weightKg: Double, reps: Int, rir: Int) {
         guard let index = exercises.firstIndex(where: { $0.id == exerciseID }) else { return }
-        exercises[index].logged.append(DraftSet(weightKg: weightKg, reps: reps, rir: rir))
-        startRest()
+        let exercise = exercises[index]
+        let set = DraftSet(weightKg: weightKg, reps: reps, rir: rir)
+        exercises[index].logged.append(set)
+        if PersonalRecordTracker.isNewPR(
+            weightKg: weightKg,
+            reps: reps,
+            rir: rir,
+            exerciseName: exercise.name,
+            sessions: pastSessions
+        ) {
+            prSetIDs.insert(set.id)
+            prPulse += 1
+            latestPRExerciseID = exerciseID
+            latestPREstimateKg = OneRM.estimate(weight: weightKg, reps: reps, rir: rir)
+        }
+        startRest(for: exerciseID)
     }
 
     func updateSet(exerciseID: UUID, setID: UUID, weightKg: Double, reps: Int, rir: Int) {
@@ -319,6 +420,8 @@ final class SessionController: ObservableObject {
             secondaryMuscles: catalog.secondaryNames,
             equipment: catalog.equipment,
             targetSets: existing.targetSets,
+            targetReps: existing.targetReps,
+            restSeconds: existing.restSeconds,
             logged: []
         )
         drafts[existing.id] = ExerciseDraft()
@@ -340,6 +443,8 @@ final class SessionController: ObservableObject {
             secondaryMuscles: secondary,
             equipment: equipment,
             targetSets: existing.targetSets,
+            targetReps: existing.targetReps,
+            restSeconds: existing.restSeconds,
             logged: []
         )
         drafts[existing.id] = ExerciseDraft()
@@ -402,6 +507,7 @@ struct LiveSessionView: View {
     @AppStorage("weightUnit") private var weightUnitRaw = WeightUnit.kg.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
+    @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
     @AppStorage(HealthKitService.writeStrengthToHealthKitKey) private var writeStrengthToHealthKit = false
     @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
     @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
@@ -443,6 +549,8 @@ struct LiveSessionView: View {
                             unit: unit,
                             accent: accent,
                             previousSets: previousSets(for: exercise.name),
+                            sessions: pastSessions,
+                            showStressAnalysis: showStressAnalysis,
                             onReorder: { showReorderSheet = true },
                             onStructureChanged: noteExerciseStructureChanged,
                             onDeleteSet: { setID in
@@ -569,10 +677,17 @@ struct LiveSessionView: View {
             }
         }
         .sensoryFeedback(.success, trigger: restTimerHaptics ? controller.restCompletedPulse : 0)
+        .sensoryFeedback(.impact(weight: .medium), trigger: restTimerHaptics ? controller.prPulse : 0)
         .onChange(of: controller.restCompletedPulse) { _, pulse in
             if pulse > 0 {
                 RestTimerSound.play()
             }
+        }
+        .onAppear {
+            controller.pastSessions = pastSessions
+        }
+        .onChange(of: pastSessions.count) { _, _ in
+            controller.pastSessions = pastSessions
         }
     }
 
@@ -700,7 +815,7 @@ struct LiveSessionView: View {
                 if controller.timerRunning {
                     controller.resetRest()
                 } else {
-                    controller.startRest()
+                    controller.startRest(for: nil)
                 }
             }
             .buttonStyle(.bordered)
@@ -747,7 +862,7 @@ struct LiveSessionView: View {
                     weight: set.weightKg,
                     reps: set.reps,
                     rir: set.rir,
-                    targetReps: nil
+                    targetReps: exercise.targetReps
                 )
                 log.session = session
                 modelContext.insert(log)
@@ -797,10 +912,11 @@ struct LiveSessionView: View {
                 primaryMuscles: exercise.primaryMuscles,
                 secondaryMuscles: exercise.secondaryMuscles,
                 targetSets: exercise.targetSets,
-                targetReps: 0,
+                targetReps: exercise.targetReps ?? 0,
                 sortIndex: index,
                 equipment: exercise.equipment
             )
+            item.restSeconds = exercise.restSeconds
             item.day = day
             modelContext.insert(item)
         }
@@ -814,6 +930,8 @@ struct SessionExerciseCard: View {
     let unit: WeightUnit
     let accent: Color
     let previousSets: [SetLog]
+    var sessions: [WorkoutSession] = []
+    var showStressAnalysis: Bool = true
     var onReorder: () -> Void
     var onStructureChanged: () -> Void
     var onDeleteSet: (UUID) -> Void
@@ -825,6 +943,7 @@ struct SessionExerciseCard: View {
     @State private var showSwapConfirm = false
     @State private var pendingSwapCatalog: CatalogExercise?
     @State private var pendingSwapCustom: (name: String, equipment: ExerciseEquipment, primary: [String], secondary: [String])?
+    @State private var showRestEditor = false
 
     private var live: DraftExercise {
         controller.exercises.first(where: { $0.id == exercise.id }) ?? exercise
@@ -846,8 +965,35 @@ struct SessionExerciseCard: View {
         live.logged.count + 1
     }
 
+    private var fatigueHint: String? {
+        guard showStressAnalysis else { return nil }
+        return StressCalculator.sessionFatigueHint(
+            primaryMuscles: live.primaryMuscles,
+            sessions: sessions
+        )
+    }
+
+    private var effectiveRestSeconds: Int {
+        ExerciseRestDefaults.seconds(for: live, fallback: controller.restDuration)
+    }
+
+    private var showSuggestion: Bool {
+        controller.showSuggestion(for: exercise.id)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
+            if controller.latestPRExerciseID == exercise.id,
+               let estimate = controller.latestPREstimateKg {
+                Text("New estimated 1RM PR — \(unit.format(estimate))")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(accent)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(accent.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            }
+
             HStack(alignment: .top, spacing: 12) {
                 Button {
                     showDetails = true
@@ -913,6 +1059,12 @@ struct SessionExerciseCard: View {
                         .layoutPriority(1)
                         .accessibilityLabel("Exercise actions")
                     }
+                    if let fatigueHint {
+                        Text(fatigueHint)
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                            .padding(.top, 4)
+                    }
                     Spacer(minLength: 0)
                     if !live.primaryMuscles.isEmpty || live.targetSets > 0 {
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -938,6 +1090,15 @@ struct SessionExerciseCard: View {
                 .frame(minHeight: thumbnailSize, alignment: .top)
             }
 
+            Button {
+                showRestEditor = true
+            } label: {
+                Text("Rest \(Formatters.duration(effectiveRestSeconds))")
+                    .font(.caption.weight(.medium).monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+            .buttonStyle(.plain)
+
             setColumnHeader
 
             if !live.logged.isEmpty {
@@ -948,6 +1109,15 @@ struct SessionExerciseCard: View {
                         SetGridRow(
                             setNumber: index + 1,
                             previousSet: previousSets[safe: index],
+                            suggestion: ProgressionHintEngine.suggest(
+                                setIndex: index,
+                                previousSessionSets: previousSets,
+                                currentSessionSets: live.logged,
+                                targetReps: live.targetReps,
+                                unit: unit
+                            ),
+                            showSuggestion: showSuggestion,
+                            isPR: controller.prSetIDs.contains(set.id),
                             weightText: editing?.weightText ?? unit.formatNumber(set.weightKg),
                             repsText: editing?.repsText ?? "\(set.reps)",
                             rir: editing?.rir ?? set.rir,
@@ -956,6 +1126,7 @@ struct SessionExerciseCard: View {
                             isPreview: false,
                             weightFocused: controller.focusedField == .weight(exercise.id, setID: set.id),
                             repsFocused: controller.focusedField == .reps(exercise.id, setID: set.id),
+                            onPreviousTap: { controller.toggleSuggestion(for: exercise.id) },
                             onWeightTap: {
                                 controller.ensureLoggedEdit(exerciseID: exercise.id, setID: set.id, unit: unit)
                                 controller.focusedField = .weight(exercise.id, setID: set.id)
@@ -989,6 +1160,15 @@ struct SessionExerciseCard: View {
             SetGridRow(
                 setNumber: nextSetNumber,
                 previousSet: previousSets[safe: live.logged.count],
+                suggestion: ProgressionHintEngine.suggest(
+                    setIndex: live.logged.count,
+                    previousSessionSets: previousSets,
+                    currentSessionSets: live.logged,
+                    targetReps: live.targetReps,
+                    unit: unit
+                ),
+                showSuggestion: showSuggestion,
+                isPR: false,
                 weightText: draft.weightText.isEmpty ? "" : draft.weightText,
                 repsText: draft.repsText.isEmpty ? "" : draft.repsText,
                 rir: draft.rir,
@@ -997,6 +1177,7 @@ struct SessionExerciseCard: View {
                 isPreview: true,
                 weightFocused: weightFocused,
                 repsFocused: repsFocused,
+                onPreviousTap: { controller.toggleSuggestion(for: exercise.id) },
                 onWeightTap: {
                     controller.ensureDraft(for: exercise.id, unit: unit, previousSets: previousSets)
                     controller.focusedField = .weight(exercise.id, setID: nil)
@@ -1018,6 +1199,29 @@ struct SessionExerciseCard: View {
         .opaqueCard()
         .onAppear {
             controller.ensureDraft(for: exercise.id, unit: unit, previousSets: previousSets)
+        }
+        .sheet(isPresented: $showRestEditor) {
+            NavigationStack {
+                Form {
+                    Stepper(
+                        "Rest \(Formatters.duration(effectiveRestSeconds))",
+                        value: Binding(
+                            get: { live.restSeconds ?? effectiveRestSeconds },
+                            set: { controller.updateRestSeconds(for: exercise.id, seconds: $0) }
+                        ),
+                        in: 15...300,
+                        step: 15
+                    )
+                }
+                .navigationTitle("Rest time")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") { showRestEditor = false }
+                    }
+                }
+            }
+            .presentationDetents([.height(180)])
         }
         .sheet(isPresented: $showHistory) {
             NavigationStack {
@@ -1157,7 +1361,7 @@ struct SessionExerciseCard: View {
         HStack(spacing: 8) {
             Text("Set")
                 .frame(width: 32, alignment: .center)
-            Text("Last")
+            Text(showSuggestion ? "Suggest" : "Last")
                 .frame(width: 88, alignment: .center)
             Text(unit.rawValue)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -1174,6 +1378,9 @@ struct SessionExerciseCard: View {
 private struct SetGridRow: View {
     let setNumber: Int
     let previousSet: SetLog?
+    let suggestion: ProgressionSuggestion?
+    let showSuggestion: Bool
+    let isPR: Bool
     let weightText: String
     let repsText: String
     let rir: Int
@@ -1182,18 +1389,31 @@ private struct SetGridRow: View {
     let isPreview: Bool
     let weightFocused: Bool
     let repsFocused: Bool
+    var onPreviousTap: () -> Void
     var onWeightTap: () -> Void
     var onRepsTap: () -> Void
     @Environment(AppTheme.self) private var theme
 
     var body: some View {
         HStack(spacing: 8) {
-            Text("\(setNumber)")
-                .font(.body.weight(.bold).monospacedDigit())
-                .foregroundStyle(.secondary)
-                .frame(width: 32, height: 32)
-                .background(theme.mutedFill)
-                .clipShape(Circle())
+            ZStack(alignment: .topTrailing) {
+                Text("\(setNumber)")
+                    .font(.body.weight(.bold).monospacedDigit())
+                    .foregroundStyle(.secondary)
+                    .frame(width: 32, height: 32)
+                    .background(theme.mutedFill)
+                    .clipShape(Circle())
+                if isPR {
+                    Text("PR")
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 2)
+                        .background(accent)
+                        .clipShape(Capsule())
+                        .offset(x: 6, y: -6)
+                }
+            }
 
             previousCell
                 .frame(width: 88, alignment: .center)
@@ -1214,20 +1434,29 @@ private struct SetGridRow: View {
 
     @ViewBuilder
     private var previousCell: some View {
-        if let previousSet {
-            HStack(spacing: 4) {
-                Text("\(unit.formatNumber(previousSet.weight)) × \(previousSet.reps)")
-                    .font(.subheadline.monospacedDigit())
-                    .foregroundStyle(.secondary)
+        Button(action: onPreviousTap) {
+            if showSuggestion, let suggestion {
+                Text("\(unit.formatNumber(suggestion.weightKg)) × \(suggestion.reps)")
+                    .font(.subheadline.monospacedDigit().weight(.semibold))
+                    .foregroundStyle(accent)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
-                RIRDot(rir: previousSet.rir, size: 14)
+            } else if let previousSet {
+                HStack(spacing: 4) {
+                    Text("\(unit.formatNumber(previousSet.weight)) × \(previousSet.reps)")
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                    RIRDot(rir: previousSet.rir, size: 14)
+                }
+            } else {
+                Text("—")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
-        } else {
-            Text("—")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
         }
+        .buttonStyle(.plain)
     }
 
     private func inputCell(value: String, placeholder: String, focused: Bool, action: @escaping () -> Void) -> some View {

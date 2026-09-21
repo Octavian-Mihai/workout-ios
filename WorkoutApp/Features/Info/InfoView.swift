@@ -106,6 +106,28 @@ struct InfoView: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
+
+                                NavigationLink {
+                                    MuscleFreshnessView()
+                                } label: {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("Muscle freshness")
+                                                .font(.headline)
+                                                .foregroundStyle(.primary)
+                                            Text("Per-muscle recovery from recent training")
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption.weight(.semibold))
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .padding(16)
+                                    .opaqueCard()
+                                }
+                                .buttonStyle(.plain)
                             }
                             .padding(.top, 8)
                         } label: {

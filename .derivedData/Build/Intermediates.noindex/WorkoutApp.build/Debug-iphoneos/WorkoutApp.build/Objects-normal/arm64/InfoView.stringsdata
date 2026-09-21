@@ -7,7 +7,7 @@
         "key": "Info",
         "location": {
           "startingColumn": 30,
-          "startingLine": 144
+          "startingLine": 166
         }
       },
       {
@@ -20,10 +20,26 @@
       },
       {
         "comment": "",
+        "key": "Muscle freshness",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 115
+        }
+      },
+      {
+        "comment": "",
+        "key": "Per-muscle recovery from recent training",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
         "key": "My stress",
         "location": {
           "startingColumn": 34,
-          "startingLine": 112
+          "startingLine": 134
         }
       },
       {
@@ -31,7 +47,7 @@
         "key": "Analytics",
         "location": {
           "startingColumn": 34,
-          "startingLine": 128
+          "startingLine": 150
         }
       },
       {
@@ -39,7 +55,7 @@
         "key": "Exercise history",
         "location": {
           "startingColumn": 26,
-          "startingLine": 155
+          "startingLine": 177
         }
       },
       {
@@ -47,7 +63,7 @@
         "key": "1RM and weight evolution for logged lifts",
         "location": {
           "startingColumn": 26,
-          "startingLine": 158
+          "startingLine": 180
         }
       },
       {
@@ -55,7 +71,7 @@
         "key": "Measurements",
         "location": {
           "startingColumn": 26,
-          "startingLine": 179
+          "startingLine": 201
         }
       },
       {
@@ -63,7 +79,7 @@
         "key": "Progress photos, body weight, calories, and circumferences",
         "location": {
           "startingColumn": 26,
-          "startingLine": 182
+          "startingLine": 204
         }
       }
     ]

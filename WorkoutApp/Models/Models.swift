@@ -72,6 +72,7 @@ final class DayExercise {
     var targetReps: Int
     var sortIndex: Int
     var equipmentRaw: String = ""
+    var restSeconds: Int? = nil
     var day: ProgramDay?
 
     init(
@@ -181,8 +182,15 @@ final class SetLog {
         self.timestamp = timestamp
     }
 
-    var primaryMuscles: [String] { MuscleCSV.decode(primaryMusclesCSV) }
-    var secondaryMuscles: [String] { MuscleCSV.decode(secondaryMusclesCSV) }
+    var primaryMuscles: [String] {
+        get { MuscleCSV.decode(primaryMusclesCSV) }
+        set { primaryMusclesCSV = MuscleCSV.encode(newValue) }
+    }
+
+    var secondaryMuscles: [String] {
+        get { MuscleCSV.decode(secondaryMusclesCSV) }
+        set { secondaryMusclesCSV = MuscleCSV.encode(newValue) }
+    }
 
     var volume: Double { weight * Double(reps) }
 

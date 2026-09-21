@@ -92,6 +92,72 @@ enum CustomExerciseCollector {
         try? modelContext.save()
     }
 
+    enum UpdateError: LocalizedError {
+        case catalogCollision
+        case duplicateName
+        case emptyName
+
+        var errorDescription: String? {
+            switch self {
+            case .catalogCollision:
+                return "That name matches a built-in catalog exercise. Choose a different name."
+            case .duplicateName:
+                return "Another custom exercise already uses that name."
+            case .emptyName:
+                return "Exercise name cannot be empty."
+            }
+        }
+    }
+
+    static func update(
+        oldName: String,
+        newName: String,
+        equipment: ExerciseEquipment,
+        primary: [String],
+        secondary: [String],
+        programs: [Program],
+        sessions: [WorkoutSession],
+        in modelContext: ModelContext
+    ) throws {
+        let trimmed = newName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { throw UpdateError.emptyName }
+
+        let oldKey = oldName.lowercased()
+        let newKey = trimmed.lowercased()
+
+        guard ExerciseCatalog.match(name: trimmed) == nil else {
+            throw UpdateError.catalogCollision
+        }
+
+        if newKey != oldKey {
+            let customs = collect(programs: programs, sessions: sessions)
+            if customs.contains(where: { $0.id == newKey }) {
+                throw UpdateError.duplicateName
+            }
+        }
+
+        for program in programs {
+            for day in program.orderedDays {
+                for exercise in day.exercises where exercise.name.lowercased() == oldKey {
+                    exercise.name = trimmed
+                    exercise.equipment = equipment
+                    exercise.primaryMuscles = primary
+                    exercise.secondaryMuscles = secondary
+                }
+            }
+        }
+
+        for session in sessions {
+            for set in session.sets where set.exerciseName.lowercased() == oldKey {
+                set.exerciseName = trimmed
+                set.primaryMuscles = primary
+                set.secondaryMuscles = secondary
+            }
+        }
+
+        try modelContext.save()
+    }
+
     private static func merge(_ map: inout [String: CustomExerciseRecord], _ record: CustomExerciseRecord) {
         let key = record.id
         guard let existing = map[key] else {

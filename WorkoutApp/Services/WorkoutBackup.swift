@@ -44,6 +44,7 @@ struct ExerciseBackup: Codable {
     var targetReps: Int
     var sortIndex: Int
     var equipment: String?
+    var restSeconds: Int? = nil
 }
 
 struct SessionBackup: Codable {
@@ -115,7 +116,8 @@ enum WorkoutBackupService {
                             targetSets: item.targetSets,
                             targetReps: item.targetReps,
                             sortIndex: item.sortIndex,
-                            equipment: item.equipmentRaw
+                            equipment: item.equipmentRaw,
+                            restSeconds: item.restSeconds
                         )
                     }
                 )
@@ -256,6 +258,7 @@ enum WorkoutBackupService {
                         sortIndex: item.sortIndex,
                         equipment: equipment
                     )
+                    exercise.restSeconds = item.restSeconds
                     exercise.day = dayModel
                     context.insert(exercise)
                 }

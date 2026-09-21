@@ -14,11 +14,11 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		mDHcMGq8NU0tEr+7X8eRPXp5wYM=
+		+TZuQrC4FbXKXawsMidxuAvG0ng=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		Ai5ugLvoQPmJneKs2nIl9dFxV5w=
+		VsoyciYb9wGH/VCeGk1pZb2dzN4=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -34,15 +34,15 @@
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/WorkoutWidgets</key>
 		<data>
-		xJ4ulGh6oA15MggHQ7dSm9R4T3c=
+		VDZMpLuRKrCAIudSyWUIV/tuV+o=
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/WorkoutWidgets.debug.dylib</key>
 		<data>
-		wy4nxb6VSMwtGKYjWXbXJi/vqho=
+		lDYhYtNXOlLVnZ6t2+8+5i8QK6c=
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/_CodeSignature/CodeResources</key>
 		<data>
-		usBYTOJInCBSViff9Ki4PBj3Oe8=
+		7n6UKUhXK+I0ykVNL8vF1cjiVqs=
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/__preview.dylib</key>
 		<data>
@@ -50,7 +50,7 @@
 		</data>
 		<key>Workout.debug.dylib</key>
 		<data>
-		S2umSTorPtzGO5okEDGsqAxF4Lc=
+		6QsRUZiSD5GZy2dn68apbp5bLVw=
 		</data>
 		<key>__preview.dylib</key>
 		<data>
@@ -77,7 +77,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			vtoWNm3OkgsRLie+BT22mpbE9mn/juEMhS4/ErEk478=
+			3LdB0ECjWYorZdm+Dzg1sI2lKsXD82TcV3wQUBBadNg=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/Assets.car</key>
@@ -98,21 +98,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			IcuMol1MjSDe/Mu2oZGm1RfbodbIdL/CEtUdN5FxCVc=
+			kUYAfkMKMF4qz5O7RKqj8JGejiW4+aJFo/y6WnEeNIg=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/WorkoutWidgets.debug.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			HrNR397llO+cJNgsk/qaiu4SPznKuS4Rk0Cp4vcA8XA=
+			d0EVopyLN4xX697+vcZ6rZQkQHomSmHM9BRcUcpX7mA=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/_CodeSignature/CodeResources</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			gFgy1dyHODlXx2CLQxEZ8xjjhz0VFJL/YdYbr/O/xvY=
+			QJq8/tSup2VYEQJi7dH6voJtpl0AkvNanLepCjCb0ps=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/__preview.dylib</key>
@@ -126,7 +126,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			kduUer4sk1NBG5o+WShj/c7Noh4b3ezI7INoNbvtWro=
+			ZGn3oBgbe/0CZVb0HSiPSWwfn+Rn3B19i5mSy2oiyYI=
 			</data>
 		</dict>
 		<key>__preview.dylib</key>

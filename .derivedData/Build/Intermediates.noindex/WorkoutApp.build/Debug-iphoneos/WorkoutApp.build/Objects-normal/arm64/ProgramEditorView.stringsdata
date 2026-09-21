@@ -108,10 +108,26 @@
       },
       {
         "comment": "",
+        "key": "Could not save exercise",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 359
+        }
+      },
+      {
+        "comment": "",
         "key": "Secondary: %@",
         "location": {
           "startingColumn": 22,
-          "startingLine": 294
+          "startingLine": 314
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit %@",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 295
         }
       },
       {
@@ -119,7 +135,31 @@
         "key": "%lld sets",
         "location": {
           "startingColumn": 26,
-          "startingLine": 284
+          "startingLine": 304
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld reps target",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 323
+        }
+      },
+      {
+        "comment": "",
+        "key": "Rest %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 333
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 363
         }
       }
     ]

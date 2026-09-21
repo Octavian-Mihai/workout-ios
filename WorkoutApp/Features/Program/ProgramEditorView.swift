@@ -267,6 +267,15 @@ struct DayEditorView: View {
 struct DayExerciseEditorRow: View {
     @Bindable var exercise: DayExercise
     var onSetsChanged: () -> Void = {}
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Program.createdAt) private var programs: [Program]
+    @Query(sort: \WorkoutSession.startDate, order: .reverse) private var sessions: [WorkoutSession]
+    @State private var showEdit = false
+    @State private var updateErrorMessage: String?
+
+    private var isCustom: Bool {
+        ExerciseCatalog.match(name: exercise.name) == nil
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -274,6 +283,17 @@ struct DayExerciseEditorRow: View {
                 Text(exercise.name)
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                if isCustom {
+                    Button {
+                        showEdit = true
+                    } label: {
+                        Image(systemName: "pencil")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Edit \(exercise.name)")
+                }
                 Stepper(value: Binding(
                     get: { exercise.targetSets },
                     set: { newValue in
@@ -295,7 +315,81 @@ struct DayExerciseEditorRow: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            HStack {
+                Stepper(value: Binding(
+                    get: { exercise.targetReps },
+                    set: { exercise.targetReps = $0 }
+                ), in: 1...30) {
+                    Text("\(exercise.targetReps) reps target")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
+            HStack {
+                Stepper(value: Binding(
+                    get: { exercise.restSeconds ?? ExerciseRestDefaults.seconds(for: exercise, fallback: 90) },
+                    set: { exercise.restSeconds = $0 }
+                ), in: 15...300, step: 15) {
+                    Text("Rest \(Formatters.duration(exercise.restSeconds ?? ExerciseRestDefaults.seconds(for: exercise, fallback: 90)))")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
         .padding(.vertical, 4)
+        .sheet(isPresented: $showEdit) {
+            NavigationStack {
+                CustomExerciseForm(
+                    mode: .edit(originalName: exercise.name),
+                    initialName: exercise.name,
+                    initialEquipment: exercise.equipment,
+                    initialPrimary: exercise.primaryMuscles,
+                    initialSecondary: exercise.secondaryMuscles
+                ) { newName, equipment, primary, secondary in
+                    saveEdit(
+                        oldName: exercise.name,
+                        newName: newName,
+                        equipment: equipment,
+                        primary: primary,
+                        secondary: secondary
+                    )
+                }
+            }
+        }
+        .alert("Could not save exercise", isPresented: Binding(
+            get: { updateErrorMessage != nil },
+            set: { if !$0 { updateErrorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {
+                updateErrorMessage = nil
+            }
+        } message: {
+            if let updateErrorMessage {
+                Text(updateErrorMessage)
+            }
+        }
+    }
+
+    private func saveEdit(
+        oldName: String,
+        newName: String,
+        equipment: ExerciseEquipment,
+        primary: [String],
+        secondary: [String]
+    ) {
+        do {
+            try CustomExerciseCollector.update(
+                oldName: oldName,
+                newName: newName,
+                equipment: equipment,
+                primary: primary,
+                secondary: secondary,
+                programs: programs,
+                sessions: sessions,
+                in: modelContext
+            )
+        } catch {
+            updateErrorMessage = error.localizedDescription
+        }
     }
 }

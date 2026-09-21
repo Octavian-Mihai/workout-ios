@@ -73,5 +73,6 @@ struct WorkoutWidgets: WidgetBundle {
         WorkoutYearWidget()
         WorkoutStressWidget()
         WorkoutNextWidget()
+        RestTimerLiveActivity()
     }
 }

@@ -166,6 +166,7 @@ struct WorkoutSessionDetailView: View {
     @Environment(AppTheme.self) private var theme
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var sessionStore: ActiveSessionStore
     @State private var showDeleteConfirm = false
 
     private var model: WorkoutSummaryModel {
@@ -241,6 +242,11 @@ struct WorkoutSessionDetailView: View {
         .navigationTitle("Session")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Repeat workout") {
+                    sessionStore.start(from: session)
+                }
+            }
             ToolbarItem(placement: .destructiveAction) {
                 Button("Delete", role: .destructive) {
                     showDeleteConfirm = true

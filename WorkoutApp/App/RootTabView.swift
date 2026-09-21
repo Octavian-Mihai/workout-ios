@@ -127,6 +127,16 @@ struct RootTabView: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 refreshWidgetSnapshot()
+                if let controller = sessionStore.controller, controller.timerRunning {
+                    if RestTimerService.shared.syncFromWallClock() {
+                        controller.restRemaining = 0
+                        controller.timerRunning = false
+                        controller.restCompletedPulse += 1
+                        controller.stopTimer()
+                    } else {
+                        controller.restRemaining = RestTimerService.shared.remainingSeconds()
+                    }
+                }
             }
         }
         .onChange(of: sessionStore.isPresented) { _, presented in

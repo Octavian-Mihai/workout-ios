@@ -14,11 +14,11 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		mDHcMGq8NU0tEr+7X8eRPXp5wYM=
+		+TZuQrC4FbXKXawsMidxuAvG0ng=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		GfEHe555mzhsqv2gsCWRPkXFAYA=
+		uqAWmcXb86bSoLtxy30S3GM8JZk=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -34,35 +34,35 @@
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/WorkoutWidgets</key>
 		<data>
-		fb7oiuy3X1Av4jYhV0dNR0/FLdU=
+		JFB08nxSdYl4UukKpe0IZL9l9MI=
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/WorkoutWidgets.debug.dylib</key>
 		<data>
-		G0bx7MWypTpyOpQPuwR5auEJeh0=
+		vVzOW9L6TuOy3/dK/RM1kvVaeUQ=
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/_CodeSignature/CodeResources</key>
 		<data>
-		yeco/yA/YZKLc3E2MrG+T4uDRK4=
+		5zQNVZpqGQ8UaZJdSWYF2SUiJ9w=
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/__preview.dylib</key>
 		<data>
-		oOK1oJj3lGZrS0lzY74Xn4ww/QU=
+		hOrCKRgihzsLMKdGoGjP64SZFS0=
 		</data>
 		<key>PlugIns/WorkoutWidgets.appex/embedded.mobileprovision</key>
 		<data>
-		o+Yginnh+T2JpweCHbpep5CWvbg=
+		B6RK2k84AAsX74xJLahJj4Gbt8w=
 		</data>
 		<key>Workout.debug.dylib</key>
 		<data>
-		vfDEY7ByGWjXMFKucqohHANVsG4=
+		DtmTy8MjFl1DnNbBLzJfREHP+3Q=
 		</data>
 		<key>__preview.dylib</key>
 		<data>
-		EjALLFn4mZ+ajPvgJSF8aENqXuo=
+		zUPzucuaaq/JS3xZASZRH/zneiA=
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
-		3nd++JG0lOnWEJt3M/vMcCqoGcw=
+		cMqfRxWvI6SiepdBFjtG79HP/ho=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -85,7 +85,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			vtoWNm3OkgsRLie+BT22mpbE9mn/juEMhS4/ErEk478=
+			3LdB0ECjWYorZdm+Dzg1sI2lKsXD82TcV3wQUBBadNg=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/Assets.car</key>
@@ -106,56 +106,56 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			zfq1BHlqlcMcg+TrZELENucWw5DwdP3md2TkHZDqMe4=
+			Hur36FxR9pB9Pir+qUdZX6DxuWCVFd6/Jh/GT6JVR2A=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/WorkoutWidgets.debug.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qiJm1wCm4I8UlMmTT/9pwYxtoZ2Kd7glSHNX4zfBmW8=
+			m7GvFwqO1nSFXlK/Hwq5rz2ZPRcyJhmIRAbBhly+wzc=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/_CodeSignature/CodeResources</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Fh0Vfuoal40OJBSGVHefdGOjiB8LAF4vHYG6rj8pBJ4=
+			vnp+PR+o5EWoOrdTLhZ8sjelD0yqbRxAkPzOAWA90aE=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/__preview.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Rga7IDSxwgMaQgV+bA8p8hMEgxpRT2/cADNTr1l9y6g=
+			nbDyUvquDe0iLCHQ9AncVg1nXZsFztTkSX+9dVpjWAY=
 			</data>
 		</dict>
 		<key>PlugIns/WorkoutWidgets.appex/embedded.mobileprovision</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			YuGr6FkQKHxSyw8Z5agGcLRqa1uYUHAPccNtAHdX6/U=
+			4iAouYzhVRAVJn0O4xYIN2F0hs47UPPi5+UIs6lgfJM=
 			</data>
 		</dict>
 		<key>Workout.debug.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			OhNQ4RG2ZWCuhmlpzmSPoYWP3c1IREg97VgTyN38C3U=
+			FIBZn5jDvRR5jRqcmnRtvx2P7XXwfIycXSH26r/yhOM=
 			</data>
 		</dict>
 		<key>__preview.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			QnAbrpapqoPb4HZOmOcAXrHLppzOdRG8GEyMbUt1R2g=
+			/GNGi3/Ond3nFgPXc1Lww+Yf5C79dZkcozZYyievF3o=
 			</data>
 		</dict>
 		<key>embedded.mobileprovision</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			pf5a7LZGt/rD21TLPUIPy/LQXkd/NsAlkECxn1ioLGU=
+			Am8Jvl9+5/JLxqKwwCGcItok2Qq6AT39RqQxVssq5CM=
 			</data>
 		</dict>
 	</dict>

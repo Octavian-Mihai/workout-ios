@@ -19,6 +19,16 @@ final class ActiveSessionStore: ObservableObject {
         isPresented = true
     }
 
+    func start(from session: WorkoutSession) {
+        if controller != nil {
+            isPresented = true
+            return
+        }
+        let rest = UserDefaults.standard.object(forKey: "defaultRestSeconds") as? Int ?? 90
+        controller = SessionController(from: session, defaultRest: rest)
+        isPresented = true
+    }
+
     func minimize() {
         isPresented = false
     }
@@ -30,12 +40,14 @@ final class ActiveSessionStore: ObservableObject {
 
     func finish() {
         controller?.stopTimer()
+        RestTimerService.shared.resetRest()
         controller = nil
         isPresented = false
     }
 
     func discard() {
         controller?.stopTimer()
+        RestTimerService.shared.resetRest()
         controller = nil
         isPresented = false
     }

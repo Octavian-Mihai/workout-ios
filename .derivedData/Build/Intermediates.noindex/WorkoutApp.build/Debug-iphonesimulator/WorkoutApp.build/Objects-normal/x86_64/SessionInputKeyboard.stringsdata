@@ -7,7 +7,7 @@
         "key": "About RIR",
         "location": {
           "startingColumn": 41,
-          "startingLine": 84
+          "startingLine": 92
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "RIR",
         "location": {
           "startingColumn": 30,
-          "startingLine": 73
+          "startingLine": 81
         }
       },
       {
@@ -23,15 +23,7 @@
         "key": "Done",
         "location": {
           "startingColumn": 36,
-          "startingLine": 109
-        }
-      },
-      {
-        "comment": "",
-        "key": "Bar %@",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 230
+          "startingLine": 117
         }
       },
       {
@@ -39,7 +31,15 @@
         "key": "rem %@ %@",
         "location": {
           "startingColumn": 26,
-          "startingLine": 223
+          "startingLine": 231
+        }
+      },
+      {
+        "comment": "",
+        "key": "Bar %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 249
         }
       }
     ]

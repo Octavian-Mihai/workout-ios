@@ -8,6 +8,8 @@ struct CustomExercisesSection: View {
     @AppStorage(WorkoutPageVisibility.customExercisesExpandedKey) private var isExpanded = false
     @State private var shareFallbackExercises: [CustomExerciseRecord]?
     @State private var pendingDeleteExercise: CustomExerciseRecord?
+    @State private var editingExercise: CustomExerciseRecord?
+    @State private var updateErrorMessage: String?
 
     private var exercises: [CustomExerciseRecord] {
         CustomExerciseCollector.collect(programs: programs, sessions: sessions)
@@ -50,6 +52,37 @@ struct CustomExercisesSection: View {
         )) {
             if let shareFallbackExercises {
                 ShareFallbackSheet(exercises: shareFallbackExercises)
+            }
+        }
+        .sheet(item: $editingExercise) { exercise in
+            NavigationStack {
+                CustomExerciseForm(
+                    mode: .edit(originalName: exercise.name),
+                    initialName: exercise.name,
+                    initialEquipment: exercise.equipment,
+                    initialPrimary: exercise.primaryMuscles,
+                    initialSecondary: exercise.secondaryMuscles
+                ) { newName, equipment, primary, secondary in
+                    saveEdit(
+                        oldName: exercise.name,
+                        newName: newName,
+                        equipment: equipment,
+                        primary: primary,
+                        secondary: secondary
+                    )
+                }
+            }
+        }
+        .alert("Could not save exercise", isPresented: Binding(
+            get: { updateErrorMessage != nil },
+            set: { if !$0 { updateErrorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {
+                updateErrorMessage = nil
+            }
+        } message: {
+            if let updateErrorMessage {
+                Text(updateErrorMessage)
             }
         }
         .alert("Delete custom exercise?", isPresented: Binding(
@@ -101,6 +134,29 @@ struct CustomExercisesSection: View {
             sessions: sessions,
             in: modelContext
         )
+    }
+
+    private func saveEdit(
+        oldName: String,
+        newName: String,
+        equipment: ExerciseEquipment,
+        primary: [String],
+        secondary: [String]
+    ) {
+        do {
+            try CustomExerciseCollector.update(
+                oldName: oldName,
+                newName: newName,
+                equipment: equipment,
+                primary: primary,
+                secondary: secondary,
+                programs: programs,
+                sessions: sessions,
+                in: modelContext
+            )
+        } catch {
+            updateErrorMessage = error.localizedDescription
+        }
     }
 
     private var shareAllRow: some View {
@@ -158,6 +214,11 @@ struct CustomExercisesSection: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             Menu {
+                Button {
+                    editingExercise = exercise
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
                 Button {
                     if !ExerciseSubmissionService.openMail(
                         exerciseName: exercise.name,

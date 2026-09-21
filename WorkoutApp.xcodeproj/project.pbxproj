@@ -50,6 +50,7 @@
 		A5EC5FA89BA60A158334805A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2BB7618F4EEBFB393C2BBB1 /* AVFoundation.framework */; };
 		B2C3D4E5F60718293A4B5C6E /* WorkoutHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F60718293A4B5C6D7E /* WorkoutHistoryView.swift */; };
 		C4D5E6F708192A3B4C5D6E7F /* CustomExercisesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D5E6F708192A3B4C5D6E80 /* CustomExercisesView.swift */; };
+		D5E6F708192A3B4C5D6E7A1 /* MuscleFreshnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E6F708192A3B4C5D6E7A2 /* MuscleFreshnessView.swift */; };
 		B58967691B6E240732718DA7 /* RunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37446E4DDD7163176DFFAFC8 /* RunningView.swift */; };
 		B7E8F901234567890ABCDEF01 /* ExercisePhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E8F901234567890ABCDEF02 /* ExercisePhotoView.swift */; };
 		B7E8F901234567890ABCDEF03 /* ExercisePreviewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E8F901234567890ABCDEF04 /* ExercisePreviewSheet.swift */; };
@@ -76,6 +77,12 @@
 		EA1E7FE34A65CAC1DD23FF25 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2BCB761E3BD2F6ECD74CA83 /* HealthKit.framework */; };
 		F1A2B3C4D5E60718293A4B5D /* FilterInputKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5E /* FilterInputKeyboard.swift */; };
 		FF1E727C6D979C9AABA1B451 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DF1935B97A864F04647A291 /* MapKit.framework */; };
+		D6E7F8091A2B3C4D5E6F7081 /* PersonalRecordTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E7F8091A2B3C4D5E6F7080 /* PersonalRecordTracker.swift */; };
+		D6E7F8091A2B3C4D5E6F7083 /* ProgressionHintEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E7F8091A2B3C4D5E6F7082 /* ProgressionHintEngine.swift */; };
+		D6E7F8091A2B3C4D5E6F7085 /* RestTimerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E7F8091A2B3C4D5E6F7084 /* RestTimerService.swift */; };
+		D6E7F8091A2B3C4D5E6F7087 /* RestTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E7F8091A2B3C4D5E6F7086 /* RestTimerAttributes.swift */; };
+		D6E7F8091A2B3C4D5E6F7089 /* RestTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E7F8091A2B3C4D5E6F7086 /* RestTimerAttributes.swift */; };
+		D6E7F8091A2B3C4D5E6F708B /* RestTimerLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E7F8091A2B3C4D5E6F708A /* RestTimerLiveActivity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -162,6 +169,7 @@
 		BBF17773585342C27C170F89 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		C3D4E5F60718293A4B5C6D7E /* WorkoutHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistoryView.swift; sourceTree = "<group>"; };
 		C4D5E6F708192A3B4C5D6E80 /* CustomExercisesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomExercisesView.swift; sourceTree = "<group>"; };
+		D5E6F708192A3B4C5D6E7A2 /* MuscleFreshnessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleFreshnessView.swift; sourceTree = "<group>"; };
 		C8F1A2B3D4E50617283A4B5C /* AppTour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTour.swift; sourceTree = "<group>"; };
 		C9D8E7F601234567890ABCD02 /* ProgressPhotoStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressPhotoStorage.swift; sourceTree = "<group>"; };
 		C9D8E7F601234567890ABCD04 /* MeasurementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsView.swift; sourceTree = "<group>"; };
@@ -181,6 +189,11 @@
 		F2BCB761E3BD2F6ECD74CA83 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		F5989C63462884A38BA52973 /* AccentPickerDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentPickerDashboard.swift; sourceTree = "<group>"; };
 		FA6BBBB891955C99D0710309 /* StressCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressCalculator.swift; sourceTree = "<group>"; };
+		D6E7F8091A2B3C4D5E6F7080 /* PersonalRecordTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalRecordTracker.swift; sourceTree = "<group>"; };
+		D6E7F8091A2B3C4D5E6F7082 /* ProgressionHintEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionHintEngine.swift; sourceTree = "<group>"; };
+		D6E7F8091A2B3C4D5E6F7084 /* RestTimerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerService.swift; sourceTree = "<group>"; };
+		D6E7F8091A2B3C4D5E6F7086 /* RestTimerAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerAttributes.swift; sourceTree = "<group>"; };
+		D6E7F8091A2B3C4D5E6F708A /* RestTimerLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerLiveActivity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,7 +228,10 @@
 				B20721E9FB4B4B4F36A718A9 /* HealthKitService.swift */,
 				A99D54D106959C1FC29CAF35 /* NextWorkoutResolver.swift */,
 				4DFE7227737392FE8C66197A /* OneRM.swift */,
+				D6E7F8091A2B3C4D5E6F7080 /* PersonalRecordTracker.swift */,
+				D6E7F8091A2B3C4D5E6F7082 /* ProgressionHintEngine.swift */,
 				C9D8E7F601234567890ABCD02 /* ProgressPhotoStorage.swift */,
+				D6E7F8091A2B3C4D5E6F7084 /* RestTimerService.swift */,
 				FA6BBBB891955C99D0710309 /* StressCalculator.swift */,
 				A10000000000000000000004 /* WidgetSnapshotSync.swift */,
 				7BA34CFD9F56446CE052A02E /* WorkoutBackup.swift */,
@@ -231,6 +247,7 @@
 				17CD87A072FA195D910510F1 /* Formatters.swift */,
 				A7273A2B966C0A2C4FF8A8F0 /* PlateCalculator.swift */,
 				5D20C5D59A01F6E785F367D3 /* RestTimerSound.swift */,
+				D6E7F8091A2B3C4D5E6F7086 /* RestTimerAttributes.swift */,
 				A71F8466EF41AAAC1BB6BD49 /* RIRViews.swift */,
 				E675DAC054C94F4C6C7B6BD4 /* StressLegendView.swift */,
 				A10000000000000000000001 /* WidgetSnapshot.swift */,
@@ -345,6 +362,7 @@
 				A1000000000000000000000B /* WorkoutWidgets.entitlements */,
 				A10000000000000000000008 /* WorkoutWidgetViews.swift */,
 				A10000000000000000000006 /* WorkoutWidgets.swift */,
+				D6E7F8091A2B3C4D5E6F708A /* RestTimerLiveActivity.swift */,
 			);
 			path = WorkoutWidgets;
 			sourceTree = "<group>";
@@ -381,6 +399,7 @@
 			children = (
 				3BA0C8063047EBC800788FEC /* YourGuideView.swift */,
 				BBF17773585342C27C170F89 /* InfoView.swift */,
+				D5E6F708192A3B4C5D6E7A2 /* MuscleFreshnessView.swift */,
 				C9D8E7F601234567890ABCD0C /* TrainingLoadEvolutionChart.swift */,
 			);
 			path = Info;
@@ -601,11 +620,16 @@
 				C9D8E7F601234567890ABCD09 /* ProgressPhotoThumbnail.swift in Sources */,
 				C9D8E7F601234567890ABCD01 /* ProgressPhotoStorage.swift in Sources */,
 				C9D8E7F601234567890ABCD0B /* TrainingLoadEvolutionChart.swift in Sources */,
+				D5E6F708192A3B4C5D6E7A1 /* MuscleFreshnessView.swift in Sources */,
 				083063D580CE8FA180F346AC /* LiveSessionView.swift in Sources */,
 				C1D2E3F4A5B60718293A4C1E /* SessionExerciseReorderView.swift in Sources */,
 				312109604BB6767FA00B4EAD /* Models.swift in Sources */,
 				E1A0F2E2490F92146B1EE1D7 /* NextWorkoutResolver.swift in Sources */,
 				BA6176842BD3AF3499330966 /* OneRM.swift in Sources */,
+				D6E7F8091A2B3C4D5E6F7081 /* PersonalRecordTracker.swift in Sources */,
+				D6E7F8091A2B3C4D5E6F7083 /* ProgressionHintEngine.swift in Sources */,
+				D6E7F8091A2B3C4D5E6F7085 /* RestTimerService.swift in Sources */,
+				D6E7F8091A2B3C4D5E6F7087 /* RestTimerAttributes.swift in Sources */,
 				DFD20EFA53B6EA2C50BA4E57 /* PlateCalculator.swift in Sources */,
 				196F1450A890A2CB67846459 /* ProgramEditorView.swift in Sources */,
 				8A1B2C3D4E5F60718293A4B1 /* ProgramOverviewStats.swift in Sources */,
@@ -644,6 +668,8 @@
 				A10000000000000000000003 /* WidgetSnapshot.swift in Sources */,
 				A10000000000000000000009 /* WorkoutWidgetViews.swift in Sources */,
 				A10000000000000000000007 /* WorkoutWidgets.swift in Sources */,
+				D6E7F8091A2B3C4D5E6F7089 /* RestTimerAttributes.swift in Sources */,
+				D6E7F8091A2B3C4D5E6F708B /* RestTimerLiveActivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

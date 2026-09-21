@@ -17,6 +17,7 @@ struct SettingsView: View {
     @AppStorage("distanceUnit") private var distanceUnitRaw = DistanceUnit.km.rawValue
     @AppStorage("defaultRestSeconds") private var defaultRestSeconds = 90
     @AppStorage("restTimerHaptics") private var restTimerHaptics = true
+    @AppStorage(RestTimerSettings.notificationsKey) private var restTimerNotifications = true
     @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
     @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
     @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
@@ -110,6 +111,7 @@ struct SettingsView: View {
                 Section("Session") {
                     Stepper("Default rest \(defaultRestSeconds)s", value: $defaultRestSeconds, in: 15...300, step: 15)
                     Toggle("Rest-timer haptics", isOn: $restTimerHaptics)
+                    Toggle("Rest timer notifications", isOn: $restTimerNotifications)
                 }
 
                 Section("Stress") {

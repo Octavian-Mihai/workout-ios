@@ -47,7 +47,7 @@
         "key": "Rest %@",
         "location": {
           "startingColumn": 30,
-          "startingLine": 184
+          "startingLine": 194
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "%lld sets · tap to resume",
         "location": {
           "startingColumn": 30,
-          "startingLine": 188
+          "startingLine": 198
         }
       }
     ]

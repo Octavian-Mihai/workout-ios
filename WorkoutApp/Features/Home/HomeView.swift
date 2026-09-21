@@ -59,6 +59,8 @@ struct HomeView: View {
                             TodayStressCard(estimate: todayStress, accent: accent, compact: true)
                                 .tourTarget(.homeTodayStress)
                                 .id(AppTourTargetID.homeTodayStress)
+
+                            MuscleFreshnessCompactCard(sessions: sessions)
                         }
 
                         VStack(alignment: .leading, spacing: 16) {
@@ -78,6 +80,19 @@ struct HomeView: View {
                                 .padding(16)
                                 .opaqueCard()
                             }
+
+                            Button {
+                                if let last = sessions.first(where: { $0.endDate != nil }) {
+                                    sessionStore.start(from: last)
+                                }
+                            } label: {
+                                Label("Repeat last workout", systemImage: "arrow.counterclockwise")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 14)
+                            }
+                            .buttonStyle(.bordered)
+                            .disabled(sessions.first(where: { $0.endDate != nil }) == nil)
 
                             Button {
                                 sessionStore.start(program: nil, programDay: nil)

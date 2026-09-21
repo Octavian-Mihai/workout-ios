@@ -447,6 +447,108 @@ enum StressCalculator {
         return result
     }
 
+    /// Per-muscle daily load 0–100 using primary 100% / secondary 50% volume weighting.
+    static func muscleDailyLoad(from sets: [SetLog]) -> [String: Double] {
+        let volumeByMuscle = muscleVolume(from: sets)
+        var result: [String: Double] = [:]
+        for (muscle, volume) in volumeByMuscle {
+            let muscleSets = sets.filter {
+                $0.primaryMuscles.contains(muscle) || $0.secondaryMuscles.contains(muscle)
+            }
+            let intensities = muscleSets.map { max(0, 5.0 - Double(min($0.rir, 5))) / 5.0 }
+            let avgIntensity = intensities.isEmpty ? 0 : intensities.reduce(0, +) / Double(intensities.count)
+            let volumeScore = min(60.0, volume / 400.0)
+            result[muscle] = min(100, volumeScore + avgIntensity * 40.0)
+        }
+        return result
+    }
+
+    /// Residual fatigue converted to freshness 0–100 for one muscle.
+    static func muscleFreshness(for muscle: String, now: Date = Date(), sessions: [WorkoutSession]) -> Double {
+        let allSets = sessions.flatMap(\.sets)
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: now)
+        var residual = 0.0
+
+        for offset in 0..<residualSeedDays {
+            guard let day = cal.date(byAdding: .day, value: -(residualSeedDays - 1 - offset), to: today) else {
+                continue
+            }
+            let end = cal.date(byAdding: .day, value: 1, to: day) ?? day.addingTimeInterval(86_400)
+            let daySets = allSets.filter { $0.timestamp >= day && $0.timestamp < end }
+            let load = muscleDailyLoad(from: daySets)[muscle] ?? 0
+            residual = min(100, load + residual * residualDecayPerDay)
+        }
+
+        return max(0, 100 - residual)
+    }
+
+    static func allMuscleFreshness(now: Date = Date(), sessions: [WorkoutSession]) -> [String: Double] {
+        var result: [String: Double] = [:]
+        for muscle in MuscleGroup.allCases {
+            result[muscle.rawValue] = muscleFreshness(for: muscle.rawValue, now: now, sessions: sessions)
+        }
+        return result
+    }
+
+    static func freshnessLabel(for score: Double) -> String {
+        switch score {
+        case 70...: return "Fresh"
+        case 40..<70: return "Moderate"
+        default: return "Fatigued"
+        }
+    }
+
+    static func freshnessColor(for score: Double) -> (red: Double, green: Double, blue: Double) {
+        switch score {
+        case 70...:
+            return (0.30, 0.72, 0.48)
+        case 40..<70:
+            return (0.95, 0.58, 0.18)
+        default:
+            return (0.90, 0.25, 0.28)
+        }
+    }
+
+    static func lastLoadDate(for muscle: String, sessions: [WorkoutSession], now: Date = Date()) -> Date? {
+        let cal = Calendar.current
+        let cutoff = now.addingTimeInterval(-Double(residualSeedDays) * 86_400)
+        let matchingSets = sessions
+            .flatMap(\.sets)
+            .filter { set in
+                set.timestamp >= cutoff
+                    && (set.primaryMuscles.contains(muscle) || set.secondaryMuscles.contains(muscle))
+            }
+            .sorted { $0.timestamp > $1.timestamp }
+        guard let latest = matchingSets.first else { return nil }
+        return cal.startOfDay(for: latest.timestamp)
+    }
+
+    static func sessionFatigueHint(
+        primaryMuscles: [String],
+        sessions: [WorkoutSession],
+        now: Date = Date()
+    ) -> String? {
+        var worstMuscle: String?
+        var worstFreshness = 100.0
+
+        for muscle in primaryMuscles {
+            let freshness = muscleFreshness(for: muscle, now: now, sessions: sessions)
+            if freshness < worstFreshness {
+                worstFreshness = freshness
+                worstMuscle = muscle
+            }
+        }
+
+        guard let muscle = worstMuscle, worstFreshness < 40 else { return nil }
+
+        if let loadDate = lastLoadDate(for: muscle, sessions: sessions, now: now) {
+            let dayName = Formatters.weekday.string(from: loadDate)
+            return "\(muscle) still fatigued from \(dayName)"
+        }
+        return "\(muscle) still fatigued from recent training"
+    }
+
     static func bestEstimated1RM(for exerciseName: String, in sets: [SetLog], now: Date = Date()) -> Double {
         let cutoff = now.addingTimeInterval(-90 * 86_400)
         let family = BigLift.allCases.first { $0.matches(exerciseName) }

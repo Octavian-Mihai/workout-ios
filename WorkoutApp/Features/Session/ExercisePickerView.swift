@@ -454,7 +454,31 @@ private struct FilterChipLabel: View {
     }
 }
 
+enum CustomExerciseFormMode: Equatable {
+    case add
+    case edit(originalName: String)
+
+    var navigationTitle: String {
+        switch self {
+        case .add: return "Custom exercise"
+        case .edit: return "Edit exercise"
+        }
+    }
+
+    var saveTitle: String {
+        switch self {
+        case .add: return "Add"
+        case .edit: return "Save"
+        }
+    }
+}
+
 struct CustomExerciseForm: View {
+    var mode: CustomExerciseFormMode = .add
+    var initialName: String = ""
+    var initialEquipment: ExerciseEquipment = .barbell
+    var initialPrimary: [String] = []
+    var initialSecondary: [String] = []
     var onSave: (String, ExerciseEquipment, [String], [String]) -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -494,13 +518,19 @@ struct CustomExerciseForm: View {
                 }
             }
         }
-        .navigationTitle("Custom exercise")
+        .navigationTitle(mode.navigationTitle)
+        .onAppear {
+            name = initialName
+            equipment = initialEquipment
+            primary = Set(initialPrimary)
+            secondary = Set(initialSecondary)
+        }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") { dismiss() }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Add") {
+                Button(mode.saveTitle) {
                     onSave(name.trimmingCharacters(in: .whitespaces), equipment, Array(primary), Array(secondary))
                     dismiss()
                 }

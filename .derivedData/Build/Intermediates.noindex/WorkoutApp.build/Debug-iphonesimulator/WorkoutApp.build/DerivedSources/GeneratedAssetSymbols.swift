@@ -61,6 +61,9 @@ extension DeveloperToolsSupport.ImageResource {
     /// The "exercise-box-jump" asset catalog image resource.
     static let exerciseBoxJump = DeveloperToolsSupport.ImageResource(name: "exercise-box-jump", bundle: resourceBundle)
 
+    /// The "exercise-box-squat" asset catalog image resource.
+    static let exerciseBoxSquat = DeveloperToolsSupport.ImageResource(name: "exercise-box-squat", bundle: resourceBundle)
+
     /// The "exercise-bulgarian-split-squat" asset catalog image resource.
     static let exerciseBulgarianSplitSquat = DeveloperToolsSupport.ImageResource(name: "exercise-bulgarian-split-squat", bundle: resourceBundle)
 
@@ -75,6 +78,12 @@ extension DeveloperToolsSupport.ImageResource {
 
     /// The "exercise-cable-lateral-raise" asset catalog image resource.
     static let exerciseCableLateralRaise = DeveloperToolsSupport.ImageResource(name: "exercise-cable-lateral-raise", bundle: resourceBundle)
+
+    /// The "exercise-cable-pullover" asset catalog image resource.
+    static let exerciseCablePullover = DeveloperToolsSupport.ImageResource(name: "exercise-cable-pullover", bundle: resourceBundle)
+
+    /// The "exercise-cable-rear-delt-fly" asset catalog image resource.
+    static let exerciseCableRearDeltFly = DeveloperToolsSupport.ImageResource(name: "exercise-cable-rear-delt-fly", bundle: resourceBundle)
 
     /// The "exercise-cable-woodchop" asset catalog image resource.
     static let exerciseCableWoodchop = DeveloperToolsSupport.ImageResource(name: "exercise-cable-woodchop", bundle: resourceBundle)
@@ -100,8 +109,14 @@ extension DeveloperToolsSupport.ImageResource {
     /// The "exercise-concentration-curl" asset catalog image resource.
     static let exerciseConcentrationCurl = DeveloperToolsSupport.ImageResource(name: "exercise-concentration-curl", bundle: resourceBundle)
 
+    /// The "exercise-cossack-squat" asset catalog image resource.
+    static let exerciseCossackSquat = DeveloperToolsSupport.ImageResource(name: "exercise-cossack-squat", bundle: resourceBundle)
+
     /// The "exercise-deadlift" asset catalog image resource.
     static let exerciseDeadlift = DeveloperToolsSupport.ImageResource(name: "exercise-deadlift", bundle: resourceBundle)
+
+    /// The "exercise-deficit-deadlift" asset catalog image resource.
+    static let exerciseDeficitDeadlift = DeveloperToolsSupport.ImageResource(name: "exercise-deficit-deadlift", bundle: resourceBundle)
 
     /// The "exercise-dips" asset catalog image resource.
     static let exerciseDips = DeveloperToolsSupport.ImageResource(name: "exercise-dips", bundle: resourceBundle)
@@ -114,6 +129,9 @@ extension DeveloperToolsSupport.ImageResource {
 
     /// The "exercise-dumbbell-fly" asset catalog image resource.
     static let exerciseDumbbellFly = DeveloperToolsSupport.ImageResource(name: "exercise-dumbbell-fly", bundle: resourceBundle)
+
+    /// The "exercise-dumbbell-pullover" asset catalog image resource.
+    static let exerciseDumbbellPullover = DeveloperToolsSupport.ImageResource(name: "exercise-dumbbell-pullover", bundle: resourceBundle)
 
     /// The "exercise-dumbbell-shoulder-press" asset catalog image resource.
     static let exerciseDumbbellShoulderPress = DeveloperToolsSupport.ImageResource(name: "exercise-dumbbell-shoulder-press", bundle: resourceBundle)
@@ -142,6 +160,9 @@ extension DeveloperToolsSupport.ImageResource {
     /// The "exercise-glute-kickback" asset catalog image resource.
     static let exerciseGluteKickback = DeveloperToolsSupport.ImageResource(name: "exercise-glute-kickback", bundle: resourceBundle)
 
+    /// The "exercise-goblet-squat" asset catalog image resource.
+    static let exerciseGobletSquat = DeveloperToolsSupport.ImageResource(name: "exercise-goblet-squat", bundle: resourceBundle)
+
     /// The "exercise-good-morning" asset catalog image resource.
     static let exerciseGoodMorning = DeveloperToolsSupport.ImageResource(name: "exercise-good-morning", bundle: resourceBundle)
 
@@ -150,6 +171,9 @@ extension DeveloperToolsSupport.ImageResource {
 
     /// The "exercise-hammer-curl" asset catalog image resource.
     static let exerciseHammerCurl = DeveloperToolsSupport.ImageResource(name: "exercise-hammer-curl", bundle: resourceBundle)
+
+    /// The "exercise-hand-gripper" asset catalog image resource.
+    static let exerciseHandGripper = DeveloperToolsSupport.ImageResource(name: "exercise-hand-gripper", bundle: resourceBundle)
 
     /// The "exercise-hanging-leg-raise" asset catalog image resource.
     static let exerciseHangingLegRaise = DeveloperToolsSupport.ImageResource(name: "exercise-hanging-leg-raise", bundle: resourceBundle)
@@ -169,11 +193,20 @@ extension DeveloperToolsSupport.ImageResource {
     /// The "exercise-jefferson-curl" asset catalog image resource.
     static let exerciseJeffersonCurl = DeveloperToolsSupport.ImageResource(name: "exercise-jefferson-curl", bundle: resourceBundle)
 
+    /// The "exercise-jm-press" asset catalog image resource.
+    static let exerciseJmPress = DeveloperToolsSupport.ImageResource(name: "exercise-jm-press", bundle: resourceBundle)
+
     /// The "exercise-kettlebell-clean" asset catalog image resource.
     static let exerciseKettlebellClean = DeveloperToolsSupport.ImageResource(name: "exercise-kettlebell-clean", bundle: resourceBundle)
 
     /// The "exercise-kettlebell-clean-and-jerk" asset catalog image resource.
     static let exerciseKettlebellCleanAndJerk = DeveloperToolsSupport.ImageResource(name: "exercise-kettlebell-clean-and-jerk", bundle: resourceBundle)
+
+    /// The "exercise-kettlebell-high-pull" asset catalog image resource.
+    static let exerciseKettlebellHighPull = DeveloperToolsSupport.ImageResource(name: "exercise-kettlebell-high-pull", bundle: resourceBundle)
+
+    /// The "exercise-kettlebell-push-press" asset catalog image resource.
+    static let exerciseKettlebellPushPress = DeveloperToolsSupport.ImageResource(name: "exercise-kettlebell-push-press", bundle: resourceBundle)
 
     /// The "exercise-kettlebell-snatch" asset catalog image resource.
     static let exerciseKettlebellSnatch = DeveloperToolsSupport.ImageResource(name: "exercise-kettlebell-snatch", bundle: resourceBundle)
@@ -217,6 +250,9 @@ extension DeveloperToolsSupport.ImageResource {
     /// The "exercise-machine-hip-adduction" asset catalog image resource.
     static let exerciseMachineHipAdduction = DeveloperToolsSupport.ImageResource(name: "exercise-machine-hip-adduction", bundle: resourceBundle)
 
+    /// The "exercise-machine-shoulder-press" asset catalog image resource.
+    static let exerciseMachineShoulderPress = DeveloperToolsSupport.ImageResource(name: "exercise-machine-shoulder-press", bundle: resourceBundle)
+
     /// The "exercise-nordic-curl" asset catalog image resource.
     static let exerciseNordicCurl = DeveloperToolsSupport.ImageResource(name: "exercise-nordic-curl", bundle: resourceBundle)
 
@@ -235,6 +271,9 @@ extension DeveloperToolsSupport.ImageResource {
     /// The "exercise-pec-deck" asset catalog image resource.
     static let exercisePecDeck = DeveloperToolsSupport.ImageResource(name: "exercise-pec-deck", bundle: resourceBundle)
 
+    /// The "exercise-pistol-squat" asset catalog image resource.
+    static let exercisePistolSquat = DeveloperToolsSupport.ImageResource(name: "exercise-pistol-squat", bundle: resourceBundle)
+
     /// The "exercise-plank" asset catalog image resource.
     static let exercisePlank = DeveloperToolsSupport.ImageResource(name: "exercise-plank", bundle: resourceBundle)
 
@@ -249,6 +288,9 @@ extension DeveloperToolsSupport.ImageResource {
 
     /// The "exercise-push-up" asset catalog image resource.
     static let exercisePushUp = DeveloperToolsSupport.ImageResource(name: "exercise-push-up", bundle: resourceBundle)
+
+    /// The "exercise-rack-pull" asset catalog image resource.
+    static let exerciseRackPull = DeveloperToolsSupport.ImageResource(name: "exercise-rack-pull", bundle: resourceBundle)
 
     /// The "exercise-rear-delt-fly" asset catalog image resource.
     static let exerciseRearDeltFly = DeveloperToolsSupport.ImageResource(name: "exercise-rear-delt-fly", bundle: resourceBundle)
@@ -274,6 +316,9 @@ extension DeveloperToolsSupport.ImageResource {
     /// The "exercise-romanian-deadlift" asset catalog image resource.
     static let exerciseRomanianDeadlift = DeveloperToolsSupport.ImageResource(name: "exercise-romanian-deadlift", bundle: resourceBundle)
 
+    /// The "exercise-safety-bar-squat" asset catalog image resource.
+    static let exerciseSafetyBarSquat = DeveloperToolsSupport.ImageResource(name: "exercise-safety-bar-squat", bundle: resourceBundle)
+
     /// The "exercise-seated-cable-row" asset catalog image resource.
     static let exerciseSeatedCableRow = DeveloperToolsSupport.ImageResource(name: "exercise-seated-cable-row", bundle: resourceBundle)
 
@@ -298,14 +343,23 @@ extension DeveloperToolsSupport.ImageResource {
     /// The "exercise-snatch" asset catalog image resource.
     static let exerciseSnatch = DeveloperToolsSupport.ImageResource(name: "exercise-snatch", bundle: resourceBundle)
 
+    /// The "exercise-snatch-pull" asset catalog image resource.
+    static let exerciseSnatchPull = DeveloperToolsSupport.ImageResource(name: "exercise-snatch-pull", bundle: resourceBundle)
+
     /// The "exercise-spider-curl" asset catalog image resource.
     static let exerciseSpiderCurl = DeveloperToolsSupport.ImageResource(name: "exercise-spider-curl", bundle: resourceBundle)
 
     /// The "exercise-step-up" asset catalog image resource.
     static let exerciseStepUp = DeveloperToolsSupport.ImageResource(name: "exercise-step-up", bundle: resourceBundle)
 
+    /// The "exercise-sumo-deadlift" asset catalog image resource.
+    static let exerciseSumoDeadlift = DeveloperToolsSupport.ImageResource(name: "exercise-sumo-deadlift", bundle: resourceBundle)
+
     /// The "exercise-tibialis-raise" asset catalog image resource.
     static let exerciseTibialisRaise = DeveloperToolsSupport.ImageResource(name: "exercise-tibialis-raise", bundle: resourceBundle)
+
+    /// The "exercise-trap-bar-deadlift" asset catalog image resource.
+    static let exerciseTrapBarDeadlift = DeveloperToolsSupport.ImageResource(name: "exercise-trap-bar-deadlift", bundle: resourceBundle)
 
     /// The "exercise-tricep-pushdown" asset catalog image resource.
     static let exerciseTricepPushdown = DeveloperToolsSupport.ImageResource(name: "exercise-tricep-pushdown", bundle: resourceBundle)

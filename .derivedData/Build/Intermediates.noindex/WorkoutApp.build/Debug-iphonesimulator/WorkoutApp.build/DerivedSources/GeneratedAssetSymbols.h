@@ -48,6 +48,9 @@ static NSString * const ACImageNameExerciseBeltSquat AC_SWIFT_PRIVATE = @"exerci
 /// The "exercise-box-jump" asset catalog image resource.
 static NSString * const ACImageNameExerciseBoxJump AC_SWIFT_PRIVATE = @"exercise-box-jump";
 
+/// The "exercise-box-squat" asset catalog image resource.
+static NSString * const ACImageNameExerciseBoxSquat AC_SWIFT_PRIVATE = @"exercise-box-squat";
+
 /// The "exercise-bulgarian-split-squat" asset catalog image resource.
 static NSString * const ACImageNameExerciseBulgarianSplitSquat AC_SWIFT_PRIVATE = @"exercise-bulgarian-split-squat";
 
@@ -62,6 +65,12 @@ static NSString * const ACImageNameExerciseCableFly AC_SWIFT_PRIVATE = @"exercis
 
 /// The "exercise-cable-lateral-raise" asset catalog image resource.
 static NSString * const ACImageNameExerciseCableLateralRaise AC_SWIFT_PRIVATE = @"exercise-cable-lateral-raise";
+
+/// The "exercise-cable-pullover" asset catalog image resource.
+static NSString * const ACImageNameExerciseCablePullover AC_SWIFT_PRIVATE = @"exercise-cable-pullover";
+
+/// The "exercise-cable-rear-delt-fly" asset catalog image resource.
+static NSString * const ACImageNameExerciseCableRearDeltFly AC_SWIFT_PRIVATE = @"exercise-cable-rear-delt-fly";
 
 /// The "exercise-cable-woodchop" asset catalog image resource.
 static NSString * const ACImageNameExerciseCableWoodchop AC_SWIFT_PRIVATE = @"exercise-cable-woodchop";
@@ -87,8 +96,14 @@ static NSString * const ACImageNameExerciseCloseGripLatPulldown AC_SWIFT_PRIVATE
 /// The "exercise-concentration-curl" asset catalog image resource.
 static NSString * const ACImageNameExerciseConcentrationCurl AC_SWIFT_PRIVATE = @"exercise-concentration-curl";
 
+/// The "exercise-cossack-squat" asset catalog image resource.
+static NSString * const ACImageNameExerciseCossackSquat AC_SWIFT_PRIVATE = @"exercise-cossack-squat";
+
 /// The "exercise-deadlift" asset catalog image resource.
 static NSString * const ACImageNameExerciseDeadlift AC_SWIFT_PRIVATE = @"exercise-deadlift";
+
+/// The "exercise-deficit-deadlift" asset catalog image resource.
+static NSString * const ACImageNameExerciseDeficitDeadlift AC_SWIFT_PRIVATE = @"exercise-deficit-deadlift";
 
 /// The "exercise-dips" asset catalog image resource.
 static NSString * const ACImageNameExerciseDips AC_SWIFT_PRIVATE = @"exercise-dips";
@@ -101,6 +116,9 @@ static NSString * const ACImageNameExerciseDumbbellCurl AC_SWIFT_PRIVATE = @"exe
 
 /// The "exercise-dumbbell-fly" asset catalog image resource.
 static NSString * const ACImageNameExerciseDumbbellFly AC_SWIFT_PRIVATE = @"exercise-dumbbell-fly";
+
+/// The "exercise-dumbbell-pullover" asset catalog image resource.
+static NSString * const ACImageNameExerciseDumbbellPullover AC_SWIFT_PRIVATE = @"exercise-dumbbell-pullover";
 
 /// The "exercise-dumbbell-shoulder-press" asset catalog image resource.
 static NSString * const ACImageNameExerciseDumbbellShoulderPress AC_SWIFT_PRIVATE = @"exercise-dumbbell-shoulder-press";
@@ -129,6 +147,9 @@ static NSString * const ACImageNameExerciseGluteHamRaise AC_SWIFT_PRIVATE = @"ex
 /// The "exercise-glute-kickback" asset catalog image resource.
 static NSString * const ACImageNameExerciseGluteKickback AC_SWIFT_PRIVATE = @"exercise-glute-kickback";
 
+/// The "exercise-goblet-squat" asset catalog image resource.
+static NSString * const ACImageNameExerciseGobletSquat AC_SWIFT_PRIVATE = @"exercise-goblet-squat";
+
 /// The "exercise-good-morning" asset catalog image resource.
 static NSString * const ACImageNameExerciseGoodMorning AC_SWIFT_PRIVATE = @"exercise-good-morning";
 
@@ -137,6 +158,9 @@ static NSString * const ACImageNameExerciseHackSquat AC_SWIFT_PRIVATE = @"exerci
 
 /// The "exercise-hammer-curl" asset catalog image resource.
 static NSString * const ACImageNameExerciseHammerCurl AC_SWIFT_PRIVATE = @"exercise-hammer-curl";
+
+/// The "exercise-hand-gripper" asset catalog image resource.
+static NSString * const ACImageNameExerciseHandGripper AC_SWIFT_PRIVATE = @"exercise-hand-gripper";
 
 /// The "exercise-hanging-leg-raise" asset catalog image resource.
 static NSString * const ACImageNameExerciseHangingLegRaise AC_SWIFT_PRIVATE = @"exercise-hanging-leg-raise";
@@ -156,11 +180,20 @@ static NSString * const ACImageNameExerciseInclineDumbbellPress AC_SWIFT_PRIVATE
 /// The "exercise-jefferson-curl" asset catalog image resource.
 static NSString * const ACImageNameExerciseJeffersonCurl AC_SWIFT_PRIVATE = @"exercise-jefferson-curl";
 
+/// The "exercise-jm-press" asset catalog image resource.
+static NSString * const ACImageNameExerciseJmPress AC_SWIFT_PRIVATE = @"exercise-jm-press";
+
 /// The "exercise-kettlebell-clean" asset catalog image resource.
 static NSString * const ACImageNameExerciseKettlebellClean AC_SWIFT_PRIVATE = @"exercise-kettlebell-clean";
 
 /// The "exercise-kettlebell-clean-and-jerk" asset catalog image resource.
 static NSString * const ACImageNameExerciseKettlebellCleanAndJerk AC_SWIFT_PRIVATE = @"exercise-kettlebell-clean-and-jerk";
+
+/// The "exercise-kettlebell-high-pull" asset catalog image resource.
+static NSString * const ACImageNameExerciseKettlebellHighPull AC_SWIFT_PRIVATE = @"exercise-kettlebell-high-pull";
+
+/// The "exercise-kettlebell-push-press" asset catalog image resource.
+static NSString * const ACImageNameExerciseKettlebellPushPress AC_SWIFT_PRIVATE = @"exercise-kettlebell-push-press";
 
 /// The "exercise-kettlebell-snatch" asset catalog image resource.
 static NSString * const ACImageNameExerciseKettlebellSnatch AC_SWIFT_PRIVATE = @"exercise-kettlebell-snatch";
@@ -204,6 +237,9 @@ static NSString * const ACImageNameExerciseMachineHipAbduction AC_SWIFT_PRIVATE 
 /// The "exercise-machine-hip-adduction" asset catalog image resource.
 static NSString * const ACImageNameExerciseMachineHipAdduction AC_SWIFT_PRIVATE = @"exercise-machine-hip-adduction";
 
+/// The "exercise-machine-shoulder-press" asset catalog image resource.
+static NSString * const ACImageNameExerciseMachineShoulderPress AC_SWIFT_PRIVATE = @"exercise-machine-shoulder-press";
+
 /// The "exercise-nordic-curl" asset catalog image resource.
 static NSString * const ACImageNameExerciseNordicCurl AC_SWIFT_PRIVATE = @"exercise-nordic-curl";
 
@@ -222,6 +258,9 @@ static NSString * const ACImageNameExerciseOverheadPress AC_SWIFT_PRIVATE = @"ex
 /// The "exercise-pec-deck" asset catalog image resource.
 static NSString * const ACImageNameExercisePecDeck AC_SWIFT_PRIVATE = @"exercise-pec-deck";
 
+/// The "exercise-pistol-squat" asset catalog image resource.
+static NSString * const ACImageNameExercisePistolSquat AC_SWIFT_PRIVATE = @"exercise-pistol-squat";
+
 /// The "exercise-plank" asset catalog image resource.
 static NSString * const ACImageNameExercisePlank AC_SWIFT_PRIVATE = @"exercise-plank";
 
@@ -236,6 +275,9 @@ static NSString * const ACImageNameExercisePullUp AC_SWIFT_PRIVATE = @"exercise-
 
 /// The "exercise-push-up" asset catalog image resource.
 static NSString * const ACImageNameExercisePushUp AC_SWIFT_PRIVATE = @"exercise-push-up";
+
+/// The "exercise-rack-pull" asset catalog image resource.
+static NSString * const ACImageNameExerciseRackPull AC_SWIFT_PRIVATE = @"exercise-rack-pull";
 
 /// The "exercise-rear-delt-fly" asset catalog image resource.
 static NSString * const ACImageNameExerciseRearDeltFly AC_SWIFT_PRIVATE = @"exercise-rear-delt-fly";
@@ -261,6 +303,9 @@ static NSString * const ACImageNameExerciseReverseWristCurl AC_SWIFT_PRIVATE = @
 /// The "exercise-romanian-deadlift" asset catalog image resource.
 static NSString * const ACImageNameExerciseRomanianDeadlift AC_SWIFT_PRIVATE = @"exercise-romanian-deadlift";
 
+/// The "exercise-safety-bar-squat" asset catalog image resource.
+static NSString * const ACImageNameExerciseSafetyBarSquat AC_SWIFT_PRIVATE = @"exercise-safety-bar-squat";
+
 /// The "exercise-seated-cable-row" asset catalog image resource.
 static NSString * const ACImageNameExerciseSeatedCableRow AC_SWIFT_PRIVATE = @"exercise-seated-cable-row";
 
@@ -285,14 +330,23 @@ static NSString * const ACImageNameExerciseSmithMachineSquat AC_SWIFT_PRIVATE = 
 /// The "exercise-snatch" asset catalog image resource.
 static NSString * const ACImageNameExerciseSnatch AC_SWIFT_PRIVATE = @"exercise-snatch";
 
+/// The "exercise-snatch-pull" asset catalog image resource.
+static NSString * const ACImageNameExerciseSnatchPull AC_SWIFT_PRIVATE = @"exercise-snatch-pull";
+
 /// The "exercise-spider-curl" asset catalog image resource.
 static NSString * const ACImageNameExerciseSpiderCurl AC_SWIFT_PRIVATE = @"exercise-spider-curl";
 
 /// The "exercise-step-up" asset catalog image resource.
 static NSString * const ACImageNameExerciseStepUp AC_SWIFT_PRIVATE = @"exercise-step-up";
 
+/// The "exercise-sumo-deadlift" asset catalog image resource.
+static NSString * const ACImageNameExerciseSumoDeadlift AC_SWIFT_PRIVATE = @"exercise-sumo-deadlift";
+
 /// The "exercise-tibialis-raise" asset catalog image resource.
 static NSString * const ACImageNameExerciseTibialisRaise AC_SWIFT_PRIVATE = @"exercise-tibialis-raise";
+
+/// The "exercise-trap-bar-deadlift" asset catalog image resource.
+static NSString * const ACImageNameExerciseTrapBarDeadlift AC_SWIFT_PRIVATE = @"exercise-trap-bar-deadlift";
 
 /// The "exercise-tricep-pushdown" asset catalog image resource.
 static NSString * const ACImageNameExerciseTricepPushdown AC_SWIFT_PRIVATE = @"exercise-tricep-pushdown";
