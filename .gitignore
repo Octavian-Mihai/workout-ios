@@ -1,6 +1,8 @@
 # Xcode
 xcuserdata/
 DerivedData/
+.derivedData/
+build/
 *.xcuserstate
 *.moved-aside
 *.hmap

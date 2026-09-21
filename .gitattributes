@@ -1,1 +1,6 @@
-README.md linguist-documentation
+# Exclude root README from language statistics (also matched by linguist documentation.yml)
+/README.md linguist-documentation
+
+# Xcode build output accidentally committed — exclude from language stats
+.derivedData/** linguist-vendored
+build/** linguist-vendored
