@@ -166,7 +166,7 @@ struct NextWorkoutCard: View {
                     .foregroundStyle(.secondary)
             } else {
                 LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible(), spacing: 6, alignment: .topLeading), count: 4),
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 6, alignment: .topLeading), count: 3),
                     alignment: .leading,
                     spacing: 6
                 ) {
@@ -203,7 +203,7 @@ struct NextWorkoutCard: View {
         .opaqueCard()
     }
 
-    private static let previewLimit = 16
+    private static let previewLimit = 12
 
     private var previewExercises: [DayExercise] {
         Array(day.orderedExercises.prefix(Self.previewLimit))
@@ -220,7 +220,7 @@ struct NextWorkoutCard: View {
 
 private struct HomeActionLabelStyle: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
-        HStack(alignment: .center, spacing: 6) {
+        HStack(alignment: .center, spacing: 9) {
             configuration.icon
                 .font(.title3.weight(.semibold))
                 .imageScale(.large)

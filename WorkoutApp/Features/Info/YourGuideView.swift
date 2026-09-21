@@ -725,6 +725,7 @@ struct KeyMuscleGroupsView: View {
 
 struct MoreStrengthPatternsView: View {
     @ObservedObject private var store = AnatomyStore.shared
+    @Environment(AppTheme.self) private var theme
 
     var body: some View {
         ArticleScreen(title: "Strength patterns") {
@@ -756,23 +757,37 @@ struct MoreStrengthPatternsView: View {
 
     @ViewBuilder
     private func checklistRow(_ name: String) -> some View {
+        let symbol = GuideVisuals.symbol(forChecklistItem: name)
         if let pattern = store.pattern(named: name) {
             GuideRowLink {
                 MovementDetailView(pattern: pattern, store: store)
             } label: {
-                GuideNavRow(title: pattern.name, subtitle: pattern.whyItMatters)
+                GuideNavRow(
+                    title: pattern.name,
+                    subtitle: pattern.whyItMatters,
+                    symbolName: symbol
+                )
             }
         } else if let topic = store.topic(named: name) {
             GuideRowLink {
                 TopicDetailView(topic: topic, store: store)
             } label: {
-                GuideNavRow(title: topic.name, subtitle: topic.summary)
+                GuideNavRow(
+                    title: topic.name,
+                    subtitle: topic.summary,
+                    symbolName: symbol
+                )
             }
         } else {
-            Text(name)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                Image(systemName: symbol)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(theme.accent)
+                Text(name)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
     }
 }
@@ -1054,9 +1069,17 @@ private struct GuideRelatedSection<Content: View>: View {
 private struct GuideNavRow: View {
     let title: String
     var subtitle: String? = nil
+    var symbolName: String? = nil
+    @Environment(AppTheme.self) private var theme
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
+            if let symbolName {
+                Image(systemName: symbolName)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(theme.accent)
+                    .padding(.top, 2)
+            }
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
@@ -1117,6 +1140,33 @@ private enum GuideVisuals {
         case "CARRIES": return "bag.fill"
         case "ROTATIONAL CORE": return "arrow.triangle.2.circlepath"
         case "ATHLETIC TRANSFERS": return "bolt.fill"
+        default: return "circle.fill"
+        }
+    }
+
+    static func symbol(forChecklistItem name: String) -> String {
+        switch name {
+        case "Vertical Push": return "arrow.up.circle.fill"
+        case "Horizontal Push": return "arrow.right.circle.fill"
+        case "Vertical Pull": return "arrow.down.circle.fill"
+        case "Horizontal Pull": return "arrow.left.circle.fill"
+        case "Squat Pattern": return "figure.strengthtraining.traditional"
+        case "Hinge Pattern": return "arrow.down.right.circle.fill"
+        case "Single-Leg Pattern": return "figure.walk"
+        case "Anti-Extension": return "arrow.up.and.down.circle.fill"
+        case "Anti-Rotation": return "arrow.triangle.2.circlepath"
+        case "Anti-Lateral Flexion": return "arrow.left.and.right.circle.fill"
+        case "Rotation (Acceleration)": return "rotate.3d.fill"
+        case "Power / Triple Extension": return "bolt.fill"
+        case "Loaded Carries": return "bag.fill"
+        case "Deceleration / Catching": return "hand.raised.fill"
+        case "Sprinting": return "figure.run"
+        case "Rotational Throwing": return "baseball.fill"
+        case "Shoulder": return "figure.arms.open"
+        case "Hip": return "figure.stand"
+        case "Knee": return "figure.walk.motion"
+        case "Elbow/Wrist": return "hand.raised.fill"
+        case "Spine": return "line.3.horizontal"
         default: return "circle.fill"
         }
     }
