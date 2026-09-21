@@ -12,10 +12,18 @@
       },
       {
         "comment": "",
+        "key": "%@ stress colors",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
         "key": "%lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 87
+          "startingLine": 180
         }
       },
       {
@@ -23,7 +31,7 @@
         "key": "Leftover fatigue eases over the next couple of mornings.",
         "location": {
           "startingColumn": 22,
-          "startingLine": 186
+          "startingLine": 284
         }
       },
       {
@@ -31,7 +39,7 @@
         "key": "Day",
         "location": {
           "startingColumn": 35,
-          "startingLine": 162
+          "startingLine": 260
         }
       },
       {
@@ -39,7 +47,7 @@
         "key": "Stress",
         "location": {
           "startingColumn": 35,
-          "startingLine": 163
+          "startingLine": 261
         }
       },
       {
@@ -47,7 +55,7 @@
         "key": "Source",
         "location": {
           "startingColumn": 49,
-          "startingLine": 165
+          "startingLine": 263
         }
       },
       {
@@ -55,7 +63,7 @@
         "key": "Day",
         "location": {
           "startingColumn": 35,
-          "startingLine": 167
+          "startingLine": 265
         }
       },
       {
@@ -63,7 +71,7 @@
         "key": "Stress",
         "location": {
           "startingColumn": 35,
-          "startingLine": 168
+          "startingLine": 266
         }
       },
       {
@@ -71,7 +79,7 @@
         "key": "Source",
         "location": {
           "startingColumn": 49,
-          "startingLine": 170
+          "startingLine": 268
         }
       },
       {
@@ -79,7 +87,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 22,
-          "startingLine": 228
+          "startingLine": 326
         }
       }
     ]

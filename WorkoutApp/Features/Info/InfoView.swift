@@ -20,6 +20,7 @@ enum RunningVisibility {
 
 enum StressVisibility {
     static let showAnalysisKey = InfoPageVisibility.showTodayStressKey
+    static let colorPresetKey = "stressColorPreset"
 }
 
 struct InfoView: View {
@@ -183,7 +184,6 @@ struct LearnLinksView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             learnLink("Exercises list catalog", destination: ExerciseCatalogBrowserView())
-            learnLink("Core movement categories", destination: CoreMovementCategoriesView())
             learnLink("Key muscle groups", destination: KeyMuscleGroupsView())
             learnLink("Strength patterns", destination: MoreStrengthPatternsView())
         }

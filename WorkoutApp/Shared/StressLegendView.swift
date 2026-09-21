@@ -47,13 +47,106 @@ struct StressLegendView: View {
     }
 }
 
+enum StressColorPreset: String, CaseIterable, Identifiable {
+    case classic
+    case ocean
+    case ember
+    case neon
+    case indigo
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .classic: return "Classic"
+        case .ocean: return "Blue / Coral / Lime"
+        case .ember: return "Red / Cyan / Gold"
+        case .neon: return "Magenta / Green / Amber"
+        case .indigo: return "Indigo / Orange / Mint"
+        }
+    }
+
+    /// Lift / cardio / total — three hues that stay distinct within each preset.
+    var lift: Color {
+        switch self {
+        case .classic: return Color(red: 0.96, green: 0.46, blue: 0.16)
+        case .ocean: return Color(red: 0.18, green: 0.48, blue: 0.92)
+        case .ember: return Color(red: 0.92, green: 0.22, blue: 0.24)
+        case .neon: return Color(red: 0.90, green: 0.18, blue: 0.62)
+        case .indigo: return Color(red: 0.38, green: 0.32, blue: 0.90)
+        }
+    }
+
+    var cardio: Color {
+        switch self {
+        case .classic: return Color(red: 0.10, green: 0.72, blue: 0.70)
+        case .ocean: return Color(red: 0.96, green: 0.42, blue: 0.38)
+        case .ember: return Color(red: 0.05, green: 0.72, blue: 0.82)
+        case .neon: return Color(red: 0.18, green: 0.72, blue: 0.32)
+        case .indigo: return Color(red: 0.96, green: 0.50, blue: 0.18)
+        }
+    }
+
+    var total: Color {
+        switch self {
+        case .classic: return Color(red: 0.58, green: 0.34, blue: 0.94)
+        case .ocean: return Color(red: 0.52, green: 0.82, blue: 0.18)
+        case .ember: return Color(red: 0.90, green: 0.68, blue: 0.10)
+        case .neon: return Color(red: 0.95, green: 0.62, blue: 0.12)
+        case .indigo: return Color(red: 0.22, green: 0.82, blue: 0.62)
+        }
+    }
+}
+
 enum StressSourcePalette {
-    /// Warm — lifting stress.
-    static let lift = Color(red: 0.96, green: 0.46, blue: 0.16)
-    /// Cool — cardio stress.
-    static let cardio = Color(red: 0.10, green: 0.72, blue: 0.70)
-    /// Contrasting third — combined / total.
-    static let total = Color(red: 0.58, green: 0.34, blue: 0.94)
+    static let presetKey = StressVisibility.colorPresetKey
+    static let defaultPreset = StressColorPreset.classic
+
+    static func preset(from raw: String) -> StressColorPreset {
+        StressColorPreset(rawValue: raw) ?? defaultPreset
+    }
+}
+
+struct StressColorPresetPicker: View {
+    @Binding var presetRaw: String
+    @Environment(AppTheme.self) private var theme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(StressColorPreset.allCases) { preset in
+                Button {
+                    presetRaw = preset.rawValue
+                } label: {
+                    HStack(spacing: 12) {
+                        HStack(spacing: 5) {
+                            Circle()
+                                .fill(preset.lift)
+                                .frame(width: 14, height: 14)
+                            Circle()
+                                .fill(preset.cardio)
+                                .frame(width: 14, height: 14)
+                            Circle()
+                                .fill(preset.total)
+                                .frame(width: 14, height: 14)
+                        }
+                        Text(preset.title)
+                            .font(.subheadline)
+                            .foregroundStyle(.primary)
+                        Spacer(minLength: 8)
+                        if StressSourcePalette.preset(from: presetRaw) == preset {
+                            Image(systemName: "checkmark")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(theme.accent)
+                        }
+                    }
+                    .padding(.vertical, 6)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("\(preset.title) stress colors")
+            }
+        }
+    }
 }
 
 struct StressMeter: View {
@@ -124,6 +217,11 @@ struct TodayStressCard: View {
     var compact: Bool = false
 
     @Environment(AppTheme.self) private var theme
+    @AppStorage(StressSourcePalette.presetKey) private var presetRaw = StressColorPreset.classic.rawValue
+
+    private var palette: StressColorPreset {
+        StressSourcePalette.preset(from: presetRaw)
+    }
 
     private var trendSeries: [StressTrendPoint] {
         trend.flatMap { point in
@@ -145,13 +243,13 @@ struct TodayStressCard: View {
                 score: estimate.total,
                 accent: accent,
                 compact: compact,
-                barColor: StressSourcePalette.total
+                barColor: palette.total
             )
             if showSplit {
                 HStack(spacing: 16) {
-                    splitMeter(title: "Lift", score: estimate.lift, color: StressSourcePalette.lift)
+                    splitMeter(title: "Lift", score: estimate.lift, color: palette.lift)
                     if showRunSplit {
-                        splitMeter(title: "Cardio", score: estimate.run, color: StressSourcePalette.cardio)
+                        splitMeter(title: "Cardio", score: estimate.run, color: palette.cardio)
                     }
                 }
                 sourceLegend
@@ -170,9 +268,9 @@ struct TodayStressCard: View {
                     .foregroundStyle(by: .value("Source", point.source))
                 }
                 .chartForegroundStyleScale([
-                    "Lift": StressSourcePalette.lift,
-                    "Cardio": StressSourcePalette.cardio,
-                    "Total": StressSourcePalette.total
+                    "Lift": palette.lift,
+                    "Cardio": palette.cardio,
+                    "Total": palette.total
                 ])
                 .chartLegend(.hidden)
                 .frame(height: 120)
@@ -199,11 +297,11 @@ struct TodayStressCard: View {
 
     private var sourceLegend: some View {
         HStack(spacing: 12) {
-            sourceSwatch("Lift", color: StressSourcePalette.lift)
+            sourceSwatch("Lift", color: palette.lift)
             if showRunSplit {
-                sourceSwatch("Cardio", color: StressSourcePalette.cardio)
+                sourceSwatch("Cardio", color: palette.cardio)
             }
-            sourceSwatch("Total", color: StressSourcePalette.total)
+            sourceSwatch("Total", color: palette.total)
         }
     }
 

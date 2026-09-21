@@ -21,6 +21,7 @@ struct SettingsView: View {
     @AppStorage(EquipmentSettings.barbellBarKgKey) private var barbellBarKg = EquipmentSettings.defaultBarKg
     @AppStorage(EquipmentSettings.barbellBarLbKey) private var barbellBarLb = EquipmentSettings.defaultBarLb
     @AppStorage(StressVisibility.showAnalysisKey) private var showStressAnalysis = true
+    @AppStorage(StressVisibility.colorPresetKey) private var stressColorPresetRaw = StressColorPreset.classic.rawValue
     @AppStorage(InfoPageVisibility.showTonnageKey) private var showTonnage = true
     @AppStorage(InfoPageVisibility.showVolumeChartsKey) private var showVolumeCharts = true
     @AppStorage(InfoPageVisibility.showEstimated1RMKey) private var showEstimated1RM = true
@@ -117,6 +118,13 @@ struct SettingsView: View {
                 Section("Stress") {
                     Toggle("Show stress analysis", isOn: $showStressAnalysis)
                     Text("Turn off to hide stress scores on Home, Info, Running, and widgets.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Text("Today’s stress colors")
+                        .font(.subheadline.weight(.semibold))
+                    StressColorPresetPicker(presetRaw: $stressColorPresetRaw)
+                    Text("Lift, cardio, and total meters and charts use the selected palette.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
