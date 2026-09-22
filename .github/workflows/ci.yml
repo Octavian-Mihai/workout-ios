@@ -20,44 +20,15 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
-      - name: Select an available iOS simulator
-        id: simulator
-        timeout-minutes: 5
-        run: |
-          # No `set -e`: grep legitimately returns non-zero when a pattern
-          # doesn't match, and this script needs to fall through its tiers
-          # instead of dying on the first miss.
-          set -u
-
-          # (GitHub Actions' step-level timeout-minutes above covers the
-          # timeout need; the `timeout` shell command isn't reliably
-          # available on macOS, so don't rely on it here.)
-          RAW=$(xcodebuild -project WorkoutApp.xcodeproj -scheme WorkoutApp -showdestinations 2>&1)
-          echo "$RAW" > /tmp/destinations.txt
-
-          # -showdestinations prints key:value pairs for display only (not the
-          # key=value syntax -destination itself takes) — pull just the UDID
-          # out of a concrete (non-placeholder) simulator line and build a
-          # plain `platform=iOS Simulator,id=<udid>` string from it.
-          LIST=$(grep "platform:iOS Simulator" /tmp/destinations.txt | grep -E 'id:[A-F0-9-]{36}')
-          LINE=$(echo "$LIST" | grep "name:iPhone" | head -1)
-          if [ -z "$LINE" ]; then
-            LINE=$(echo "$LIST" | head -1)
-          fi
-          if [ -z "$LINE" ]; then
-            echo "No concrete iOS Simulator destination found. Raw -showdestinations output:" >&2
-            cat /tmp/destinations.txt >&2
-            exit 1
-          fi
-          UDID=$(echo "$LINE" | grep -oE 'id:[A-F0-9-]{36}' | cut -d: -f2)
-          echo "Using simulator UDID: $UDID"
-          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: List available destinations (diagnostic — never fails the job)
+        continue-on-error: true
+        run: xcodebuild -project WorkoutApp.xcodeproj -scheme WorkoutApp -showdestinations || true
 
       - name: Run WorkoutAppTests
         timeout-minutes: 15
         run: |
           xcodebuild -project WorkoutApp.xcodeproj -scheme WorkoutApp \
-            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
+            -destination "platform=iOS Simulator,name=iPhone 16" \
             test -only-testing:WorkoutAppTests
 
   web-tests:
