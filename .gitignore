@@ -17,3 +17,6 @@ timeline.xctimeline
 
 # macOS
 .DS_Store
+
+# program-builder (Node/Vitest)
+program-builder/node_modules/

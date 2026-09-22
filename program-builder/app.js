@@ -1453,6 +1453,39 @@ async function init() {
   });
 }
 
-init().catch((error) => {
-  showToast(error.message || "Failed to load catalog");
-});
+// The real page always has these elements; this guard only prevents init()
+// (fetch + DOM event wiring) from running when app.js is imported as a
+// module for unit testing pure functions against a bare document.
+if (typeof document !== "undefined" && document.getElementById("program-name")) {
+  init().catch((error) => {
+    showToast(error.message || "Failed to load catalog");
+  });
+}
+
+export {
+  sortValue,
+  prettyJSON,
+  sanitizeFilename,
+  inferEquipment,
+  containsAny,
+  inferPattern,
+  displaySorted,
+  equipmentTitle,
+  plannedSetCount,
+  estimatedWorkoutMinutes,
+  estimatedWorkoutLabel,
+  dayMetaLabel,
+  uniqueMuscles,
+  mapCatalogMuscle,
+  mapCatalogMuscles,
+  analysisTargets,
+  regionName,
+  trimmedNumber,
+  listPhrase,
+  sortCredit,
+  overviewInsights,
+  escapeHTML,
+  parseISODate,
+  clamp,
+  iso8601,
+};
