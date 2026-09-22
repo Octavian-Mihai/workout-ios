@@ -9,10 +9,12 @@ jobs:
   ios-tests:
     name: iOS unit tests (WorkoutAppTests)
     runs-on: macos-15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
       - name: Install XcodeGen
+        timeout-minutes: 5
         run: brew install xcodegen
 
       - name: Generate Xcode project
@@ -20,16 +22,32 @@ jobs:
 
       - name: Select an available iOS simulator
         id: simulator
+        timeout-minutes: 5
         run: |
-          DEVICE_ID=$(xcrun simctl list devices available iPhone -j \
-            | python3 -c "import json,sys; data=json.load(sys.stdin)['devices']; ids=[d['udid'] for runtime in data.values() for d in runtime if 'iPhone' in d['name']]; print(ids[0])")
-          echo "Using simulator $DEVICE_ID"
-          echo "id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          # -showdestinations prints key:value pairs for display only (not the
+          # key=value syntax -destination itself takes) — pull just the UDID
+          # out and build a plain `platform=iOS Simulator,id=<udid>` string.
+          LIST=$(timeout 60 xcodebuild -project WorkoutApp.xcodeproj -scheme WorkoutApp -showdestinations 2>/dev/null \
+            | grep "platform:iOS Simulator" | grep "OS:")
+          # Prefer a concrete iPhone simulator; fall back to any concrete simulator.
+          LINE=$(echo "$LIST" | grep "name:iPhone" | head -1)
+          if [ -z "$LINE" ]; then
+            LINE=$(echo "$LIST" | head -1)
+          fi
+          if [ -z "$LINE" ]; then
+            echo "No concrete iOS Simulator destination found" >&2
+            exit 1
+          fi
+          UDID=$(echo "$LINE" | grep -oE 'id:[A-F0-9-]+' | cut -d: -f2)
+          echo "Using simulator UDID: $UDID"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
 
       - name: Run WorkoutAppTests
+        timeout-minutes: 15
         run: |
           xcodebuild -project WorkoutApp.xcodeproj -scheme WorkoutApp \
-            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
             test -only-testing:WorkoutAppTests
 
   web-tests:
