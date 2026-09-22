@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://workout-ios.local/schema/program-template.schema.json",
+  "title": "ProgramTemplateFile",
+  "description": "Program-only export/import format shared by the iOS app (WorkoutApp/Services/ProgramTemplateService.swift, ProgramTemplateFile) and the web program-builder (program-builder/app.js, buildExportObject/importTemplate). Either side must be able to produce and consume this shape.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "exportedAt", "program"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "exportedAt": { "type": "string", "format": "date-time" },
+    "program": { "$ref": "#/$defs/program" }
+  },
+  "$defs": {
+    "program": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uuid", "name", "isActive", "createdAt", "days"],
+      "properties": {
+        "uuid": { "type": "string" },
+        "name": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "days": { "type": "array", "items": { "$ref": "#/$defs/day" } }
+      }
+    },
+    "day": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uuid", "name", "sortIndex", "exercises"],
+      "properties": {
+        "uuid": { "type": "string" },
+        "name": { "type": "string" },
+        "sortIndex": { "type": "integer", "minimum": 0 },
+        "exercises": { "type": "array", "items": { "$ref": "#/$defs/exercise" } }
+      }
+    },
+    "exercise": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "primaryMuscles", "secondaryMuscles", "targetSets", "targetReps", "sortIndex"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "primaryMuscles": { "type": "array", "items": { "type": "string" } },
+        "secondaryMuscles": { "type": "array", "items": { "type": "string" } },
+        "targetSets": { "type": "integer", "minimum": 0 },
+        "targetReps": { "type": "integer", "minimum": 0 },
+        "sortIndex": { "type": "integer", "minimum": 0 },
+        "equipment": { "type": ["string", "null"] },
+        "restSeconds": { "type": ["integer", "null"] }
+      }
+    }
+  }
+}

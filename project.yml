@@ -57,6 +57,8 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: WorkoutAppTests
+      - path: contract
+        name: Contract
     dependencies:
       - target: WorkoutApp
     settings:

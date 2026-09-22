@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ios-tests:
+    name: iOS unit tests (WorkoutAppTests)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Select an available iOS simulator
+        id: simulator
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available iPhone -j \
+            | python3 -c "import json,sys; data=json.load(sys.stdin)['devices']; ids=[d['udid'] for runtime in data.values() for d in runtime if 'iPhone' in d['name']]; print(ids[0])")
+          echo "Using simulator $DEVICE_ID"
+          echo "id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Run WorkoutAppTests
+        run: |
+          xcodebuild -project WorkoutApp.xcodeproj -scheme WorkoutApp \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" \
+            test -only-testing:WorkoutAppTests
+
+  web-tests:
+    name: program-builder unit tests (Vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: program-builder
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: program-builder/package-lock.json
+
+      - run: npm ci
+      - run: npm test
+
+  schema-compat:
+    name: iOS/web JSON contract schema check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: program-builder
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: program-builder/package-lock.json
+
+      - run: npm ci
+      - run: npm run schema:check

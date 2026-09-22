@@ -3,9 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "schema:check": "node scripts/validate-fixture.mjs"
   },
   "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "jsdom": "^25.0.0",
     "vitest": "^5.0.1"
   }
