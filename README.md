@@ -1,5 +1,7 @@
 # Workout
 
+[![CI](https://github.com/Octavian-Mihai/workout-ios/actions/workflows/ci.yml/badge.svg)](https://github.com/Octavian-Mihai/workout-ios/actions/workflows/ci.yml)
+
 A native iPhone app for strength training, plus a desktop **Program Builder** website. Log sessions with a custom keypad and RIR, build rotating programs, follow recovery and volume, and pull runs from Apple Health. The website assembles programs from the same exercise catalog and exports JSON the app can import.
 
 Requires **iOS 17+**.
@@ -92,6 +94,20 @@ This repo has two parts:
 | Maps | MapKit |
 | Health | HealthKit (cardio read; body mass read/write; optional strength workout write) |
 | Home screen | WidgetKit |
+
+---
+
+## Testing
+
+Three independent CI jobs run on every push and PR (see the badge above):
+
+| Job | What it covers | Run locally |
+|---|---|---|
+| iOS unit tests | Analytics math (`WorkoutApp/Analytics/`), JSON codable round-trips, SwiftData integration, iOS↔web JSON contract | `xcodebuild -project WorkoutApp.xcodeproj -scheme WorkoutApp -destination 'platform=iOS Simulator,name=iPhone 16' test -only-testing:WorkoutAppTests` |
+| program-builder unit tests | Muscle-group analysis, equipment/pattern inference, JSON formatting (Vitest + jsdom) | `cd program-builder && npm ci && npm test` |
+| Schema-compat check | Validates the shared `contract/program-template.schema.json` fixture with ajv | `cd program-builder && npm run schema:check` |
+
+The `contract/` directory holds the JSON Schema and fixture shared between `WorkoutApp/Services/ProgramTemplateService.swift` and the web builder's export/import — both test suites decode the same fixture, so a schema drift on either side fails CI.
 
 ---
 
