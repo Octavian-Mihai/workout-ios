@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "exportedAt": "2023-06-15T08:00:00Z",
+  "programs": [],
+  "sessions": [
+    {
+      "uuid": "44444444-4444-4444-4444-444444444444",
+      "startDate": "2023-06-15T07:00:00Z",
+      "endDate": null,
+      "source": "manual",
+      "programUUID": null,
+      "programDayIndex": null,
+      "programDayName": null,
+      "durationSeconds": 1800,
+      "sets": [
+        {
+          "exerciseName": "Squat",
+          "primaryMuscles": ["Quadriceps"],
+          "secondaryMuscles": ["Glutes"],
+          "weight": 140.0,
+          "reps": 3,
+          "rir": 1,
+          "targetReps": null,
+          "timestamp": "2023-06-15T07:10:00Z"
+        }
+      ]
+    }
+  ],
+  "bodyWeights": [
+    { "date": "2023-06-15T06:00:00Z", "kilograms": 80.0 }
+  ]
+}

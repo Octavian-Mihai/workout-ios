@@ -3,7 +3,7 @@ import SwiftData
 import UniformTypeIdentifiers
 import CoreTransferable
 
-struct WorkoutBackupFile: Codable, Transferable {
+struct WorkoutBackupFile: Codable, Equatable, Transferable {
     var version: Int
     var exportedAt: Date
     var programs: [ProgramBackup]
@@ -21,7 +21,7 @@ struct WorkoutBackupFile: Codable, Transferable {
     }
 }
 
-struct ProgramBackup: Codable {
+struct ProgramBackup: Codable, Equatable {
     var uuid: UUID
     var name: String
     var isActive: Bool
@@ -29,14 +29,14 @@ struct ProgramBackup: Codable {
     var days: [DayBackup]
 }
 
-struct DayBackup: Codable {
+struct DayBackup: Codable, Equatable {
     var uuid: UUID
     var name: String
     var sortIndex: Int
     var exercises: [ExerciseBackup]
 }
 
-struct ExerciseBackup: Codable {
+struct ExerciseBackup: Codable, Equatable {
     var name: String
     var primaryMuscles: [String]
     var secondaryMuscles: [String]
@@ -47,7 +47,7 @@ struct ExerciseBackup: Codable {
     var restSeconds: Int? = nil
 }
 
-struct SessionBackup: Codable {
+struct SessionBackup: Codable, Equatable {
     var uuid: UUID
     var startDate: Date
     var endDate: Date?
@@ -59,7 +59,7 @@ struct SessionBackup: Codable {
     var sets: [SetBackup]
 }
 
-struct SetBackup: Codable {
+struct SetBackup: Codable, Equatable {
     var exerciseName: String
     var primaryMuscles: [String]
     var secondaryMuscles: [String]
@@ -70,12 +70,12 @@ struct SetBackup: Codable {
     var timestamp: Date
 }
 
-struct BodyWeightBackup: Codable {
+struct BodyWeightBackup: Codable, Equatable {
     var date: Date
     var kilograms: Double
 }
 
-struct MeasurementBackup: Codable {
+struct MeasurementBackup: Codable, Equatable {
     var date: Date
     var photoFilename: String?
     var kilograms: Double?
