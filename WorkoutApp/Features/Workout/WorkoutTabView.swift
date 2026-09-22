@@ -229,9 +229,9 @@ struct StrengthAnalyticsView: View {
     @AppStorage(InfoPageVisibility.showTrainingLoadEvolutionKey) private var showTrainingLoadEvolution = true
 
     private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .kg }
-    private var recent: [SetLog] { StressCalculator.sets(inLastDays: 7, from: sets) }
+    private var recent: [SetEntry] { VolumeAnalytics.sets(inLastDays: 7, from: sets.map(SetEntry.init)) }
     private var muscleVolume: [(String, Double)] {
-        let recorded = StressCalculator.muscleVolume(from: recent)
+        let recorded = VolumeAnalytics.muscleVolume(from: recent)
             .map { ($0.key, $0.value) }
             .sorted { $0.1 > $1.1 }
         if recorded.isEmpty {
@@ -240,7 +240,7 @@ struct StrengthAnalyticsView: View {
         return recorded
     }
     private var muscleLoads: [(name: String, tonnageKg: Double, reps: Double)] {
-        let reps = StressCalculator.muscleReps(from: recent)
+        let reps = VolumeAnalytics.muscleReps(from: recent)
         return muscleVolume.map { ($0.0, $0.1, reps[$0.0] ?? 0) }
     }
 
@@ -270,14 +270,14 @@ struct StrengthAnalyticsView: View {
             HStack {
                 Text("Tonnage (7d)")
                 Spacer()
-                Text("\(Formatters.compactNumber(unit.fromKg(StressCalculator.totalVolume(from: recent)))) \(unit.rawValue)·reps")
+                Text("\(Formatters.compactNumber(unit.fromKg(VolumeAnalytics.totalVolume(from: recent)))) \(unit.rawValue)·reps")
                     .monospacedDigit()
             }
             .font(.subheadline)
             HStack {
                 Text("Reps (7d)")
                 Spacer()
-                Text("\(StressCalculator.totalReps(from: recent))")
+                Text("\(VolumeAnalytics.totalReps(from: recent))")
                     .monospacedDigit()
             }
             .font(.subheadline)

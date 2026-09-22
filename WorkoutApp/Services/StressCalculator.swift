@@ -16,15 +16,6 @@ struct DailyStress: Identifiable {
     var id: Date { date }
 }
 
-struct WeeklyTrainingLoad: Identifiable {
-    let weekStart: Date
-    let tonnageKg: Double
-    let setCount: Int
-    let repCount: Int
-
-    var id: Date { weekStart }
-}
-
 enum StressBand: String {
     case recovery = "Recovery / easy"
     case productive = "Productive"
@@ -61,46 +52,12 @@ enum StressCalculator {
         StressBand.band(for: score)
     }
 
-    static func setVolume(_ set: SetLog) -> Double {
-        set.weight * Double(set.reps)
-    }
-
-    /// Primary muscles get full volume; secondary muscles get half.
-    static func muscleVolume(from sets: [SetLog]) -> [String: Double] {
-        var result: [String: Double] = [:]
-        for set in sets {
-            let vol = setVolume(set)
-            for muscle in set.primaryMuscles {
-                result[muscle, default: 0] += vol
-            }
-            for muscle in set.secondaryMuscles {
-                result[muscle, default: 0] += vol * 0.5
-            }
-        }
-        return result
-    }
-
-    /// Primary muscles get full reps; secondary muscles get half.
-    static func muscleReps(from sets: [SetLog]) -> [String: Double] {
-        var result: [String: Double] = [:]
-        for set in sets {
-            let reps = Double(set.reps)
-            for muscle in set.primaryMuscles {
-                result[muscle, default: 0] += reps
-            }
-            for muscle in set.secondaryMuscles {
-                result[muscle, default: 0] += reps * 0.5
-            }
-        }
-        return result
-    }
-
     static func totalVolume(from sets: [SetLog]) -> Double {
-        sets.reduce(0) { $0 + setVolume($1) }
+        VolumeAnalytics.totalVolume(from: sets.map(SetEntry.init))
     }
 
     static func totalReps(from sets: [SetLog]) -> Int {
-        sets.reduce(0) { $0 + $1.reps }
+        VolumeAnalytics.totalReps(from: sets.map(SetEntry.init))
     }
 
     static func sets(inLastDays days: Double, from sets: [SetLog], now: Date = Date()) -> [SetLog] {
@@ -111,12 +68,13 @@ enum StressCalculator {
     /// Central stress 0–100 from the last 7 days: heavy compounds, high % of est. 1RM, low RIR.
     /// Normalized so roughly 12 hard compound sets in a week sit near 100.
     static func centralStress(sets: [SetLog], now: Date = Date()) -> Double {
-        let recent = self.sets(inLastDays: windowDays, from: sets, now: now).filter { isCompound($0.exerciseName) }
+        let recent = self.sets(inLastDays: windowDays, from: sets, now: now).filter { VolumeAnalytics.isCompound($0.exerciseName) }
         guard !recent.isEmpty else { return 0 }
 
+        let entries = sets.map(SetEntry.init)
         var points = 0.0
         for set in recent {
-            let best = bestEstimated1RM(for: set.exerciseName, in: sets, now: now)
+            let best = VolumeAnalytics.bestEstimated1RM(for: set.exerciseName, in: entries, now: now)
             let pct1RM: Double
             if best > 0 {
                 pct1RM = min(set.weight / best, 1.20)
@@ -268,16 +226,6 @@ enum StressCalculator {
         return min(100, mean)
     }
 
-    static func isCompound(_ name: String) -> Bool {
-        let n = name.lowercased()
-        let keys = [
-            "squat", "bench", "deadlift", "overhead press", "ohp",
-            "military press", "barbell row", "pendlay", "pull-up", "pull up",
-            "chin-up", "chin up", "dip"
-        ]
-        return keys.contains { n.contains($0) }
-    }
-
     /// Leftover fatigue for today: today’s residual from the decaying lift/run series.
     static func todayEstimate(
         sets: [SetLog],
@@ -405,62 +353,13 @@ enum StressCalculator {
         return StressEstimate(total: blend(lift: lift, run: run), lift: lift, run: run)
     }
 
-    static func weekStartContaining(_ date: Date, calendar: Calendar = Calendar.current) -> Date {
-        var cal = calendar
-        cal.firstWeekday = 2
-        return cal.dateInterval(of: .weekOfYear, for: date)?.start ?? cal.startOfDay(for: date)
-    }
-
     static func weeklyTrainingLoad(from sets: [SetLog], weeks: Int = 12, now: Date = Date()) -> [WeeklyTrainingLoad] {
-        var cal = Calendar.current
-        cal.firstWeekday = 2
-        guard let currentWeekStart = cal.dateInterval(of: .weekOfYear, for: now)?.start,
-              let earliestWeekStart = cal.date(byAdding: .weekOfYear, value: -(weeks - 1), to: currentWeekStart) else {
-            return []
-        }
-
-        var buckets: [Date: (tonnage: Double, sets: Int, reps: Int)] = [:]
-        for set in sets {
-            let week = weekStartContaining(set.timestamp, calendar: cal)
-            guard week >= earliestWeekStart else { continue }
-            var bucket = buckets[week, default: (0, 0, 0)]
-            bucket.tonnage += setVolume(set)
-            bucket.sets += 1
-            bucket.reps += set.reps
-            buckets[week] = bucket
-        }
-
-        var result: [WeeklyTrainingLoad] = []
-        result.reserveCapacity(weeks)
-        for offset in 0..<weeks {
-            guard let week = cal.date(byAdding: .weekOfYear, value: offset, to: earliestWeekStart) else { continue }
-            let bucket = buckets[week] ?? (0, 0, 0)
-            result.append(
-                WeeklyTrainingLoad(
-                    weekStart: week,
-                    tonnageKg: bucket.tonnage,
-                    setCount: bucket.sets,
-                    repCount: bucket.reps
-                )
-            )
-        }
-        return result
+        VolumeAnalytics.weeklyTrainingLoad(from: sets.map(SetEntry.init), weeks: weeks, now: now)
     }
 
     /// Per-muscle daily load 0–100 using primary 100% / secondary 50% volume weighting.
     static func muscleDailyLoad(from sets: [SetLog]) -> [String: Double] {
-        let volumeByMuscle = muscleVolume(from: sets)
-        var result: [String: Double] = [:]
-        for (muscle, volume) in volumeByMuscle {
-            let muscleSets = sets.filter {
-                $0.primaryMuscles.contains(muscle) || $0.secondaryMuscles.contains(muscle)
-            }
-            let intensities = muscleSets.map { max(0, 5.0 - Double(min($0.rir, 5))) / 5.0 }
-            let avgIntensity = intensities.isEmpty ? 0 : intensities.reduce(0, +) / Double(intensities.count)
-            let volumeScore = min(60.0, volume / 400.0)
-            result[muscle] = min(100, volumeScore + avgIntensity * 40.0)
-        }
-        return result
+        VolumeAnalytics.muscleDailyLoad(from: sets.map(SetEntry.init))
     }
 
     /// Residual fatigue converted to freshness 0–100 for one muscle.
@@ -550,15 +449,6 @@ enum StressCalculator {
     }
 
     static func bestEstimated1RM(for exerciseName: String, in sets: [SetLog], now: Date = Date()) -> Double {
-        let cutoff = now.addingTimeInterval(-90 * 86_400)
-        let family = BigLift.allCases.first { $0.matches(exerciseName) }
-        let candidates = sets.filter { set in
-            guard set.timestamp >= cutoff, set.weight > 0, set.reps > 0 else { return false }
-            if let family {
-                return family.matches(set.exerciseName)
-            }
-            return set.exerciseName.compare(exerciseName, options: .caseInsensitive) == .orderedSame
-        }
-        return candidates.map { OneRM.estimate(weight: $0.weight, reps: $0.reps, rir: $0.rir) }.max() ?? 0
+        VolumeAnalytics.bestEstimated1RM(for: exerciseName, in: sets.map(SetEntry.init), now: now)
     }
 }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "2630"
+   LastUpgradeVersion = "1430"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -15,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F188A5381D91802A1CFB359E"
-               BuildableName = "Workout.app"
+               BuildableName = "WorkoutApp.app"
                BlueprintName = "WorkoutApp"
                ReferencedContainer = "container:WorkoutApp.xcodeproj">
             </BuildableReference>
@@ -27,10 +28,31 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      onlyGenerateCoverageForSpecifiedTargets = "NO">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "F188A5381D91802A1CFB359E"
+            BuildableName = "WorkoutApp.app"
+            BlueprintName = "WorkoutApp"
+            ReferencedContainer = "container:WorkoutApp.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F591D5D1214322DB8C36E35A"
+               BuildableName = "WorkoutAppTests.xctest"
+               BlueprintName = "WorkoutAppTests"
+               ReferencedContainer = "container:WorkoutApp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F029B2FA34DC1EB5DD3E4624"
@@ -40,6 +62,8 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -56,11 +80,13 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F188A5381D91802A1CFB359E"
-            BuildableName = "Workout.app"
+            BuildableName = "WorkoutApp.app"
             BlueprintName = "WorkoutApp"
             ReferencedContainer = "container:WorkoutApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -73,11 +99,13 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F188A5381D91802A1CFB359E"
-            BuildableName = "Workout.app"
+            BuildableName = "WorkoutApp.app"
             BlueprintName = "WorkoutApp"
             ReferencedContainer = "container:WorkoutApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
