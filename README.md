@@ -15,17 +15,13 @@ This repo has two parts:
 
 ## Screenshots
 
-| Home | Live workout |
-|:---:|:---:|
-| ![Home screen](docs/screenshots/home.png) | ![Live workout session](docs/screenshots/live-workout.png) |
+| Home | Live workout |Workout |
+|:---:|:---:|:---:|
+| ![Home screen](docs/screenshots/home.png) | ![Live workout session](docs/screenshots/live-workout.png) |![Workout tab](docs/screenshots/workout.png) |
 
-| Workout | Info |
-|:---:|:---:|
-| ![Workout tab](docs/screenshots/workout.png) | ![Info tab](docs/screenshots/info.png) |
-
-| Running | Settings |
-|:---:|:---:|
-| ![Running tab](docs/screenshots/running.png) | ![Settings](docs/screenshots/settings.png) |
+| Running |Info | Settings |
+|:---:|:---:|:---:|
+| ![Running tab](docs/screenshots/running.png) |![Info tab](docs/screenshots/info.png) | ![Settings](docs/screenshots/settings.png) |
 
 ---
 
