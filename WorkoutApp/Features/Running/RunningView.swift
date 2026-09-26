@@ -711,6 +711,9 @@ struct RunRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
+                Text(run.sportLabel)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(accent)
                 Text(Formatters.shortDate.string(from: run.start))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.primary)
@@ -775,7 +778,7 @@ struct RunDetailView: View {
                 paceCard
 
                 if showStressAnalysis {
-                    StressMeter(title: "Run stress", score: stressScore, accent: accent)
+                    StressMeter(title: "\(run.sportLabel) stress", score: stressScore, accent: accent)
                         .padding(16)
                         .opaqueCard()
 
@@ -800,7 +803,7 @@ struct RunDetailView: View {
             .padding(16)
         }
         .background(theme.groupedBackground.ignoresSafeArea())
-        .compactNavigationTitle("Run")
+        .compactNavigationTitle(run.sportLabel)
         .task {
             loading = true
             details = await health.loadDetails(for: run)

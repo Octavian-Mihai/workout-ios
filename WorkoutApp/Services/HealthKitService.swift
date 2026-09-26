@@ -11,9 +11,20 @@ struct CardioWorkout: Identifiable {
     let averageHeartRate: Double?
     let activityType: HKWorkoutActivityType
     let elevationGainMeters: Double?
+    let isIndoor: Bool
     let workout: HKWorkout
 
     var distanceKilometers: Double { distanceMeters / 1000.0 }
+
+    var sportLabel: String {
+        switch activityType {
+        case .running: return isIndoor ? "Indoor Run" : "Outdoor Run"
+        case .cycling: return isIndoor ? "Indoor Cycling" : "Outdoor Cycling"
+        case .walking: return isIndoor ? "Indoor Walk" : "Outdoor Walk"
+        case .hiking: return "Hike"
+        default: return "Workout"
+        }
+    }
 
     var paceMinPerKm: Double? {
         guard distanceKilometers > 0, duration > 0 else { return nil }
@@ -575,6 +586,7 @@ final class HealthKitService: ObservableObject {
                 averageHeartRate: averageHeartRate(from: workout),
                 activityType: workout.workoutActivityType,
                 elevationGainMeters: elevation,
+                isIndoor: (workout.metadata?[HKMetadataKeyIndoorWorkout] as? Bool) ?? false,
                 workout: workout
             ))
         }
