@@ -74,7 +74,7 @@ final class HealthKitService: ObservableObject {
     @Published var isAuthorized = false
     @Published var cardioWorkouts: [CardioWorkout] = []
     @Published var olderCardioWorkouts: [CardioWorkout] = []
-    @Published var olderRunCount = 0
+    @Published var olderCardioSessionCount = 0
     @Published var runDays: Set<Date> = []
     @Published var lastError: String?
     @Published var isLoading = false
@@ -102,12 +102,13 @@ final class HealthKitService: ObservableObject {
         return cal.date(from: DateComponents(year: cal.component(.year, from: now), month: 1, day: 1)) ?? now
     }
 
-    /// Recent running plus older running once that folder has been loaded.
-    var runs: [CardioWorkout] {
+    /// Recent running and cycling (indoor and outdoor) plus older sessions once that folder has been loaded.
+    var cardioSessions: [CardioWorkout] {
         var seen = Set<UUID>()
         var result: [CardioWorkout] = []
         for workout in cardioWorkouts + olderCardioWorkouts {
-            guard workout.activityType == .running, seen.insert(workout.id).inserted else { continue }
+            guard workout.activityType == .running || workout.activityType == .cycling,
+                  seen.insert(workout.id).inserted else { continue }
             result.append(workout)
         }
         return result.sorted { $0.start > $1.start }
@@ -141,7 +142,7 @@ final class HealthKitService: ObservableObject {
             loadDateOfBirth()
             try await loadCardioWorkouts()
             try await loadRunDays()
-            try await loadOlderRunCount()
+            try await loadOlderCardioSessionCount()
             try await loadRestingHeartRate()
             try await loadHRV()
             try? await loadSleep()
@@ -305,17 +306,19 @@ final class HealthKitService: ObservableObject {
         cardioWorkouts = await mapCardioWorkouts(workouts)
     }
 
-    /// Cheap count of older running workouts (no route walk) so the Running folder can show N before expand.
-    func loadOlderRunCount() async throws {
+    /// Cheap count of older running/cycling workouts (no route walk) so the folder can show N before expand.
+    func loadOlderCardioSessionCount() async throws {
         let running = HKQuery.predicateForWorkouts(with: .running)
+        let cycling = HKQuery.predicateForWorkouts(with: .cycling)
+        let sport = NSCompoundPredicate(orPredicateWithSubpredicates: [running, cycling])
         let dates = HKQuery.predicateForSamples(
             withStart: nil,
             end: Self.recentCardioCutoff,
             options: .strictStartDate
         )
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [running, dates])
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [sport, dates])
         let workouts = try await fetchWorkouts(predicate: predicate)
-        olderRunCount = workouts.count
+        olderCardioSessionCount = workouts.count
     }
 
     /// Full older cardio (same activity types, start before the 14-day cutoff), including elevation.
@@ -333,7 +336,9 @@ final class HealthKitService: ObservableObject {
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [cardioActivityPredicate, dates])
             let workouts = try await fetchWorkouts(predicate: predicate)
             olderCardioWorkouts = await mapCardioWorkouts(workouts)
-            olderRunCount = olderCardioWorkouts.filter { $0.activityType == .running }.count
+            olderCardioSessionCount = olderCardioWorkouts.filter {
+                $0.activityType == .running || $0.activityType == .cycling
+            }.count
             hasLoadedOlder = true
         } catch {
             lastError = error.localizedDescription

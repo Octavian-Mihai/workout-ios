@@ -3,7 +3,14 @@ import Charts
 import MapKit
 import CoreLocation
 
+enum CardioSportFilter: String, CaseIterable, Equatable {
+    case all = "All"
+    case running = "Running"
+    case cycling = "Cycling"
+}
+
 struct RunningFilters: Equatable {
+    var sport: CardioSportFilter = .all
     var useMinDistance = false
     var useMaxDistance = false
     var minDistance: Double = 3
@@ -22,11 +29,17 @@ struct RunningFilters: Equatable {
     var endDate = Date()
 
     var isActive: Bool {
-        useMinDistance || useMaxDistance || useMinDuration || useMaxDuration
+        sport != .all || useMinDistance || useMaxDistance || useMinDuration || useMaxDuration
             || useMinPace || useMaxPace || useStartDate || useEndDate
     }
 
     func matches(_ run: CardioWorkout, unit: DistanceUnit) -> Bool {
+        switch sport {
+        case .all: break
+        case .running: if run.activityType != .running { return false }
+        case .cycling: if run.activityType != .cycling { return false }
+        }
+
         let distance = unit.fromMeters(run.distanceMeters)
         if useMinDistance, distance < minDistance { return false }
         if useMaxDistance, distance > maxDistance { return false }
@@ -69,7 +82,7 @@ struct RunningView: View {
     }
 
     private var filtered: [CardioWorkout] {
-        health.runs.filter { filters.matches($0, unit: unit) }
+        health.cardioSessions.filter { filters.matches($0, unit: unit) }
     }
 
     private var twoWeekCutoff: Date {
@@ -89,16 +102,16 @@ struct RunningView: View {
     }
 
     private var shouldShowOlderFolder: Bool {
-        health.olderRunCount > 0 || !olderRuns.isEmpty || health.isLoadingOlder
+        health.olderCardioSessionCount > 0 || !olderRuns.isEmpty || health.isLoadingOlder
     }
 
     private var olderFolderCount: Int {
-        health.olderCardioWorkouts.isEmpty ? health.olderRunCount : olderRuns.count
+        health.olderCardioWorkouts.isEmpty ? health.olderCardioSessionCount : olderRuns.count
     }
 
     private var last7: [CardioWorkout] {
         let cutoff = Date().addingTimeInterval(-7 * 86_400)
-        return health.runs.filter { $0.start >= cutoff }
+        return health.cardioSessions.filter { $0.start >= cutoff }
     }
 
     private var avgPace: Double? {
@@ -113,7 +126,7 @@ struct RunningView: View {
 
     private var weeklyRunStress: Double {
         StressCalculator.averageRunStress(
-            health.runs,
+            health.cardioSessions,
             restingHeartRate: health.restingHeartRate,
             maxHeartRate: health.maxHeartRate
         )
@@ -148,7 +161,7 @@ struct RunningView: View {
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text("Recent runs")
+                            Text("Recent cardio sessions")
                                 .font(.headline)
                             Spacer()
                             if filters.isActive {
@@ -162,9 +175,9 @@ struct RunningView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                         } else if recentRuns.isEmpty && !shouldShowOlderFolder {
-                            Text(health.runs.isEmpty && health.olderRunCount == 0
-                                 ? "No running workouts found in Apple Health. Record a run in the Fitness or Health app, then pull to refresh."
-                                 : "No runs match these filters.")
+                            Text(health.cardioSessions.isEmpty && health.olderCardioSessionCount == 0
+                                 ? "No running or cycling workouts found in Apple Health. Record one in the Fitness or Health app, then pull to refresh."
+                                 : "No sessions match these filters.")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                                 .padding(16)
@@ -303,10 +316,10 @@ struct RunningView: View {
             HStack {
                 metric("Avg pace", avgPace.map { Formatters.pace($0, unit: unit) } ?? "—")
                 metric("Best pace", bestPace.map { Formatters.pace($0, unit: unit) } ?? "—")
-                metric("Runs", "\(last7.count)")
+                metric("Sessions", "\(last7.count)")
             }
             if showStressAnalysis {
-                StressMeter(title: "Run stress", score: weeklyRunStress, accent: accent)
+                StressMeter(title: "Cardio stress", score: weeklyRunStress, accent: accent)
             }
             stepsChart
         }
@@ -408,6 +421,16 @@ struct RunningFilterSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    filterSection("Activity") {
+                        Picker("Activity", selection: $filters.sport) {
+                            ForEach(CardioSportFilter.allCases, id: \.self) { sport in
+                                Text(sport.rawValue).tag(sport)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                    }
+
                     filterSection("Distance (\(unit.title))") {
                         filterField("Minimum", text: minDistanceText, field: .minDistance, placeholder: "Any")
                         filterField("Maximum", text: maxDistanceText, field: .maxDistance, placeholder: "Any")
