@@ -323,7 +323,7 @@ struct RunningView: View {
                 Text("Steps")
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                if let today = health.dailySteps.last, today.count > 0 {
+                if let today = health.dailySteps.max(by: { $0.date < $1.date }), today.count > 0 {
                     Text("Today: \(today.count.formatted())")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
@@ -347,9 +347,10 @@ struct RunningView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .frame(height: 120)
             } else {
-                Chart(health.dailySteps) { point in
+                let steps = health.dailySteps.sorted { $0.date < $1.date }
+                Chart(Array(steps.enumerated()), id: \.offset) { index, point in
                     BarMark(
-                        x: .value("Day", point.date, unit: .day),
+                        x: .value("Day", index),
                         y: .value("Steps", point.count),
                         width: .ratio(0.75)
                     )
@@ -361,15 +362,20 @@ struct RunningView: View {
                     AxisMarks(position: .leading)
                 }
                 .chartXAxis {
-                    AxisMarks(values: .stride(by: .day)) { _ in
+                    AxisMarks(values: Array(steps.indices)) { value in
                         AxisGridLine()
-                        AxisValueLabel(format: .dateTime.weekday(.narrow))
+                        if let index = value.as(Int.self), steps.indices.contains(index) {
+                            AxisValueLabel(weekdayLabel(for: steps[index].date))
+                        }
                     }
                 }
             }
         }
     }
 
+    private func weekdayLabel(for date: Date) -> String {
+        date.formatted(.dateTime.weekday(.narrow))
+    }
 }
 
 enum RunningFilterField: Hashable {
