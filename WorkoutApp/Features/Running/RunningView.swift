@@ -82,7 +82,14 @@ struct RunningView: View {
     }
 
     private var filtered: [CardioWorkout] {
-        health.cardioSessions.filter { filters.matches($0, unit: unit) }
+        health.cardioSessions
+            .filter { filters.matches($0, unit: unit) }
+            .filter { !isSlowRun($0) }
+    }
+
+    private func isSlowRun(_ workout: CardioWorkout) -> Bool {
+        guard workout.activityType == .running, let pace = workout.paceMinPerKm else { return false }
+        return pace > 10
     }
 
     private var twoWeekCutoff: Date {
@@ -107,21 +114,6 @@ struct RunningView: View {
 
     private var olderFolderCount: Int {
         health.olderCardioWorkouts.isEmpty ? health.olderCardioSessionCount : olderRuns.count
-    }
-
-    private var last7: [CardioWorkout] {
-        let cutoff = Date().addingTimeInterval(-7 * 86_400)
-        return health.cardioSessions.filter { $0.start >= cutoff }
-    }
-
-    private var avgPace: Double? {
-        let paces = last7.compactMap { unit.paceMinutesPerUnit(duration: $0.duration, meters: $0.distanceMeters) }
-        guard !paces.isEmpty else { return nil }
-        return paces.reduce(0, +) / Double(paces.count)
-    }
-
-    private var bestPace: Double? {
-        last7.compactMap { unit.paceMinutesPerUnit(duration: $0.duration, meters: $0.distanceMeters) }.min()
     }
 
     private var weeklyRunStress: Double {
@@ -301,7 +293,10 @@ struct RunningView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Filters")
                 Button {
-                    Task { await health.requestAndLoad() }
+                    Task {
+                        await health.requestAndLoad()
+                        await health.loadDailyStepsIfPossible()
+                    }
                 } label: {
                     Image(systemName: "arrow.clockwise")
                         .font(.title2.weight(.semibold))
@@ -312,11 +307,6 @@ struct RunningView: View {
                 .buttonStyle(.plain)
                 .disabled(health.isLoading)
                 .accessibilityLabel("Refresh")
-            }
-            HStack {
-                metric("Avg pace", avgPace.map { Formatters.pace($0, unit: unit) } ?? "—")
-                metric("Best pace", bestPace.map { Formatters.pace($0, unit: unit) } ?? "—")
-                metric("Sessions", "\(last7.count)")
             }
             if showStressAnalysis {
                 StressMeter(title: "Cardio stress", score: weeklyRunStress, accent: accent)
@@ -380,16 +370,6 @@ struct RunningView: View {
         }
     }
 
-    private func metric(_ title: String, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.headline.monospacedDigit())
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
 }
 
 enum RunningFilterField: Hashable {
