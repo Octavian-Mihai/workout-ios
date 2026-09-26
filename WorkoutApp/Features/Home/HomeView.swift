@@ -17,6 +17,37 @@ struct HomeView: View {
         NextWorkoutResolver.nextDay(activeProgram: programs.first(where: \.isActive), sessions: sessions)
     }
 
+    private var hasActivePlan: Bool {
+        programs.first(where: \.isActive) != nil && nextDay != nil
+    }
+
+    @ViewBuilder
+    private var repeatLastWorkoutButton: some View {
+        Button {
+            if let last = sessions.first(where: { $0.endDate != nil }) {
+                sessionStore.start(from: last)
+            }
+        } label: {
+            Label("Repeat last workout", systemImage: "arrow.counterclockwise")
+                .homeActionButtonLabel()
+        }
+        .buttonStyle(.bordered)
+        .disabled(sessions.first(where: { $0.endDate != nil }) == nil)
+        .frame(maxWidth: .infinity)
+    }
+
+    @ViewBuilder
+    private var startEmptyWorkoutButton: some View {
+        Button {
+            sessionStore.start(program: nil, programDay: nil)
+        } label: {
+            Label("Start empty workout", systemImage: "plus.circle.fill")
+                .homeActionButtonLabel()
+        }
+        .buttonStyle(.borderedProminent)
+        .frame(maxWidth: .infinity)
+    }
+
     var body: some View {
         NavigationStack {
             ScrollViewReader { proxy in
@@ -58,27 +89,16 @@ struct HomeView: View {
                                 .opaqueCard()
                             }
 
-                            HStack(spacing: 10) {
-                                Button {
-                                    if let last = sessions.first(where: { $0.endDate != nil }) {
-                                        sessionStore.start(from: last)
-                                    }
-                                } label: {
-                                    Label("Repeat last workout", systemImage: "arrow.counterclockwise")
-                                        .homeActionButtonLabel()
+                            if hasActivePlan {
+                                HStack(spacing: 10) {
+                                    repeatLastWorkoutButton
+                                    startEmptyWorkoutButton
                                 }
-                                .buttonStyle(.bordered)
-                                .disabled(sessions.first(where: { $0.endDate != nil }) == nil)
-                                .frame(maxWidth: .infinity)
-
-                                Button {
-                                    sessionStore.start(program: nil, programDay: nil)
-                                } label: {
-                                    Label("Start empty workout", systemImage: "plus.circle.fill")
-                                        .homeActionButtonLabel()
+                            } else {
+                                VStack(spacing: 10) {
+                                    repeatLastWorkoutButton
+                                    startEmptyWorkoutButton
                                 }
-                                .buttonStyle(.borderedProminent)
-                                .frame(maxWidth: .infinity)
                             }
                         }
                         .tourTarget(.homeStartWorkout)

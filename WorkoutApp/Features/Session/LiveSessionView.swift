@@ -220,10 +220,6 @@ final class SessionController: ObservableObject {
     }
 
     func startRest(for exerciseID: UUID? = nil) {
-        if let exerciseID,
-           let exercise = exercises.first(where: { $0.id == exerciseID }) {
-            restDuration = ExerciseRestDefaults.seconds(for: exercise, fallback: restDuration)
-        }
         restRemaining = restDuration
         timerRunning = true
         let name = exerciseID.flatMap { id in exercises.first(where: { $0.id == id })?.name }
@@ -253,11 +249,6 @@ final class SessionController: ObservableObject {
 
     func toggleSuggestion(for exerciseID: UUID) {
         showSuggestionByExercise[exerciseID] = !(showSuggestionByExercise[exerciseID] ?? false)
-    }
-
-    func updateRestSeconds(for exerciseID: UUID, seconds: Int) {
-        guard let index = exercises.firstIndex(where: { $0.id == exerciseID }) else { return }
-        exercises[index].restSeconds = seconds
     }
 
     private func ensureTimer() {
@@ -518,6 +509,7 @@ struct LiveSessionView: View {
     @State private var showMidWorkoutSaveTemplate = false
     @State private var templateSaveDecision: TemplateSaveDecision = .undecided
     @State private var showDiscardConfirm = false
+    @State private var showFinishConfirm = false
     @State private var finishedSession: WorkoutSession?
     @State private var showSummary = false
 
@@ -560,7 +552,7 @@ struct LiveSessionView: View {
                     }
 
                     Button {
-                        finish()
+                        showFinishConfirm = true
                     } label: {
                         Text("Finish workout")
                             .font(.headline)
@@ -570,6 +562,14 @@ struct LiveSessionView: View {
                     .disabled(controller.loggedSetCount == 0)
                     .buttonStyle(.borderedProminent)
                     .padding(.top, 8)
+                    .confirmationDialog(
+                        "Finish workout?",
+                        isPresented: $showFinishConfirm,
+                        titleVisibility: .visible
+                    ) {
+                        Button("Finish workout") { finish() }
+                        Button("Cancel", role: .cancel) {}
+                    }
 
                     Button("Discard workout", role: .destructive) {
                         if controller.loggedSetCount > 0 {
@@ -942,7 +942,6 @@ struct SessionExerciseCard: View {
     @State private var showSwapConfirm = false
     @State private var pendingSwapCatalog: CatalogExercise?
     @State private var pendingSwapCustom: (name: String, equipment: ExerciseEquipment, primary: [String], secondary: [String])?
-    @State private var showRestEditor = false
 
     private var live: DraftExercise {
         controller.exercises.first(where: { $0.id == exercise.id }) ?? exercise
@@ -970,10 +969,6 @@ struct SessionExerciseCard: View {
             primaryMuscles: live.primaryMuscles,
             sessions: sessions
         )
-    }
-
-    private var effectiveRestSeconds: Int {
-        ExerciseRestDefaults.seconds(for: live, fallback: controller.restDuration)
     }
 
     private var showSuggestion: Bool {
@@ -1089,15 +1084,6 @@ struct SessionExerciseCard: View {
                 .frame(minHeight: thumbnailSize, alignment: .top)
             }
 
-            Button {
-                showRestEditor = true
-            } label: {
-                Text("Rest \(Formatters.duration(effectiveRestSeconds))")
-                    .font(.caption.weight(.medium).monospacedDigit())
-                    .foregroundStyle(.secondary)
-            }
-            .buttonStyle(.plain)
-
             setColumnHeader
 
             if !live.logged.isEmpty {
@@ -1198,29 +1184,6 @@ struct SessionExerciseCard: View {
         .opaqueCard()
         .onAppear {
             controller.ensureDraft(for: exercise.id, unit: unit, previousSets: previousSets)
-        }
-        .sheet(isPresented: $showRestEditor) {
-            NavigationStack {
-                Form {
-                    Stepper(
-                        "Rest \(Formatters.duration(effectiveRestSeconds))",
-                        value: Binding(
-                            get: { live.restSeconds ?? effectiveRestSeconds },
-                            set: { controller.updateRestSeconds(for: exercise.id, seconds: $0) }
-                        ),
-                        in: 15...300,
-                        step: 15
-                    )
-                }
-                .navigationTitle("Rest time")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") { showRestEditor = false }
-                    }
-                }
-            }
-            .presentationDetents([.height(180)])
         }
         .sheet(isPresented: $showHistory) {
             NavigationStack {
