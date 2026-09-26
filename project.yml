@@ -41,6 +41,8 @@ targets:
       - sdk: CoreLocation.framework
       - sdk: AudioToolbox.framework
       - sdk: AVFoundation.framework
+      - target: WorkoutWidgets
+        embed: true
     entitlements:
       path: WorkoutApp.entitlements
       properties:
@@ -51,6 +53,29 @@ targets:
       testTargets:
         - WorkoutAppTests
         - WorkoutAppUITests
+  WorkoutWidgets:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: WorkoutWidgets
+      - path: WorkoutApp/Shared/WidgetSnapshot.swift
+      - path: WorkoutApp/Shared/RestTimerAttributes.swift
+    settings:
+      base:
+        INFOPLIST_FILE: WorkoutWidgets/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.WorkoutApp.WorkoutWidgets
+        PRODUCT_NAME: WorkoutWidgets
+        CODE_SIGN_ENTITLEMENTS: WorkoutWidgets/WorkoutWidgets.entitlements
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_EMIT_LOC_STRINGS: YES
+    entitlements:
+      path: WorkoutWidgets/WorkoutWidgets.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.local.WorkoutApp
   WorkoutAppTests:
     type: bundle.unit-test
     platform: iOS

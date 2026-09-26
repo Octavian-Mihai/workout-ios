@@ -2,6 +2,11 @@ import ActivityKit
 import SwiftUI
 import WidgetKit
 
+private func setProgressText(_ state: RestTimerAttributes.ContentState) -> String? {
+    guard state.targetSets > 0 else { return nil }
+    return "Set \(min(state.setsCompleted + 1, state.targetSets)) of \(state.targetSets)"
+}
+
 struct RestTimerLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: RestTimerAttributes.self) { context in
@@ -12,9 +17,15 @@ struct RestTimerLiveActivity: Widget {
                     Text(context.state.exerciseName)
                         .font(.headline)
                         .lineLimit(1)
-                    Text(context.attributes.sessionLabel)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    HStack(spacing: 6) {
+                        Text(context.attributes.sessionLabel)
+                        if let progress = setProgressText(context.state) {
+                            Text("·")
+                            Text(progress)
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Text(timerInterval: Date()...context.state.restEndDate, countsDown: true)
@@ -32,10 +43,24 @@ struct RestTimerLiveActivity: Widget {
                     Text(timerInterval: Date()...context.state.restEndDate, countsDown: true)
                         .font(.title3.monospacedDigit().weight(.bold))
                 }
-                DynamicIslandExpandedRegion(.bottom) {
-                    Text(context.state.exerciseName)
-                        .font(.subheadline)
+                DynamicIslandExpandedRegion(.center) {
+                    Text(context.attributes.sessionLabel)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
+                }
+                DynamicIslandExpandedRegion(.bottom) {
+                    HStack(spacing: 6) {
+                        Text(context.state.exerciseName)
+                            .lineLimit(1)
+                        if let progress = setProgressText(context.state) {
+                            Text("·")
+                                .foregroundStyle(.secondary)
+                            Text(progress)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .font(.subheadline)
                 }
             } compactLeading: {
                 Image(systemName: "timer")

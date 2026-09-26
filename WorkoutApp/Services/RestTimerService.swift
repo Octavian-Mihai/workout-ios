@@ -16,6 +16,8 @@ final class RestTimerService: ObservableObject {
 
     private var activity: Activity<RestTimerAttributes>?
     private var didRequestNotificationPermission = false
+    private var setsCompleted = 0
+    private var targetSets = 0
 
     private init() {}
 
@@ -29,9 +31,17 @@ final class RestTimerService: ObservableObject {
         return max(0, Int(restEndDate.timeIntervalSince(now).rounded(.up)))
     }
 
-    func startRest(duration: Int, exerciseName: String?, sessionLabel: String) {
+    func startRest(
+        duration: Int,
+        exerciseName: String?,
+        sessionLabel: String,
+        setsCompleted: Int = 0,
+        targetSets: Int = 0
+    ) {
         restDuration = duration
         self.exerciseName = exerciseName
+        self.setsCompleted = setsCompleted
+        self.targetSets = targetSets
         restEndDate = Date().addingTimeInterval(TimeInterval(duration))
         scheduleNotification(for: restEndDate!, exerciseName: exerciseName)
         startOrUpdateLiveActivity(sessionLabel: sessionLabel, exerciseName: exerciseName ?? "Rest")
@@ -94,7 +104,12 @@ final class RestTimerService: ObservableObject {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
         guard let restEndDate else { return }
 
-        let state = RestTimerAttributes.ContentState(restEndDate: restEndDate, exerciseName: exerciseName)
+        let state = RestTimerAttributes.ContentState(
+            restEndDate: restEndDate,
+            exerciseName: exerciseName,
+            setsCompleted: setsCompleted,
+            targetSets: targetSets
+        )
         if let activity {
             Task { await activity.update(ActivityContent(state: state, staleDate: restEndDate)) }
             return
@@ -114,7 +129,12 @@ final class RestTimerService: ObservableObject {
 
     private func updateLiveActivity(exerciseName: String) {
         guard let restEndDate, let activity else { return }
-        let state = RestTimerAttributes.ContentState(restEndDate: restEndDate, exerciseName: exerciseName)
+        let state = RestTimerAttributes.ContentState(
+            restEndDate: restEndDate,
+            exerciseName: exerciseName,
+            setsCompleted: setsCompleted,
+            targetSets: targetSets
+        )
         Task { await activity.update(ActivityContent(state: state, staleDate: restEndDate)) }
     }
 
@@ -122,7 +142,9 @@ final class RestTimerService: ObservableObject {
         guard let activity else { return }
         let finalState = RestTimerAttributes.ContentState(
             restEndDate: Date(),
-            exerciseName: exerciseName ?? "Rest"
+            exerciseName: exerciseName ?? "Rest",
+            setsCompleted: setsCompleted,
+            targetSets: targetSets
         )
         Task {
             await activity.end(ActivityContent(state: finalState, staleDate: nil), dismissalPolicy: .immediate)

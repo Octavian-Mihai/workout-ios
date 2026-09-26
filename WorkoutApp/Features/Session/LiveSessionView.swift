@@ -222,11 +222,13 @@ final class SessionController: ObservableObject {
     func startRest(for exerciseID: UUID? = nil) {
         restRemaining = restDuration
         timerRunning = true
-        let name = exerciseID.flatMap { id in exercises.first(where: { $0.id == id })?.name }
+        let exercise = exerciseID.flatMap { id in exercises.first(where: { $0.id == id }) }
         restTimer.startRest(
             duration: restDuration,
-            exerciseName: name,
-            sessionLabel: programDay?.name ?? "Workout"
+            exerciseName: exercise?.name,
+            sessionLabel: programDay?.name ?? "Workout",
+            setsCompleted: exercise?.logged.count ?? 0,
+            targetSets: exercise?.targetSets ?? 0
         )
         ensureTimer()
     }
