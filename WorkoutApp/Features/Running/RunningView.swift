@@ -348,9 +348,9 @@ struct RunningView: View {
                     .frame(height: 120)
             } else {
                 let steps = health.dailySteps.sorted { $0.date < $1.date }
-                Chart(Array(steps.enumerated()), id: \.offset) { index, point in
+                Chart(steps) { point in
                     BarMark(
-                        x: .value("Day", index),
+                        x: .value("Day", weekdayLabel(for: point.date)),
                         y: .value("Steps", point.count),
                         width: .ratio(0.75)
                     )
@@ -362,11 +362,9 @@ struct RunningView: View {
                     AxisMarks(position: .leading)
                 }
                 .chartXAxis {
-                    AxisMarks(values: Array(steps.indices)) { value in
+                    AxisMarks(preset: .aligned, values: .automatic) { _ in
                         AxisGridLine()
-                        if let index = value.as(Int.self), steps.indices.contains(index) {
-                            AxisValueLabel(weekdayLabel(for: steps[index].date))
-                        }
+                        AxisValueLabel()
                     }
                 }
             }
