@@ -671,7 +671,10 @@ struct LiveSessionView: View {
                     model: WorkoutSummaryModel(session: session),
                     accent: accent,
                     unit: unit,
-                    onDone: { showSummary = false }
+                    onDone: {
+                        showSummary = false
+                        handleSummaryDismissed()
+                    }
                 )
             }
         }
@@ -883,6 +886,7 @@ struct LiveSessionView: View {
     }
 
     private func handleSummaryDismissed() {
+        guard finishedSession != nil else { return }
         finishedSession = nil
         if controller.exerciseListChanged, templateSaveDecision == .undecided {
             showSaveTemplate = true
