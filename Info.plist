@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Workout</string>
+	<string>Vigor - workout</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,12 +24,12 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSSupportsLiveActivities</key>
-	<true/>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Workout reads your cardio workouts (running, walking, hiking, cycling), GPS routes, distance, elevation, heart rate, resting heart rate, HRV, and sleep from Apple Health to show maps, pace charts, duration, and training stress. It also reads body weight to keep your weight log in sync.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Workout saves body weight entries you log in the app to Apple Health. If you turn on writing workouts, it also saves finished strength sessions as Traditional Strength Training workouts.</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
