@@ -584,13 +584,24 @@ final class HealthKitService: ObservableObject {
                 duration: workout.duration,
                 distanceMeters: distance,
                 averageHeartRate: averageHeartRate(from: workout),
-                activityType: workout.workoutActivityType,
+                activityType: dominantActivityType(for: workout),
                 elevationGainMeters: elevation,
                 isIndoor: (workout.metadata?[HKMetadataKeyIndoorWorkout] as? Bool) ?? false,
                 workout: workout
             ))
         }
         return results
+    }
+
+    /// Some sessions (auto-detected run/walk intervals, warm-up segments, etc.) are recorded as a
+    /// multi-segment `HKWorkout`. The legacy `workoutActivityType` only reflects the first segment,
+    /// which can disagree with what Health displays as the workout's overall type. Prefer the segment
+    /// that covers the most time when segment data is available.
+    private func dominantActivityType(for workout: HKWorkout) -> HKWorkoutActivityType {
+        let activities = workout.workoutActivities
+        guard !activities.isEmpty else { return workout.workoutActivityType }
+        let dominant = activities.max { $0.duration < $1.duration }
+        return dominant?.workoutConfiguration.activityType ?? workout.workoutActivityType
     }
 
     private func elevationFromMetadata(_ workout: HKWorkout) -> Double? {
